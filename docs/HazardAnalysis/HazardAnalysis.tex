@@ -66,8 +66,18 @@ or harm to users.
 
 \section{Scope and Purpose of Hazard Analysis}
 
-\wss{You should say what \textbf{loss} could be incurred because of the
-hazards.}
+This document outlines a hazard analysis for SyncMaster, which is a system that
+manages documentation and enables administrators to verify presence of users on
+site. The purpose of this analysis is to identify and evaluate potential
+hazards, outline how they will be detected/introduced to the system, and to
+establish mitigation strategies. This analysis will also determine
+the parties responsible
+for each of the aforementioned points. Some of the losses that
+may be incurred as a result of hazards are, but are not limited to:
+financial loss, data loss, loss of trust, regulatory violations, and
+operational interruption. These losses stemming from hazards must be mitigated
+to ensure that the system operates securely, and in compliance with relevant
+regulations.
 
 \section{System Boundaries and Components}
 
@@ -82,11 +92,14 @@ important library, these are also potential components.}
 
 \section{Critical Assumptions}
 
-\wss{These assumptions that are made about the software or system.  You should
-  minimize the number of assumptions that remove potential hazards.
-  For instance,
-  you could assume a part will never fail, but it is generally better to include
-this potential failure mode.}
+\begin{enumerate}
+  \item There are trained, trusted employees with appropriate access
+    in the system to resolve failures should they occur.
+  \item There are workflows and processes in place to complete
+    necessary tasks should the application fail.
+  \item External libraries used are trustworthy, secure, and will not
+    be a cause of failure.
+\end{enumerate}
 
 \section{Failure Mode and Effect Analysis}
 
