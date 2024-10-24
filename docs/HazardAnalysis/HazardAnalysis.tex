@@ -81,11 +81,14 @@ important library, these are also potential components.}
 
 \section{Critical Assumptions}
 
-\wss{These assumptions that are made about the software or system.  You should
-  minimize the number of assumptions that remove potential hazards.
-  For instance,
-  you could assume a part will never fail, but it is generally better to include
-this potential failure mode.}
+\begin{enumerate}
+  \item There are trained, trusted employees with appropriate access
+    in the system to resolve failures should they occur.
+  \item There are workflows and processes in place to complete
+    necessary tasks should the application fail.
+  \item External libraries used are trustworthy, secure, and will not
+    be a cause of failure.
+\end{enumerate}
 
 \section{Failure Mode and Effect Analysis}
 
