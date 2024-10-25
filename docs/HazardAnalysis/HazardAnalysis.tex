@@ -4,6 +4,7 @@
 \usepackage{tabularx}
 \usepackage{hyperref}
 \usepackage{graphicx}
+\usepackage{enumerate}
 
 \hypersetup{
   colorlinks=true,       % false: boxed links; true: colored links
@@ -182,6 +183,47 @@ documentation, and/or test cases.}
       user & a. User to Ask Manager for URL \newline b. Employees to
       provide new scannable QR code at location if applicable & SR-AR1 & H4-2 \\
       \hline
+      Accept Contractor Document Upload & Document is valid but is uploaded in
+      the wrong location & Poor discoverability and organization &
+      a. Human-computer interface failure &User detects document is
+      in the wrong category &
+      a. Alert administrator to adjust & FR1 & H4-1 \\
+      \cline{2-8}
+      & Document is malicious and should not be in the system & Malware
+      infection &a. Malicious user gained access to system & Malware
+      scan identifies malicious documents
+      & a. Application removes file from system and notifies
+      administrator & SR-AR1
+      & H4-2 \\
+      \cline{2-8}
+      & File chosen for upload is corrupted and not able to be opened &
+      User fails to open file &a. Failure in document chosen or upload process&
+      Error messages to user& a. Application removes file from system and
+      notifies administrator & SR-IR3 & H4-3 \\
+      \cline{2-8}
+      & File type uploaded is not a supported type & System can't display
+      file correctly to the user & a. Failure in file type detection
+      \newline b. System permitted user to attempt upload of wrong file &
+      Error message to user& a. System notifies user of incompatible file type &
+      FR1 & H4-4 \\
+      \cline{2-8}
+      & The upload process is interrupted and the file upload is incomplete. &
+      File upload fails & a. System connection interruption &
+      Error messages to system& a. System notifies user & PR-SC1 & H4-5\\
+      \hline
+      Contractor acknowledges document & Contractor does not acknowledge
+      correctly and it is not saved to the system & Acknowledgement not received
+      & a. User does not understand feedback from the application interface
+      \newline b. User does not agree to sign the document & Application detects
+      unsuccessful acknowledgement state & a. System notifies user &
+      FR7 & H5-1 \\
+      \cline{2-8}
+      & Device loses power and interrupts the acknowledgement & Acknowledgement
+      is not received by the system &
+      a. Loss of power disconnects users from the application & Server side
+      detects user disconnection & a. Save the application state and return
+      user to previous state when they reconnect & FR7 & H5-2 \\
+      \hline
     \end{tabular}
   }
   \caption{Failure Mode and Effect Analysis (FMEA) Table}
@@ -191,6 +233,16 @@ documentation, and/or test cases.}
 
 \wss{Newly discovered requirements.  These should also be added to the SRS.  (A
 rationale design process how and why to fake it.)}
+\begin{enumerate}[{SFR}1.]
+  \item The system shall notify the facilities manager if a contractor declines
+    to sign a document.\\
+    \newline Rationale: The facilities manager should be aware if
+    their contractor
+    declines to sign a document. This creates a health and safety concern.\\
+    \newline Fit criterion: The facilities manager receives a
+    notification from the
+    application identifying the contractor and the document.
+\end{enumerate}
 
 \section{Roadmap}
 
