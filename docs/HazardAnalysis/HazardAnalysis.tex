@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass{article}.tex
 
 \usepackage{booktabs}
 \usepackage{tabularx}
@@ -128,6 +128,13 @@ documentation, and/or test cases.}
       Device does not have a GPS \newline e. VPN usage & Error
       messages and logging & a. Report inaccurate location detection
       to manager & SR-AR1 & H1-1 \\
+      \cline{2-8}
+      & GPS signal spoofing & Contractors are able to access the system and
+      upload documents even when they are not on site & a. Use of spoofing
+      applications \newline b. Physical spoofing of GPS signals & System compares GPS location
+      along with the ip address of the originating request & a. System will
+      detect and report suspicious location activity to administrators & SR-AR1
+      & H1-2 \\
       \hline
       User Authentication & Unauthorized Access & Comprimises system
       security & a. Weak protocols for user authentication &
@@ -140,13 +147,18 @@ documentation, and/or test cases.}
       failure & detailed logs of all views and edits to documents
       from within the system & a. Allow administrator to adjust
       permissions & SR-AR2 \newline SR-AR3 \newline SR-IR1 & H2-2 \\
+      \cline{2-8}
+      & Failure to revoke permissions & Contractor retains access to system
+      after they have completed project/no longer a contractor & a. Admin fails to
+      remove access & Access logs & a. System automates permission revocation after
+      contractor ceases to work on project & SR-IR1 \newline SR-AR1 & H2-3\\
       \hline
       View Station Entry Protocols & Contractor Views Old Version of
       Entry Protocols & Contractor may view and abide by out-of-date
       and incorrect station entry protocols & a. Database Error &
       Send all documents that a contractor viewed to their manager
       for verification upon completion & a. Reupload newer version of
-      entry protocol documents & SR-IR2 & H3-1 \\
+      entry protocol documents & SR-IR1 & H3-1 \\
       \cline{2-8}
       & Contractor Unable to Sign Documents & Contractor cannot start
       doing their work as they are unable to complete appropriate
