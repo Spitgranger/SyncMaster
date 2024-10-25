@@ -126,34 +126,62 @@ documentation, and/or test cases.}
       site, but unable to follow entry/exit protocols & a. GPS
       Signal Blocked \newline b. Use of inaccurate Geolocation API
       \newline c. Out of date third-party databases \newline d.
-      Device does not have a GPS \newline e. VPN usage & Error
-      messages and logging & a. Report inaccurate location detection
-      to manager & SR-AR1 & H1-1 \\
+      Device does not have a GPS \newline e. VPN usage & System
+      provides error message to user when they get geo-blocked and
+      sends an email to manager indicating that the user has been
+      geo-blocked & a. User reports inaccurate location detection to
+      manager & SR-AR1 & H1-1 \\
       \hline
       User Authentication & Unauthorized Access & Comprimises system
       security & a. Weak protocols for user authentication &
-      Geo-blocking & a. Require multi-factor authentication \newline
-      b. limit login attempts & SR-AR1 & H2-1 \\
+      Geo-blocking & a. System should require multi-factor
+      authentication \newline
+      b. System should limit login attempts & SR-AR1 & H2-1 \\
       \cline{2-8}
       & User has higher access level than they should & User may be
       able to view or edit documents they should not be able to
       causing security concerns & a. Permission issue from database
-      failure & detailed logs of all views and edits to documents
-      from within the system & a. Allow administrator to adjust
-      permissions & SR-AR2 \newline SR-AR3 \newline SR-IR1 & H2-2 \\
+      failure & System maintains detailed logbook of all views and
+      edits to documents from within the system. Managers can
+      subscribe to a document to get a notification when it is
+      edited. & a. Allow administrator to adjust permissions &
+      SR-AR2 \newline SR-AR3 \newline SR-IR1 & H2-2 \\
+      \cline{2-8}
+      & User unable to complete Two-Factor Authentication & User
+      unable to access application & a. User name and email not in
+      database \newline b. User did not receive authentication email
+      \newline c. User unable to access email account \newline d.
+      Email address in database outdated or incorrect
+      & Self-report by user & a. User to report authentication issue
+      to manager & SR-AR1 & H2-3 \\
       \hline
       View Station Entry Protocols & Contractor Views Old Version of
       Entry Protocols & Contractor may view and abide by out-of-date
       and incorrect station entry protocols & a. Database Error &
       Send all documents that a contractor viewed to their manager
-      for verification upon completion & a. Reupload newer version of
-      entry protocol documents & SR-IR2 & H3-1 \\
+      for verification upon completion & a. Manager can reupload
+      newer version of entry protocol documents & SR-IR2 & H3-1 \\
       \cline{2-8}
       & Contractor Unable to Sign Documents & Contractor cannot start
       doing their work as they are unable to complete appropriate
       documentation & a. Permission issue from database failure &
-      Error messages and logging & a. Allow administrator to adjust
-      permissions & SR-AR1 \newline SR-AR4 & H3-2 \\
+      System provides detailed error message to user explaining that
+      they cannot sign and guiding them on next steps & a. Allow
+      administrator to adjust permissions & SR-AR1 \newline SR-AR4 & H3-2 \\
+      \hline
+      Access to web-application & User is unable to access the
+      application through their device & User unable to use
+      application functionality & a. Poor or no internet on device
+      \newline b. Device or browser unsupported or unable to run application
+      & Self-report by user & a. User to report to Manager \newline
+      b. User to follow alternative workflow and processes to
+      complete tasks on site
+      to manager & SR-AR1 & H4-1 \\
+      \cline{4-8}
+      & & & c. Unable to access URL (QR code damaged or missing, no
+      camera on device, User unable to find URL) & Self-report by
+      user & a. User to Ask Manager for URL \newline b. Employees to
+      provide new scannable QR code at location if applicable & SR-AR1 & H4-2 \\
       \hline
       Accept Contractor Document Upload & Document is valid but is uploaded in
       the wrong location & Poor discoverability and organization &
