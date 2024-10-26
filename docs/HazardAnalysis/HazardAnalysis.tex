@@ -5,6 +5,7 @@
 \usepackage{hyperref}
 \usepackage{graphicx}
 \usepackage{enumerate}
+\usepackage{float}
 
 \hypersetup{
   colorlinks=true,       % false: boxed links; true: colored links
@@ -53,8 +54,6 @@
 ~\newpage
 
 \pagenumbering{arabic}
-
-\wss{You are free to modify this template.}
 
 \section{Introduction}
 
@@ -123,18 +122,7 @@ regulations.
 
 \section{Failure Mode and Effect Analysis}
 
-\wss{Include your FMEA table here. This is the most important part of
-this document.}
-\wss{The safety requirements in the table do not have to have the prefix SR.
-  The most important thing is to show traceability to your SRS. You
-  might trace to
-  requirements you have already written, or you might need to add new
-requirements.}
-\wss{If no safety requirement can be devised, other mitigation strategies can be
-  entered in the table, including strategies involving providing additional
-documentation, and/or test cases.}
-
-\begin{table}
+\begin{table}[H]
   \scalebox{0.6}{
     \begin{tabular}{|>{\raggedright}p{2.0cm}|>{\raggedright}p{2.0cm}|>{\raggedright}p{2.5cm}|>{\raggedright}p{4cm}|>{\raggedright}p{3cm}|>{\raggedright}p{4cm}|>{\raggedright}p{1.5cm}|p{1.5cm}|}
       \hline
@@ -204,6 +192,19 @@ documentation, and/or test cases.}
       they cannot sign and guiding them on next steps & a. Allow
       administrator to adjust permissions & SR-AR1 \newline SR-AR4 & H3-2 \\
       \hline
+    \end{tabular}
+  }
+  \caption{Failure Mode and Effect Analysis (FMEA) Table Part 1}
+\end{table}
+
+\begin{table}[H]
+  \scalebox{0.6}{
+    \begin{tabular}{|>{\raggedright}p{2.0cm}|>{\raggedright}p{2.0cm}|>{\raggedright}p{2.5cm}|>{\raggedright}p{4cm}|>{\raggedright}p{3cm}|>{\raggedright}p{4cm}|>{\raggedright}p{1.5cm}|p{1.5cm}|}
+      \hline
+      \textbf{Design Function} & \textbf{Failure Modes} & \textbf{Effects
+      of Failure} & \textbf{Causes of Failure} & \textbf{Detection} &
+      \textbf{Recommended Actions} & \textbf{SR} & \textbf{Ref.} \\
+      \hline
       Access to web-application & User is unable to access the
       application through their device & User unable to use
       application functionality & a. Poor or no internet on device
@@ -261,13 +262,11 @@ documentation, and/or test cases.}
       \hline
     \end{tabular}
   }
-  \caption{Failure Mode and Effect Analysis (FMEA) Table}
+  \caption{Failure Mode and Effect Analysis (FMEA) Table Part 2}
 \end{table}
 
 \section{Safety and Security Requirements}
 
-\wss{Newly discovered requirements.  These should also be added to the SRS.  (A
-rationale design process how and why to fake it.)}
 \begin{enumerate}[{SFR}1.]
   \item The system shall notify the facilities manager if a contractor declines
     to sign a document.\\
