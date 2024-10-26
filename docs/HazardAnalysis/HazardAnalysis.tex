@@ -254,21 +254,49 @@ Which requirements will be implemented in the future?}
 
 \section*{Appendix --- Reflection}
 
-\wss{Not required for CAS 741}
-
 \input{../Reflection.tex}
 
 \begin{enumerate}
-  \item What went well while writing this deliverable?
+  \item What went well while writing this deliverable?\\
+    \\
+    When writing this deliverable, we were able to efficiently discuss and
+    delegate sections of the document to team members. We made good use of the
+    issues and PR's on GitHub to track the status.
   \item What pain points did you experience during this deliverable, and how
-    did you resolve them?
+    did you resolve them?\\
+    \\
+    One pain point was identifying new safety requirements and determining
+    the best way to incorporate them into the HazardAnalysis.pdf
+    document while maintaining
+    consistency with the SRS.pdf. The team utilized a pull request to discuss
+    the best approach. The team decided to give each safety requirements it's
+    own unique label to resolve this problem.
   \item Which of your listed risks had your team thought of before this
     deliverable, and which did you think of while doing this deliverable? For
     the latter ones (ones you thought of while doing the Hazard Analysis), how
-    did they come about?
+    did they come about?\\
+    \\
+    Our team had thought about poor internet signal at stations and also the
+    risk of GPS technology not working properly. This deliverable allowed us to
+    consider in more depths what the causes of failure could be and what actions
+    the system should take to respond. Our team discovered new risks, including
+    what would happen if a contractor decided not to sign a document. This led
+    to the creation of a new safety requirement to address this issue.
   \item Other than the risk of physical harm (some projects may not have any
     appreciable risks of this form), list at least 2 other types of risk in
-    software products. Why are they important to consider?
+    software products. Why are they important to consider?\\
+    \\
+    One important risk to consider is the risk of poor user
+    experience. Our application
+    will be used by dozens of contractors, so the application
+    must not be frustrating for the user or they will not utilize it
+    and the benefits it has to offer.\\
+    \\
+    Another important risk is the risk of malicious documents entering the
+    system. Applications which accept the input of data are naturally
+    at a higher risk from malicious actors. The hazard analysis allowed our
+    team to consider the importance of scanning uploaded documents for threats
+    instead of trusting the documents which the system receives.
 \end{enumerate}
 
 \end{document}
