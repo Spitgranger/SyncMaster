@@ -131,6 +131,14 @@ documentation, and/or test cases.}
       sends an email to manager indicating that the user has been
       geo-blocked & a. User reports inaccurate location detection to
       manager & SR-AR1 & H1-1 \\
+      \cline{2-8}
+      & GPS signal spoofing & Contractors are able to access the system and
+      upload documents even when they are not on site & a. Use of spoofing
+      applications \newline b. Physical spoofing of GPS signals &
+      System compares GPS location
+      along with the ip address of the originating request & a. System will
+      detect and report suspicious location activity to administrators & SR-AR1
+      & H1-2 \\
       \hline
       User Authentication & Unauthorized Access & Comprimises system
       security & a. Weak protocols for user authentication &
@@ -154,6 +162,13 @@ documentation, and/or test cases.}
       Email address in database outdated or incorrect
       & Self-report by user & a. User to report authentication issue
       to manager & SR-AR1 & H2-3 \\
+      \cline{2-8}
+      & Failure to revoke permissions & Contractor retains access to system
+      after they have completed project/no longer a contractor & a.
+      Admin fails to
+      remove access & Access logs & a. System automates permission
+      revocation after
+      contractor ceases to work on project & SR-IR1 \newline SR-AR1 & H2-4\\
       \hline
       View Station Entry Protocols & Contractor Views Old Version of
       Entry Protocols & Contractor may view and abide by out-of-date
