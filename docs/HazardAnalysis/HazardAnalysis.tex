@@ -4,6 +4,7 @@
 \usepackage{tabularx}
 \usepackage{hyperref}
 \usepackage{graphicx}
+\usepackage{enumerate}
 
 \hypersetup{
   colorlinks=true,       % false: boxed links; true: colored links
@@ -125,46 +126,118 @@ documentation, and/or test cases.}
       site, but unable to follow entry/exit protocols & a. GPS
       Signal Blocked \newline b. Use of inaccurate Geolocation API
       \newline c. Out of date third-party databases \newline d.
-      Device does not have a GPS \newline e. VPN usage & Error
-      messages and logging & a. Report inaccurate location detection
-      to manager & SR-AR1 & H1-1 \\
+      Device does not have a GPS \newline e. VPN usage & System
+      provides error message to user when they get geo-blocked and
+      sends an email to manager indicating that the user has been
+      geo-blocked & a. User reports inaccurate location detection to
+      manager & SR-AR1 & H1-1 \\
       \cline{2-8}
       & GPS signal spoofing & Contractors are able to access the system and
       upload documents even when they are not on site & a. Use of spoofing
-      applications \newline b. Physical spoofing of GPS signals & System compares GPS location
+      applications \newline b. Physical spoofing of GPS signals &
+      System compares GPS location
       along with the ip address of the originating request & a. System will
       detect and report suspicious location activity to administrators & SR-AR1
       & H1-2 \\
       \hline
       User Authentication & Unauthorized Access & Comprimises system
       security & a. Weak protocols for user authentication &
-      Geo-blocking & a. Require multi-factor authentication \newline
-      b. limit login attempts & SR-AR1 & H2-1 \\
+      Geo-blocking & a. System should require multi-factor
+      authentication \newline
+      b. System should limit login attempts & SR-AR1 & H2-1 \\
       \cline{2-8}
       & User has higher access level than they should & User may be
       able to view or edit documents they should not be able to
       causing security concerns & a. Permission issue from database
-      failure & detailed logs of all views and edits to documents
-      from within the system & a. Allow administrator to adjust
-      permissions & SR-AR2 \newline SR-AR3 \newline SR-IR1 & H2-2 \\
+      failure & System maintains detailed logbook of all views and
+      edits to documents from within the system. Managers can
+      subscribe to a document to get a notification when it is
+      edited. & a. Allow administrator to adjust permissions &
+      SR-AR2 \newline SR-AR3 \newline SR-IR1 & H2-2 \\
+      \cline{2-8}
+      & User unable to complete Two-Factor Authentication & User
+      unable to access application & a. User name and email not in
+      database \newline b. User did not receive authentication email
+      \newline c. User unable to access email account \newline d.
+      Email address in database outdated or incorrect
+      & Self-report by user & a. User to report authentication issue
+      to manager & SR-AR1 & H2-3 \\
       \cline{2-8}
       & Failure to revoke permissions & Contractor retains access to system
-      after they have completed project/no longer a contractor & a. Admin fails to
-      remove access & Access logs & a. System automates permission revocation after
-      contractor ceases to work on project & SR-IR1 \newline SR-AR1 & H2-3\\
+      after they have completed project/no longer a contractor & a.
+      Admin fails to
+      remove access & Access logs & a. System automates permission
+      revocation after
+      contractor ceases to work on project & SR-IR1 \newline SR-AR1 & H2-4\\
       \hline
       View Station Entry Protocols & Contractor Views Old Version of
       Entry Protocols & Contractor may view and abide by out-of-date
       and incorrect station entry protocols & a. Database Error &
       Send all documents that a contractor viewed to their manager
-      for verification upon completion & a. Reupload newer version of
-      entry protocol documents & SR-IR2 & H3-1 \\
+      for verification upon completion & a. Manager can reupload
+      newer version of entry protocol documents & SR-IR2 & H3-1 \\
       \cline{2-8}
       & Contractor Unable to Sign Documents & Contractor cannot start
       doing their work as they are unable to complete appropriate
       documentation & a. Permission issue from database failure &
-      Error messages and logging & a. Allow administrator to adjust
-      permissions & SR-AR1 \newline SR-AR4 & H3-2 \\
+      System provides detailed error message to user explaining that
+      they cannot sign and guiding them on next steps & a. Allow
+      administrator to adjust permissions & SR-AR1 \newline SR-AR4 & H3-2 \\
+      \hline
+      Access to web-application & User is unable to access the
+      application through their device & User unable to use
+      application functionality & a. Poor or no internet on device
+      \newline b. Device or browser unsupported or unable to run application
+      & Self-report by user & a. User to report to Manager \newline
+      b. User to follow alternative workflow and processes to
+      complete tasks on site
+      to manager & SR-AR1 & H4-1 \\
+      \cline{4-8}
+      & & & c. Unable to access URL (QR code damaged or missing, no
+      camera on device, User unable to find URL) & Self-report by
+      user & a. User to Ask Manager for URL \newline b. Employees to
+      provide new scannable QR code at location if applicable & SR-AR1 & H4-2 \\
+      \hline
+      Accept Contractor Document Upload & Document is valid but is uploaded in
+      the wrong location & Poor discoverability and organization &
+      a. Human-computer interface failure &User detects document is
+      in the wrong category &
+      a. Alert administrator to adjust & FR1 & H4-1 \\
+      \cline{2-8}
+      & Document is malicious and should not be in the system & Malware
+      infection &a. Malicious user gained access to system & Malware
+      scan identifies malicious documents
+      & a. Application removes file from system and notifies
+      administrator & SR-AR1
+      & H4-2 \\
+      \cline{2-8}
+      & File chosen for upload is corrupted and not able to be opened &
+      User fails to open file &a. Failure in document chosen or upload process&
+      Error messages to user& a. Application removes file from system and
+      notifies administrator & SR-IR3 & H4-3 \\
+      \cline{2-8}
+      & File type uploaded is not a supported type & System can't display
+      file correctly to the user & a. Failure in file type detection
+      \newline b. System permitted user to attempt upload of wrong file &
+      Error message to user& a. System notifies user of incompatible file type &
+      FR1 & H4-4 \\
+      \cline{2-8}
+      & The upload process is interrupted and the file upload is incomplete. &
+      File upload fails & a. System connection interruption &
+      Error messages to system& a. System notifies user & PR-SC1 & H4-5\\
+      \hline
+      Contractor acknowledges document & Contractor does not acknowledge
+      correctly and it is not saved to the system & Acknowledgement not received
+      & a. User does not understand feedback from the application interface
+      \newline b. User does not agree to sign the document & Application detects
+      unsuccessful acknowledgement state & a. System notifies user &
+      FR7 & H5-1 \\
+      \cline{2-8}
+      & Device loses power and interrupts the acknowledgement & Acknowledgement
+      is not received by the system &
+      a. Loss of power disconnects users from the application & Server side
+      detects user disconnection & a. Save the application state and return
+      user to previous state when they reconnect & FR7 & H5-2 \\
       \hline
     \end{tabular}
   }
@@ -175,6 +248,16 @@ documentation, and/or test cases.}
 
 \wss{Newly discovered requirements.  These should also be added to the SRS.  (A
 rationale design process how and why to fake it.)}
+\begin{enumerate}[{SFR}1.]
+  \item The system shall notify the facilities manager if a contractor declines
+    to sign a document.\\
+    \newline Rationale: The facilities manager should be aware if
+    their contractor
+    declines to sign a document. This creates a health and safety concern.\\
+    \newline Fit criterion: The facilities manager receives a
+    notification from the
+    application identifying the contractor and the document.
+\end{enumerate}
 
 \section{Roadmap}
 
