@@ -40,9 +40,7 @@
     \toprule
     \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
     \midrule
-    Date1 & Name(s) & Description of changes\\
-    Date2 & Name(s) & Description of changes\\
-    ... & ... & ...\\
+    10/25/2024 & Whole Team & Rev0 Hazard Analysis\\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -223,42 +221,42 @@ regulations.
       the wrong location & Poor discoverability and organization &
       a. Human-computer interface failure &User detects document is
       in the wrong category &
-      a. Alert administrator to adjust & FR1 & H4-1 \\
+      a. Alert administrator to adjust & FR1 & H5-1 \\
       \cline{2-8}
       & Document is malicious and should not be in the system & Malware
       infection &a. Malicious user gained access to system & Malware
       scan identifies malicious documents
       & a. Application removes file from system and notifies
       administrator & SR-AR1
-      & H4-2 \\
+      & H5-2 \\
       \cline{2-8}
       & File chosen for upload is corrupted and not able to be opened &
       User fails to open file &a. Failure in document chosen or upload process&
       Error messages to user& a. Application removes file from system and
-      notifies administrator & SR-IR3 & H4-3 \\
+      notifies administrator & SR-IR3 & H5-3 \\
       \cline{2-8}
       & File type uploaded is not a supported type & System can't display
       file correctly to the user & a. Failure in file type detection
       \newline b. System permitted user to attempt upload of wrong file &
       Error message to user& a. System notifies user of incompatible file type &
-      FR1 & H4-4 \\
+      FR1 & H5-4 \\
       \cline{2-8}
       & The upload process is interrupted and the file upload is incomplete. &
       File upload fails & a. System connection interruption &
-      Error messages to system& a. System notifies user & PR-SC1 & H4-5\\
+      Error messages to system& a. System notifies user & PR-SC1 & H5-5\\
       \hline
       Contractor acknowledges document & Contractor does not acknowledge
       correctly and it is not saved to the system & Acknowledgement not received
       & a. User does not understand feedback from the application interface
       \newline b. User does not agree to sign the document & Application detects
       unsuccessful acknowledgement state & a. System notifies user &
-      FR7 & H5-1 \\
+      FR7 & H6-1 \\
       \cline{2-8}
       & Device loses power and interrupts the acknowledgement & Acknowledgement
       is not received by the system &
       a. Loss of power disconnects users from the application & Server side
       detects user disconnection & a. Save the application state and return
-      user to previous state when they reconnect & FR7 & H5-2 \\
+      user to previous state when they reconnect & FR7 & H6-2 \\
       \hline
     \end{tabular}
   }
