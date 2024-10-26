@@ -79,17 +79,37 @@ operational interruption. These losses stemming from hazards must be mitigated
 to ensure that the system operates securely, and in compliance with relevant
 regulations.
 
-\section{System Boundaries and Components}
+\section{System Components and Boundaries}
 
-\wss{Dividing the system into components will help you brainstorm the hazards.
-  You shouldn't do a full design of the components, just get a feel
-  for the major
-  ones.  For projects that involve hardware, the components will
-  typically include
-  each individual piece of hardware.  If your software will have a
-  database, or an
-important library, these are also potential components.}
+\subsection{System Components}
+\begin{itemize}
+  \item Document Management Module: This module is responsible for handling the
+    storage, retrieval, categorization, and versioning of the documents.
+  \item User Authentication and Authorization Module: This module is responsible
+    for ensuring that only authorized users can access or modify the
+    documents.
+  \item User Presence Verification Module: This module is responsible for
+    tracking and verifying the presence of users on site.
+  \item Logging and Monitoring Module: This module is responsible for generating
+    and monitoring the logs related to system usage, document changes, and
+    user presence verification activities.
+  \item Notification Module: This module is responsible for sending alerts to
+    admins about important events such as document updates or user presence
+    verification issues.
+  \item Database: The database stores all documents, user information, presence
+    verification data, and logs.
+\end{itemize}
 
+\subsection{System Boundaries}
+\begin{itemize}
+  \item User Authentication: The authentication of users will be handled through
+    a third-party provider. The application will only interface with this
+    provider.
+  \item System Infrastructure: This application will be cloud-based and the
+    underlying infrastructure including computation, storage, and network
+    resources will be maintained by a cloud service provider.
+
+\end{itemize}
 \section{Critical Assumptions}
 
 \begin{enumerate}
