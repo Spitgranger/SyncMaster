@@ -14,8 +14,7 @@
 \usepackage{graphicx}
 \usepackage{enumerate}
 \usepackage{float}
-\usepackage{geometry}
-\usepackage{pdflscape}
+\usepackage{longtable}
 
 \input{../Comments}
 \input{../Common}
@@ -384,94 +383,82 @@ be involved? Be specific.}
 \wss{Provide a table that shows which test cases are supporting which
 requirements.}
 
-\setlength{\tabcolsep}{1pt}
-\newgeometry{margin=2cm}
-\begin{landscape}
-  \begin{table}[H]
-    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-      \hline
-      & \textbf{FR1} & \textbf{FR2} & \textbf{FR3} & \textbf{FR4} &
-      \textbf{FR5} & \textbf{FR6} & \textbf{FR7} & \textbf{FR8} &
-      \textbf{FR9} & \textbf{LF-AP1} & \textbf{LF-ST1} &
-      \textbf{UH-EU1} & \textbf{UH-EU2} & \textbf{UH-LR1} &
-      \textbf{UH-LR2} & \textbf{UH-UP1} & \textbf{UH-UP2} \\
-      \hline
-      \textbf{TC-1} & & & & & & & & & & & & & & & & &\\
-      \hline
-    \end{tabular}
-    \caption{Test Case Traceability Matrix Part 1}
-  \end{table}
-
-  \begin{table}[H]
-    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-      \hline
-      & \textbf{UH-AS1} & \textbf{PR-SL1} & \textbf{PR-SL2} &
-      \textbf{PR-SL3} & \textbf{PR-SC1} & \textbf{PR-SC2} &
-      \textbf{PR-PA1} & \textbf{PR-PA2} & \textbf{PR-RFT1} &
-      \textbf{PR-RFT2} & \textbf{PR-CR1} & \textbf{PR-CR2} \\
-      \hline
-      \textbf{TC-1} & & & & & & & & & & & & \\
-      \hline
-    \end{tabular}
-    \caption{Test Case Traceability Matrix Part 2}
-  \end{table}
-
-  \begin{table}[H]
-    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-      \hline
-      & \textbf{PR-SE1} & \textbf{PR-SE2} & \textbf{PR-LR1} &
-      \textbf{OE-PE1} & \textbf{OE-WE1} & \textbf{OE-WE2} &
-      \textbf{OE-IAS1} & \textbf{OE-IAS2} & \textbf{OE-IAS2} &
-      \textbf{OE-REL1} & \textbf{OE-REL2} & \textbf{OE-REL3} \\
-      \hline
-      \textbf{TC-1} & & & & & & & & & & & & \\
-      \hline
-    \end{tabular}
-    \caption{Test Case Traceability Matrix Part 3}
-  \end{table}
-
-  \begin{table}[H]
-    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
-      \hline
-      & \textbf{OE-REL4} & \textbf{MS-MTN1} & \textbf{MS-MTN2} &
-      \textbf{MS-MTN3} & \textbf{MS-MTN4} & \textbf{MS-MTN5} &
-      \textbf{MS-MTN6} & \textbf{MS-SUP1} & \textbf{MS-SUP2} &
-      \textbf{MS-SUP3} \\
-      \hline
-      \textbf{TC-1} & & & & & & & & & & \\
-      \hline
-    \end{tabular}
-    \caption{Test Case Traceability Matrix Part 4}
-  \end{table}
-
-  \begin{table}[H]
-    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-      \hline
-      & \textbf{MS-SUP4} & \textbf{MS-ADP1} & \textbf{MS-ADP2} &
-      \textbf{MS-ADP3} & \textbf{SR-AR1} & \textbf{SR-AR2} &
-      \textbf{SR-AR3} & \textbf{SR-AR4} & \textbf{SR-IR1} &
-      \textbf{SR-IR2} & \textbf{SR-IR3} & \textbf{SR-PR1}\\
-      \hline
-      \textbf{TC-1} & & & & & & & & & & & &\\
-      \hline
-    \end{tabular}
-    \caption{Test Case Traceability Matrix Part 5}
-  \end{table}
-
-  \begin{table}[H]
-    \begin{tabular}{|c|c|c|c|c|c|c|c|}
-      \hline
-      & \textbf{MS-PR2} & \textbf{SR-AU1} & \textbf{SR-IMR1} &
-      \textbf{CR-CR1} & \textbf{CR-L1} & \textbf{CR-L2} & \textbf{CR-S1} \\
-      \hline
-      \textbf{TC-1} & & & & & & &\\
-      \hline
-    \end{tabular}
-    \caption{Test Case Traceability Matrix Part 6}
-  \end{table}
-
-\end{landscape}
-\restoregeometry
+\begin{longtable}{|l|l|}
+  \hline
+  \textbf{Req. ID} & \textbf{Test ID's} \\
+  \hline
+  FR1 & \\ \hline
+  FR2 & \\ \hline
+  FR3 & \\ \hline
+  FR4 & \\ \hline
+  FR5 & \\ \hline
+  FR6 & \\ \hline
+  FR7 & \\ \hline
+  FR8 & \\ \hline
+  FR9 & \\ \hline
+  LF-AP1 & \\ \hline
+  LF-ST1 & \\ \hline
+  UH-EU1 & \\ \hline
+  UH-EU2 & \\ \hline
+  UH-LR1 & \\ \hline
+  UH-LR2 & \\ \hline
+  UH-UP1 & \\ \hline
+  UH-UP2 & \\ \hline
+  UH-AS1 & \\ \hline
+  PR-SL1 & \\ \hline
+  PR-SL2 & \\ \hline
+  PR-SL3 & \\ \hline
+  PR-SC1 & \\ \hline
+  PR-SC2 & \\ \hline
+  PR-PA1 & \\ \hline
+  PR-PA2 & \\ \hline
+  PR-RFT1 & \\ \hline
+  PR-RFT2 & \\ \hline
+  PR-CR1 & \\ \hline
+  PR-CR2 & \\ \hline
+  PR-SE1 & \\ \hline
+  PR-SE2 & \\ \hline
+  PR-LR1 & \\ \hline
+  OE-PE1 & \\ \hline
+  OE-WE1 & \\ \hline
+  OE-WE2 & \\ \hline
+  OE-IAS1 & \\ \hline
+  OE-IAS2 & \\ \hline
+  OE-IAS2 & \\ \hline
+  OE-REL1 & \\ \hline
+  OE-REL2 & \\ \hline
+  OE-REL3 & \\ \hline
+  OE-REL4 & \\ \hline
+  MS-MTN1 & \\ \hline
+  MS-MTN2 & \\ \hline
+  MS-MTN3 & \\ \hline
+  MS-MTN4 & \\ \hline
+  MS-MTN5 & \\ \hline
+  MS-MTN6 & \\ \hline
+  MS-SUP1 & \\ \hline
+  MS-SUP2 & \\ \hline
+  MS-SUP3 & \\ \hline
+  MS-SUP4 & \\ \hline
+  MS-ADP1 & \\ \hline
+  MS-ADP2 & \\ \hline
+  MS-ADP3 & \\ \hline
+  SR-AR1 & \\ \hline
+  SR-AR2 & \\ \hline
+  SR-AR3 & \\ \hline
+  SR-AR4 & \\ \hline
+  SR-IR1 & \\ \hline
+  SR-IR2 & \\ \hline
+  SR-IR3 & \\ \hline
+  SR-PR1 & \\ \hline
+  MS-PR2 & \\ \hline
+  SR-AU1 & \\ \hline
+  SR-IMR1 & \\ \hline
+  CR-CR1 & \\ \hline
+  CR-L1 & \\ \hline
+  CR-L2 & \\ \hline
+  CR-S1 & \\ \hline
+  \caption{Requirements to Test Case Traceability Matrix}
+\end{longtable}
 
 \section{Unit Test Description}
 
