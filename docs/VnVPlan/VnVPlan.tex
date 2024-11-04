@@ -442,17 +442,26 @@ be involved? Be specific.}
     considered a pass. If 70\% or more of testers pass, we can say that this
     test passes.
 
-  \item{test-id2\\}
+  \item{TC-EU-2\\}
 
-    Type: Functional, Dynamic, Manual, Static etc.
+    Type: Dynamic, Manual
 
-    Initial State:
+    Initial State: System is functional with test accounts made for users. Users
+    are between $\hypertarget{min_age}{MIN\_AGE}$ and $\hypertarget{min_age}{MIN\_AGE}$ age limits.
 
-    Input:
+    Input: Users logs in, and performs an action classified as irreversible
+    (e.g. deletion).
 
-    Output:
+    Output: The user sees a notification informing them that their action is
+    irreversible or an undo option.
 
-    How test will be performed:
+    How test will be performed: The test will be performed by a user from our
+    stakeholder. The user will be instructed to perform an irrversible action on
+    the system. After performing the action and viewing the prompt, the user
+    will be asked if they understood the implications of their actions. If the
+    user understands the prompt and actions correctly, the test is considered
+    successful.
+
 \end{enumerate}
 
 \subsubsection{Look and Feel Requirements}
