@@ -364,7 +364,71 @@ be involved? Be specific.}
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
+\subsubsection{Look and Feel Requirements}
+
+\paragraph{Appearance}
+
+\begin{enumerate}
+
+  \item{TC-LF-1\\}
+
+    Type: Manual
+
+    Initial State: The system is in an operational state, with all
+    components running
+
+    Input/Condition: User logs in, and views all available screens of
+    the user interface
+
+    Output/Result: The user has seen all available screens of the
+    user interface and finds that they all follow a similar colour
+    palette to existing applications used by the city of Hamilton.
+
+    How test will be performed: The test will be performed by getting
+    one user who works at the city of Hamilton for each type of role
+    (General/Contractor, Manager, Admin). Then a member the
+    development team will guide them to all available screens for their role and
+    ask them to evaluate how many colours that were seen are were
+    similar to ones used in other applications used by the city of
+    Hamilton and how many were not similar. If the number of colours
+    that are similar is larger than the number that are not, then the
+    test is successful, otherwise it is failed.
+
+  \item{TC-LF-2\\}
+
+    Type: Dynamic, Manual.
+
+    Initial State: The system is in an operational state, with all
+    components running
+
+    Input: User logs in, and views all available screens of
+    the user interface while using devices of screen sizes with
+    common desktop screen resolutions (1920x1080, 1366x768,
+    1280x1024, 1024x768), with common mobile device screen
+    resolutions (375x667, 414x736, 360x800, 390x884), or with common
+    tablet screen resolutions (768x1024, 1024x768, 601x962).
+
+    Output: User is able to interact with the system on all screen
+    sizes and understand the interface regardless of screen size
+
+    How test will be performed: One user who works at the city of
+    Hamilton for each type of role (General/Contractor, Manager,
+    Admin), will be guided through the core functionalities important
+    for their roles by a member of the development team and asked to
+    evaluate how easy it is to perform the core functionalities on a
+    scale of 1-10. This test will be repeated of all screen sizes
+    mentioned in the inputs. If all users provide a score $\ge$ 5 out
+    of 10, for all screen sizes, then the test is considered a success. \\
+
+    The core functionalites for a contractor/general user will be
+    signing into the system, viewing a document, signing a document,
+    and logging out. The core functionalities of a manager will be
+    uploading a document, viewing document update history, and seeing
+    the status of a contractor/general user under them. The core
+    functionalities of an admin will be creating users, deleting
+    users, and assigning roles to users.
+
+\end{enumerate}
 
 ...
 
@@ -386,8 +450,8 @@ requirements.}
   FR7 & \\ \hline
   FR8 & \\ \hline
   FR9 & \\ \hline
-  LF-AP1 & \\ \hline
-  LF-ST1 & \\ \hline
+  LF-AP1 & TC-LF-1 \\ \hline
+  LF-ST1 & TC-LF-2 \\ \hline
   UH-EU1 & \\ \hline
   UH-EU2 & \\ \hline
   UH-LR1 & \\ \hline
