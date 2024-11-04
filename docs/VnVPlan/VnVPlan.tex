@@ -675,6 +675,8 @@ be involved? Be specific.}
 
 \subsection{Compliance Requirements}
 
+\begin{enumerate}
+
 \item{TC-CR-1\\}
 
 Type: Manual
@@ -699,8 +701,24 @@ Type: Manual
 
 Initial State: Github is functional, cloud deployment platform is functional
 
-Input/Condition: 
-...
+Input/Condition: The admin account registers a contractor account with the
+contractors personal email address.
+
+Output/Result: The contractors account is successfully registered, and the email
+address is only possible to view either from the facility managers
+account, the admin
+account, and the contractors account.
+
+How the test will be performed: The facility manager will use the interface to
+register an account in the application. The application will then be opened in
+different views based on profile. These profiles will be the
+registered contractor,
+the admin user, the facilities manager, and a second contractor profile.
+The test is successful when the email address of the contractor is only
+visible in the profile of that contractor, the facilities manager,
+and the admin user.
+
+\end{enumerate}
 
 \subsection{Traceability Between Test Cases and Requirements}
 
@@ -779,7 +797,7 @@ requirements.}
   SR-IMR1 & \\ \hline
   CR-CR1 & \\ \hline
   CR-L1 & TC-CR-1 \\ \hline
-  CR-L2 & \\ \hline
+  CR-L2 & TC-CR-2 \\ \hline
   CR-S1 & \\ \hline
   \caption{Requirements to Test Case Traceability Matrix}
 \end{longtable}
