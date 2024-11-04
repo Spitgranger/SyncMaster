@@ -673,7 +673,59 @@ be involved? Be specific.}
 
 \end{enumerate}
 
-...
+\subsection{Compliance Requirements}
+
+\begin{enumerate}
+
+  \item{TC-CR-1\\}
+
+    Type: Manual
+
+    Initial State: Github is functional, cloud deployment platform is functional
+
+    Input/Condition: A contractor uses the authentication feature of
+    the application
+    to verify their presence on site for the facilities managers.
+
+    Output/Result: The contractor successfully authenticates in the application
+    and successfully complies with each step of the entry/exit
+    procedure document
+    for the station provided through the application.
+
+    How the test will be performed: The contractor user will authenticate at the
+    site for a work order to fix an exhaust fan. Through the
+    authentication process,
+    the entry/exit procedure will be used as a checklist to ensure it
+    is followed
+    and the legislation specified in CR-L1 is not violated.
+
+  \item{TC-CR-2\\}
+
+    Type: Manual
+
+    Initial State: Github is functional, cloud deployment platform is functional
+
+    Input/Condition: The admin account registers a contractor account with the
+    contractors personal email address.
+
+    Output/Result: The contractors account is successfully
+    registered, and the email
+    address is only possible to view either from the facility managers
+    account, the admin
+    account, and the contractors account.
+
+    How the test will be performed: The facility manager will use the
+    interface to
+    register an account in the application. The application will then
+    be opened in
+    different views based on profile. These profiles will be the
+    registered contractor,
+    the admin user, the facilities manager, and a second contractor profile.
+    The test is successful when the email address of the contractor is only
+    visible in the profile of that contractor, the facilities manager,
+    and the admin user.
+
+\end{enumerate}
 
 \subsection{Traceability Between Test Cases and Requirements}
 
@@ -751,8 +803,8 @@ requirements.}
   SR-AU1 & \\ \hline
   SR-IMR1 & \\ \hline
   CR-CR1 & \\ \hline
-  CR-L1 & \\ \hline
-  CR-L2 & \\ \hline
+  CR-L1 & TC-CR-1 \\ \hline
+  CR-L2 & TC-CR-2 \\ \hline
   CR-S1 & \\ \hline
   \caption{Requirements to Test Case Traceability Matrix}
 \end{longtable}
