@@ -712,7 +712,9 @@ be involved? Be specific.}
 
 \end{enumerate}
 
-\subsection{Compliance Requirements}
+\subsubsection{Compliance Requirements}
+
+\paragraph{Compliance}
 
 \begin{enumerate}
 
@@ -766,6 +768,92 @@ be involved? Be specific.}
 
 \end{enumerate}
 
+\subsubsection{Operational and Environmental Requirements}
+
+\paragraph{Ability to Connect and Use}
+
+\begin{enumerate}
+
+  \item{TC-OE-1\\}
+
+    Type: Manual
+
+    Initial State: Device connected to City of Hamilton network
+
+    Input/Condition: Attempt to connect to the application using the network.
+
+    Output/Result: The device successfully connects to and is able to
+    use the application.
+
+    How test will be performed: A user on site at the City of
+    Hamilton, Water Division will connect to the network available to
+    employees and contractors and then attempt to connect to and use
+    the application. The test is successful if the application can be
+    connected to using the city's network.
+
+  \item{TC-OE-2\\}
+
+    Type: Manual
+
+    Initial State: Devices connected to the internet and have the
+    supported browsers available.
+
+    Input: Desktop Browsers being tested are Chrome and Edge, and the
+    mobile devices being tested are Android and iPhone.
+
+    Output: The devices successfully connect to and are able to use
+    the application.
+
+    How test will be performed: Exploratory testing using the
+    supported devices and browsers. The devices should be able to
+    connect and use all functionality in the application, and provide
+    a similar experience.
+
+\end{enumerate}
+
+\paragraph{Future Integration}
+
+\begin{enumerate}
+
+  \item{TC-OE-3\\}
+
+    Type: Manual
+
+    Initial State: Branch with functionality to fill in data fields
+    when provided a valid work order number
+
+    Input/Condition: Valid work order number
+
+    Output/Result: Relevant data fields should be filled in by the application
+
+    How test will be performed: Dummy API used which returns work
+    order information given a work order number. Will test if the
+    functionality in the branch is able to fill in the fields with
+    data from the API, indicating it is viable to add this
+    integration in the future.
+
+\end{enumerate}
+
+\paragraph{Release and Change Log}
+
+\begin{enumerate}
+
+  \item{TC-OE-4\\}
+
+    Type: Manual
+
+    Initial State: New revision
+
+    Input/Condition: Revision released, change log produced
+
+    Output/Result: Revision is released by planned date, change log
+    details all changes.
+
+    How test will be performed: Whenever a revision is released, will
+    inspect the change log to check if all changes have been noted.
+
+\end{enumerate}
+
 \subsection{Traceability Between Test Cases and Requirements}
 
 \wss{Provide a table that shows which test cases are supporting which
@@ -808,15 +896,13 @@ requirements.}
   PR-SE2 & \\ \hline
   PR-LR1 & \\ \hline
   OE-PE1 & \\ \hline
-  OE-WE1 & \\ \hline
-  OE-WE2 & \\ \hline
-  OE-IAS1 & \\ \hline
-  OE-IAS2 & \\ \hline
-  OE-IAS2 & \\ \hline
-  OE-REL1 & \\ \hline
-  OE-REL2 & \\ \hline
-  OE-REL3 & \\ \hline
-  OE-REL4 & \\ \hline
+  OE-WE1 & TC-OE-1 \\ \hline
+  OE-WE2 & TC-OE-2 \\ \hline
+  OE-IAS3 & TC-OE-3 \\ \hline
+  OE-REL1 & TC-OE-4 \\ \hline
+  OE-REL2 & TC-OE-4 \\ \hline
+  OE-REL3 & TC-OE-4 \\ \hline
+  OE-REL4 & TC-OE-4 \\ \hline
   MS-MTN1 & TC-MS-1 \\ \hline
   MS-MTN2 & TC-MS-2 \\ \hline
   MS-MTN3 & TC-MS-3 \\ \hline
