@@ -12,6 +12,9 @@
 }
 \usepackage[round]{natbib}
 \usepackage{longtable}
+\usepackage{enumitem,amssymb}
+\newlist{todolist}{itemize}{2}
+\setlist[todolist]{label=$\square$}
 
 \input{../Comments}
 \input{../Common}
@@ -234,6 +237,35 @@ verified.  Techniques for this include review and mutation testing.}
 \wss{The review will include reviews by your classmates}
 
 \wss{Create a checklists?}
+
+to ensure the quality and completeness of the verification and
+validation plan, the testing team will ensure the following:
+
+\begin{enumerate}
+  \item There will be peer reviews of the document coming from our
+    assigned Peer Review team, to provide feedback on the plan.
+  \item The TA assigned to the project will review and provide
+    feedback on the plan when grading.
+  \item The development team will review the document to ensure the
+    quality of the plan.
+  \item It should be checked by the testing team that each
+    requirement has a test case associated with it. This can be done
+    using traceability matrices and cross-referencing requirements
+    with what exists in the SRS.
+\end{enumerate}
+
+The following is a checklist that can be used to verify the
+verification and validation plan:
+\begin{todolist}
+\item Ensure all issues on the project GitHub related to the document
+  from the Peer Review team is closed.
+\item Ensure that all feedback provided by the TA in the rubric for
+  the document on Avenue is addressed.
+\item Ensure the Development team has reviewed the document and is in
+  agreement that the document is up to quality and completeness standards.
+\item Check the traceability matrices to ensure that all requirements
+  have a test case associated with them.
+\end{todolist}
 
 \subsection{Implementation Verification Plan}
 
