@@ -204,18 +204,36 @@ the members and their roles are given in the following table:
 
 \subsection{SRS Verification Plan}
 
-\wss{List any approaches you intend to use for SRS verification.  This may
-  include ad hoc feedback from reviewers, like your classmates (like your
-primary reviewer), or you may plan for something more rigorous/systematic.}
-
-\wss{If you have a supervisor for the project, you shouldn't just say they will
-  read over the SRS.  You should explain your structured approach to the review.
-  Will you have a meeting?  What will you present?  What questions will you ask?
-  Will you give them instructions for a task-based inspection?  Will
-  you use your
-issue tracker?}
-
-\wss{Maybe create an SRS checklist?}
+To verify the SRS document, we will use the following methods:
+\begin{enumerate}
+  \item Formal reviews with our TA, Yiding. A checklist will be used to track
+    the status of the review and be used as an instrument to verify our SRS.
+    The checklist to be used is at the end of this section of the document.
+  \item Ad-hoc peer reviews tracked through GitHub issues. Throughout the
+    course we receive peer feedback on the quality of our SRS and VnV Plan. The
+    peer feedback provided is valuable input which we will action through issues
+    and pull requests as identified in the development plan.
+  \item Milestone feedback provided through Avenue will also be used to
+    improve the checklist which we use as our instrument to measure
+    SRS verification.
+\end{enumerate}
+The checklist below will be used during formal reviews for SRS verification
+with our TA.
+\begin{itemize}
+  \item Have the requirements been listed in the appropriate sections of the
+    SRS document?
+  \item Are all definitions and acronyms defined in the glossary of terms?
+  \item Are the system inputs properly specified?
+  \item Are the system outputs properly specified?
+  \item Do the functional requirements avoid conflicts with other requirements?
+  \item Do the functional requirements avoid specifying the system design?
+  \item Are the requirements clear enough that they could be implemented by an
+    independent engineering team correctly?
+  \item Is each requirement testable?
+  \item Is independent testing of each requirement possible?
+  \item Are the functional requirements traceable to a use case of the system?
+  \item Are there any open issues from reviewers on a requirement?
+\end{itemize}
 
 \subsection{Design Verification Plan}
 
