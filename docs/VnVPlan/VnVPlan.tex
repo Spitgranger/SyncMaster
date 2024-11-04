@@ -401,24 +401,23 @@ be involved? Be specific.}
     Initial State: The system is in an operational state, with all
     components running
 
-    Input/Condition: User logs in, and attempts all core functions for
-    their role while using devices with common desktop screen
-    resolutions (1920x1080, 1366x768, 1280x1024, 1024x768), common
-    mobile device screen resolutions (375x667, 414x736, 360x800,
-    390x884), and common tablet screen resolutions (768x1024,
-    1024x768, 601x962)
+    Input/Condition: Load and navigate through the application on
+    various supported operating systems, with varying supported
+    browsers and screen sizes.
 
     Output/Result: User is able to interact with the system on all screen
     sizes and understand the interface regardless of screen size
 
-    How test will be performed: One user who works at the city of
-    Hamilton for each type of role (General/Contractor, Manager,
-    Admin), will be guided through the core functionalities important
-    for their roles by a member of the development team and asked to
-    evaluate how easy it is to perform the core functionalities on a
-    scale of 1-10. This test will be repeated of all screen sizes
-    mentioned in the inputs. If all users provide a score $\ge$ 5 out
-    of 10, for all screen sizes, then the test is considered a success. \\
+    How test will be performed: One user for each type of role
+    (General/Contractor, Manager, Admin), will be go through the core
+    functionalities important for their roles and ensure that all
+    functionalities work as expected across screen sizes, browsers,
+    and operating systems. The tests should be performed using
+    Windows 10, IOS, and Android, which are the supported operating
+    systems for this application. The browsers used should be
+    Microsoft Edge and Google Chrome. Testing should include a mobile
+    device, a desktop, and a tablet to ensure accommodation of
+    different screen sizes and of different types of devices.
 
     The core functionalites for a contractor/general user will be
     signing into the system, viewing a document, signing a document,
@@ -495,6 +494,7 @@ requirements.}
   MS-SUP4 & \\ \hline
   MS-ADP1 & TC-LF-2 \\ \hline
   MS-ADP2 & TC-LF-2 \\ \hline
+  MS-ADP3 & TC-LF-2 \\ \hline
   SR-AR1 & \\ \hline
   SR-AR2 & \\ \hline
   SR-AR3 & \\ \hline
