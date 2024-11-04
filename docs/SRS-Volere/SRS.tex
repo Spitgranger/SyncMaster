@@ -12,6 +12,8 @@
 \usepackage{hyperref}
 \usepackage{enumerate}
 \usepackage{amsmath}
+\usepackage[normalem]{ulem}
+\usepackage{xcolor}
 \hypersetup{
   bookmarks=true,         % show bookmarks bar?
   colorlinks=true,      % false: boxed links; true: colored links
@@ -49,7 +51,8 @@ Management System}
 \begin{tabularx}{\textwidth}{p{3cm}p{3cm}X}
   \toprule {\textbf{Date}} & {\textbf{Author}} & {\textbf{Notes}}\\
   \midrule
-  October 11 2024 & Entire Team & Rev0 of the SRS\\
+  10/11/2024 & Entire Team & Rev0 of the SRS\\
+  11/04/2024 & Rafeed Iqbal & Updated sections 13 and 15\\
   \bottomrule
 \end{tabularx}
 
@@ -854,9 +857,14 @@ N/A
 \end{enumerate}
 \subsection{Requirements for Interfacing with Adjacent Systems}
 \begin{enumerate} [{OE-IAS}1.]
-  \item Application should integrate with existing SharePoint repositories.
-  \item Application should be able to provide up-to-date Safety Data
-    Sheets from MySDS.
+  \item \sout{Application should integrate with existing SharePoint
+    repositories.}
+  \item \sout{Application should be able to provide up-to-date Safety Data
+    Sheets from MySDS.}\\
+    \textcolor{red}{Direct integration with SharePoint and MySDS is
+      no longer required by the stakeholders due to city policy and
+      security concerns. The requirement for related functionality is
+    covered by SR-IR2.}
   \item Application should be open for integration with upcoming Work
     Order tracking system in the city's Enterprise Asset Management software.
 \end{enumerate}
@@ -944,6 +952,11 @@ N/A
 \begin{enumerate} [{SR-IMR}1.]
   \item Security vulnerabilities and weaknesses should be patched
     within a week of their discovery.
+\end{enumerate}
+\subsection{Safety Requirements}
+\begin{enumerate}[{SR-S}1.]
+  \item The system shall notify the facilities manager if a contractor declines
+    to sign a document.
 \end{enumerate}
 
 \section{Cultural Requirements}
