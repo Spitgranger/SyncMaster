@@ -16,6 +16,8 @@
 \input{../Comments}
 \input{../Common}
 
+\setcitestyle{numbers}
+
 \begin{document}
 
 \title{System Verification and Validation Plan for \progname{}}
@@ -125,24 +127,22 @@ has already been verified by its implementation team.}
 
 The challenge level for this project is a general level, and the
 extras are conducting user testing and developing a user manual. For
-more information on the challenge level and extras see section
-\textit{Challenge Level and Extras} of the Problem Statement
-\href{https://github.com/Spitgranger/SyncMaster/blob/main/docs/ProblemStatementAndGoals/ProblemStatement.md#4-challenge-level-and-extras}
-{here}.
+more information refer to the Problem Statement and Goals
+\citep[\textit{Challenge Level and Extras}]{ProblemStatement}.
 
 \subsection{Relevant Documentation}
 
-\wss{Reference relevant documentation.  This will definitely include your SRS
-  and your other project documents (design documents, like MG, MIS, etc).  You
-  can include these even before they are written, since by the time the project
-  is done, they will be written.  You can create BibTeX entries for your
-documents and within those entries include a hyperlink to the documents.}
-
-\citet{SRS}
-
-\wss{Don't just list the other documents.  You should explain why
-  they are relevant and
-how they relate to your VnV efforts.}
+\begin{enumerate}
+  \item Problem Statement and Goals \citep{ProblemStatement}:
+    Provides context on the goals and scope of the application.
+  \item Software Requirements Specification \Citep{SRS}:
+    Specification of all requirements being tested and validated in
+    this document.
+  \item Hazard Analysis \Citep{HazardAnalysis}: Additional
+    specifications for security and safety requirements.
+  \item Design Documents \Citep{MG, MIS}: Reference for the
+    mechanisms and design behind functionality and systems being tested.
+\end{enumerate}
 
 \section{Plan}
 
@@ -941,6 +941,8 @@ mentioned functional tests.}
 \subsection{Traceability Between Test Cases and Modules}
 
 \wss{Provide evidence that all of the modules have been considered.}
+
+\newpage
 
 \bibliographystyle{plainnat}
 
