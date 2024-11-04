@@ -364,7 +364,197 @@ be involved? Be specific.}
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
+\subsubsection{Maintainability and Support Requirements}
+
+\paragraph{Maintenance}
+
+\begin{enumerate}
+
+  \item{TC-MS-1\\}
+
+    Type: Manual
+
+    Initial State: Cloud platform used for deployments is functional,
+    GitHub actions is functional.
+
+    Input/Condition: A workflow run in GitHub actions is triggered to
+    deploy the application into a specified environment, and
+    building/automated unit testing of the application is completed
+
+    Output/Result: The application is deployed to the specified
+    environment in under 30 minutes
+
+    How test will be performed: The test will be performed by
+    triggering a GitHub actions workflow run to deploy the application
+    into the development environment, and waiting for it to complete.
+    Once completed, the unit testing and building time will be subtracted
+    from the total runtime of the workflow run, to determine the
+    deployment time, this should be under 30 minutes to be considered a success.
+
+  \item{TC-MS-2\\}
+
+    Type: Manual
+
+    Initial State: GitHub actions is functional.
+
+    Input/Condition: A workflow run in GitHub actions is triggered to
+    deploy the application into a specified environment, and
+    automated unit testing of the application is completed.
+
+    Output/Result: The application is built in under 10 minutes.
+
+    How test will be performed: The test will be performed by
+    triggering a GitHub actions workflow run to deploy the application
+    into the development environment, and waiting for it to complete.
+    Once completed, the unit testing and deployment time will be subtracted
+    from the total runtime of the workflow run, to determine the
+    build time, this should be under 10 minutes to be considered a success.
+
+  \item{TC-MS-3\\}
+
+    Type: Manual
+
+    Initial State: GitHub actions is functional.
+
+    Input/Condition: A workflow run in GitHub actions is triggered to
+    perform all automated testing (end-to-end or unit testing) of the
+    application.
+
+    Output/Result: The automated tests for the application run in
+    under 10 minutes.
+
+    How test will be performed: The test will be performed by
+    triggering a GitHub actions workflow run to perform all automated
+    tests, and checking that once this run is completed, the total
+    runtime is under 10 minutes.
+
+  \item{TC-MS-4\\}
+
+    Type: Manual
+
+    Initial State: GitHub actions is functional.
+
+    Input/Condition: A push is made to a branch with a pull request
+    open off of it.
+
+    Output/Result: The branch is found to have line coverage $\ge$ 95\% and
+    the branch coverage is found to be $\ge$ 90\%
+
+    How test will be performed: The test will be performed by
+    triggering a GitHub actions workfow run to run unit tests on the
+    application upon every push to a branch with a PR open off of it.
+    The workflow will generate a coverage report, and when the
+    coverage report is generated, it should be checked that the line
+    coverage and branch coverage meet the expectations.
+
+  \item{TC-MS-5\\}
+
+    Type: Manual
+
+    Initial State: GitHub is functional
+
+    Input/Condition: The GitHub repository for the project is checked
+    to ensure that all functional requirements listed in the SRS have
+    a unit and end-to-end test cases corresponding to them.
+
+    Output/Result: All functional requirements found in the SRS have a unit
+    and end-to-end test cases corresponding to them
+
+    How test will be performed: The test will be performed by
+    checking the Traceability Matrices in this document, to make sure
+    that there exists a unit and end-to-end test case for all
+    functional requirements.
+
+  \item{TC-MS-6\\}
+
+    Type: Manual
+
+    Initial State: GitHub is functional
+
+    Input/Condition: The GitHub repository for the project is checked
+    to ensure that all appropriate documentation existed for users to
+    be able to maintain the system.
+
+    Output/Result: Instructions are provided in the GitHub repository
+    for the project on how users can continue to maintain the system.
+    This includes contribution guidelines, descriptions of all
+    GitHub actions workflows, and documentation on the design of the system.
+
+    How test will be performed: The test will be performed by
+    checking that the documentation listed in the output/result
+    exists in the repository, and by verifying with the Matthew
+    Yakymyshyn that this documentation is able to be understood by
+    the city of Hamilton.
+
+  \item{TC-MS-7\\}
+
+    Type: Manual
+
+    Initial State: GitHub is functional
+
+    Input/Condition: The GitHub repository for the project is checked
+    to see the user manual.
+
+    Output/Result: There exists a user manual in the github
+    repository which describes, at a minimum, how to leverage the
+    functionalities described in the functional requirements of the
+    SRS from the user interface.
+
+    How test will be performed: The test will be performed by
+    checking that the user manual exists, and that there is
+    user-facing documentation in the manual on how to achieve all
+    functionalities described in the functional requirements.
+
+  \item{TC-MS-8\\}
+
+    Type: Manual
+
+    Initial State: GitHub is functional
+
+    Input/Condition: The GitHub repository for the project is checked
+    to see the API documentation.
+
+    Output/Result: There exists API documentation in the github
+    repository which follows the OpenAPI Specification (OAS) standard.
+
+    How test will be performed: The test will be performed by
+    checking that an OpenAPI Specification for the API's provided by
+    the system exists on the project repository.
+
+  \item{TC-MS-9\\}
+
+    Type: Manual
+
+    Initial State: GitHub is functional
+
+    Input/Condition: The GitHub repository for the project is checked
+    to see the the internal documentation.
+
+    Output/Result: There exists documentation on all internal
+    functions and classes defined in the project repository.
+
+    How test will be performed: The test will be performed by
+    checking that documentation exists for all functions and classes
+    defined in the project repository.
+
+  \item{TC-MS-10\\}
+
+    Type: Manual
+
+    Initial State: GitHub is functional, Cloud deployment platform is functional
+
+    Input/Condition: The GitHub repository for the project is checked
+    to see the the deployment documentation
+
+    Output/Result: There exists documentation on how to deploy the
+    project, which is up-to-date and works when attempted.
+
+    How test will be performed: The test will be performed by
+    checking that the deployment documentation exists and that a
+    member of our development team can follow the provided steps to
+    successfully deploy the appication.
+
+\end{enumerate}
 
 ...
 
@@ -419,16 +609,16 @@ requirements.}
   OE-REL2 & \\ \hline
   OE-REL3 & \\ \hline
   OE-REL4 & \\ \hline
-  MS-MTN1 & \\ \hline
-  MS-MTN2 & \\ \hline
-  MS-MTN3 & \\ \hline
-  MS-MTN4 & \\ \hline
-  MS-MTN5 & \\ \hline
-  MS-MTN6 & \\ \hline
-  MS-SUP1 & \\ \hline
-  MS-SUP2 & \\ \hline
-  MS-SUP3 & \\ \hline
-  MS-SUP4 & \\ \hline
+  MS-MTN1 & TC-MS-1 \\ \hline
+  MS-MTN2 & TC-MS-2 \\ \hline
+  MS-MTN3 & TC-MS-3 \\ \hline
+  MS-MTN4 & TC-MS-4 \\ \hline
+  MS-MTN5 & TC-MS-5 \\ \hline
+  MS-MTN6 & TC-MS-6 \\ \hline
+  MS-SUP1 & TC-MS-7 \\ \hline
+  MS-SUP2 & TC-MS-8 \\ \hline
+  MS-SUP3 & TC-MS-9 \\ \hline
+  MS-SUP4 & TC-MS-10 \\ \hline
   MS-ADP1 & \\ \hline
   MS-ADP2 & \\ \hline
   MS-ADP3 & \\ \hline
