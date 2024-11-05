@@ -500,7 +500,7 @@ be involved? Be specific.}
     device, a desktop, and a tablet to ensure accommodation of
     different screen sizes and of different types of devices.
 
-    The core functionalites for a contractor/general user will be
+    The core functionalities for a contractor/general user will be
     signing into the system, viewing a document, signing a document,
     and logging out. The core functionalities of a manager will be
     uploading a document, viewing document update history, and seeing
@@ -698,7 +698,7 @@ be involved? Be specific.}
     How test will be performed: The test will be performed by
     checking that the deployment documentation exists and that a
     member of our development team can follow the provided steps to
-    successfully deploy the appication.
+    successfully deploy the application.
 
 \end{enumerate}
 
@@ -755,6 +755,31 @@ be involved? Be specific.}
     The test is successful when the email address of the contractor is only
     visible in the profile of that contractor, the facilities manager,
     and the admin user.
+
+    \item{TC-CR-3\\}
+
+    Type: Manual
+
+    Initial State: The application is complete, checklist(s) outlining all Federal, Provincial, Municipal and City of Hamilton, Water Division rules, regulations and policies created.
+
+    Input/Condition: Review the application's functionality, data handling, and security measures against checklist(s)
+
+    Output/Result: The application should align with all defined requirements, policies, and regulations, showing full compliance with legal and departmental standards without any deviations.
+
+    How test will be performed: Develop a comprehensive checklist that includes all applicable government regulations, standards, and internal policies. Cross-reference the application's design and operational documentation with the compliance checklist. Perform a manual inspection of the application's source code, configuration settings, and security protocols to ensure they meet the required standards. Test relevant features to confirm that they adhere to the compliance checklist.
+
+    \item{TC-CR-4\\}
+
+    Type: Manual
+
+    Initial State: Documentation which must be stored on the City's BCOS system are to be stored on the application
+
+    Input/Condition: Export the files.
+
+    Output/Result: Application will aligns with the City's DWQMS (Drinking
+    Water Quality Management System).
+
+    How test will be performed: Attempt to transfer the required documentation, check if standards are met.
 
 \end{enumerate}
 
@@ -844,6 +869,89 @@ be involved? Be specific.}
 
 \end{enumerate}
 
+\subsubsection{Safety and Security Requirements}
+
+\paragraph{Account Permissions}
+
+\begin{enumerate}
+
+  \item{TC-SS-1\\}
+
+    Type: Manual
+
+    Initial State: User IDs of each possible access level created.
+
+    Input/Condition: Attempt to use every feature available using each ID
+
+    Output/Result: Users only have access to features allowed by their permissions.
+
+    How test will be performed: Accounts will be created on the application for each available level of access. Using each account, the use of each feature of the application will be attempted. Wether an action was possible or not will be noted and compared to the permissions of the account.
+
+    \item{TC-SS-2\\}
+
+    Type: Manual
+
+    Initial State: User IDs of each possible access level created.
+
+    Input/Condition: Attempt to upload, delete, modify files in different directories.
+
+    Output/Result: Users only have access to files and directories allowed by their permissions.
+
+    How test will be performed: Accounts will be created on the application for each available level of access. Using each account, the creation, deletion and modification of of files with varying permission requirements will be attempted. The testing will be done to cover directories of varying permission requirements. Wether an action was possible or not will be noted and compared to the permissions of the account.
+
+\end{enumerate}
+
+\paragraph{Data Validation}
+
+\begin{enumerate}
+
+  \item{TC-SS-3\\}
+
+    Type: Manual
+
+    Initial State: Initial set of files uploaded to application
+
+    Input/Condition: View files on the application
+
+    Output/Result: Files on the application are the appropriate version available on SharePoint and/or MySDS
+
+    How test will be performed: Files will be checked against their current versions. Users with appropriate permissions should have the ability to update the files if outdated.
+
+    \item{TC-SS-4\\}
+
+    Type: Manual
+
+    Initial State: Data fields empty.
+
+    Input/Condition: Submit incomplete, impossible, or malicious data through data fields
+
+    Output/Result: Fail-safes trigger, noting the bad data and informing the administrator.
+
+    How test will be performed: Attempt to submit data fields filled in with a set of entries which vary between incomplete, impossible, and malicious and check how the application handles the inputs.
+
+\end{enumerate}
+
+\paragraph{Encryption}
+
+\begin{enumerate}
+
+  \item{TC-SS-5\\}
+
+    Type: Manual
+
+    Initial State: The application is accessed via a web browser with tools for inspecting network requests.
+
+    Input/Condition: Access and use the application using https:// in a browser
+
+    Output/Result: Network requests displayed as HTTPS in the browser's developer tools, and the security certificates are valid and properly configured.
+
+    How test will be performed: Connect to and use the application using https:// and ensure the connection is secured with SSL/TLS. Use the browser's developer tools to inspect the requests made by the site. Check that all requests are made over HTTPS and the lock icon/secure status is visible in the browser's address bar. Check if SSL certificate is valid and correctly configured.
+    
+\end{enumerate}
+
+\paragraph{Adherance to Policies, Regulations, and Laws}
+
+
 \subsection{Traceability Between Test Cases and Requirements}
 
 \wss{Provide a table that shows which test cases are supporting which
@@ -906,21 +1014,22 @@ requirements.}
   MS-ADP1 & TC-LF-2 \\ \hline
   MS-ADP2 & TC-LF-2 \\ \hline
   MS-ADP3 & TC-LF-2 \\ \hline
-  SR-AR1 & \\ \hline
-  SR-AR2 & \\ \hline
-  SR-AR3 & \\ \hline
-  SR-AR4 & \\ \hline
-  SR-IR1 & \\ \hline
-  SR-IR2 & \\ \hline
-  SR-IR3 & \\ \hline
-  SR-PR1 & \\ \hline
-  MS-PR2 & \\ \hline
-  SR-AU1 & \\ \hline
+  SR-AR1 & TC-SS-1 \\ \hline
+  SR-AR2 & TC-SS-1 \\ \hline
+  SR-AR3 & TC-SS-1 \\ \hline
+  SR-AR4 & TC-SS-2 \\ \hline
+  SR-IR1 & TC-SS-2 \\ \hline
+  SR-IR2 & TC-SS-3 \\ \hline
+  SR-IR3 & TC-SS-4 \\ \hline
+  SR-PR1 & TC-SS-5\\ \hline
+  SR-PR2 & TC-CR-3 \\ \hline
+  SR-AU1 & TC-CR-3 \\ \hline
   SR-IMR1 & \\ \hline
-  CR-CR1 & \\ \hline
-  CR-L1 & TC-CR-1 \\ \hline
-  CR-L2 & TC-CR-2 \\ \hline
-  CR-S1 & \\ \hline
+  SR-S1 & \\ \hline
+  CR-CR1 & TC-CR-3 \\ \hline
+  CR-L1 & TC-CR-1, TC-CR-3 \\ \hline
+  CR-L2 & TC-CR-2, TC-CR-3 \\ \hline
+  CR-S1 & TC-CR-4 \\ \hline
   \caption{Requirements to Test Case Traceability Matrix}
 \end{longtable}
 
