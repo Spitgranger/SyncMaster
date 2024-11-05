@@ -831,6 +831,229 @@ Below are tests for the nonfunctional requirements.
 
 \end{enumerate}
 
+\subsubsection{Performance Requirements}
+
+\paragraph{Speed and Latency Requirements}
+
+\begin{enumerate}
+  \item {TC-PR-1\\}
+
+    Type: Manual
+
+    Initial State: The system is running, and documents are available in the
+    database.
+
+    Input/Condition: Request to retrieve a document.
+
+    Output/Result: The document should be retrieved in less than 2 seconds
+
+    How test will be performed: Manually request document retrieval and measure
+    time taken. Verify that it does not exceed 2 seconds
+
+  \item {TC-PR-2\\}
+
+    Type: Manual
+
+    Initial State: The system is running
+
+    Input/Condition: Navigation to a different page
+
+    Output/Result: The system should be able to navigate to a different page
+    in under 1.5 seconds.
+
+    How test will be performed: Manually navigate to a different page and
+    measure time taken. Verify that it does not exceed 1.5 seconds
+
+\end{enumerate}
+
+\paragraph{Safety-Critical Requirements}
+\begin{enumerate}
+
+  \item {TC-PR-3\\}
+
+    Type: Manual
+
+    Initial State: The system is running and ready to upload and retrieve
+    documents.
+
+    Input/Condition: Upload and retrieve a document
+
+    Output/Result: The document should be verified for its integrity by checking
+    for any modifications/corruption.
+
+    How test will be performed: Manually upload and retrieve a document. Then,
+    verify its integrity.
+
+  \item {TC-PR-4\\}
+
+    Type: Manual
+
+    Initial State: The system has different user roles configured (Admin and
+    Contractor/General user)
+
+    Input/Condition: Attempt to access documents with different user roles.
+
+    Output/Result: Document access should be restricted based on user roles.
+    Admin users should have the ability to read and write docuements while
+    contractor/general users should have the abilty to only read and sign
+    docuements.
+
+    How test will be performed: Manually log in with different user roles and
+    attempt to access docuements. Verify that access is correctly restricted.
+
+\end{enumerate}
+
+\paragraph{Precision or Accuracy Requirements}
+\begin{enumerate}
+
+  \item {TC-PR-5\\}
+
+    Type: Manual
+
+    Initial State: The system is running with a populated database with number
+    of users and documents greater than equal to 1.
+
+    Input/Condition: Perform search queries related to documents or user data
+
+    Output/Result: At least 95\% of the search results should be relevant to
+    search query
+
+    How test will be performed: Manually perform search queries and evaluate the
+    relevance of the results
+
+  \item {TC-PR-6\\}
+
+    Type: Manual
+
+    Initial State: The system is running and ready for docuement upload and
+    retrieval
+
+    Input/Condition: Upload and retrieve docuements
+
+    Output/Result: No corruption or data loss in 99.99\% of the cases
+
+    How test will be performed: Manually upload and retrieve docuements. Then,
+    verify their integrity.
+
+\end{enumerate}
+
+\paragraph{Robustness or Fault-Tolerance Requirements}
+\begin{enumerate}
+
+  \item {TC-PR-7\\}
+
+    Type: Manual
+
+    Initial State: The system is running
+
+    Input/Condition: Provide unexpected inputs and events
+
+    Output/Result: The system should handle them without crashing
+
+    How test will be performed: Manually input unexpected data and observe the
+    system's response.
+
+  \item {TC-PR-8\\}
+
+    Type: Manual
+
+    Initial State: The system is running
+
+    Input/Condition: Introduce anomalies or potential failures
+
+    Output/Result: The system should detect and alert on these issues
+
+    How test will be performed: Manually introduce anomalies and verify the
+    system's detection and alert mechanism.
+
+\end{enumerate}
+
+\paragraph{Capacity Requirements}
+\begin{enumerate}
+
+  \item {TC-PR-9\\}
+
+    Type: Manual
+
+    Initial State: The system is running
+
+    Input/Condition: Upload and download documents
+
+    Output/Result: The system should support a peak data transfer rate of 1
+    Gbps.
+
+    How test will be performed: Manually upload and download documents and
+    measure the data transfer rate.
+
+  \item {TC-PR-10\\}
+
+    Type: Manual
+
+    Initial State: The system is running
+
+    Input/Condition: Attempt to upload individual files up to 1 GB.
+
+    Output/Result: The files should be successfully uploaded
+
+    How test will be performed: Manually upload files of varying sizes up to
+    1 GB and verify successfull uploads.
+
+\end{enumerate}
+
+\paragraph{Scalability or Extensibility Requirements}
+\begin{enumerate}
+  \item {TC-PR-11\\}
+
+    Type: Manual
+
+    Initial State: The system is running
+
+    Input/Condition: Create nested document categories with multiple
+    sub-categories.
+
+    Output/Result: The system should allow nesting of documents and categories.
+
+    How test will be performed: Manually create nested document categories and
+    verify their functionality.
+
+  \item {TC-PR-12\\}
+
+    Type: Automatic
+
+    Initial State: The system is running under normal conditions
+
+    Input/Condition: Simulate high traffic to the system.
+
+    Output/Result: The system should distribute traffic evenly and avoid single
+    points of failure.
+
+    How test will be performed: Simulate high-traffic using a script to generate
+    users and perform the task of uploading a document. Verify the system's load
+    balancing capabilities.
+
+\end{enumerate}
+
+\paragraph{Scalability or Extensibility Requirements}
+\begin{enumerate}
+
+  \item {TC-PR-13}
+    Type: Automatic
+
+    Initial State: The system is running
+
+    Input/Condition: Add new feature into the system
+
+    Output/Result: The system is functional with the new functionalites and the
+    behaviour of the old functionalities is not changed (the ones which
+    were not intended to be impacted by the introduction of the new feature).
+    The ease of introduction should atleast be 8.
+
+    How test will be performed: Add code for the new feature and
+    measure the ease
+    of introduction of the feature on a scale of 1-10. Verify that the ease of
+    introduction is greater or equal to 8.
+\end{enumerate}
+
 \subsubsection{Maintainability and Support Requirements}
 
 \paragraph{Maintenance}
@@ -1416,20 +1639,19 @@ requirements.}
   UH-UP1 & TC-UP1\\ \hline
   UH-UP2 & TC-UP2\\ \hline
   UH-AS1 & TC-AS1\\ \hline
-  PR-SL1 & \\ \hline
-  PR-SL2 & \\ \hline
-  PR-SL3 & \\ \hline
-  PR-SC1 & \\ \hline
-  PR-SC2 & \\ \hline
-  PR-PA1 & \\ \hline
-  PR-PA2 & \\ \hline
-  PR-RFT1 & \\ \hline
-  PR-RFT2 & \\ \hline
-  PR-CR1 & \\ \hline
-  PR-CR2 & \\ \hline
-  PR-SE1 & \\ \hline
-  PR-SE2 & \\ \hline
-  PR-LR1 & \\ \hline
+  PR-SL1 & TC-PR-1\\ \hline
+  PR-SL3 & TC-PR-2\\ \hline
+  PR-SC1 & TC-PR-3\\ \hline
+  PR-SC2 & TC-PR-4\\ \hline
+  PR-PA1 & TC-PR-5\\ \hline
+  PR-PA2 & TC-PR-6\\ \hline
+  PR-RFT1 & TC-PR-7\\ \hline
+  PR-RFT2 & TC-PR-8\\ \hline
+  PR-CR1 & TC-PR-9\\ \hline
+  PR-CR2 & TC-PR-10\\ \hline
+  PR-SE1 & TC-PR-11\\ \hline
+  PR-SE2 & TC-PR-12\\ \hline
+  PR-LR1 & TC-PR-13\\ \hline
   OE-PE1 & TC-OE-1 \\ \hline
   OE-WE1 & TC-OE-2 \\ \hline
   OE-WE2 & TC-OE-2 \\ \hline
