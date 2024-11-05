@@ -893,6 +893,23 @@ be involved? Be specific.}
     visible in the profile of that contractor, the facilities manager,
     and the admin user.
 
+  \item{TC-L-3\\}
+
+    Type: Manual
+
+    Initial State: Github is functional, cloud deployment platform is functional
+
+    Input/Condition: A facilities manager signs into the application and
+    downloads a compliance document.
+
+    Output/Result: This document is sent to the administrative team of the BCOS
+    system who are able to record the document in their system.
+
+    How the test will be performed: The facilities manager signs into the system
+    and downloads a compliance document. The test is successful if this
+    document is confirmed by the City it is in a form that is able to be
+    uploaded to the BCOS system.
+
 \end{enumerate}
 
 \subsubsection{Cultural Requirements}
@@ -1085,7 +1102,7 @@ requirements.}
   CR-CR1 & TC-CR-1 \\ \hline
   CR-L1 & TC-L-1 \\ \hline
   CR-L2 & TC-L-2 \\ \hline
-  CR-S1 & \\ \hline
+  CR-S1 & TC-L-3 \\ \hline
   \caption{Requirements to Test Case Traceability Matrix}
 \end{longtable}
 
