@@ -839,30 +839,29 @@ Below are tests for the nonfunctional requirements.
   \item {TC-PR-1\\}
 
     Type: Manual
-      
+
     Initial State: The system is running, and documents are available in the
     database.
-      
+
     Input/Condition: Request to retrieve a document.
-      
+
     Output/Result: The document should be retrieved in less than 2 seconds
-      
+
     How test will be performed: Manually request document retrieval and measure
     time taken. Verify that it does not exceed 2 seconds
-
 
   \item {TC-PR-2\\}
 
     Type: Manual
-      
+
     Initial State: The system is running
-      
+
     Input/Condition: Navigation to a different page
-      
+
     Output/Result: The system should be able to navigate to a different page
     in under 1.5 seconds.
-      
-    How test will be performed: Manually navigate to a different page and 
+
+    How test will be performed: Manually navigate to a different page and
     measure time taken. Verify that it does not exceed 1.5 seconds
 
 \end{enumerate}
@@ -889,17 +888,17 @@ Below are tests for the nonfunctional requirements.
 
     Type: Manual
 
-    Initial State: The system has different user roles configured (Admin and 
+    Initial State: The system has different user roles configured (Admin and
     Contractor/General user)
 
     Input/Condition: Attempt to access documents with different user roles.
 
-    Output/Result: Document access should be restricted based on user roles. 
+    Output/Result: Document access should be restricted based on user roles.
     Admin users should have the ability to read and write docuements while
     contractor/general users should have the abilty to only read and sign
     docuements.
 
-    How test will be performed: Manually log in with different user roles and 
+    How test will be performed: Manually log in with different user roles and
     attempt to access docuements. Verify that access is correctly restricted.
 
 \end{enumerate}
@@ -926,7 +925,7 @@ Below are tests for the nonfunctional requirements.
 
     Type: Manual
 
-    Initial State: The system is running and ready for docuement upload and 
+    Initial State: The system is running and ready for docuement upload and
     retrieval
 
     Input/Condition: Upload and retrieve docuements
@@ -954,7 +953,7 @@ Below are tests for the nonfunctional requirements.
     How test will be performed: Manually input unexpected data and observe the
     system's response.
 
-    \item {TC-PR-8\\}
+  \item {TC-PR-8\\}
 
     Type: Manual
 
@@ -980,13 +979,13 @@ Below are tests for the nonfunctional requirements.
 
     Input/Condition: Upload and download documents
 
-    Output/Result: The system should support a peak data transfer rate of 1 
+    Output/Result: The system should support a peak data transfer rate of 1
     Gbps.
 
     How test will be performed: Manually upload and download documents and
     measure the data transfer rate.
 
-    \item {TC-PR-10\\}
+  \item {TC-PR-10\\}
 
     Type: Manual
 
@@ -999,9 +998,7 @@ Below are tests for the nonfunctional requirements.
     How test will be performed: Manually upload files of varying sizes up to
     1 GB and verify successfull uploads.
 
-
 \end{enumerate}
-
 
 \paragraph{Scalability or Extensibility Requirements}
 \begin{enumerate}
@@ -1011,7 +1008,7 @@ Below are tests for the nonfunctional requirements.
 
     Initial State: The system is running
 
-    Input/Condition: Create nested document categories with multiple 
+    Input/Condition: Create nested document categories with multiple
     sub-categories.
 
     Output/Result: The system should allow nesting of documents and categories.
@@ -1019,7 +1016,7 @@ Below are tests for the nonfunctional requirements.
     How test will be performed: Manually create nested document categories and
     verify their functionality.
 
-    \item {TC-PR-12\\}
+  \item {TC-PR-12\\}
 
     Type: Automatic
 
@@ -1040,22 +1037,22 @@ Below are tests for the nonfunctional requirements.
 \begin{enumerate}
 
   \item {TC-PR-13}
-  Type: Automatic
+    Type: Automatic
 
-  Initial State: The system is running
+    Initial State: The system is running
 
-  Input/Condition: Add new feature into the system
+    Input/Condition: Add new feature into the system
 
-  Output/Result: The system is functional with the new functionalites and the
-  behaviour of the old functionalities is not changed (the ones which 
-  were not intended to be impacted by the introduction of the new feature).
-  The ease of introduction should atleast be 8.
+    Output/Result: The system is functional with the new functionalites and the
+    behaviour of the old functionalities is not changed (the ones which
+    were not intended to be impacted by the introduction of the new feature).
+    The ease of introduction should atleast be 8.
 
-  How test will be performed: Add code for the new feature and measure the ease
-  of introduction of the feature on a scale of 1-10. Verify that the ease of
-  introduction is greater or equal to 8.
+    How test will be performed: Add code for the new feature and
+    measure the ease
+    of introduction of the feature on a scale of 1-10. Verify that the ease of
+    introduction is greater or equal to 8.
 \end{enumerate}
-
 
 \subsubsection{Maintainability and Support Requirements}
 
