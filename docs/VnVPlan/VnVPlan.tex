@@ -709,7 +709,7 @@ be involved? Be specific.}
 
 \begin{enumerate}
 
-  \item{TC-CR-1\\}
+  \item{TC-L-1\\}
 
     Type: Manual
 
@@ -731,7 +731,7 @@ be involved? Be specific.}
     is followed
     and the legislation specified in CR-L1 is not violated.
 
-  \item{TC-CR-2\\}
+  \item{TC-L-2\\}
 
     Type: Manual
 
@@ -759,6 +759,32 @@ be involved? Be specific.}
 
 \end{enumerate}
 
+\subsubsection{Cultural Requirements}
+
+\paragraph{Cultural}
+
+\begin{enumerate}
+  \item{TC-CR-1\\}
+
+    Type: Manual
+
+    Initial State: Github is functional, cloud deployment platform is functional
+
+    Input/Condition: The Github repository code is checked and the code for the
+    display of the user interface is opened.
+
+    Output/Result: The user interface and user experience is aligned with the 5
+    City of Hamilton cultural pillars. These are Collective Ownership,
+    Steadfast Integrity, Courageous Change, Sensational Service, and
+    Engaged and Empowered Employees.
+
+    How the test will be performed: The capstone team will compare the qualities
+    of the user interface application code with the 5 pillars and assess whether
+    each pillar is met by the application. The test passes if the
+    team determines
+    that the pillars are satisfied.
+\end{enumerate}
+
 \subsubsection{Operational and Environmental Requirements}
 
 \paragraph{Ability to Connect and Use}
@@ -771,7 +797,8 @@ be involved? Be specific.}
 
     Initial State: Device connected to City of Hamilton network
 
-    Input/Condition: Attempt to connect to the application using the network.
+    Input/Condition: Attempt to connect to the application using
+    the network.
 
     Output/Result: The device successfully connects to and is able to
     use the application.
@@ -815,7 +842,8 @@ be involved? Be specific.}
 
     Input/Condition: Valid work order number
 
-    Output/Result: Relevant data fields should be filled in by the application
+    Output/Result: Relevant data fields should be filled in by
+    the application
 
     How test will be performed: Dummy API used which returns work
     order information given a work order number. Will test if the
@@ -918,16 +946,17 @@ requirements.}
   MS-PR2 & \\ \hline
   SR-AU1 & \\ \hline
   SR-IMR1 & \\ \hline
-  CR-CR1 & \\ \hline
-  CR-L1 & TC-CR-1 \\ \hline
-  CR-L2 & TC-CR-2 \\ \hline
+  CR-CR1 & TC-CR-1 \\ \hline
+  CR-L1 & TC-L-1 \\ \hline
+  CR-L2 & TC-L-2 \\ \hline
   CR-S1 & \\ \hline
   \caption{Requirements to Test Case Traceability Matrix}
 \end{longtable}
 
 \section{Unit Test Description}
 
-\wss{This section should not be filled in until after the MIS (detailed design
+\wss{This section should not be filled in until after the MIS
+  (detailed design
 document) has been completed.}
 
 \wss{Reference your MIS (detailed design document) and explain your overall
@@ -950,8 +979,10 @@ needs to be well-documented, with meaningful names for all of the tests.}
 \subsection{Unit Testing Scope}
 
 \wss{What modules are outside of the scope.  If there are modules that are
-  developed by someone else, then you would say here if you aren't planning on
-  verifying them.  There may also be modules that are part of your software, but
+  developed by someone else, then you would say here if you
+  aren't planning on
+  verifying them.  There may also be modules that are part of
+  your software, but
   have a lower priority for verification than others.  If this is the case,
 explain your rationale for the ranking of module importance.}
 
@@ -963,9 +994,11 @@ technique.  That can also be documented in this section.}
 
 \subsubsection{Module 1}
 
-\wss{Include a blurb here to explain why the subsections below cover the module.
+\wss{Include a blurb here to explain why the subsections below
+  cover the module.
   References to the MIS would be good.  You will want tests from a black box
-  perspective and from a white box perspective.  Explain to the reader how the
+  perspective and from a white box perspective.  Explain to the
+  reader how the
 tests were selected.}
 
 \begin{enumerate}
@@ -1084,7 +1117,8 @@ Their values are defined in this section for easy maintenance.
 
 \wss{This section is not required for CAS 741}
 
-The information in this section will be used to evaluate the team members on the
+The information in this section will be used to evaluate the team
+members on the
 graduate attribute of Lifelong Learning.
 
 \input{../Reflection.tex}
@@ -1093,13 +1127,16 @@ graduate attribute of Lifelong Learning.
   \item What went well while writing this deliverable?
   \item What pain points did you experience during this deliverable, and how
     did you resolve them?
-  \item What knowledge and skills will the team collectively need to acquire to
+  \item What knowledge and skills will the team collectively need
+    to acquire to
     successfully complete the verification and validation of your project?
-    Examples of possible knowledge and skills include dynamic testing knowledge,
+    Examples of possible knowledge and skills include dynamic
+    testing knowledge,
     static testing knowledge, specific tool usage, Valgrind etc.  You
     should look to
     identify at least one item for each team member.
-  \item For each of the knowledge areas and skills identified in the previous
+  \item For each of the knowledge areas and skills identified in
+    the previous
     question, what are at least two approaches to acquiring the knowledge or
     mastering the skill?  Of the identified approaches, which will each team
     member pursue, and why did they make this choice?
