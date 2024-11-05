@@ -534,6 +534,51 @@ be involved? Be specific.}
 
 \end{enumerate}
 
+\paragraph{Understandability and Politeness}
+\begin{enumerate}
+  \item{TC-UP-1\\}
+
+    Type: Dynamic, Manual
+
+    Initial State: System is functional with test accounts made for users. Users
+    are between $\hypertarget{min_age}{MIN\_AGE}$ and $\hypertarget{min_age}{MIN\_AGE}$ age limits.
+
+    Input: User logs in, and views all available screens of the user interface.
+
+    Output: The user has seen the images and text on all available screens of
+    the user interface and notes the content seen.
+
+    How test will be performed: The test will be performed by a user from our
+    stakeholder. They will be guided through all screens for every type of role
+    (General/Contractor, Manager, Admin). They will then be asked if any of the
+    images or text seen contains anything that they might have found offensive
+    or politically charged. If the user reports they haven't seen anything that
+    may have been offensive or poitically charged, the test is successful.
+
+  \item{TC-UP-2\\}
+
+    Type: Dynamic, Manual
+
+    Initial State: System is functional with test accounts made for users. Users
+    are between $\hypertarget{min_age}{MIN\_AGE}$ and $\hypertarget{min_age}{MIN\_AGE}$ age limits.
+
+    Input: User performs an action that puts the system into an error state
+    (e.g. deleting a document that they don't have permission to modify).
+
+    Output: User has performed the actions and the system has informed the user
+    of the error. User actions the feedback given and understands the potential
+    resolution paths.
+
+    How test will be performed: The test will be performed by a user from our
+    stakeholder. The user will be instructed to perform an action that will put
+    the system in an error state. They will then perform the appropriate action
+    after receiving the feedback from the system. The user will then be asked if
+    they understood the error and if they were able to figure the possible
+    solutions. If the user reports that they have a clear understanding, the
+    test is successful.
+
+\end{enumerate}
+
 \subsubsection{Look and Feel Requirements}
 
 \paragraph{Appearance}
