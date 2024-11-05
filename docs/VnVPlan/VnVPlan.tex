@@ -1038,21 +1038,34 @@ be involved? Be specific.}
 
     Input/Condition: Attempt to use every feature available using each ID
 
-    Output/Result: Users only have access to features allowed by their permissions.
+    Output/Result: Users only have access to features allowed by
+    their permissions.
 
-    How test will be performed: Accounts will be created on the application for each available level of access. Using each account, the use of each feature of the application will be attempted. Wether an action was possible or not will be noted and compared to the permissions of the account.
+    How test will be performed: Accounts will be created on the
+    application for each available level of access. Using each
+    account, the use of each feature of the application will be
+    attempted. Wether an action was possible or not will be noted and
+    compared to the permissions of the account.
 
-    \item{TC-SS-2\\}
+  \item{TC-SS-2\\}
 
     Type: Manual
 
     Initial State: User IDs of each possible access level created.
 
-    Input/Condition: Attempt to upload, delete, modify files in different directories.
+    Input/Condition: Attempt to upload, delete, modify files in
+    different directories.
 
-    Output/Result: Users only have access to files and directories allowed by their permissions.
+    Output/Result: Users only have access to files and directories
+    allowed by their permissions.
 
-    How test will be performed: Accounts will be created on the application for each available level of access. Using each account, the creation, deletion and modification of of files with varying permission requirements will be attempted. The testing will be done to cover directories of varying permission requirements. Wether an action was possible or not will be noted and compared to the permissions of the account.
+    How test will be performed: Accounts will be created on the
+    application for each available level of access. Using each
+    account, the creation, deletion and modification of of files with
+    varying permission requirements will be attempted. The testing
+    will be done to cover directories of varying permission
+    requirements. Wether an action was possible or not will be noted
+    and compared to the permissions of the account.
 
 \end{enumerate}
 
@@ -1068,21 +1081,28 @@ be involved? Be specific.}
 
     Input/Condition: View files on the application
 
-    Output/Result: Files on the application are the appropriate version available on SharePoint and/or MySDS
+    Output/Result: Files on the application are the appropriate
+    version available on SharePoint and/or MySDS
 
-    How test will be performed: Files will be checked against their current versions. Users with appropriate permissions should have the ability to update the files if outdated.
+    How test will be performed: Files will be checked against their
+    current versions. Users with appropriate permissions should have
+    the ability to update the files if outdated.
 
-    \item{TC-SS-4\\}
+  \item{TC-SS-4\\}
 
     Type: Manual
 
     Initial State: Data fields empty.
 
-    Input/Condition: Submit incomplete, impossible, or malicious data through data fields
+    Input/Condition: Submit incomplete, impossible, or malicious data
+    through data fields
 
-    Output/Result: Fail-safes trigger, noting the bad data and informing the administrator.
+    Output/Result: Fail-safes trigger, noting the bad data and
+    informing the administrator.
 
-    How test will be performed: Attempt to submit data fields filled in with a set of entries which vary between incomplete, impossible, and malicious and check how the application handles the inputs.
+    How test will be performed: Attempt to submit data fields filled
+    in with a set of entries which vary between incomplete,
+    impossible, and malicious and check how the application handles the inputs.
 
 \end{enumerate}
 
@@ -1094,29 +1114,49 @@ be involved? Be specific.}
 
     Type: Manual
 
-    Initial State: The application is accessed via a web browser with tools for inspecting network requests.
+    Initial State: The application is accessed via a web browser with
+    tools for inspecting network requests.
 
     Input/Condition: Access and use the application using https:// in a browser
 
-    Output/Result: Network requests displayed as HTTPS in the browser's developer tools, and the security certificates are valid and properly configured.
+    Output/Result: Network requests displayed as HTTPS in the
+    browser's developer tools, and the security certificates are
+    valid and properly configured.
 
-    How test will be performed: Connect to and use the application using https:// and ensure the connection is secured with SSL/TLS. Use the browser's developer tools to inspect the requests made by the site. Check that all requests are made over HTTPS and the lock icon/secure status is visible in the browser's address bar. Check if SSL certificate is valid and correctly configured.
-    
+    How test will be performed: Connect to and use the application
+    using https:// and ensure the connection is secured with SSL/TLS.
+    Use the browser's developer tools to inspect the requests made by
+    the site. Check that all requests are made over HTTPS and the
+    lock icon/secure status is visible in the browser's address bar.
+    Check if SSL certificate is valid and correctly configured.
+
 \end{enumerate}
 
 \paragraph{Adherance to Policies, Regulations, and Laws}
 
 \begin{enumerate}
 
-\item{TC-SS-6\\}
+  \item{TC-SS-6\\}
 
-Initial State: The application is complete, checklist(s) outlining all Federal, Provincial, Municipal and City of Hamilton, Water Division rules, regulations and policies created.
+    Initial State: The application is complete, checklist(s)
+    outlining all Federal, Provincial, Municipal and City of
+    Hamilton, Water Division rules, regulations and policies created.
 
-Input/Condition: Review the application's functionality, data handling, and security measures against checklist(s)
+    Input/Condition: Review the application's functionality, data
+    handling, and security measures against checklist(s)
 
-Output/Result: The application should align with all defined requirements, policies, and regulations, showing full compliance with legal and departmental standards without any deviations.
+    Output/Result: The application should align with all defined
+    requirements, policies, and regulations, showing full compliance
+    with legal and departmental standards without any deviations.
 
-How test will be performed: Develop a comprehensive checklist that includes all applicable government regulations, standards, and internal policies. Cross-reference the application's design and operational documentation with the compliance checklist. Perform a manual inspection of the application's source code, configuration settings, and security protocols to ensure they meet the required standards. Test relevant features to confirm that they adhere to the compliance checklist.
+    How test will be performed: Develop a comprehensive checklist
+    that includes all applicable government regulations, standards,
+    and internal policies. Cross-reference the application's design
+    and operational documentation with the compliance checklist.
+    Perform a manual inspection of the application's source code,
+    configuration settings, and security protocols to ensure they
+    meet the required standards. Test relevant features to confirm
+    that they adhere to the compliance checklist.
 
 \end{enumerate}
 
