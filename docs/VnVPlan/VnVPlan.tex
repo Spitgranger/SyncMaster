@@ -511,6 +511,151 @@ be involved? Be specific.}
 
 \end{enumerate}
 
+\subsubsection{Performance Requirements}
+
+\paragraph{Speed and Latency Requirements}
+
+\begin{enumerate}
+  \item {TC-PR-1\\}
+
+    Type: Manual
+      
+    Initial State: The system is running, and documents are available in the
+    database.
+      
+    Input/Condition: Request to retrieve a document.
+      
+    Output/Result: The document should be retrieved in less than 2 seconds
+      
+    How test will be performed: Manually request document retrieval and measure
+    time taken. Verify that it does not exceed 2 seconds
+
+\end{enumerate}
+
+\paragraph{Safety-Critical Requirements}
+\begin{enumerate}
+
+  \item {TC-PR-2\\}
+
+    Type: Manual
+
+    Initial State: The system is running and ready to upload and retrieve
+    documents.
+
+    Input/Condition: Upload and retrieve a document
+
+    Output/Result: The document should be verified for its integrity by checking
+    for any modifications/corruption.
+
+    How test will be performed: Manually upload and retrieve a document. Then,
+    verify its integrity.
+
+\end{enumerate}
+
+\paragraph{Precision or Accuracy Requirements}
+\begin{enumerate}
+
+  \item {TC-PR-3\\}
+
+    Type: Manual
+
+    Initial State: The system is running with a populated database with number
+    of users and documents greater than equal to 1.
+
+    Input/Condition: Perform search queries related to documents or user data
+
+    Output/Result: At least 95\% of the search results should be relevant to
+    search query
+
+    How test will be performed: Manually perform search queries and evaluate the
+    relevance of the results
+
+\end{enumerate}
+
+\paragraph{Robustness or Fault-Tolerance Requirements}
+\begin{enumerate}
+
+  \item {TC-PR-4\\}
+
+    Type: Manual
+
+    Initial State: The system is running
+
+    Input/Condition: Provide unexpected inputs and events
+
+    Output/Result: The system should handle them without crashing
+
+    How test will be performed: Manually input unexpected data and observe the
+    system's response.
+
+    \item {TC-PR-5\\}
+
+    Type: Manual
+
+    Initial State: The system is running
+
+    Input/Condition: Introduce anomalies or potential failures
+
+    Output/Result: The system should detect and alert on these issues
+
+    How test will be performed: Manually introduce anomalies and verify the
+    system's detection and alert mechanism.
+
+\end{enumerate}
+
+\paragraph{Capacity Requirements}
+\begin{enumerate}
+
+  \item {TC-PR-6\\}
+
+    Type: Manual
+
+    Initial State: The system is running
+
+    Input/Condition: Upload and download documents
+
+    Output/Result: The system should support a peak data transfer rate of 1 
+    Gbps.
+
+    How test will be performed: Manually upload and download documents and
+    measure the data transfer rate.
+
+    \item {TC-PR-7\\}
+
+    Type: Manual
+
+    Initial State: The system is running
+
+    Input/Condition: Attempt to upload individual files up to 1 GB.
+
+    Output/Result: The files should be successfully uploaded
+
+    How test will be performed: Manually upload files of varying sizes up to
+    1 GB and verify successfull uploads.
+
+
+\end{enumerate}
+
+
+\paragraph{Scalability or Extensibility Requirements}
+\begin{enumerate}
+  \item {TC-PR-8\\}
+
+    Type: Manual
+
+    Initial State: The system is running
+
+    Input/Condition: Create nested document categories with multiple 
+    sub-categories.
+
+    Output/Result: The system should allow nesting of documents and categories.
+
+    How test will be performed: Manually create nested document categories and
+    verify their functionality.
+
+\end{enumerate}
+
+
 \subsubsection{Maintainability and Support Requirements}
 
 \paragraph{Maintenance}
@@ -900,18 +1045,18 @@ requirements.}
   UH-UP1 & \\ \hline
   UH-UP2 & \\ \hline
   UH-AS1 & \\ \hline
-  PR-SL1 & \\ \hline
+  PR-SL1 & TC-PR-1\\ \hline
   PR-SL2 & \\ \hline
   PR-SL3 & \\ \hline
-  PR-SC1 & \\ \hline
+  PR-SC1 & TC-PR-2\\ \hline
   PR-SC2 & \\ \hline
-  PR-PA1 & \\ \hline
+  PR-PA1 & TC-PR-3\\ \hline
   PR-PA2 & \\ \hline
-  PR-RFT1 & \\ \hline
-  PR-RFT2 & \\ \hline
-  PR-CR1 & \\ \hline
-  PR-CR2 & \\ \hline
-  PR-SE1 & \\ \hline
+  PR-RFT1 & TC-PR-4\\ \hline
+  PR-RFT2 & TC-PR-5\\ \hline
+  PR-CR1 & TC-PR-6\\ \hline
+  PR-CR2 & TC-PR-7\\ \hline
+  PR-SE1 & TC-PR-8\\ \hline
   PR-SE2 & \\ \hline
   PR-LR1 & \\ \hline
   OE-PE1 & \\ \hline
