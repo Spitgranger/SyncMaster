@@ -792,362 +792,363 @@ be involved? Be specific.}
     each pillar is met by the application. The test passes if the
     team determines
     that the pillars are satisfied.
+\end{enumerate}
 
-    \subsubsection{Operational and Environmental Requirements}
+\subsubsection{Operational and Environmental Requirements}
 
-    \paragraph{Ability to Connect and Use}
+\paragraph{Ability to Connect and Use}
 
-    \begin{enumerate}
+\begin{enumerate}
 
-      \item{TC-OE-1\\}
+  \item{TC-OE-1\\}
 
-        Type: Manual
+    Type: Manual
 
-        Initial State: Device connected to City of Hamilton network
+    Initial State: Device connected to City of Hamilton network
 
-        Input/Condition: Attempt to connect to the application using
-        the network.
+    Input/Condition: Attempt to connect to the application using
+    the network.
 
-        Output/Result: The device successfully connects to and is able to
-        use the application.
+    Output/Result: The device successfully connects to and is able to
+    use the application.
 
-        How test will be performed: A user on site at the City of
-        Hamilton, Water Division will connect to the network available to
-        employees and contractors and then attempt to connect to and use
-        the application. The test is successful if the application can be
-        connected to using the city's network.
+    How test will be performed: A user on site at the City of
+    Hamilton, Water Division will connect to the network available to
+    employees and contractors and then attempt to connect to and use
+    the application. The test is successful if the application can be
+    connected to using the city's network.
 
-      \item{TC-OE-2\\}
+  \item{TC-OE-2\\}
 
-        Type: Manual
+    Type: Manual
 
-        Initial State: Devices connected to the internet and have the
-        supported browsers available.
+    Initial State: Devices connected to the internet and have the
+    supported browsers available.
 
-        Input: Desktop Browsers being tested are Chrome and Edge, and the
-        mobile devices being tested are Android and iPhone.
+    Input: Desktop Browsers being tested are Chrome and Edge, and the
+    mobile devices being tested are Android and iPhone.
 
-        Output: The devices successfully connect to and are able to use
-        the application.
+    Output: The devices successfully connect to and are able to use
+    the application.
 
-        How test will be performed: Exploratory testing using the
-        supported devices and browsers. The devices should be able to
-        connect and use all functionality in the application, and provide
-        a similar experience.
+    How test will be performed: Exploratory testing using the
+    supported devices and browsers. The devices should be able to
+    connect and use all functionality in the application, and provide
+    a similar experience.
 
-    \end{enumerate}
+\end{enumerate}
 
-    \paragraph{Future Integration}
+\paragraph{Future Integration}
 
-    \begin{enumerate}
+\begin{enumerate}
+
+  \item{TC-OE-3\\}
+
+    Type: Manual
+
+    Initial State: Branch with functionality to fill in data fields
+    when provided a valid work order number
+
+    Input/Condition: Valid work order number
+
+    Output/Result: Relevant data fields should be filled in by
+    the application
+
+    How test will be performed: Dummy API used which returns work
+    order information given a work order number. Will test if the
+    functionality in the branch is able to fill in the fields with
+    data from the API, indicating it is viable to add this
+    integration in the future.
+
+\end{enumerate}
+
+\paragraph{Release and Change Log}
+
+\begin{enumerate}
+
+  \item{TC-OE-4\\}
+
+    Type: Manual
+
+    Initial State: New revision
+
+    Input/Condition: Revision released, change log produced
+
+    Output/Result: Revision is released by planned date, change log
+    details all changes.
+
+    How test will be performed: Whenever a revision is released, will
+    inspect the change log to check if all changes have been noted.
+
+\end{enumerate}
+
+\subsection{Traceability Between Test Cases and Requirements}
+
+\wss{Provide a table that shows which test cases are supporting which
+requirements.}
+
+\begin{longtable}{|l|l|}
+  \hline
+  \textbf{Req. ID} & \textbf{Test ID's} \\
+  \hline
+  FR1 & \\ \hline
+  FR2 & \\ \hline
+  FR3 & \\ \hline
+  FR4 & \\ \hline
+  FR5 & \\ \hline
+  FR6 & \\ \hline
+  FR7 & \\ \hline
+  FR8 & \\ \hline
+  FR9 & \\ \hline
+  LF-AP1 & TC-LF-1 \\ \hline
+  LF-ST1 & TC-LF-2 \\ \hline
+  UH-EU1 & \\ \hline
+  UH-EU2 & \\ \hline
+  UH-LR1 & \\ \hline
+  UH-LR2 & \\ \hline
+  UH-UP1 & \\ \hline
+  UH-UP2 & \\ \hline
+  UH-AS1 & \\ \hline
+  PR-SL1 & \\ \hline
+  PR-SL2 & \\ \hline
+  PR-SL3 & \\ \hline
+  PR-SC1 & \\ \hline
+  PR-SC2 & \\ \hline
+  PR-PA1 & \\ \hline
+  PR-PA2 & \\ \hline
+  PR-RFT1 & \\ \hline
+  PR-RFT2 & \\ \hline
+  PR-CR1 & \\ \hline
+  PR-CR2 & \\ \hline
+  PR-SE1 & \\ \hline
+  PR-SE2 & \\ \hline
+  PR-LR1 & \\ \hline
+  OE-PE1 & \\ \hline
+  OE-WE1 & TC-OE-1 \\ \hline
+  OE-WE2 & TC-OE-2 \\ \hline
+  OE-IAS3 & TC-OE-3 \\ \hline
+  OE-REL1 & TC-OE-4 \\ \hline
+  OE-REL2 & TC-OE-4 \\ \hline
+  OE-REL3 & TC-OE-4 \\ \hline
+  OE-REL4 & TC-OE-4 \\ \hline
+  MS-MTN1 & TC-MS-1 \\ \hline
+  MS-MTN2 & TC-MS-2 \\ \hline
+  MS-MTN3 & TC-MS-3 \\ \hline
+  MS-MTN4 & TC-MS-4 \\ \hline
+  MS-MTN5 & TC-MS-5 \\ \hline
+  MS-MTN6 & TC-MS-6 \\ \hline
+  MS-SUP1 & TC-MS-7 \\ \hline
+  MS-SUP2 & TC-MS-8 \\ \hline
+  MS-SUP3 & TC-MS-9 \\ \hline
+  MS-SUP4 & TC-MS-10 \\ \hline
+  MS-ADP1 & TC-LF-2 \\ \hline
+  MS-ADP2 & TC-LF-2 \\ \hline
+  MS-ADP3 & TC-LF-2 \\ \hline
+  SR-AR1 & \\ \hline
+  SR-AR2 & \\ \hline
+  SR-AR3 & \\ \hline
+  SR-AR4 & \\ \hline
+  SR-IR1 & \\ \hline
+  SR-IR2 & \\ \hline
+  SR-IR3 & \\ \hline
+  SR-PR1 & \\ \hline
+  MS-PR2 & \\ \hline
+  SR-AU1 & \\ \hline
+  SR-IMR1 & \\ \hline
+  CR-CR1 & TC-CR-1 \\ \hline
+  CR-L1 & TC-L-1 \\ \hline
+  CR-L2 & TC-L-2 \\ \hline
+  CR-S1 & \\ \hline
+  \caption{Requirements to Test Case Traceability Matrix}
+\end{longtable}
+
+\section{Unit Test Description}
+
+\wss{This section should not be filled in until after the MIS
+  (detailed design
+document) has been completed.}
+
+\wss{Reference your MIS (detailed design document) and explain your overall
+philosophy for test case selection.}
+
+\wss{To save space and time, it may be an option to provide less
+  detail in this section.
+  For the unit tests you can potentially layout your testing strategy
+  here.  That is, you
+  can explain how tests will be selected for each module.  For
+  instance, your test building
+  approach could be test cases for each access program, including one
+  test for normal behaviour
+  and as many tests as needed for edge cases.  Rather than create the
+  details of the input
+  and output here, you could point to the unit testing code.  For
+  this to work, you code
+needs to be well-documented, with meaningful names for all of the tests.}
+
+\subsection{Unit Testing Scope}
+
+\wss{What modules are outside of the scope.  If there are modules that are
+  developed by someone else, then you would say here if you
+  aren't planning on
+  verifying them.  There may also be modules that are part of
+  your software, but
+  have a lower priority for verification than others.  If this is the case,
+explain your rationale for the ranking of module importance.}
+
+\subsection{Tests for Functional Requirements}
+
+\wss{Most of the verification will be through automated unit testing.  If
+  appropriate specific modules can be verified by a non-testing based
+technique.  That can also be documented in this section.}
 
-      \item{TC-OE-3\\}
-
-        Type: Manual
-
-        Initial State: Branch with functionality to fill in data fields
-        when provided a valid work order number
-
-        Input/Condition: Valid work order number
-
-        Output/Result: Relevant data fields should be filled in by
-        the application
-
-        How test will be performed: Dummy API used which returns work
-        order information given a work order number. Will test if the
-        functionality in the branch is able to fill in the fields with
-        data from the API, indicating it is viable to add this
-        integration in the future.
-
-    \end{enumerate}
-
-    \paragraph{Release and Change Log}
-
-    \begin{enumerate}
-
-      \item{TC-OE-4\\}
-
-        Type: Manual
-
-        Initial State: New revision
-
-        Input/Condition: Revision released, change log produced
-
-        Output/Result: Revision is released by planned date, change log
-        details all changes.
-
-        How test will be performed: Whenever a revision is released, will
-        inspect the change log to check if all changes have been noted.
-
-    \end{enumerate}
-
-    \subsection{Traceability Between Test Cases and Requirements}
-
-    \wss{Provide a table that shows which test cases are supporting which
-    requirements.}
-
-    \begin{longtable}{|l|l|}
-      \hline
-      \textbf{Req. ID} & \textbf{Test ID's} \\
-      \hline
-      FR1 & \\ \hline
-      FR2 & \\ \hline
-      FR3 & \\ \hline
-      FR4 & \\ \hline
-      FR5 & \\ \hline
-      FR6 & \\ \hline
-      FR7 & \\ \hline
-      FR8 & \\ \hline
-      FR9 & \\ \hline
-      LF-AP1 & TC-LF-1 \\ \hline
-      LF-ST1 & TC-LF-2 \\ \hline
-      UH-EU1 & \\ \hline
-      UH-EU2 & \\ \hline
-      UH-LR1 & \\ \hline
-      UH-LR2 & \\ \hline
-      UH-UP1 & \\ \hline
-      UH-UP2 & \\ \hline
-      UH-AS1 & \\ \hline
-      PR-SL1 & \\ \hline
-      PR-SL2 & \\ \hline
-      PR-SL3 & \\ \hline
-      PR-SC1 & \\ \hline
-      PR-SC2 & \\ \hline
-      PR-PA1 & \\ \hline
-      PR-PA2 & \\ \hline
-      PR-RFT1 & \\ \hline
-      PR-RFT2 & \\ \hline
-      PR-CR1 & \\ \hline
-      PR-CR2 & \\ \hline
-      PR-SE1 & \\ \hline
-      PR-SE2 & \\ \hline
-      PR-LR1 & \\ \hline
-      OE-PE1 & \\ \hline
-      OE-WE1 & TC-OE-1 \\ \hline
-      OE-WE2 & TC-OE-2 \\ \hline
-      OE-IAS3 & TC-OE-3 \\ \hline
-      OE-REL1 & TC-OE-4 \\ \hline
-      OE-REL2 & TC-OE-4 \\ \hline
-      OE-REL3 & TC-OE-4 \\ \hline
-      OE-REL4 & TC-OE-4 \\ \hline
-      MS-MTN1 & TC-MS-1 \\ \hline
-      MS-MTN2 & TC-MS-2 \\ \hline
-      MS-MTN3 & TC-MS-3 \\ \hline
-      MS-MTN4 & TC-MS-4 \\ \hline
-      MS-MTN5 & TC-MS-5 \\ \hline
-      MS-MTN6 & TC-MS-6 \\ \hline
-      MS-SUP1 & TC-MS-7 \\ \hline
-      MS-SUP2 & TC-MS-8 \\ \hline
-      MS-SUP3 & TC-MS-9 \\ \hline
-      MS-SUP4 & TC-MS-10 \\ \hline
-      MS-ADP1 & TC-LF-2 \\ \hline
-      MS-ADP2 & TC-LF-2 \\ \hline
-      MS-ADP3 & TC-LF-2 \\ \hline
-      SR-AR1 & \\ \hline
-      SR-AR2 & \\ \hline
-      SR-AR3 & \\ \hline
-      SR-AR4 & \\ \hline
-      SR-IR1 & \\ \hline
-      SR-IR2 & \\ \hline
-      SR-IR3 & \\ \hline
-      SR-PR1 & \\ \hline
-      MS-PR2 & \\ \hline
-      SR-AU1 & \\ \hline
-      SR-IMR1 & \\ \hline
-      CR-CR1 & TC-CR-1 \\ \hline
-      CR-L1 & TC-L-1 \\ \hline
-      CR-L2 & TC-L-2 \\ \hline
-      CR-S1 & \\ \hline
-      \caption{Requirements to Test Case Traceability Matrix}
-    \end{longtable}
-
-    \section{Unit Test Description}
-
-    \wss{This section should not be filled in until after the MIS
-      (detailed design
-    document) has been completed.}
-
-    \wss{Reference your MIS (detailed design document) and explain your overall
-    philosophy for test case selection.}
-
-    \wss{To save space and time, it may be an option to provide less
-      detail in this section.
-      For the unit tests you can potentially layout your testing strategy
-      here.  That is, you
-      can explain how tests will be selected for each module.  For
-      instance, your test building
-      approach could be test cases for each access program, including one
-      test for normal behaviour
-      and as many tests as needed for edge cases.  Rather than create the
-      details of the input
-      and output here, you could point to the unit testing code.  For
-      this to work, you code
-    needs to be well-documented, with meaningful names for all of the tests.}
-
-    \subsection{Unit Testing Scope}
-
-    \wss{What modules are outside of the scope.  If there are modules that are
-      developed by someone else, then you would say here if you
-      aren't planning on
-      verifying them.  There may also be modules that are part of
-      your software, but
-      have a lower priority for verification than others.  If this is the case,
-    explain your rationale for the ranking of module importance.}
-
-    \subsection{Tests for Functional Requirements}
-
-    \wss{Most of the verification will be through automated unit testing.  If
-      appropriate specific modules can be verified by a non-testing based
-    technique.  That can also be documented in this section.}
+\subsubsection{Module 1}
 
-    \subsubsection{Module 1}
+\wss{Include a blurb here to explain why the subsections below
+  cover the module.
+  References to the MIS would be good.  You will want tests from a black box
+  perspective and from a white box perspective.  Explain to the
+  reader how the
+tests were selected.}
 
-    \wss{Include a blurb here to explain why the subsections below
-      cover the module.
-      References to the MIS would be good.  You will want tests from a black box
-      perspective and from a white box perspective.  Explain to the
-      reader how the
-    tests were selected.}
+\begin{enumerate}
 
-    \begin{enumerate}
+  \item{test-id1\\}
 
-      \item{test-id1\\}
+    Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+    be automatic}
 
-        Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-        be automatic}
+    Initial State:
 
-        Initial State:
+    Input:
 
-        Input:
+    Output: \wss{The expected result for the given inputs}
 
-        Output: \wss{The expected result for the given inputs}
+    Test Case Derivation: \wss{Justify the expected value given in
+    the Output field}
 
-        Test Case Derivation: \wss{Justify the expected value given in
-        the Output field}
+    How test will be performed:
 
-        How test will be performed:
+  \item{test-id2\\}
 
-      \item{test-id2\\}
+    Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+    be automatic}
 
-        Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-        be automatic}
+    Initial State:
 
-        Initial State:
+    Input:
 
-        Input:
+    Output: \wss{The expected result for the given inputs}
 
-        Output: \wss{The expected result for the given inputs}
+    Test Case Derivation: \wss{Justify the expected value given in
+    the Output field}
 
-        Test Case Derivation: \wss{Justify the expected value given in
-        the Output field}
+    How test will be performed:
 
-        How test will be performed:
+  \item{...\\}
 
-      \item{...\\}
+\end{enumerate}
 
-    \end{enumerate}
+\subsubsection{Module 2}
 
-    \subsubsection{Module 2}
+...
 
-    ...
+\subsection{Tests for Nonfunctional Requirements}
 
-    \subsection{Tests for Nonfunctional Requirements}
+\wss{If there is a module that needs to be independently assessed for
+  performance, those test cases can go here.  In some projects, planning for
+nonfunctional tests of units will not be that relevant.}
 
-    \wss{If there is a module that needs to be independently assessed for
-      performance, those test cases can go here.  In some projects, planning for
-    nonfunctional tests of units will not be that relevant.}
+\wss{These tests may involve collecting performance data from previously
+mentioned functional tests.}
 
-    \wss{These tests may involve collecting performance data from previously
-    mentioned functional tests.}
+\subsubsection{Module ?}
 
-    \subsubsection{Module ?}
+\begin{enumerate}
 
-    \begin{enumerate}
+  \item{test-id1\\}
 
-      \item{test-id1\\}
+    Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+    be automatic}
 
-        Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-        be automatic}
+    Initial State:
 
-        Initial State:
+    Input/Condition:
 
-        Input/Condition:
+    Output/Result:
 
-        Output/Result:
+    How test will be performed:
 
-        How test will be performed:
+  \item{test-id2\\}
 
-      \item{test-id2\\}
+    Type: Functional, Dynamic, Manual, Static etc.
 
-        Type: Functional, Dynamic, Manual, Static etc.
+    Initial State:
 
-        Initial State:
+    Input:
 
-        Input:
+    Output:
 
-        Output:
+    How test will be performed:
 
-        How test will be performed:
+\end{enumerate}
 
-    \end{enumerate}
+\subsubsection{Module ?}
 
-    \subsubsection{Module ?}
+...
 
-    ...
+\subsection{Traceability Between Test Cases and Modules}
 
-    \subsection{Traceability Between Test Cases and Modules}
+\wss{Provide evidence that all of the modules have been considered.}
 
-    \wss{Provide evidence that all of the modules have been considered.}
+\newpage
 
-    \newpage
+\bibliographystyle{plainnat}
 
-    \bibliographystyle{plainnat}
+\bibliography{../../refs/References}
 
-    \bibliography{../../refs/References}
+\newpage
 
-    \newpage
+\section{Appendix}
 
-    \section{Appendix}
+This is where you can place additional information.
 
-    This is where you can place additional information.
+\subsection{Symbolic Parameters}
 
-    \subsection{Symbolic Parameters}
+The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
+Their values are defined in this section for easy maintenance.
 
-    The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
-    Their values are defined in this section for easy maintenance.
+\subsection{Usability Survey Questions?}
 
-    \subsection{Usability Survey Questions?}
+\wss{This is a section that would be appropriate for some projects.}
 
-    \wss{This is a section that would be appropriate for some projects.}
+\newpage{}
+\section*{Appendix --- Reflection}
 
-    \newpage{}
-    \section*{Appendix --- Reflection}
+\wss{This section is not required for CAS 741}
 
-    \wss{This section is not required for CAS 741}
+The information in this section will be used to evaluate the team
+members on the
+graduate attribute of Lifelong Learning.
 
-    The information in this section will be used to evaluate the team
-    members on the
-    graduate attribute of Lifelong Learning.
+\input{../Reflection.tex}
 
-    \input{../Reflection.tex}
+\begin{enumerate}
+  \item What went well while writing this deliverable?
+  \item What pain points did you experience during this deliverable, and how
+    did you resolve them?
+  \item What knowledge and skills will the team collectively need
+    to acquire to
+    successfully complete the verification and validation of your project?
+    Examples of possible knowledge and skills include dynamic
+    testing knowledge,
+    static testing knowledge, specific tool usage, Valgrind etc.  You
+    should look to
+    identify at least one item for each team member.
+  \item For each of the knowledge areas and skills identified in
+    the previous
+    question, what are at least two approaches to acquiring the knowledge or
+    mastering the skill?  Of the identified approaches, which will each team
+    member pursue, and why did they make this choice?
+\end{enumerate}
 
-    \begin{enumerate}
-      \item What went well while writing this deliverable?
-      \item What pain points did you experience during this deliverable, and how
-        did you resolve them?
-      \item What knowledge and skills will the team collectively need
-        to acquire to
-        successfully complete the verification and validation of your project?
-        Examples of possible knowledge and skills include dynamic
-        testing knowledge,
-        static testing knowledge, specific tool usage, Valgrind etc.  You
-        should look to
-        identify at least one item for each team member.
-      \item For each of the knowledge areas and skills identified in
-        the previous
-        question, what are at least two approaches to acquiring the knowledge or
-        mastering the skill?  Of the identified approaches, which will each team
-        member pursue, and why did they make this choice?
-    \end{enumerate}
-
-    \end{document}
+\end{document}
