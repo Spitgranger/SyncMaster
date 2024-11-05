@@ -36,43 +36,21 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
   \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
   \midrule
-  Date 1 & 1.0 & Notes\\
-  Date 2 & 1.1 & Notes\\
+  11/4/24 & 1.0 & Initial Draft of VnV Plan for Rev0\\
   \bottomrule
 \end{tabularx}
 
 ~\\
-\wss{The intention of the VnV plan is to increase confidence in the software.
-  However, this does not mean listing every verification and
-  validation technique
-  that has ever been devised.  The VnV plan should also be a \textbf{feasible}
-  plan. Execution of the plan should be possible with the time and
-  team available.
-  If the full plan cannot be completed during the time available, it
-  can either be
-  modified to ``fake it'', or a better solution is to add a section describing
-what work has been completed and what work is still planned for the future.}
-
-\wss{The VnV plan is typically started after the requirements stage, but before
-  the design stage.  This means that the sections related to unit testing cannot
-  initially be completed.  The sections will be filled in after the design stage
-  is complete.  the final version of the VnV plan should have all
-  sections filled
-in.}
 
 \newpage
 
 \tableofcontents
 
 \listoftables
-\wss{Remove this section if it isn't needed}
-
-\listoffigures
-\wss{Remove this section if it isn't needed}
 
 \section*{Symbols, Abbreviations, and Acronyms}
 
-Refer to \textit{Section 4 Naming Convnetions and Terminology} in the
+Refer to \textit{Section 4 Naming Conventions and Terminology} in the
 SRS document\citep{SRS} for all relevant symbols, abbreviations, and acronyms.
 
 \newpage
@@ -174,6 +152,7 @@ the members and their roles are given in the table below.
 \setlength{\arrayrulewidth}{0.5mm}
 \setlength{\tabcolsep}{18pt}
 \renewcommand{\arraystretch}{1.5}\\
+\begin{table}
 \begin{tabular}{ | m{5cm} | m{9cm} | }
   \hline
   \textbf{Names and Role} & \textbf{Responsibilites} \\
@@ -219,6 +198,8 @@ the members and their roles are given in the table below.
   \hline
 
 \end{tabular}
+\caption{Testing Team}
+\end{table}
 
 \subsection{SRS Verification Plan}
 
@@ -255,11 +236,13 @@ with our TA.
 
 \subsection{Design Verification Plan}
 
-\wss{Plans for design verification}
+% \wss{Plans for design verification}
 
-\wss{The review will include reviews by your classmates}
+% \wss{The review will include reviews by your classmates}
 
-\wss{Create a checklists?}
+% \wss{Create a checklists?}
+
+N/A
 
 \subsection{Verification and Validation Plan Verification Plan}
 
@@ -1615,9 +1598,6 @@ Below are tests for the nonfunctional requirements.
 
 \subsection{Traceability Between Test Cases and Requirements}
 
-\wss{Provide a table that shows which test cases are supporting which
-requirements.}
-
 \begin{longtable}{|l|l|}
   \hline
   \textbf{Req. ID} & \textbf{Test ID's} \\
@@ -1694,141 +1674,143 @@ requirements.}
 
 \section{Unit Test Description}
 
-\wss{This section should not be filled in until after the MIS
-  (detailed design
-document) has been completed.}
+This section will be filled out once the design document is completed.
 
-\wss{Reference your MIS (detailed design document) and explain your overall
-philosophy for test case selection.}
+% \wss{This section should not be filled in until after the MIS
+%   (detailed design
+% document) has been completed.}
 
-\wss{To save space and time, it may be an option to provide less
-  detail in this section.
-  For the unit tests you can potentially layout your testing strategy
-  here.  That is, you
-  can explain how tests will be selected for each module.  For
-  instance, your test building
-  approach could be test cases for each access program, including one
-  test for normal behaviour
-  and as many tests as needed for edge cases.  Rather than create the
-  details of the input
-  and output here, you could point to the unit testing code.  For
-  this to work, you code
-needs to be well-documented, with meaningful names for all of the tests.}
+% \wss{Reference your MIS (detailed design document) and explain your overall
+% philosophy for test case selection.}
 
-\subsection{Unit Testing Scope}
+% \wss{To save space and time, it may be an option to provide less
+%   detail in this section.
+%   For the unit tests you can potentially layout your testing strategy
+%   here.  That is, you
+%   can explain how tests will be selected for each module.  For
+%   instance, your test building
+%   approach could be test cases for each access program, including one
+%   test for normal behaviour
+%   and as many tests as needed for edge cases.  Rather than create the
+%   details of the input
+%   and output here, you could point to the unit testing code.  For
+%   this to work, you code
+% needs to be well-documented, with meaningful names for all of the tests.}
 
-\wss{What modules are outside of the scope.  If there are modules that are
-  developed by someone else, then you would say here if you
-  aren't planning on
-  verifying them.  There may also be modules that are part of
-  your software, but
-  have a lower priority for verification than others.  If this is the case,
-explain your rationale for the ranking of module importance.}
+% \subsection{Unit Testing Scope}
 
-\subsection{Tests for Functional Requirements}
+% \wss{What modules are outside of the scope.  If there are modules that are
+%   developed by someone else, then you would say here if you
+%   aren't planning on
+%   verifying them.  There may also be modules that are part of
+%   your software, but
+%   have a lower priority for verification than others.  If this is the case,
+% explain your rationale for the ranking of module importance.}
 
-\wss{Most of the verification will be through automated unit testing.  If
-  appropriate specific modules can be verified by a non-testing based
-technique.  That can also be documented in this section.}
+% \subsection{Tests for Functional Requirements}
 
-\subsubsection{Module 1}
+% \wss{Most of the verification will be through automated unit testing.  If
+%   appropriate specific modules can be verified by a non-testing based
+% technique.  That can also be documented in this section.}
 
-\wss{Include a blurb here to explain why the subsections below
-  cover the module.
-  References to the MIS would be good.  You will want tests from a black box
-  perspective and from a white box perspective.  Explain to the
-  reader how the
-tests were selected.}
+% \subsubsection{Module 1}
 
-\begin{enumerate}
+% \wss{Include a blurb here to explain why the subsections below
+%   cover the module.
+%   References to the MIS would be good.  You will want tests from a black box
+%   perspective and from a white box perspective.  Explain to the
+%   reader how the
+% tests were selected.}
 
-  \item{test-id1\\}
+% \begin{enumerate}
 
-    Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-    be automatic}
+%   \item{test-id1\\}
 
-    Initial State:
+%     Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+%     be automatic}
 
-    Input:
+%     Initial State:
 
-    Output: \wss{The expected result for the given inputs}
+%     Input:
 
-    Test Case Derivation: \wss{Justify the expected value given in
-    the Output field}
+%     Output: \wss{The expected result for the given inputs}
 
-    How test will be performed:
+%     Test Case Derivation: \wss{Justify the expected value given in
+%     the Output field}
 
-  \item{test-id2\\}
+%     How test will be performed:
 
-    Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-    be automatic}
+%   \item{test-id2\\}
 
-    Initial State:
+%     Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+%     be automatic}
 
-    Input:
+%     Initial State:
 
-    Output: \wss{The expected result for the given inputs}
+%     Input:
 
-    Test Case Derivation: \wss{Justify the expected value given in
-    the Output field}
+%     Output: \wss{The expected result for the given inputs}
 
-    How test will be performed:
+%     Test Case Derivation: \wss{Justify the expected value given in
+%     the Output field}
 
-  \item{...\\}
+%     How test will be performed:
 
-\end{enumerate}
+%   \item{...\\}
 
-\subsubsection{Module 2}
+% \end{enumerate}
 
-...
+% \subsubsection{Module 2}
 
-\subsection{Tests for Nonfunctional Requirements}
+% ...
 
-\wss{If there is a module that needs to be independently assessed for
-  performance, those test cases can go here.  In some projects, planning for
-nonfunctional tests of units will not be that relevant.}
+% \subsection{Tests for Nonfunctional Requirements}
 
-\wss{These tests may involve collecting performance data from previously
-mentioned functional tests.}
+% \wss{If there is a module that needs to be independently assessed for
+%   performance, those test cases can go here.  In some projects, planning for
+% nonfunctional tests of units will not be that relevant.}
 
-\subsubsection{Module ?}
+% \wss{These tests may involve collecting performance data from previously
+% mentioned functional tests.}
 
-\begin{enumerate}
+% \subsubsection{Module ?}
 
-  \item{test-id1\\}
+% \begin{enumerate}
 
-    Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-    be automatic}
+%   \item{test-id1\\}
 
-    Initial State:
+%     Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+%     be automatic}
 
-    Input/Condition:
+%     Initial State:
 
-    Output/Result:
+%     Input/Condition:
 
-    How test will be performed:
+%     Output/Result:
 
-  \item{test-id2\\}
+%     How test will be performed:
 
-    Type: Functional, Dynamic, Manual, Static etc.
+%   \item{test-id2\\}
 
-    Initial State:
+%     Type: Functional, Dynamic, Manual, Static etc.
 
-    Input:
+%     Initial State:
 
-    Output:
+%     Input:
 
-    How test will be performed:
+%     Output:
 
-\end{enumerate}
+%     How test will be performed:
 
-\subsubsection{Module ?}
+% \end{enumerate}
 
-...
+% \subsubsection{Module ?}
 
-\subsection{Traceability Between Test Cases and Modules}
+% ...
 
-\wss{Provide evidence that all of the modules have been considered.}
+% \subsection{Traceability Between Test Cases and Modules}
+
+% \wss{Provide evidence that all of the modules have been considered.}
 
 \newpage
 
@@ -1839,8 +1821,6 @@ mentioned functional tests.}
 \newpage
 
 \section{Appendix}
-
-This is where you can place additional information.
 
 \subsection{Symbolic Parameters}
 
