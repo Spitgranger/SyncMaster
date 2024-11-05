@@ -278,21 +278,20 @@ verification and validation plan:
 \end{itemize}
 
 \subsection{Automated Testing and Verification Tools}
-
-\wss{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-Python.}
-
-\wss{If you have already done this in the development plan, you can point to
-that document.}
-
-\wss{The details of this section will likely evolve as you get closer to the
-implementation.}
+\begin{itemize}
+  \item Python unit testing: PyTest
+  \item JavaScript/TypeScript unit testing: Jest
+\end{itemize}
+Detailed information about automated testing and verification tools
+that we plan to use are explained in the Development Plan
+\citep[\textit{Expected Technology, Coding Standard}]{ProblemStatement}.
+In terms of quality metrics, we plan on using GitHub actions to
+generate a report
+every time a pull request is made against the main branch. The report
+will be generated from the unit testing framework selected, more
+specifically jest-html-reporter and pytest-cov. Initially, these tests
+will include unit tests with more types of automated testing to be determined as
+the project progresses.
 
 \subsection{Software Validation Plan}
 
@@ -412,35 +411,171 @@ format for the tests given below.}
   walkthroughs, who will
 be involved? Be specific.}
 
-\subsubsection{Area of Testing1}
+\subsubsection{Usability and Humanity Requirements}
 
-\paragraph{Title for Test}
+\paragraph{Ease of Use}
 
 \begin{enumerate}
 
-  \item{test-id1\\}
+  \item{TC-EU-1\\}
 
-    Type: Functional, Dynamic, Manual, Static etc.
+    Type: Dynamic, Manual
 
-    Initial State:
+    Initial State: System is functional with test accounts made for users. Users
+    are between $\hypertarget{min_age}{MIN\_AGE}$ and
+    $\hypertarget{min_age}{MIN\_AGE}$ age limits. No prior instructions or
+    training are provided.
 
-    Input/Condition:
+    Input/Condition: User who has no prior experience using the system attempts
+    to use it.
 
-    Output/Result:
+    Output/Result: Users are able to discover at least 70\% of the main
+    functionalities of the system within 10 minutes without assitance.
 
-    How test will be performed:
+    How test will be performed: The test will be performed by letting users from
+    our stakeholder who have no prior knowledge of the system use the system.
+    After using the system they will fill out a short quiz that asks them
+    about the specific features/uses of the system. Scoring above 70\% is
+    considered a pass. If 70\% or more of testers pass, we can say that this
+    test passes. See \textbf{Section 6.2} Usability Survey Questions.
 
-  \item{test-id2\\}
+  \item{TC-EU-2\\}
 
-    Type: Functional, Dynamic, Manual, Static etc.
+    Type: Dynamic, Manual
 
-    Initial State:
+    Initial State: System is functional with test accounts made for users. Users
+    are between $\hypertarget{min_age}{MIN\_AGE}$ and
+    $\hypertarget{min_age}{MIN\_AGE}$ age limits.
 
-    Input:
+    Input: Users logs in, and performs an action classified as irreversible
+    (e.g. deletion).
 
-    Output:
+    Output: The user sees a notification informing them that their action is
+    irreversible or an undo option.
 
-    How test will be performed:
+    How test will be performed: The test will be performed by a user from our
+    stakeholder. The user will be instructed to perform an irrversible action on
+    the system. After performing the action and viewing the prompt, the user
+    will be asked if they understood the implications of their actions. If the
+    user understands the prompt and actions correctly, the test is considered
+    successful.
+
+\end{enumerate}
+
+\paragraph{Learning}
+\begin{enumerate}
+  \item{TC-LR-1\\}
+
+    Type: Dynamic, Manual
+
+    Initial State: System is functional with test accounts made for users. Users
+    are between $\hypertarget{min_age}{MIN\_AGE}$ and
+    $\hypertarget{min_age}{MIN\_AGE}$ age limits.
+
+    Input: User logs in, and uses a feature that they have not used
+    before (e.g. viewing documents)
+
+    Output: User has explored the new feature and is confident in using the
+    feature.
+
+    How test will be performed: The test will be performed by a user from our
+    stakeholder. The user will be instructed to use a feature of the system that
+    they have not seem before. After 10 minutes, the user will be asked to rate
+    their understanding of the feature and how confident they are using it. The
+    questions will be a simple 1-10 scale. If the user selects a 7 or above, the
+    test is considered passed. See \textbf{Section 6.2} Usability
+    Survey Questions.
+
+  \item{TC-LR-2\\}
+
+    Type: Dynamic, Manual
+
+    Initial State: System onboarding documents are avaliable. Users
+    are between $\hypertarget{min_age}{MIN\_AGE}$ and
+    $\hypertarget{min_age}{MIN\_AGE}$ age limits.
+
+    Input: User views the system onboarding documents.
+
+    Output: User has finished viewing the system onboarding documents and
+    reports their confidence on how they feel about using the system.
+
+    How test will be performed: The test will be performed by a user from our
+    stakeholder. They will be asked to view the onboarding documents. After 5
+    minutes the user will be asked a few questions to gauge their
+    confidence when using the
+    system. See \textbf{Section 6.2} Usability Survey Questions.
+
+\end{enumerate}
+
+\paragraph{Understandability and Politeness}
+\begin{enumerate}
+  \item{TC-UP-1\\}
+
+    Type: Dynamic, Manual
+
+    Initial State: System is functional with test accounts made for users. Users
+    are between $\hypertarget{min_age}{MIN\_AGE}$ and
+    $\hypertarget{min_age}{MIN\_AGE}$ age limits.
+
+    Input: User logs in, and views all available screens of the user interface.
+
+    Output: The user has seen the images and text on all available screens of
+    the user interface and notes the content seen.
+
+    How test will be performed: The test will be performed by a user from our
+    stakeholder. They will be guided through all screens for every type of role
+    (General/Contractor, Manager, Admin). They will then be asked if any of the
+    images or text seen contains anything that they might have found offensive
+    or politically charged. If the user reports they haven't seen anything that
+    may have been offensive or poitically charged, the test is successful.
+
+  \item{TC-UP-2\\}
+
+    Type: Dynamic, Manual
+
+    Initial State: System is functional with test accounts made for users. Users
+    are between $\hypertarget{min_age}{MIN\_AGE}$ and
+    $\hypertarget{min_age}{MIN\_AGE}$ age limits.
+
+    Input: User performs an action that puts the system into an error state
+    (e.g. deleting a document that they don't have permission to modify).
+
+    Output: User has performed the actions and the system has informed the user
+    of the error. User actions the feedback given and understands the potential
+    resolution paths.
+
+    How test will be performed: The test will be performed by a user from our
+    stakeholder. The user will be instructed to perform an action that will put
+    the system in an error state. They will then perform the appropriate action
+    after receiving the feedback from the system. The user will then be asked if
+    they understood the error and if they were able to figure the possible
+    solutions. If the user reports that they have a clear understanding, the
+    test is successful.
+
+\end{enumerate}
+
+\paragraph{Accessibility}
+\begin{enumerate}
+  \item{TC-AS-1\\}
+
+    Type: Dynamic, Manual
+
+    Initial State: System is functional with test accounts made for users. Users
+    are between $\hypertarget{min_age}{MIN\_AGE}$ and
+    $\hypertarget{min_age}{MIN\_AGE}$ age limits.
+
+    Input: User logs in, and views all available screens of the user interface.
+
+    Output: The user seen all available screens of
+    the user interface and notes the content seen.
+
+    How test will be performed: The test will be performed by a user from our
+    stakeholder. They will be guided through all screens for every type of role
+    (General/Contractor, Manager, Admin). They will then be asked if the design
+    of the user interface aligns with accessibility features that they have
+    seen in other applications used by the city. If the user reports that the
+    accessibility features seen are similar to other applications that
+    they already use, the test is successful.
 
 \end{enumerate}
 
@@ -708,7 +843,7 @@ be involved? Be specific.}
 
 \begin{enumerate}
 
-  \item{TC-CR-1\\}
+  \item{TC-L-1\\}
 
     Type: Manual
 
@@ -730,7 +865,7 @@ be involved? Be specific.}
     is followed
     and the legislation specified in CR-L1 is not violated.
 
-  \item{TC-CR-2\\}
+  \item{TC-L-2\\}
 
     Type: Manual
 
@@ -756,31 +891,49 @@ be involved? Be specific.}
     visible in the profile of that contractor, the facilities manager,
     and the admin user.
 
-    \item{TC-CR-3\\}
+  \item{TC-L-3\\}
 
     Type: Manual
 
-    Initial State: The application is complete, checklist(s) outlining all Federal, Provincial, Municipal and City of Hamilton, Water Division rules, regulations and policies created.
+    Initial State: Github is functional, cloud deployment platform is functional
 
-    Input/Condition: Review the application's functionality, data handling, and security measures against checklist(s)
+    Input/Condition: A facilities manager signs into the application and
+    downloads a compliance document.
 
-    Output/Result: The application should align with all defined requirements, policies, and regulations, showing full compliance with legal and departmental standards without any deviations.
+    Output/Result: This document is sent to the administrative team of the BCOS
+    system who are able to record the document in their system.
 
-    How test will be performed: Develop a comprehensive checklist that includes all applicable government regulations, standards, and internal policies. Cross-reference the application's design and operational documentation with the compliance checklist. Perform a manual inspection of the application's source code, configuration settings, and security protocols to ensure they meet the required standards. Test relevant features to confirm that they adhere to the compliance checklist.
+    How the test will be performed: The facilities manager signs into the system
+    and downloads a compliance document. The test is successful if this
+    document is confirmed by the City it is in a form that is able to be
+    uploaded to the BCOS system.
 
-    \item{TC-CR-4\\}
+\end{enumerate}
+
+\subsubsection{Cultural Requirements}
+
+\paragraph{Cultural}
+
+\begin{enumerate}
+  \item{TC-CR-1\\}
 
     Type: Manual
 
-    Initial State: Documentation which must be stored on the City's BCOS system are to be stored on the application
+    Initial State: Github is functional, cloud deployment platform is functional
 
-    Input/Condition: Export the files.
+    Input/Condition: The Github repository code is checked and the code for the
+    display of the user interface is opened.
 
-    Output/Result: Application will aligns with the City's DWQMS (Drinking
-    Water Quality Management System).
+    Output/Result: The user interface and user experience is aligned with the 5
+    City of Hamilton cultural pillars. These are Collective Ownership,
+    Steadfast Integrity, Courageous Change, Sensational Service, and
+    Engaged and Empowered Employees.
 
-    How test will be performed: Attempt to transfer the required documentation, check if standards are met.
-
+    How the test will be performed: The capstone team will compare the qualities
+    of the user interface application code with the 5 pillars and assess whether
+    each pillar is met by the application. The test passes if the
+    team determines
+    that the pillars are satisfied.
 \end{enumerate}
 
 \subsubsection{Operational and Environmental Requirements}
@@ -795,7 +948,8 @@ be involved? Be specific.}
 
     Initial State: Device connected to City of Hamilton network
 
-    Input/Condition: Attempt to connect to the application using the network.
+    Input/Condition: Attempt to connect to the application using
+    the network.
 
     Output/Result: The device successfully connects to and is able to
     use the application.
@@ -839,7 +993,8 @@ be involved? Be specific.}
 
     Input/Condition: Valid work order number
 
-    Output/Result: Relevant data fields should be filled in by the application
+    Output/Result: Relevant data fields should be filled in by
+    the application
 
     How test will be performed: Dummy API used which returns work
     order information given a work order number. Will test if the
@@ -972,13 +1127,13 @@ requirements.}
   FR9 & \\ \hline
   LF-AP1 & TC-LF-1 \\ \hline
   LF-ST1 & TC-LF-2 \\ \hline
-  UH-EU1 & \\ \hline
-  UH-EU2 & \\ \hline
-  UH-LR1 & \\ \hline
-  UH-LR2 & \\ \hline
-  UH-UP1 & \\ \hline
-  UH-UP2 & \\ \hline
-  UH-AS1 & \\ \hline
+  UH-EU1 & TC-EU1\\ \hline
+  UH-EU2 & TC-EU2\\ \hline
+  UH-LR1 & TC-LR1\\ \hline
+  UH-LR2 & TC-LR2\\ \hline
+  UH-UP1 & TC-UP1\\ \hline
+  UH-UP2 & TC-UP2\\ \hline
+  UH-AS1 & TC-AS1\\ \hline
   PR-SL1 & \\ \hline
   PR-SL2 & \\ \hline
   PR-SL3 & \\ \hline
@@ -1025,17 +1180,17 @@ requirements.}
   SR-PR2 & TC-CR-3 \\ \hline
   SR-AU1 & TC-CR-3 \\ \hline
   SR-IMR1 & \\ \hline
-  SR-S1 & \\ \hline
-  CR-CR1 & \\ \hline
-  CR-L1 & TC-CR-1 \\ \hline
-  CR-L2 & TC-CR-2 \\ \hline
-  CR-S1 & \\ \hline
+  CR-CR1 & TC-CR-1 \\ \hline
+  CR-L1 & TC-L-1 \\ \hline
+  CR-L2 & TC-L-2 \\ \hline
+  CR-S1 & TC-L-3 \\ \hline
   \caption{Requirements to Test Case Traceability Matrix}
 \end{longtable}
 
 \section{Unit Test Description}
 
-\wss{This section should not be filled in until after the MIS (detailed design
+\wss{This section should not be filled in until after the MIS
+  (detailed design
 document) has been completed.}
 
 \wss{Reference your MIS (detailed design document) and explain your overall
@@ -1058,8 +1213,10 @@ needs to be well-documented, with meaningful names for all of the tests.}
 \subsection{Unit Testing Scope}
 
 \wss{What modules are outside of the scope.  If there are modules that are
-  developed by someone else, then you would say here if you aren't planning on
-  verifying them.  There may also be modules that are part of your software, but
+  developed by someone else, then you would say here if you
+  aren't planning on
+  verifying them.  There may also be modules that are part of
+  your software, but
   have a lower priority for verification than others.  If this is the case,
 explain your rationale for the ranking of module importance.}
 
@@ -1071,9 +1228,11 @@ technique.  That can also be documented in this section.}
 
 \subsubsection{Module 1}
 
-\wss{Include a blurb here to explain why the subsections below cover the module.
+\wss{Include a blurb here to explain why the subsections below
+  cover the module.
   References to the MIS would be good.  You will want tests from a black box
-  perspective and from a white box perspective.  Explain to the reader how the
+  perspective and from a white box perspective.  Explain to the
+  reader how the
 tests were selected.}
 
 \begin{enumerate}
@@ -1180,17 +1339,24 @@ This is where you can place additional information.
 
 \subsection{Symbolic Parameters}
 
-The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.
+$\hypertarget{min_age}{MIN\_AGE}$ = 18\\
+$\hypertarget{min_age}{MAX\_AGE}$ = 70\\
 
-\subsection{Usability Survey Questions?}
-
-\wss{This is a section that would be appropriate for some projects.}
+\subsection{Usability Survey Questions}
+\begin{enumerate}
+  \item Were you able to understand how to use the system after reading the
+    onboarding documentation?
+  \item On a scale of 1 to 10, how confident are you using the system?
+  \item On a scale of 1 to 10, how easy was it to discover features of the
+    system?
+  \item How confident were you in interpreting the system feedback? Was it able
+    provide confirmation or possible solutions to your input?
+  \item Did you find the content of the system to be politically neutral and
+    unoffensive?
+\end{enumerate}
 
 \newpage{}
 \section*{Appendix --- Reflection}
-
-\wss{This section is not required for CAS 741}
 
 The information in this section will be used to evaluate the team members on the
 graduate attribute of Lifelong Learning.
@@ -1198,19 +1364,76 @@ graduate attribute of Lifelong Learning.
 \input{../Reflection.tex}
 
 \begin{enumerate}
-  \item What went well while writing this deliverable?
+  \item What went well while writing this deliverable?\\
+    \\
+    When writing this deliverable, our team was able to quickly meet
+    and delegate
+    sections of the document between members. We had a very productive TA
+    meeting for the VnV plan which answered many questions we had. One example
+    was we were able to clarify that section 5 of the document would be
+    completed later when the design of the system had been done.
+
   \item What pain points did you experience during this deliverable, and how
-    did you resolve them?
+    did you resolve them?\\
+    \\
+    One pain point we experienced was deciding what the best verification and
+    validation methods would be. We wanted to ensure that we chose the right
+    approaches for this application which would result in the highest quality
+    of work. We resolved this challenge by discussing and investigating the
+    merits of different options, and developing a test suite which covered
+    every requirement we had at least once.
+
   \item What knowledge and skills will the team collectively need to acquire to
     successfully complete the verification and validation of your project?
-    Examples of possible knowledge and skills include dynamic testing knowledge,
+    Examples of possible knowledge and skills include dynamic
+    testing knowledge,
     static testing knowledge, specific tool usage, Valgrind etc.  You
     should look to
-    identify at least one item for each team member.
+    identify at least one item for each team member.\\
+    \\
+
+    Akshit Gulia - Needs to get familiar with the PyTest testing
+    framework for python. \\
+
+    Mitchell Hynes - Needs to get familiar with the PyTest testing
+    framework for python and Figma for prototyping designs. \\
+
+    Richard Fan - Needs to get familiar with Jest testing framework
+    for javascript and PyTest testing framework in python. \\
+
+    Kyle D'Souza - Needs to get familiar with Jest test framework for
+    javascript and Figma for prototyping designs. \\
+
+    Rafeed Iqbal - Needs to get familiar with PyTest framework for
+    python and GitHub actions for running tests in GitHub. \\
+
   \item For each of the knowledge areas and skills identified in the previous
     question, what are at least two approaches to acquiring the knowledge or
     mastering the skill?  Of the identified approaches, which will each team
-    member pursue, and why did they make this choice?
+    member pursue, and why did they make this choice?\\
+    \\
+
+    For all of the aforementioned skills some potential ways of
+    acquiring knowledge or mastering the skill would be to get hands
+    on experience with the skill by applying it in a project, reading
+    documentation, and watching online tutorials.
+
+    Akshit Gulia - Plans on watching tutorials on youtube related to
+    PyTest, and also plans on building a small personal learning
+    project on the side in python which uses PyTest for testing. \\
+
+    Mitchell Hynes - Plans to follow the introductory tutorials
+    provided by the creators of PyTest and Figma and will also read
+    documentation on them. \\
+
+    Richard Fan - Plans to read documentation on Jest and PyTest, and
+    also use them in a personal project. \\
+
+    Kyle D'Souza - Plans to watch online tutorials on Jest and Figma.
+    Also plans to read documentation on them. \\
+
+    Rafeed Iqbal - Plans to read documentation on GitHub actions and
+    Pytest. Also plans to watch online tutorials on them. \\
 \end{enumerate}
 
 \end{document}
