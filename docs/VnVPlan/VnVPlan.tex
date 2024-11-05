@@ -1160,6 +1160,44 @@ be involved? Be specific.}
 
 \end{enumerate}
 
+\paragraph{Adherance to Policies, Regulations, and Laws}
+
+\begin{enumerate}
+
+  \item{TC-SS-7\\}
+
+    Initial State: The application is being actively maintained.
+
+    Input/Condition: A security vulnerability or weakness is discovered.
+
+    Output/Result: The vulnerability or weakness is patched withing
+    seven days of discovery.
+
+    How test will be performed: Inspection of wether patch has
+    resolved the weakness within the deadline
+
+\end{enumerate}
+
+\paragraph{Hazard Handling}
+
+\begin{enumerate}
+
+  \item{TC-SS-8\\}
+
+    Initial State: Unsigned document and contractor user account
+    exists in application
+
+    Input/Condition: Contractor user declines signature, attempts to
+    sign but does not complete action, or ignores document.
+
+    Output/Result: Fail-safes trigger, noting the bad data and
+    informing the facilities manager.
+
+    How test will be performed: Attempt to submit without signature
+    and check how the application handles the action.
+
+\end{enumerate}
+
 \subsection{Traceability Between Test Cases and Requirements}
 
 \wss{Provide a table that shows which test cases are supporting which
@@ -1232,7 +1270,8 @@ requirements.}
   SR-PR1 & TC-SS-5\\ \hline
   SR-PR2 & TC-SS-6 \\ \hline
   SR-AU1 & TC-SS-6 \\ \hline
-  SR-IMR1 & \\ \hline
+  SR-IMR1 & TC-SS-7 \\ \hline
+  SR-S1 & TC-SS-8 \\ \hline
   CR-CR1 & TC-CR-1 \\ \hline
   CR-L1 & TC-L-1 \\ \hline
   CR-L2 & TC-L-2 \\ \hline
