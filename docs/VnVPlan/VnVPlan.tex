@@ -12,9 +12,14 @@
 }
 \usepackage[round]{natbib}
 \usepackage{longtable}
+\usepackage{enumitem,amssymb}
+\newlist{todolist}{itemize}{2}
+\setlist[todolist]{label=$\square$}
 
 \input{../Comments}
 \input{../Common}
+
+\setcitestyle{numbers}
 
 \begin{document}
 
@@ -69,26 +74,22 @@ in.}
 
 \section{Symbols, Abbreviations, and Acronyms}
 
-\renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l}
-  \toprule
-  \textbf{symbol} & \textbf{description}\\
-  \midrule
-  T & Test\\
-  \bottomrule
-\end{tabular}\\
-
-\wss{symbols, abbreviations, or acronyms --- you can simply reference the SRS
-\citep{SRS} tables, if appropriate}
-
-\wss{Remove this section if it isn't needed}
+Refer to \textit{Section 4 Naming Convnetions and Terminology} in the
+\href{https://github.com/Spitgranger/SyncMaster/blob/main/docs/SRS-Volere/SRS.pdf}{SRS.pdf}
+document
+for all relevant symbols, abbreviations, and acronyms.
 
 \newpage
 
 \pagenumbering{arabic}
 
-This document ... \wss{provide an introductory blurb and roadmap of the
-Verification and Validation plan}
+This document outlines the Verification and Validation plan which will be used
+to ensure the SyncMaster application meets the requirements specification
+and the City of Hamilton's acceptance. The verification plan is specified
+in detail outlining what methods will be used to verify the
+functional and non-functional
+requirements. The system tests to support this process are specified in detail.
+The validation plan to ensure stakeholder acceptance is further identified.
 
 \section{General Information}
 
@@ -99,50 +100,36 @@ its general functions.}
 
 \subsection{Objectives}
 
-\wss{State what is intended to be accomplished.  The objective will be around
-  the qualities that are most important for your project.  You might have
-  something like: ``build confidence in the software correctness,''
-  ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
-just those that are most important.}
+The objectives of this document are to be able to build confidence in
+the correctness of the application being built, and to demonstrate
+adequate usability of the application by performing the tests
+outlined in this document.
 
-\wss{You should also list the objectives that are out of scope.  You don't have
-  the resources to do everything, so what will you be leaving out.
-  For instance,
-  if you are not going to verify the quality of usability, state
-  this.  It is also
-worthwhile to justify why the objectives are left out.}
-
-\wss{The objectives are important because they highlight that you are aware of
-  limitations in your resources for verification and validation.  You
-  can't do everything,
-  so what are you going to prioritize?  As an example, if your system
-  depends on an
-  external library, you can explicitly state that you will assume
-  that external library
-has already been verified by its implementation team.}
+It is out of scope for the verification and validation plans outlined
+in this document to test external libraries. Instead it is assumed
+that the implementation team for the external library has already
+validated the library.
 
 \subsection{Challenge Level and Extras}
 
 The challenge level for this project is a general level, and the
 extras are conducting user testing and developing a user manual. For
-more information on the challenge level and extras see section
-\textit{Challenge Level and Extras} of the Problem Statement
-\href{https://github.com/Spitgranger/SyncMaster/blob/main/docs/ProblemStatementAndGoals/ProblemStatement.md#4-challenge-level-and-extras}
-{here}.
+more information refer to the Problem Statement and Goals
+\citep[\textit{Challenge Level and Extras}]{ProblemStatement}.
 
 \subsection{Relevant Documentation}
 
-\wss{Reference relevant documentation.  This will definitely include your SRS
-  and your other project documents (design documents, like MG, MIS, etc).  You
-  can include these even before they are written, since by the time the project
-  is done, they will be written.  You can create BibTeX entries for your
-documents and within those entries include a hyperlink to the documents.}
-
-\citet{SRS}
-
-\wss{Don't just list the other documents.  You should explain why
-  they are relevant and
-how they relate to your VnV efforts.}
+\begin{enumerate}
+  \item Problem Statement and Goals \citep{ProblemStatement}:
+    Provides context on the goals and scope of the application.
+  \item Software Requirements Specification \Citep{SRS}:
+    Specification of all requirements being tested and validated in
+    this document.
+  \item Hazard Analysis \Citep{HazardAnalysis}: Additional
+    specifications for security and safety requirements.
+  \item Design Documents \Citep{MG, MIS}: Reference for the
+    mechanisms and design behind functionality and systems being tested.
+\end{enumerate}
 
 \section{Plan}
 
@@ -205,18 +192,36 @@ the members and their roles are given in the following table:
 
 \subsection{SRS Verification Plan}
 
-\wss{List any approaches you intend to use for SRS verification.  This may
-  include ad hoc feedback from reviewers, like your classmates (like your
-primary reviewer), or you may plan for something more rigorous/systematic.}
-
-\wss{If you have a supervisor for the project, you shouldn't just say they will
-  read over the SRS.  You should explain your structured approach to the review.
-  Will you have a meeting?  What will you present?  What questions will you ask?
-  Will you give them instructions for a task-based inspection?  Will
-  you use your
-issue tracker?}
-
-\wss{Maybe create an SRS checklist?}
+To verify the SRS document, we will use the following methods:
+\begin{enumerate}
+  \item Formal reviews with our TA, Yiding. A checklist will be used to track
+    the status of the review and be used as an instrument to verify our SRS.
+    The checklist to be used is at the end of this section of the document.
+  \item Ad-hoc peer reviews tracked through GitHub issues. Throughout the
+    course we receive peer feedback on the quality of our SRS and VnV Plan. The
+    peer feedback provided is valuable input which we will action through issues
+    and pull requests as identified in the development plan.
+  \item Milestone feedback provided through Avenue will also be used to
+    improve the checklist which we use as our instrument to measure
+    SRS verification.
+\end{enumerate}
+The checklist below will be used during formal reviews for SRS verification
+with our TA.
+\begin{itemize}
+  \item Have the requirements been listed in the appropriate sections of the
+    SRS document?
+  \item Are all definitions and acronyms defined in the glossary of terms?
+  \item Are the system inputs properly specified?
+  \item Are the system outputs properly specified?
+  \item Do the functional requirements avoid conflicts with other requirements?
+  \item Do the functional requirements avoid specifying the system design?
+  \item Are the requirements clear enough that they could be implemented by an
+    independent engineering team correctly?
+  \item Is each requirement testable?
+  \item Is independent testing of each requirement possible?
+  \item Are the functional requirements traceable to a use case of the system?
+  \item Are there any open issues from reviewers on a requirement?
+\end{itemize}
 
 \subsection{Design Verification Plan}
 
@@ -228,42 +233,67 @@ issue tracker?}
 
 \subsection{Verification and Validation Plan Verification Plan}
 
-\wss{The verification and validation plan is an artifact that should also be
-verified.  Techniques for this include review and mutation testing.}
+To ensure the quality and completeness of the verification and
+validation plan, the testing team will ensure the following:
 
-\wss{The review will include reviews by your classmates}
+\begin{enumerate}
+  \item There will be peer reviews of the document coming from our
+    assigned Peer Review team, to provide feedback on the plan.
+  \item The TA assigned to the project will review and provide
+    feedback on the plan when grading.
+  \item The development team will review the document to ensure the
+    quality of the plan.
+  \item It should be checked by the testing team that each
+    requirement has a test case associated with it. This can be done
+    using traceability matrices and cross-referencing requirements
+    with what exists in the SRS.
+\end{enumerate}
 
-\wss{Create a checklists?}
+The following is a checklist that can be used to verify the
+verification and validation plan:
+\begin{todolist}
+\item Ensure all issues on the project GitHub related to the document
+  from the Peer Review team is closed.
+\item Ensure that all feedback provided by the TA in the rubric for
+  the document on Avenue is addressed.
+\item Ensure the Development team has reviewed the document and is in
+  agreement that the document is up to quality and completeness standards.
+\item Check the traceability matrices to ensure that all requirements
+  have a test case associated with them.
+\end{todolist}
 
 \subsection{Implementation Verification Plan}
 
-\wss{You should at least point to the tests listed in this document and the unit
-testing plan.}
-
-\wss{In this section you would also give any details of any plans for static
-  verification of the implementation.  Potential techniques include code
-walkthroughs, code inspection, static analyzers, etc.}
-
-\wss{The final class presentation in CAS 741 could be used as a code
-  walkthrough.  There is also a possibility of using the final presentation (in
-CAS741) for a partial usability survey.}
+\begin{itemize}
+  \item To ensure proper implementation of application functionality,
+    unit tests will be conducted on all functions and modules as
+    specified in this document.
+  \item Continuous Integration (CI) tools will be utilized to
+    automatically test all code before deployment, verifying code
+    integrity and identifying issues early in the development process.
+  \item All pull requests will undergo a detailed review process to
+    ensure code quality, adherence to standards, and functional
+    accuracy before merging into the main codebase.
+  \item Following each revision, a team code walkthrough will be
+    conducted to review changes collectively, fostering knowledge
+    sharing and alignment on implementation details.
+\end{itemize}
 
 \subsection{Automated Testing and Verification Tools}
-
-\wss{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-Python.}
-
-\wss{If you have already done this in the development plan, you can point to
-that document.}
-
-\wss{The details of this section will likely evolve as you get closer to the
-implementation.}
+\begin{itemize}
+  \item Python unit testing: PyTest
+  \item JavaScript/TypeScript unit testing: Jest
+\end{itemize}
+Detailed information about automated testing and verification tools
+that we plan to use are explained in the Development Plan
+\citep[\textit{Expected Technology, Coding Standard}]{ProblemStatement}.
+In terms of quality metrics, we plan on using GitHub actions to
+generate a report
+every time a pull request is made against the main branch. The report
+will be generated from the unit testing framework selected, more
+specifically jest-html-reporter and pytest-cov. Initially, these tests
+will include unit tests with more types of automated testing to be determined as
+the project progresses.
 
 \subsection{Software Validation Plan}
 
@@ -762,7 +792,147 @@ be involved? Be specific.}
 
 \end{enumerate}
 
-...
+\subsubsection{Compliance Requirements}
+
+\paragraph{Compliance}
+
+\begin{enumerate}
+
+  \item{TC-CR-1\\}
+
+    Type: Manual
+
+    Initial State: Github is functional, cloud deployment platform is functional
+
+    Input/Condition: A contractor uses the authentication feature of
+    the application
+    to verify their presence on site for the facilities managers.
+
+    Output/Result: The contractor successfully authenticates in the application
+    and successfully complies with each step of the entry/exit
+    procedure document
+    for the station provided through the application.
+
+    How the test will be performed: The contractor user will authenticate at the
+    site for a work order to fix an exhaust fan. Through the
+    authentication process,
+    the entry/exit procedure will be used as a checklist to ensure it
+    is followed
+    and the legislation specified in CR-L1 is not violated.
+
+  \item{TC-CR-2\\}
+
+    Type: Manual
+
+    Initial State: Github is functional, cloud deployment platform is functional
+
+    Input/Condition: The admin account registers a contractor account with the
+    contractors personal email address.
+
+    Output/Result: The contractors account is successfully
+    registered, and the email
+    address is only possible to view either from the facility managers
+    account, the admin
+    account, and the contractors account.
+
+    How the test will be performed: The facility manager will use the
+    interface to
+    register an account in the application. The application will then
+    be opened in
+    different views based on profile. These profiles will be the
+    registered contractor,
+    the admin user, the facilities manager, and a second contractor profile.
+    The test is successful when the email address of the contractor is only
+    visible in the profile of that contractor, the facilities manager,
+    and the admin user.
+
+\end{enumerate}
+
+\subsubsection{Operational and Environmental Requirements}
+
+\paragraph{Ability to Connect and Use}
+
+\begin{enumerate}
+
+  \item{TC-OE-1\\}
+
+    Type: Manual
+
+    Initial State: Device connected to City of Hamilton network
+
+    Input/Condition: Attempt to connect to the application using the network.
+
+    Output/Result: The device successfully connects to and is able to
+    use the application.
+
+    How test will be performed: A user on site at the City of
+    Hamilton, Water Division will connect to the network available to
+    employees and contractors and then attempt to connect to and use
+    the application. The test is successful if the application can be
+    connected to using the city's network.
+
+  \item{TC-OE-2\\}
+
+    Type: Manual
+
+    Initial State: Devices connected to the internet and have the
+    supported browsers available.
+
+    Input: Desktop Browsers being tested are Chrome and Edge, and the
+    mobile devices being tested are Android and iPhone.
+
+    Output: The devices successfully connect to and are able to use
+    the application.
+
+    How test will be performed: Exploratory testing using the
+    supported devices and browsers. The devices should be able to
+    connect and use all functionality in the application, and provide
+    a similar experience.
+
+\end{enumerate}
+
+\paragraph{Future Integration}
+
+\begin{enumerate}
+
+  \item{TC-OE-3\\}
+
+    Type: Manual
+
+    Initial State: Branch with functionality to fill in data fields
+    when provided a valid work order number
+
+    Input/Condition: Valid work order number
+
+    Output/Result: Relevant data fields should be filled in by the application
+
+    How test will be performed: Dummy API used which returns work
+    order information given a work order number. Will test if the
+    functionality in the branch is able to fill in the fields with
+    data from the API, indicating it is viable to add this
+    integration in the future.
+
+\end{enumerate}
+
+\paragraph{Release and Change Log}
+
+\begin{enumerate}
+
+  \item{TC-OE-4\\}
+
+    Type: Manual
+
+    Initial State: New revision
+
+    Input/Condition: Revision released, change log produced
+
+    Output/Result: Revision is released by planned date, change log
+    details all changes.
+
+    How test will be performed: Whenever a revision is released, will
+    inspect the change log to check if all changes have been noted.
+
+\end{enumerate}
 
 \subsection{Traceability Between Test Cases and Requirements}
 
@@ -806,15 +976,13 @@ requirements.}
   PR-SE2 & \\ \hline
   PR-LR1 & \\ \hline
   OE-PE1 & \\ \hline
-  OE-WE1 & \\ \hline
-  OE-WE2 & \\ \hline
-  OE-IAS1 & \\ \hline
-  OE-IAS2 & \\ \hline
-  OE-IAS2 & \\ \hline
-  OE-REL1 & \\ \hline
-  OE-REL2 & \\ \hline
-  OE-REL3 & \\ \hline
-  OE-REL4 & \\ \hline
+  OE-WE1 & TC-OE-1 \\ \hline
+  OE-WE2 & TC-OE-2 \\ \hline
+  OE-IAS3 & TC-OE-3 \\ \hline
+  OE-REL1 & TC-OE-4 \\ \hline
+  OE-REL2 & TC-OE-4 \\ \hline
+  OE-REL3 & TC-OE-4 \\ \hline
+  OE-REL4 & TC-OE-4 \\ \hline
   MS-MTN1 & TC-MS-1 \\ \hline
   MS-MTN2 & TC-MS-2 \\ \hline
   MS-MTN3 & TC-MS-3 \\ \hline
@@ -840,8 +1008,8 @@ requirements.}
   SR-AU1 & \\ \hline
   SR-IMR1 & \\ \hline
   CR-CR1 & \\ \hline
-  CR-L1 & \\ \hline
-  CR-L2 & \\ \hline
+  CR-L1 & TC-CR-1 \\ \hline
+  CR-L2 & TC-CR-2 \\ \hline
   CR-S1 & \\ \hline
   \caption{Requirements to Test Case Traceability Matrix}
 \end{longtable}
@@ -978,6 +1146,8 @@ mentioned functional tests.}
 \subsection{Traceability Between Test Cases and Modules}
 
 \wss{Provide evidence that all of the modules have been considered.}
+
+\newpage
 
 \bibliographystyle{plainnat}
 
