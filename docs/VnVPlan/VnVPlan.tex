@@ -413,38 +413,6 @@ format for the tests given below.}
   walkthroughs, who will
 be involved? Be specific.}
 
-\subsubsection{Area of Testing1}
-
-\paragraph{Title for Test}
-
-\begin{enumerate}
-
-  \item{test-id1\\}
-
-    Type: Functional, Dynamic, Manual, Static etc.
-
-    Initial State:
-
-    Input/Condition:
-
-    Output/Result:
-
-    How test will be performed:
-
-  \item{test-id2\\}
-
-    Type: Functional, Dynamic, Manual, Static etc.
-
-    Initial State:
-
-    Input:
-
-    Output:
-
-    How test will be performed:
-
-\end{enumerate}
-
 \subsubsection{Usability and Humanity Requirements}
 
 \paragraph{Ease of Use}
@@ -513,7 +481,7 @@ be involved? Be specific.}
     they have not seem before. After 10 minutes, the user will be asked to rate
     their understanding of the feature and how confident they are using it. The
     questions will be a simple 1-10 scale. If the user selects a 7 or above, the
-    test is considered passed.
+    test is considered passed. See \textbf{Section 6.2} Usability Survey Questions.
 
   \item{TC-LR-2\\}
 
@@ -530,7 +498,8 @@ be involved? Be specific.}
     How test will be performed: The test will be performed by a user from our
     stakeholder. They will be asked to view the onboarding documents. After 5
     minutes the user will be asked a few questions to gauge their confidence when using the
-    system. See Usability Survey Questions.
+    system. See \textbf{Section 6.2} Usability Survey Questions.
+
 
 \end{enumerate}
 
@@ -1023,13 +992,13 @@ requirements.}
   FR9 & \\ \hline
   LF-AP1 & TC-LF-1 \\ \hline
   LF-ST1 & TC-LF-2 \\ \hline
-  UH-EU1 & \\ \hline
-  UH-EU2 & \\ \hline
-  UH-LR1 & \\ \hline
-  UH-LR2 & \\ \hline
-  UH-UP1 & \\ \hline
-  UH-UP2 & \\ \hline
-  UH-AS1 & \\ \hline
+  UH-EU1 & TC-EU1\\ \hline
+  UH-EU2 & TC-EU2\\ \hline
+  UH-LR1 & TC-LR1\\ \hline
+  UH-LR2 & TC-LR2\\ \hline
+  UH-UP1 & TC-UP1\\ \hline
+  UH-UP2 & TC-UP2\\ \hline
+  UH-AS1 & TC-AS1\\ \hline
   PR-SL1 & \\ \hline
   PR-SL2 & \\ \hline
   PR-SL3 & \\ \hline
@@ -1229,9 +1198,6 @@ mentioned functional tests.}
 This is where you can place additional information.
 
 \subsection{Symbolic Parameters}
-
-The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.
 
 $\hypertarget{min_age}{MIN\_AGE}$ = 18\\
 $\hypertarget{min_age}{MAX\_AGE}$ = 70\\
