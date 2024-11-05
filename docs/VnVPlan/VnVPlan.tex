@@ -322,68 +322,239 @@ the project progresses.
 
 \section{System Tests}
 
-\wss{There should be text between all headings, even if it is just a roadmap of
-the contents of the subsections.}
-
 \subsection{Tests for Functional Requirements}
 
-\wss{Subsets of the tests may be in related, so this section is divided into
-  different areas.  If there are no identifiable subsets for the tests, this
-level of document structure can be removed.}
-
-\wss{Include a blurb here to explain why the subsections below
-cover the requirements.  References to the SRS would be good here.}
-
-\subsubsection{Area of Testing1}
-
-\wss{It would be nice to have a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good here.
-  If a section
-  covers tests for input constraints, you should reference the data constraints
-table in the SRS.}
-
-\paragraph{Title for Test}
+\subsubsection{File Handling}
 
 \begin{enumerate}
 
-  \item{test-id1\\}
+  \item{TC-FR1\\}
 
-    Control: Manual versus Automatic
+    Control: Manual
 
-    Initial State:
+    Initial State: The system is running and user is logged in
 
-    Input:
+    Input: A file (can have any extension)
 
-    Output: \wss{The expected result for the given inputs.  Output is
-      not how you
-      are going to return the results of the test.  The output is the expected
-    result.}
+    Output: File should be uploaded successfully and visible in the folder/path
+    it was uploded under with the following details:
+    \begin{enumerate}
+      \item File Name
+      \item Date Modified
+      \item Type
+      \item Size
+      \item Owner
+    \end{enumerate}
 
-    Test Case Derivation: \wss{Justify the expected value given in
-    the Output field}
+    Test Case Derivation: The system is expected to support the upload of files
+    regardless of their file types and also show the details mentioned above
+    once they are successfully uploaded.
 
-    How test will be performed:
+    How test will be performed: Files with common file types
+    (.pdf, .docx, .xlsx, .txt, .png, .jpeg, .jpg, .zip and .rar
+    will be used for testing) and uncommon file types (.rb, .rda, .bin and .vdi
+    will be used for testing) will be manually uploaded. Afterwards, their
+    visibility on the portal will be verified.
 
-  \item{test-id2\\}
+  \item{TC-FR2\\}
 
-    Control: Manual versus Automatic
+    Control: Manual
 
-    Initial State:
+    Initial State: The system is running, and the user is logged in
 
-    Input:
+    Input: A file present in the portal (i.e., an uploaded file)
 
-    Output: \wss{The expected result for the given inputs}
+    Output: The user should able to view the file in the portal if it is one
+    of the following types:
+    \begin{enumerate}
+      \item .doc
+      \item .docx
+      \item .xls
+      \item .xlsx
+      \item .ppt
+      \item .pptx
+      \item .pdf
+      \item .csv
+      \item .txt
+    \end{enumerate}
+    If the file is not one of the above types, then the message \lq\lq File
+    cannot be viewed in the portal. Download file to view it." should be
+    displayed.
 
-    Test Case Derivation: \wss{Justify the expected value given in
-    the Output field}
+    Test Case Derivation: The above mentioned types are commonly used by the
+    stakeholders in day-to-day operations and therefore, they should be able to
+    view them. Less common file types (ones not mentioned above) are not used by
+    our stakeholders. Moreover, file types like .xlsm (macro-enabled excel
+    workbook) can be malcious and thus, can compromise the safety of the system
+    (malcious macro present in a macro-enabled excel workbook executes when file
+    is opened/viewed). Therefore, they are not viewable on the portal.
 
-    How test will be performed:
+    How test will be performed: Two random files, one having the file type
+    supported for viewing (as mentioned above), and other having an unsupported
+    file type will be selected and viewed.
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
+\subsubsection{Access Control}
 
-...
+\begin{enumerate}
+  \item {TC-FR3\\}
+
+    Control: Manual
+
+    Initial State: The system is running and different user roles of Admin,
+    Contractor/General user exist.
+
+    Input: User Role (Admin, Contractor/General user)
+
+    Output: Admin users should be able to change permissions and access all
+    documents. Contractor/General users should only have read access and the
+    ability to sign documents.
+    Test Case Derivation: The system should enforce different access levels as
+    specified in the functional requirements in the SRS document.
+
+    How test will be performed: Manually log in with different users roles (
+    as mentioned above) and verify the access permissions and capabilities.
+
+\end{enumerate}
+
+\subsubsection{User Information Visibility}
+
+\begin{enumerate}
+  \item {TC-FR4\\}
+
+    Control: Manual
+
+    Initial State: The system is running and the number of users in the system
+    is greater than or equal to 2 and there is atleast one admin user and
+    atleast one contractor/general user.
+
+    Input: A valid user id
+
+    Output: Admin users should be able to view all the details of the other user
+    with the corresponding user id provided.
+
+    Test Case Derivation: Admin users need to access contractor information to
+    manage work orders and job details. In some cases, admin users will also
+    need to access details of other admin users.
+
+    How test will be performed: Manually log in as an admin user and verify the
+    visibility of the user details based on the user id provided.
+
+\end{enumerate}
+
+\subsubsection{Geolocation Verification}
+
+\begin{enumerate}
+  \item {TC-FR5\\}
+
+    Control: Manual
+
+    Initial State: The system is running and the location service is enabled
+    on the contractor's device
+
+    Input: Contractor user's location
+
+    Output: Authentication and signing/uploading of the document should be
+    allowed if within the allowed geolocation. Otherwise, denied.
+
+    Test Case Derivation: To ensure presence of contractors on the plant, the
+    should restrict the actions mentioned above if they are not within premises
+    of the plant.
+
+    How test will be performed: Manually attempt to authenticate and sign/upload
+    documents from different locations and verify the results.
+
+\end{enumerate}
+
+\subsubsection{Notifications}
+
+\begin{enumerate}
+  \item {TC-FR6\\}
+
+    Control: Manual
+
+    Initial State: The system is running, and compliance documents are present
+    in the system
+
+    Input: Expired compliance document
+
+    Output: The user should receive a notification when a compliance document
+    expires
+
+    Test Case Derivation: Notifications for expired documents ensure users stay
+    compliant and up-to-date.
+
+    How test will be performed: Manually expire a compliance document and verify
+    that the user receives a notification.
+
+  \item {TC-FR7\\}
+
+    Control: Manual
+
+    Initial State: The system is running, and there are contractor users who
+    have not completed required training.
+
+    Input: Contractor user without completed training.
+
+    Output: The manager of the contractor should receive a notification when the
+    contractor attempts to authenticate and upload documents without required
+    training.
+
+    Test Case Derivation: Managers need to be aware of contractor's traning
+    statuses to ensure compliance.
+
+    How test will be performed: Manually attempt to authenticate and upload
+    documents without completing required training as a contractor user and
+    verify that the manager is notified.
+
+\end{enumerate}
+
+\subsubsection{Document Acknowledgement}
+
+\begin{enumerate}
+  \item {TC-FR8\\}
+
+    Control: Manual
+
+    Initial State: The system is running, and documents are available for
+    acknowledgement.
+
+    Input: Document for acknowledgement.
+
+    Output: The should store the date, time, document name and name of the
+    person who signed the acknowledgement document.
+
+    Test Case Derivation: Accurate record-keeping is required for
+    accountability and traceability.
+    How test will be performed: Manually acknowledge a document and verify that
+    the system stores the correct information.
+
+\end{enumerate}
+
+\subsubsection{Training Verification}
+
+\begin{enumerate}
+  \item {TC-FR9\\}
+
+    Control: Manual
+
+    Initial State: The system is running, and there are contractor users who
+    have not completed the required training.
+
+    Input: Contractor user without completed training
+
+    Output: The should prevent a contractor user from authenticating or
+    uploading a document if the required training is not completed.
+
+    Test Case Derivation: Contractors are required to complete training before
+    they start their work at the plant.
+
+    How test will be performed: Manually try to authenticate and upload document
+    as a contractor user without completing required training and verify that
+    the system prevents it.
+
+\end{enumerate}
 
 \subsection{Tests for Nonfunctional Requirements}
 
@@ -1207,15 +1378,14 @@ requirements.}
   \hline
   \textbf{Req. ID} & \textbf{Test ID's} \\
   \hline
-  FR1 & \\ \hline
-  FR2 & \\ \hline
-  FR3 & \\ \hline
-  FR4 & \\ \hline
-  FR5 & \\ \hline
-  FR6 & \\ \hline
-  FR7 & \\ \hline
-  FR8 & \\ \hline
-  FR9 & \\ \hline
+  FR1 & TC-FR1, TC-FR2\\ \hline
+  FR3 & TC-FR3\\ \hline
+  FR4 & TC-FR4\\ \hline
+  FR5 & TC-FR5\\ \hline
+  FR6 & TC-FR6\\ \hline
+  FR7 & TC-FR8\\ \hline
+  FR8 & TC-FR7\\ \hline
+  FR9 & TC-FR9\\ \hline
   LF-AP1 & TC-LF-1 \\ \hline
   LF-ST1 & TC-LF-2 \\ \hline
   UH-EU1 & TC-EU1\\ \hline
