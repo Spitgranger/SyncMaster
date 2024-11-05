@@ -280,21 +280,20 @@ verification and validation plan:
 \end{itemize}
 
 \subsection{Automated Testing and Verification Tools}
-
-\wss{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-Python.}
-
-\wss{If you have already done this in the development plan, you can point to
-that document.}
-
-\wss{The details of this section will likely evolve as you get closer to the
-implementation.}
+\begin{itemize}
+  \item Python unit testing: PyTest
+  \item JavaScript/TypeScript unit testing: Jest
+\end{itemize}
+Detailed information about automated testing and verification tools
+that we plan to use are explained in the Development Plan
+\citep[\textit{Expected Technology, Coding Standard}]{ProblemStatement}.
+In terms of quality metrics, we plan on using GitHub actions to
+generate a report
+every time a pull request is made against the main branch. The report
+will be generated from the unit testing framework selected, more
+specifically jest-html-reporter and pytest-cov. Initially, these tests
+will include unit tests with more types of automated testing to be determined as
+the project progresses.
 
 \subsection{Software Validation Plan}
 
