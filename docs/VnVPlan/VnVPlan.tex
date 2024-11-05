@@ -100,27 +100,15 @@ its general functions.}
 
 \subsection{Objectives}
 
-\wss{State what is intended to be accomplished.  The objective will be around
-  the qualities that are most important for your project.  You might have
-  something like: ``build confidence in the software correctness,''
-  ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
-just those that are most important.}
+The objectives of this document are to be able to build confidence in
+the correctness of the application being built, and to demonstrate
+adequate usability of the application by performing the tests
+outlined in this document.
 
-\wss{You should also list the objectives that are out of scope.  You don't have
-  the resources to do everything, so what will you be leaving out.
-  For instance,
-  if you are not going to verify the quality of usability, state
-  this.  It is also
-worthwhile to justify why the objectives are left out.}
-
-\wss{The objectives are important because they highlight that you are aware of
-  limitations in your resources for verification and validation.  You
-  can't do everything,
-  so what are you going to prioritize?  As an example, if your system
-  depends on an
-  external library, you can explicitly state that you will assume
-  that external library
-has already been verified by its implementation team.}
+It is out of scope for the verification and validation plans outlined
+in this document to test external libraries. Instead it is assumed
+that the implementation team for the external library has already
+validated the library.
 
 \subsection{Challenge Level and Extras}
 
@@ -245,7 +233,7 @@ with our TA.
 
 \subsection{Verification and Validation Plan Verification Plan}
 
-to ensure the quality and completeness of the verification and
+To ensure the quality and completeness of the verification and
 validation plan, the testing team will ensure the following:
 
 \begin{enumerate}
@@ -292,21 +280,20 @@ verification and validation plan:
 \end{itemize}
 
 \subsection{Automated Testing and Verification Tools}
-
-\wss{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-Python.}
-
-\wss{If you have already done this in the development plan, you can point to
-that document.}
-
-\wss{The details of this section will likely evolve as you get closer to the
-implementation.}
+\begin{itemize}
+  \item Python unit testing: PyTest
+  \item JavaScript/TypeScript unit testing: Jest
+\end{itemize}
+Detailed information about automated testing and verification tools
+that we plan to use are explained in the Development Plan
+\citep[\textit{Expected Technology, Coding Standard}]{ProblemStatement}.
+In terms of quality metrics, we plan on using GitHub actions to
+generate a report
+every time a pull request is made against the main branch. The report
+will be generated from the unit testing framework selected, more
+specifically jest-html-reporter and pytest-cov. Initially, these tests
+will include unit tests with more types of automated testing to be determined as
+the project progresses.
 
 \subsection{Software Validation Plan}
 
@@ -722,7 +709,7 @@ be involved? Be specific.}
 
 \begin{enumerate}
 
-  \item{TC-CR-1\\}
+  \item{TC-L-1\\}
 
     Type: Manual
 
@@ -744,7 +731,7 @@ be involved? Be specific.}
     is followed
     and the legislation specified in CR-L1 is not violated.
 
-  \item{TC-CR-2\\}
+  \item{TC-L-2\\}
 
     Type: Manual
 
@@ -772,6 +759,32 @@ be involved? Be specific.}
 
 \end{enumerate}
 
+\subsubsection{Cultural Requirements}
+
+\paragraph{Cultural}
+
+\begin{enumerate}
+  \item{TC-CR-1\\}
+
+    Type: Manual
+
+    Initial State: Github is functional, cloud deployment platform is functional
+
+    Input/Condition: The Github repository code is checked and the code for the
+    display of the user interface is opened.
+
+    Output/Result: The user interface and user experience is aligned with the 5
+    City of Hamilton cultural pillars. These are Collective Ownership,
+    Steadfast Integrity, Courageous Change, Sensational Service, and
+    Engaged and Empowered Employees.
+
+    How the test will be performed: The capstone team will compare the qualities
+    of the user interface application code with the 5 pillars and assess whether
+    each pillar is met by the application. The test passes if the
+    team determines
+    that the pillars are satisfied.
+\end{enumerate}
+
 \subsubsection{Operational and Environmental Requirements}
 
 \paragraph{Ability to Connect and Use}
@@ -784,7 +797,8 @@ be involved? Be specific.}
 
     Initial State: Device connected to City of Hamilton network
 
-    Input/Condition: Attempt to connect to the application using the network.
+    Input/Condition: Attempt to connect to the application using
+    the network.
 
     Output/Result: The device successfully connects to and is able to
     use the application.
@@ -828,7 +842,8 @@ be involved? Be specific.}
 
     Input/Condition: Valid work order number
 
-    Output/Result: Relevant data fields should be filled in by the application
+    Output/Result: Relevant data fields should be filled in by
+    the application
 
     How test will be performed: Dummy API used which returns work
     order information given a work order number. Will test if the
@@ -931,16 +946,17 @@ requirements.}
   MS-PR2 & \\ \hline
   SR-AU1 & \\ \hline
   SR-IMR1 & \\ \hline
-  CR-CR1 & \\ \hline
-  CR-L1 & TC-CR-1 \\ \hline
-  CR-L2 & TC-CR-2 \\ \hline
+  CR-CR1 & TC-CR-1 \\ \hline
+  CR-L1 & TC-L-1 \\ \hline
+  CR-L2 & TC-L-2 \\ \hline
   CR-S1 & \\ \hline
   \caption{Requirements to Test Case Traceability Matrix}
 \end{longtable}
 
 \section{Unit Test Description}
 
-\wss{This section should not be filled in until after the MIS (detailed design
+\wss{This section should not be filled in until after the MIS
+  (detailed design
 document) has been completed.}
 
 \wss{Reference your MIS (detailed design document) and explain your overall
@@ -963,8 +979,10 @@ needs to be well-documented, with meaningful names for all of the tests.}
 \subsection{Unit Testing Scope}
 
 \wss{What modules are outside of the scope.  If there are modules that are
-  developed by someone else, then you would say here if you aren't planning on
-  verifying them.  There may also be modules that are part of your software, but
+  developed by someone else, then you would say here if you
+  aren't planning on
+  verifying them.  There may also be modules that are part of
+  your software, but
   have a lower priority for verification than others.  If this is the case,
 explain your rationale for the ranking of module importance.}
 
@@ -976,9 +994,11 @@ technique.  That can also be documented in this section.}
 
 \subsubsection{Module 1}
 
-\wss{Include a blurb here to explain why the subsections below cover the module.
+\wss{Include a blurb here to explain why the subsections below
+  cover the module.
   References to the MIS would be good.  You will want tests from a black box
-  perspective and from a white box perspective.  Explain to the reader how the
+  perspective and from a white box perspective.  Explain to the
+  reader how the
 tests were selected.}
 
 \begin{enumerate}
@@ -1122,7 +1142,8 @@ graduate attribute of Lifelong Learning.
 
   \item What knowledge and skills will the team collectively need to acquire to
     successfully complete the verification and validation of your project?
-    Examples of possible knowledge and skills include dynamic testing knowledge,
+    Examples of possible knowledge and skills include dynamic
+    testing knowledge,
     static testing knowledge, specific tool usage, Valgrind etc.  You
     should look to
     identify at least one item for each team member.\\
