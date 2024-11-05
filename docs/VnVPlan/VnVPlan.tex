@@ -204,18 +204,36 @@ the members and their roles are given in the following table:
 
 \subsection{SRS Verification Plan}
 
-\wss{List any approaches you intend to use for SRS verification.  This may
-  include ad hoc feedback from reviewers, like your classmates (like your
-primary reviewer), or you may plan for something more rigorous/systematic.}
-
-\wss{If you have a supervisor for the project, you shouldn't just say they will
-  read over the SRS.  You should explain your structured approach to the review.
-  Will you have a meeting?  What will you present?  What questions will you ask?
-  Will you give them instructions for a task-based inspection?  Will
-  you use your
-issue tracker?}
-
-\wss{Maybe create an SRS checklist?}
+To verify the SRS document, we will use the following methods:
+\begin{enumerate}
+  \item Formal reviews with our TA, Yiding. A checklist will be used to track
+    the status of the review and be used as an instrument to verify our SRS.
+    The checklist to be used is at the end of this section of the document.
+  \item Ad-hoc peer reviews tracked through GitHub issues. Throughout the
+    course we receive peer feedback on the quality of our SRS and VnV Plan. The
+    peer feedback provided is valuable input which we will action through issues
+    and pull requests as identified in the development plan.
+  \item Milestone feedback provided through Avenue will also be used to
+    improve the checklist which we use as our instrument to measure
+    SRS verification.
+\end{enumerate}
+The checklist below will be used during formal reviews for SRS verification
+with our TA.
+\begin{itemize}
+  \item Have the requirements been listed in the appropriate sections of the
+    SRS document?
+  \item Are all definitions and acronyms defined in the glossary of terms?
+  \item Are the system inputs properly specified?
+  \item Are the system outputs properly specified?
+  \item Do the functional requirements avoid conflicts with other requirements?
+  \item Do the functional requirements avoid specifying the system design?
+  \item Are the requirements clear enough that they could be implemented by an
+    independent engineering team correctly?
+  \item Is each requirement testable?
+  \item Is independent testing of each requirement possible?
+  \item Are the functional requirements traceable to a use case of the system?
+  \item Are there any open issues from reviewers on a requirement?
+\end{itemize}
 
 \subsection{Design Verification Plan}
 
@@ -694,7 +712,9 @@ be involved? Be specific.}
 
 \end{enumerate}
 
-\subsection{Compliance Requirements}
+\subsubsection{Compliance Requirements}
+
+\paragraph{Compliance}
 
 \begin{enumerate}
 
@@ -770,6 +790,90 @@ be involved? Be specific.}
     each pillar is met by the application. The test passes if the team determines
     that the pillars are satisfied.
 
+\subsubsection{Operational and Environmental Requirements}
+
+\paragraph{Ability to Connect and Use}
+
+\begin{enumerate}
+
+  \item{TC-OE-1\\}
+
+    Type: Manual
+
+    Initial State: Device connected to City of Hamilton network
+
+    Input/Condition: Attempt to connect to the application using the network.
+
+    Output/Result: The device successfully connects to and is able to
+    use the application.
+
+    How test will be performed: A user on site at the City of
+    Hamilton, Water Division will connect to the network available to
+    employees and contractors and then attempt to connect to and use
+    the application. The test is successful if the application can be
+    connected to using the city's network.
+
+  \item{TC-OE-2\\}
+
+    Type: Manual
+
+    Initial State: Devices connected to the internet and have the
+    supported browsers available.
+
+    Input: Desktop Browsers being tested are Chrome and Edge, and the
+    mobile devices being tested are Android and iPhone.
+
+    Output: The devices successfully connect to and are able to use
+    the application.
+
+    How test will be performed: Exploratory testing using the
+    supported devices and browsers. The devices should be able to
+    connect and use all functionality in the application, and provide
+    a similar experience.
+
+\end{enumerate}
+
+\paragraph{Future Integration}
+
+\begin{enumerate}
+
+  \item{TC-OE-3\\}
+
+    Type: Manual
+
+    Initial State: Branch with functionality to fill in data fields
+    when provided a valid work order number
+
+    Input/Condition: Valid work order number
+
+    Output/Result: Relevant data fields should be filled in by the application
+
+    How test will be performed: Dummy API used which returns work
+    order information given a work order number. Will test if the
+    functionality in the branch is able to fill in the fields with
+    data from the API, indicating it is viable to add this
+    integration in the future.
+
+\end{enumerate}
+
+\paragraph{Release and Change Log}
+
+\begin{enumerate}
+
+  \item{TC-OE-4\\}
+
+    Type: Manual
+
+    Initial State: New revision
+
+    Input/Condition: Revision released, change log produced
+
+    Output/Result: Revision is released by planned date, change log
+    details all changes.
+
+    How test will be performed: Whenever a revision is released, will
+    inspect the change log to check if all changes have been noted.
+
 \end{enumerate}
 
 \subsection{Traceability Between Test Cases and Requirements}
@@ -814,15 +918,13 @@ requirements.}
   PR-SE2 & \\ \hline
   PR-LR1 & \\ \hline
   OE-PE1 & \\ \hline
-  OE-WE1 & \\ \hline
-  OE-WE2 & \\ \hline
-  OE-IAS1 & \\ \hline
-  OE-IAS2 & \\ \hline
-  OE-IAS2 & \\ \hline
-  OE-REL1 & \\ \hline
-  OE-REL2 & \\ \hline
-  OE-REL3 & \\ \hline
-  OE-REL4 & \\ \hline
+  OE-WE1 & TC-OE-1 \\ \hline
+  OE-WE2 & TC-OE-2 \\ \hline
+  OE-IAS3 & TC-OE-3 \\ \hline
+  OE-REL1 & TC-OE-4 \\ \hline
+  OE-REL2 & TC-OE-4 \\ \hline
+  OE-REL3 & TC-OE-4 \\ \hline
+  OE-REL4 & TC-OE-4 \\ \hline
   MS-MTN1 & TC-MS-1 \\ \hline
   MS-MTN2 & TC-MS-2 \\ \hline
   MS-MTN3 & TC-MS-3 \\ \hline
