@@ -530,12 +530,27 @@ be involved? Be specific.}
     How test will be performed: Manually request document retrieval and measure
     time taken. Verify that it does not exceed 2 seconds
 
+
+  \item {TC-PR-2\\}
+
+    Type: Manual
+      
+    Initial State: The system is running
+      
+    Input/Condition: Navigation to a different page
+      
+    Output/Result: The system should be able to navigate to a different page
+    in under 1.5 seconds.
+      
+    How test will be performed: Manually navigate to a different page and 
+    measure time taken. Verify that it does not exceed 1.5 seconds
+
 \end{enumerate}
 
 \paragraph{Safety-Critical Requirements}
 \begin{enumerate}
 
-  \item {TC-PR-2\\}
+  \item {TC-PR-3\\}
 
     Type: Manual
 
@@ -550,12 +565,29 @@ be involved? Be specific.}
     How test will be performed: Manually upload and retrieve a document. Then,
     verify its integrity.
 
+  \item {TC-PR-4\\}
+
+    Type: Manual
+
+    Initial State: The system has different user roles configured (Admin and 
+    Contractor/General user)
+
+    Input/Condition: Attempt to access documents with different user roles.
+
+    Output/Result: Document access should be restricted based on user roles. 
+    Admin users should have the ability to read and write docuements while
+    contractor/general users should have the abilty to only read and sign
+    docuements.
+
+    How test will be performed: Manually log in with different user roles and 
+    attempt to access docuements. Verify that access is correctly restricted.
+
 \end{enumerate}
 
 \paragraph{Precision or Accuracy Requirements}
 \begin{enumerate}
 
-  \item {TC-PR-3\\}
+  \item {TC-PR-5\\}
 
     Type: Manual
 
@@ -570,12 +602,26 @@ be involved? Be specific.}
     How test will be performed: Manually perform search queries and evaluate the
     relevance of the results
 
+  \item {TC-PR-6\\}
+
+    Type: Manual
+
+    Initial State: The system is running and ready for docuement upload and 
+    retrieval
+
+    Input/Condition: Upload and retrieve docuements
+
+    Output/Result: No corruption or data loss in 99.99\% of the cases
+
+    How test will be performed: Manually upload and retrieve docuements. Then,
+    verify their integrity.
+
 \end{enumerate}
 
 \paragraph{Robustness or Fault-Tolerance Requirements}
 \begin{enumerate}
 
-  \item {TC-PR-4\\}
+  \item {TC-PR-7\\}
 
     Type: Manual
 
@@ -588,7 +634,7 @@ be involved? Be specific.}
     How test will be performed: Manually input unexpected data and observe the
     system's response.
 
-    \item {TC-PR-5\\}
+    \item {TC-PR-8\\}
 
     Type: Manual
 
@@ -606,7 +652,7 @@ be involved? Be specific.}
 \paragraph{Capacity Requirements}
 \begin{enumerate}
 
-  \item {TC-PR-6\\}
+  \item {TC-PR-9\\}
 
     Type: Manual
 
@@ -620,7 +666,7 @@ be involved? Be specific.}
     How test will be performed: Manually upload and download documents and
     measure the data transfer rate.
 
-    \item {TC-PR-7\\}
+    \item {TC-PR-10\\}
 
     Type: Manual
 
@@ -639,7 +685,7 @@ be involved? Be specific.}
 
 \paragraph{Scalability or Extensibility Requirements}
 \begin{enumerate}
-  \item {TC-PR-8\\}
+  \item {TC-PR-11\\}
 
     Type: Manual
 
@@ -653,6 +699,41 @@ be involved? Be specific.}
     How test will be performed: Manually create nested document categories and
     verify their functionality.
 
+    \item {TC-PR-12\\}
+
+    Type: Automatic
+
+    Initial State: The system is running under normal conditions
+
+    Input/Condition: Simulate high traffic to the system.
+
+    Output/Result: The system should distribute traffic evenly and avoid single
+    points of failure.
+
+    How test will be performed: Simulate high-traffic using a script to generate
+    users and perform the task of uploading a document. Verify the system's load
+    balancing capabilities.
+
+\end{enumerate}
+
+\paragraph{Scalability or Extensibility Requirements}
+\begin{enumerate}
+
+  \item {TC-PR-13}
+  Type: Automatic
+
+  Initial State: The system is running
+
+  Input/Condition: Add new feature into the system
+
+  Output/Result: The system is functional with the new functionalites and the
+  behaviour of the old functionalities is not changed (the ones which 
+  were not intended to be impacted by the introduction of the new feature).
+  The ease of introduction should atleast be 8.
+
+  How test will be performed: Add code for the new feature and measure the ease
+  of introduction of the feature on a scale of 1-10. Verify that the ease of
+  introduction is greater or equal to 8.
 \end{enumerate}
 
 
@@ -1046,19 +1127,18 @@ requirements.}
   UH-UP2 & \\ \hline
   UH-AS1 & \\ \hline
   PR-SL1 & TC-PR-1\\ \hline
-  PR-SL2 & \\ \hline
-  PR-SL3 & \\ \hline
-  PR-SC1 & TC-PR-2\\ \hline
-  PR-SC2 & \\ \hline
-  PR-PA1 & TC-PR-3\\ \hline
-  PR-PA2 & \\ \hline
-  PR-RFT1 & TC-PR-4\\ \hline
-  PR-RFT2 & TC-PR-5\\ \hline
-  PR-CR1 & TC-PR-6\\ \hline
-  PR-CR2 & TC-PR-7\\ \hline
-  PR-SE1 & TC-PR-8\\ \hline
-  PR-SE2 & \\ \hline
-  PR-LR1 & \\ \hline
+  PR-SL3 & TC-PR-2\\ \hline
+  PR-SC1 & TC-PR-3\\ \hline
+  PR-SC2 & TC-PR-4\\ \hline
+  PR-PA1 & TC-PR-5\\ \hline
+  PR-PA2 & TC-PR-6\\ \hline
+  PR-RFT1 & TC-PR-7\\ \hline
+  PR-RFT2 & TC-PR-8\\ \hline
+  PR-CR1 & TC-PR-9\\ \hline
+  PR-CR2 & TC-PR-10\\ \hline
+  PR-SE1 & TC-PR-11\\ \hline
+  PR-SE2 & TC-PR-12\\ \hline
+  PR-LR1 & TC-PR-13\\ \hline
   OE-PE1 & \\ \hline
   OE-WE1 & TC-OE-1 \\ \hline
   OE-WE2 & TC-OE-2 \\ \hline
