@@ -8,11 +8,12 @@ const LandingPage: React.FC = () => {
   const router = useRouter();
 
   const goToNextPage = () => {
-    router.push('/next'); // Redirects to the "next" page
+    router.push('/next'); // placeholder for next page
   };
 
   return (
     <div className={styles.container}>
+      {/* Logo */}
       <Image
           className={styles.logo}
           src="/hamilton-logo.svg"
@@ -27,7 +28,7 @@ const LandingPage: React.FC = () => {
         <p>Water, Wastewater & Stormwater Management</p>
       </header>
 
-      {/* Information Sections */}
+      {/* Portal button */}
       <main className={styles.main}>
         <section className={styles.section}>
           <div className={styles.icon}>🛠️</div>
@@ -36,8 +37,6 @@ const LandingPage: React.FC = () => {
       </button>
         </section>
       </main>
-
-      {/* Link to the Next Page */}
     </div>
   );
 };
