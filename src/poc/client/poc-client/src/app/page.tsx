@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation';
 import Image from 'next/image'
 import React from 'react';
-import styles from './page.module.css';
+import styles from './landing.module.css';
 
 const LandingPage: React.FC = () => {
   const router = useRouter();
