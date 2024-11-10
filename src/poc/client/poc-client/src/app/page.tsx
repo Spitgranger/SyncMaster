@@ -1,5 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation';
+import Image from 'next/image'
 import React from 'react';
 import styles from './page.module.css';
 
@@ -12,6 +13,14 @@ const LandingPage: React.FC = () => {
 
   return (
     <div className={styles.container}>
+      <Image
+          className={styles.logo}
+          src="/hamilton-logo.svg"
+          alt="Next.js logo"
+          width={500}
+          height={100}
+          priority
+        />
       {/* Header Section */}
       <header className={styles.header}>
         <h1>City of Hamilton, Water Division</h1>
