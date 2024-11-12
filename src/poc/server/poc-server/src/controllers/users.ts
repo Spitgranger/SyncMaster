@@ -56,7 +56,7 @@ export const verifyLocation = async (req: Request, res: Response) => {
             res.status(401).json({ message: "User is not on a registered site" });
             return;
         }
-        res.status(200).json({ uuid });
+        res.status(200).json({ token: "" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
