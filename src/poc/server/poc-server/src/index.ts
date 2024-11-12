@@ -1,14 +1,15 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import dotenv from "dotenv";
-import http, {IncomingMessage} from "http";
+import http from "http";
 import bodyParser from "body-parser";
 import userRoutes from "./routes/users";
 import { Server, Socket } from "socket.io";
 import cors from "cors";
+import {sessionIds} from "./controllers/users";
 
 declare module 'express-session' {
     interface SessionData {
-        chatId: string | Uint8Array
+        sessionId: string | Uint8Array
     }
 }
 
@@ -16,7 +17,6 @@ dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 5001;
-var sessionIds: string[] | Uint8Array[] = [];
 
 app.use(cors({
     origin: "http://localhost:3001",
@@ -24,16 +24,17 @@ app.use(cors({
 }));
 
 const server = new http.Server(app);
-const io = new Server(server, {
+export const io = new Server(server, {
     cors: {
         origin: ["http://localhost:3001"],
     },
 });
 io.on("connection", (socket: Socket) => {
     console.log("Socket connected: ", socket.id);
-    socket.on("join_room", (data) => {
+    socket.on("join_session", (data) => {
         socket.join(data);
-        console.log("User joined room: ", data);
+        console.log("User started session: ", data);
+        console.log(sessionIds);
     });
     socket.on("disconnect", () => {
         console.log("A user disconnected");
