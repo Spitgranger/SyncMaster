@@ -4,7 +4,7 @@ import http, {IncomingMessage} from "http";
 import bodyParser from "body-parser";
 import userRoutes from "./routes/users";
 import { Server, Socket } from "socket.io";
-import session, {SessionData} from "express-session";
+import cors from "cors";
 
 declare module 'express-session' {
     interface SessionData {
@@ -15,13 +15,18 @@ declare module 'express-session' {
 dotenv.config();
 
 const app: Express = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5001;
 var sessionIds: string[] | Uint8Array[] = [];
+
+app.use(cors({
+    origin: "http://localhost:3001",
+    credentials: true,
+}));
 
 const server = new http.Server(app);
 const io = new Server(server, {
     cors: {
-        origin: "*",
+        origin: ["http://localhost:3001"],
     },
 });
 io.on("connection", (socket: Socket) => {
@@ -40,6 +45,6 @@ app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
 
 app.use("/api/users", userRoutes);
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });
