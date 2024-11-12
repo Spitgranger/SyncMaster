@@ -1,12 +1,18 @@
 import { v4 as uuidv4 } from "uuid";
+const { createSecretKey } = require('crypto');
+import dotenv from "dotenv";
 import { Request, Response } from "express";
 import haversine from 'haversine-distance';
+import * as jose from 'jose';
 import { io } from "../index";
 export const sessionIds: string[] = [];
 export const ITBLocation = {
     latitude: 43.25898815315478,
     longitude: -79.92086378832343
 };
+
+dotenv.config();
+const secretKey = createSecretKey(process.env.JWT_SECRET, 'utf-8');
 
 /**
  * Route to create session.
@@ -34,7 +40,7 @@ export const verifyLocation = async (req: Request, res: Response) => {
         }
 
         console.log(
-            "User [%s] exists at [%s] longitude and [%s] latitude",
+            "User [%s] exists at [%d] longitude and [%d] latitude",
             uuid,
             req.body.longitude,
             req.body.latitude
@@ -56,7 +62,14 @@ export const verifyLocation = async (req: Request, res: Response) => {
             res.status(401).json({ message: "User is not on a registered site" });
             return;
         }
-        res.status(200).json({ token: "" });
+        const token = await new jose.SignJWT(userLocation)
+            .setProtectedHeader({ alg: "HS256" })
+            .setSubject(uuid)
+            .setIssuedAt()
+            .setExpirationTime("1h")
+            .sign(secretKey);
+        io.to(uuid).emit("authSuccess", token);
+        res.status(200).json({ token: token });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });

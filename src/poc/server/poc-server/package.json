@@ -20,7 +20,8 @@
     "jsonwebtoken": "^9.0.2",
     "socket.io": "^4.8.1",
     "uuid": "^11.0.3",
-    "haversine-distance": "^1.2.3"
+    "haversine-distance": "^1.2.3",
+    "jose": "^5.9.6"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
