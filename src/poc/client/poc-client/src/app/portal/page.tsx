@@ -1,5 +1,11 @@
+'use client'
 import React from 'react'
+import Portal from '@/components/Portal/Portal';
 
-export default function Page() {
-    return <h1>Hello, Portal Page!</h1>
-  }
+const PortalPage: React.FC = () => {
+  return (
+    <Portal />
+  );
+};
+
+export default PortalPage;
