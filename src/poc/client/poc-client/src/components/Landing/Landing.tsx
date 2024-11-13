@@ -8,7 +8,7 @@ const Landing = () => {
     const router = useRouter();
 
     const goToNextPage = () => {
-        router.push('/test-wrapper'); // placeholder for next page
+        router.push('/api-test'); // placeholder for next page
     };
 
     return (

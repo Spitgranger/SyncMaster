@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import WrapperTestComponent from '../../../components/test/wrappertest';
+import WrapperTestComponent from '../../../components/test/apitest';
 
 const TestWrapperPage: React.FC = () => {
   return (
