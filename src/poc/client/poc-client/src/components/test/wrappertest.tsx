@@ -1,18 +1,34 @@
 import React, { useState } from 'react';
-//import { createSession, verifyLocation, emitConnection } from '../../app/(api)/_utils/wrapper';
+import { createSession, verifyLocation, emitConnection } from '../../app/(api)/_utils/wrapper';
 
 const WrapperTestComponent: React.FC = () => {
-  //const [sessionId, setSessionId] = useState<string | null>(null);
-  //const [verificationResult, setVerificationResult] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string>("null");
+  const [verificationResult, setVerificationResult] = useState<string>("null");
+  const [emitConnectionResult, setEmitConnectionResult] = useState<string>("null");
   const [locationData, setLocationData] = useState({ latitude: 0, longitude: 0 });
 
-  const doNothing = async () => {
+  const createSessionPress = async () => {
+    const response = await createSession();
+    setSessionId(response.uuid);
+    console.log(sessionId)
+  };
+
+  const verifyLocationPress = async () => {
+    const response = await verifyLocation(sessionId, locationData.latitude, locationData.longitude);
+    setVerificationResult(response.message);
+    console.log(verificationResult)
+  };
+
+  const emitConnectionPress = async () => {
+    const response = await emitConnection(sessionId);
+    setEmitConnectionResult(response.message);
+    console.log(emitConnectionResult)
   };
 
   return (
     <div>
       <h2>API Wrapper Test</h2>
-      <button onClick={doNothing}>Create Session</button>
+      <button onClick={createSessionPress}>Create Session</button>
       <div>
         <h3>Verify Location</h3>
         <input
@@ -27,10 +43,10 @@ const WrapperTestComponent: React.FC = () => {
           value={locationData.longitude}
           onChange={(e) => setLocationData({ ...locationData, longitude: parseFloat(e.target.value) })}
         />
-        <button onClick={doNothing}>Verify Location</button>
+        <button onClick={verifyLocationPress}>Verify Location</button>
       </div>
 
-      <button onClick={doNothing}>Emit Connection</button>
+      <button onClick={emitConnectionPress}>Emit Connection</button>
     </div>
   );
 };
