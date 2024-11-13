@@ -12,7 +12,14 @@ export const ITBLocation = {
 };
 
 dotenv.config();
-const secretKey = createSecretKey(process.env.JWT_SECRET, 'utf-8');
+
+/* Make sure a secret is defined in your .env file, but the default here 
+exists just so that the server can be run out of the box for local testing */
+const secretKey = createSecretKey(
+    process.env.JWT_SECRET ||
+    "1234567891011121314151617181920212223242526272829303132",
+    'utf-8'
+);
 
 /**
  * Route to create session.
