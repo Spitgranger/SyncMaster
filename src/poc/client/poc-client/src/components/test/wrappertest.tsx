@@ -3,26 +3,22 @@ import { createSession, verifyLocation, emitConnection } from '../../app/(api)/_
 
 const WrapperTestComponent: React.FC = () => {
   const [sessionId, setSessionId] = useState<string>("null");
-  const [verificationResult, setVerificationResult] = useState<string>("null");
-  const [emitConnectionResult, setEmitConnectionResult] = useState<string>("null");
   const [locationData, setLocationData] = useState({ latitude: 0, longitude: 0 });
 
   const createSessionPress = async () => {
     const response = await createSession();
     setSessionId(response.uuid);
-    console.log(sessionId)
+    console.log(response.uuid)
   };
 
   const verifyLocationPress = async () => {
     const response = await verifyLocation(sessionId, locationData.latitude, locationData.longitude);
-    setVerificationResult(response.message);
-    console.log(verificationResult)
+    console.log(response.message)
   };
 
   const emitConnectionPress = async () => {
     const response = await emitConnection(sessionId);
-    setEmitConnectionResult(response.message);
-    console.log(emitConnectionResult)
+    console.log(response.message)
   };
 
   return (
