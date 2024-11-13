@@ -3,13 +3,8 @@ interface SessionResponse {
   }
   
   interface LocationVerificationResponse {
-    isVerified: boolean;
+    token: string;
     message: string;
-  }
-  
-interface LocationData {
-    latitude: number;
-    longitude: number;
   }
 
 interface EmitResponse {
@@ -41,10 +36,10 @@ export async function createSession(): Promise<SessionResponse> {
     return apiFetch<SessionResponse>('api/users/create-session', { method: 'POST' });
   }
   
-export async function verifyLocation(userId: string, locationData: LocationData): Promise<LocationVerificationResponse> {
+export async function verifyLocation(userId: string, latitude: number, longitude: number): Promise<LocationVerificationResponse> {
     return apiFetch<LocationVerificationResponse>('api/users/verify-location', {
       method: 'POST',
-      body: JSON.stringify({ userId, ...locationData }),
+      body: JSON.stringify({ userId, latitude, longitude }),
     });
   }
 
@@ -54,4 +49,3 @@ export async function emitConnection(userId: string): Promise<EmitResponse> {
       body: JSON.stringify({ userId }),
     });
   }
-  
