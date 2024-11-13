@@ -33,7 +33,7 @@ interface EmitResponse {
   }
   
 export async function createSession(): Promise<SessionResponse> {
-    return apiFetch<SessionResponse>('api/users/create-session', { method: 'POST' });
+    return apiFetch<SessionResponse>('api/users/create-session', { method: 'GET' });
   }
   
 export async function verifyLocation(userId: string, latitude: number, longitude: number): Promise<LocationResponse> {
