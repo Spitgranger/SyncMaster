@@ -86,5 +86,5 @@ export const emitConnection = async (req: Request, res: Response) => {
     const { uuid } = req.body;
     io.to(uuid).emit("event");
     res.status(200).json({ message: "Connection established" });
-    console.log("Connection established for", req.body.uuid)
+    console.log("Connection established for", req.body)
 }
