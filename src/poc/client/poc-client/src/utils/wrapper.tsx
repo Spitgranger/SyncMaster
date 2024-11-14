@@ -10,12 +10,16 @@ async function apiFetch<T>(endpoint: string, options: RequestInit = {}): Promise
         ...options.headers,
       },
     });
-  
-    if (!response.ok) {
-      const errorDetails = await response.json();
-      throw new Error(errorDetails.message || 'An error occurred');
+
+    try {
+      if (!response.ok) {
+        const errorDetails = await response.json();
+        throw new Error(errorDetails.message || 'An error occurred');
+      }
+    } catch (error) {
+      console.error('Error creating session:', error);
     }
-  
+    
     return response.json();
   }
 
