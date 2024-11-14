@@ -11,7 +11,7 @@ const WrapperTestComponent: React.FC = () => {
       setSessionId(response.uuid);
       console.log(response.uuid)
     } catch (error) {
-      console.error(error)
+      console.log(error)
     }
   };
 
@@ -20,7 +20,7 @@ const WrapperTestComponent: React.FC = () => {
       const response = await verifyLocation(sessionId, locationData.latitude, locationData.longitude);
       console.log(response.message)
     } catch (error) {
-      console.error(error)
+      console.log(error)
     }
   };
 
@@ -29,7 +29,7 @@ const WrapperTestComponent: React.FC = () => {
       const response = await emitConnection(sessionId);
       console.log(response.message)
     } catch (error) {
-      console.error(error)
+      console.log(error)
     }
   };
 
