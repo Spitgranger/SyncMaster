@@ -33,6 +33,23 @@ const WrapperTestComponent: React.FC = () => {
     }
   };
 
+  const longitudeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      setLocationData({ ...locationData, longitude: parseFloat(e.target.value)})
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+  const latitudeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      setLocationData({ ...locationData, latitude: parseFloat(e.target.value) })
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+
   return (
     <div>
       <h2>API Wrapper Test</h2>
@@ -43,13 +60,13 @@ const WrapperTestComponent: React.FC = () => {
           type="number"
           placeholder="Latitude"
           value={locationData.latitude}
-          onChange={(e) => setLocationData({ ...locationData, latitude: parseFloat(e.target.value) })}
+          onChange={latitudeChange}
         />
         <input
           type="number"
           placeholder="Longitude"
           value={locationData.longitude}
-          onChange={(e) => setLocationData({ ...locationData, longitude: parseFloat(e.target.value) })}
+          onChange={longitudeChange}
         />
         <button onClick={verifyLocationPress}>Verify Location</button>
       </div>
