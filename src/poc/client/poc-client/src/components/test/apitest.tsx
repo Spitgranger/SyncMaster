@@ -35,6 +35,9 @@ const WrapperTestComponent: React.FC = () => {
 
   const longitudeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
+      if (isNaN(parseFloat(e.target.value))){
+        throw new Error('An error occurred');
+      }
       setLocationData({ ...locationData, longitude: parseFloat(e.target.value)})
     } catch (error) {
       console.log(error)
@@ -43,6 +46,9 @@ const WrapperTestComponent: React.FC = () => {
 
   const latitudeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
+      if (isNaN(parseFloat(e.target.value))){
+        throw new Error('An error occurred');
+      }
       setLocationData({ ...locationData, latitude: parseFloat(e.target.value) })
     } catch (error) {
       console.log(error)
