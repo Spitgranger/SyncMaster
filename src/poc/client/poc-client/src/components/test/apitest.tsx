@@ -49,7 +49,6 @@ const WrapperTestComponent: React.FC = () => {
     }
   };
 
-
   return (
     <div>
       <h2>API Wrapper Test</h2>
