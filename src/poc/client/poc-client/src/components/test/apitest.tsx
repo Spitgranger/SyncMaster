@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createSession, verifyLocation, emitConnection } from '../../app/(api)/_utils/wrapper';
+import { createSession, verifyLocation, emitConnection } from '../../utils/wrapper';
 
 const WrapperTestComponent: React.FC = () => {
   const [sessionId, setSessionId] = useState<string>("null");
