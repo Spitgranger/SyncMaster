@@ -1,8 +1,9 @@
-import express, { Express } from "express";
+import express, {Express} from "express";
 import dotenv from "dotenv";
 import http from "http";
 import bodyParser from "body-parser";
 import userRoutes from "./routes/users";
+import dashboardRoutes from "./routes/dashboard";
 import {DefaultEventsMap, Server, Socket} from "socket.io";
 import cors from "cors";
 import {sessionIds} from "./controllers/users";
@@ -45,7 +46,8 @@ app.use(bodyParser.json({limit: "30mb"}));
 app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
 
 app.use("/api/users", userRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 server.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
+    console.log(`[server]: Server is running at http://localhost:${port}`);
 });
