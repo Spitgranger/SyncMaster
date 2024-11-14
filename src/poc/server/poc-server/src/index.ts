@@ -19,14 +19,14 @@ const app: Express = express();
 const port = process.env.PORT || 5001;
 
 app.use(cors({
-    origin: "http://localhost:3001",
+    origin: "http://localhost:3000",
     credentials: true,
 }));
 
 const server: http.Server = new http.Server(app);
 export const io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any> = new Server(server, {
     cors: {
-        origin: ["http://localhost:3001"],
+        origin: ["http://localhost:3000"],
     },
 });
 io.on("connection", (socket: Socket) => {
