@@ -2,6 +2,13 @@ import {Request, Response, NextFunction} from "express";
 import {jwtVerify} from "jose";
 import {createSecretKey} from "node:crypto";
 
+/**
+ * Middleware to authenticate user
+ * Note if the header does not contain a valid token, we return 500 status code
+ * @param req express Request object
+ * @param res express Response object
+ * @param next next function to call
+ */
 const auth = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const token = req?.headers?.authorization?.split(" ")[1];

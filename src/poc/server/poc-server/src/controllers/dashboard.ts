@@ -1,7 +1,10 @@
 import {Request, Response} from "express";
-import {v4 as uuidv4} from "uuid";
-import {sessionIds} from "./users";
 
+/**
+ * Route to serve dummy data location GET request
+ * @name /api/dashboard/
+ * @function
+ */
 export const getDashboardData = async (req: Request, res: Response) => {
     res.status(200).json({
         stationNumber: 5,
