@@ -5,7 +5,7 @@ import socket from "@/utils/socket";
 
 const WrapperTestComponent: React.FC = () => {
     const [sessionId, setSessionId] = useState<string>("null");
-    const [locationData, setLocationData] = useState({latitude: 0, longitAude: 0});
+    const [locationData, setLocationData] = useState({latitude: 0, longitude: 0});
     useSocket();
     const createSessionPress = async () => {
         try {
