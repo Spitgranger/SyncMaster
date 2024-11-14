@@ -6,19 +6,31 @@ const WrapperTestComponent: React.FC = () => {
   const [locationData, setLocationData] = useState({ latitude: 0, longitude: 0 });
 
   const createSessionPress = async () => {
-    const response = await createSession();
-    setSessionId(response.uuid);
-    console.log(response.uuid)
+    try {
+      const response = await createSession();
+      setSessionId(response.uuid);
+      console.log(response.uuid)
+    } catch (error) {
+      console.error(error)
+    }
   };
 
   const verifyLocationPress = async () => {
-    const response = await verifyLocation(sessionId, locationData.latitude, locationData.longitude);
-    console.log(response.message)
+    try {
+      const response = await verifyLocation(sessionId, locationData.latitude, locationData.longitude);
+      console.log(response.message)
+    } catch (error) {
+      console.error(error)
+    }
   };
 
   const emitConnectionPress = async () => {
-    const response = await emitConnection(sessionId);
-    console.log(response.message)
+    try {
+      const response = await emitConnection(sessionId);
+      console.log(response.message)
+    } catch (error) {
+      console.error(error)
+    }
   };
 
   return (
