@@ -2,14 +2,10 @@ import React from 'react'
 import Image from 'next/image'
 import styles from './landing.module.css';
 import { useRouter } from 'next/navigation';
+import getGeolocation from '@/utils/getLocation';
 
 
-const Landing = () => {
-    const router = useRouter();
-
-    const goToNextPage = () => {
-        router.push('/portal'); // placeholder for next page
-    };
+const Landing = ({ onClick }) => {
 
     return (
         <div className={styles.container}>
@@ -32,7 +28,7 @@ const Landing = () => {
             <main className={styles.main}>
                 <section className={styles.section}>
                     <div className={styles.icon}>🛠️</div>
-                    <button onClick={goToNextPage} style={{ padding: '10px 20px', fontSize: '16px', cursor: 'pointer' }}>
+                    <button onClick={onClick} style={{ padding: '10px 20px', fontSize: '16px', cursor: 'pointer' }}>
                         Contractor Portal
                     </button>
                 </section>
