@@ -42,8 +42,6 @@ const VerifyLocation = () => {
                     <button style={{ height: "50px", width: "auto", marginTop: "35vh", fontSize: "20px", padding: "5px" }} onClick={handleVerifyLocation}>Verify Location</button>
 
                     <p style={{ marginTop: "20px" }}>Please Click the above button to verify your location</p>
-                    <p style={{ marginTop: "20px" }}>Latitude:{lat}</p>
-                    <p style={{ marginTop: "20px" }}>Longitude:{long}</p>
                 </div>
             }
         </>
