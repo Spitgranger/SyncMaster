@@ -12,17 +12,14 @@ const VerifyLocation = () => {
     const [isVerified, setIsVerified] = useState(false);
     const userId = params.userId;
     useSocket();
-    socket.on('authSuccess', () => {
-        setIsVerified(true);
-    })
     const handleVerifyLocation = async () => {
         const { lat: lat, long: long } = await getGeolocation();
         try {
-            await verifyLocation(userId, lat, long);
+            let locationResponse  = await verifyLocation(userId, lat, long);
+            setIsVerified(true)
         } catch (err) {
             console.log(err)
         }
-
 
         console.log(lat)
         console.log(long);
