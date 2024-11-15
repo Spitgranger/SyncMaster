@@ -1,4 +1,5 @@
-import socket from "../../utils/socket.ts";
+"use client"
+import socket from "../../utils/socket";
 import {useEffect} from "react";
 
 const useSocket = () => {
@@ -11,7 +12,7 @@ const useSocket = () => {
         const authSuccess = (token: string) => {
             console.log(token);
             // Handle the events here.
-            alert("Auth success");
+            // alert("Auth success");
         }
 
         const eventTest = (userId: string) => {
