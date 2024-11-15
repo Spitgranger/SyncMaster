@@ -1,6 +1,9 @@
-const baseUrl = "http://localhost:5001";
 
 async function apiFetch<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+    const baseUrl = `http://${process.env.NEXT_PUBLIC_ADDRESS}:5001`;
+
+    console.log(baseUrl)
+
     const url = `${baseUrl}/${endpoint}`;
 
     const response = await fetch(url, {
