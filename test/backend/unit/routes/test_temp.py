@@ -1,6 +1,7 @@
-from backend.handler import lambda_handler
-from http import HTTPStatus
 import json
+from http import HTTPStatus
+
+from backend.handler import lambda_handler
 
 
 def test_temp(get_request):

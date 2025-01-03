@@ -33,6 +33,7 @@ env = [
 ]
 
 [tool.ruff]
+src = ["src/backend"]
 line-length = 100
 
 [tool.ruff.format]
