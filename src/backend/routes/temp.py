@@ -8,8 +8,10 @@ router = Router()
 
 
 @router.get("/test")
-def thingy():
+def thingy() -> dict:
     """
     Dummy route for use in initial project structure setup. Can be removed later.
+
+    :return: dummy dict.
     """
     return {"Hello": "World"}

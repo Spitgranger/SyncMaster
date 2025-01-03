@@ -19,8 +19,8 @@ def lambda_handler(event: dict, context: LambdaContext) -> dict:
     """
     Main lambda handler for all API Gateway events. Handles routing of requests.
 
-    :param event: The API Gateway event coming from AWS
-    :param context: The lambda context coming from AWS
-    :return: The response determined be the application
+    :param event: The API Gateway event coming from AWS.
+    :param context: The lambda context coming from AWS.
+    :return: The response determined be the application.
     """
     return app.resolve(event, context)

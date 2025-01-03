@@ -16,6 +16,7 @@ dev = [
     "bandit>=1.8.0",
     "cfn-lint==1.22.2",
     "moto==5.0.25",
+    "mypy==1.14.1",
     "pylint==3.3.3",
     "pytest==8.3.4",
     "pytest-env==1.1.5",
