@@ -19,6 +19,7 @@ dev = [
     "mypy==1.14.1",
     "pylint==3.3.3",
     "pytest==8.3.4",
+    "pytest-cov==6.0.0",
     "pytest-env==1.1.5",
     "pytest-socket==0.7.0",
     "ruff==0.8.4",
@@ -26,11 +27,17 @@ dev = [
 
 [tool.pytest.ini_options]
 pythonpath = "src"
-addopts = "--disable-socket -vv"
+addopts = "--disable-socket --cov src/backend -vv"
 testpaths = "test/backend/unit"
 env = [
     "LOG_LEVEL=DEBUG"
 ]
+
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+fail_under = 95
 
 [tool.ruff]
 src = ["src/backend"]
@@ -41,6 +48,9 @@ quote-style = "double"
 indent-style = "space"
 docstring-code-format = true
 docstring-code-line-length = 80
+
+[tool.ruff.lint]
+select = ["I"]
 
 [tool.pylint.'MAIN']
 load-plugins="pylint.extensions.docparams"
