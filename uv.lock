@@ -114,6 +114,8 @@ dependencies = [
 dev = [
     { name = "bandit" },
     { name = "cfn-lint" },
+    { name = "coverage" },
+    { name = "coverage-threshold" },
     { name = "moto" },
     { name = "mypy" },
     { name = "pylint" },
@@ -136,6 +138,8 @@ requires-dist = [
 dev = [
     { name = "bandit", specifier = ">=1.8.0" },
     { name = "cfn-lint", specifier = "==1.22.2" },
+    { name = "coverage", specifier = "==7.6.10" },
+    { name = "coverage-threshold", specifier = "==0.5.0" },
     { name = "moto", specifier = "==5.0.25" },
     { name = "mypy", specifier = "==1.14.1" },
     { name = "pylint", specifier = "==3.3.3" },
@@ -252,6 +256,18 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/50/69/b3f2416725621e9f112e74e8470793d5b5995f146f596f133678a633b77e/coverage-7.6.10-cp313-cp313t-musllinux_1_2_x86_64.whl", hash = "sha256:6f93531882a5f68c28090f901b1d135de61b56331bba82028489bc51bdd818d2", size = 248737 },
     { url = "https://files.pythonhosted.org/packages/3c/6e/fe899fb937657db6df31cc3e61c6968cb56d36d7326361847440a430152e/coverage-7.6.10-cp313-cp313t-win32.whl", hash = "sha256:89d76815a26197c858f53c7f6a656686ec392b25991f9e409bcef020cd532312", size = 211611 },
     { url = "https://files.pythonhosted.org/packages/1c/55/52f5e66142a9d7bc93a15192eba7a78513d2abf6b3558d77b4ca32f5f424/coverage-7.6.10-cp313-cp313t-win_amd64.whl", hash = "sha256:54a5f0f43950a36312155dae55c505a76cd7f2b12d26abeebbe7a0b36dbc868d", size = 212781 },
+]
+
+[[package]]
+name = "coverage-threshold"
+version = "0.5.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "toml" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/18/c4/658dfcf69788d42245f0a18ef1466a4a1a8b187e8ed513864ddfb4b75151/coverage_threshold-0.5.0.tar.gz", hash = "sha256:ebdf2441ca1e66d7ac6e4bcd8e3da9d09b8e6e0a18d7522ab1d6ba60dc0ed920", size = 12450 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1e/f5/66f8d32657296992681b7dcf421855675ea56a54654f685da41113bca68c/coverage_threshold-0.5.0-py3-none-any.whl", hash = "sha256:81ee3c1b8c1d96ffd01617faf7c2efbd19ea7104a89057222f04e5d4102794b0", size = 18211 },
 ]
 
 [[package]]
@@ -886,6 +902,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/11/8a/5a7fd6284fa8caac23a26c9ddf9c30485a48169344b4bd3b0f02fef1890f/sympy-1.13.3.tar.gz", hash = "sha256:b27fd2c6530e0ab39e275fc9b683895367e51d5da91baa8d3d64db2565fec4d9", size = 7533196 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/99/ff/c87e0622b1dadea79d2fb0b25ade9ed98954c9033722eb707053d310d4f3/sympy-1.13.3-py3-none-any.whl", hash = "sha256:54612cf55a62755ee71824ce692986f23c88ffa77207b30c1368eda4a7060f73", size = 6189483 },
+]
+
+[[package]]
+name = "toml"
+version = "0.10.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/be/ba/1f744cdc819428fc6b5084ec34d9b30660f6f9daaf70eead706e3203ec3c/toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f", size = 22253 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/44/6f/7120676b6d73228c96e17f1f794d8ab046fc910d781c8d151120c3f1569e/toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b", size = 16588 },
 ]
 
 [[package]]

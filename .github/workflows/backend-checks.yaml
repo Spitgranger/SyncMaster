@@ -20,4 +20,4 @@ jobs:
       - name: Run linters
         run: bash ./scripts/backend/run_linters.sh
       - name: Run tests
-        run: uv run pytest
+        run: bash ./scripts/backend/run_tests.sh
