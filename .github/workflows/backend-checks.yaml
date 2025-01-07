@@ -9,11 +9,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install the latest version of uv
+        id: setup-uv
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
           cache-dependency-glob: "uv.lock"
       - name: Sync dependencies
+      if: steps.setup-uv.outputs.cache-hit == 'false'
         run: uv sync --dev
       - name: Run linters
         run: bash ./scripts/backend/run_linters.sh
