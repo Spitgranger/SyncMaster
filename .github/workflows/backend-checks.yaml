@@ -15,7 +15,7 @@ jobs:
           enable-cache: true
           cache-dependency-glob: "uv.lock"
       - name: Sync dependencies
-      if: steps.setup-uv.outputs.cache-hit == 'false'
+        if: steps.setup-uv.outputs.cache-hit == 'false'
         run: uv sync --dev
       - name: Run linters
         run: bash ./scripts/backend/run_linters.sh
