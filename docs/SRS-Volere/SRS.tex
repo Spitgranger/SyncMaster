@@ -56,6 +56,8 @@ Management System}
   11/04/2024 & Rafeed Iqbal & Added SR-S1\\
   11/04/2024 & Akshit Gulia & Removed FR-2\\
   11/04/2024 & Akshit Gulia & Removed PR-SL2\\
+  12/27/2024 & Mitchell Hynes & Added Peer Review Issues 135, 136\\
+  01/02/2025 & Mitchell Hynes & Removed Sharepoint from scope\\
   \bottomrule
 \end{tabularx}
 
@@ -249,12 +251,12 @@ To understand the current practices at the City of Hamilton see the
 N/A
 \subsection{Off-the-Shelf Software}
 \begin{enumerate} [{C-OTS}1.]
-  \item The system must integrate with Sharepoint to synchronize documents in
-    Sharepoint with documents in the system.
-  \item The system must integrate with Infor EAM, to show the status of work
-    orders associated with a document.
-  \item The system must integrate with MySDS to show relevent relevant SDS
-    documents to users on a given site.
+  \item \sout{ The system must integrate with Sharepoint to synchronize documents in
+    Sharepoint with documents in the system.} \textcolor{red}{Removing due to technical infeasability.}
+  \item \sout{ The system must integrate with Infor EAM, to show the status of work
+    orders associated with a document.} \textcolor{red}{Removing as this software is not yet implemented and is proprietary.}
+  \item \sout{The system must integrate with MySDS to show relevent relevant SDS
+    documents to users on a given site.} \textcolor{red}{Removing as MySDS is a proprietary system.}
 \end{enumerate}
 
 \subsection{Anticipated Workplace Environment}
@@ -301,17 +303,20 @@ involved in the Project}
   \item CSE: Confined Space Entry
   \item Dry Well: A room which houses industrial equipment such as pumps
     and valves.
+  \item GPS: Global Positioning System
   \item Hazard Assessment Form: A form outlining potential
     hazards at a location.
   \item Hot Works: Work which produces ignition sources.
     Requires an accompanying hot works permit.
   \item HVAC: Heating, Ventilation, and Air Conditiong.
   \item Infor EAM: An Enterprise Asset Management system.
+  \item MySDS: An external application which provides safety data sheets.
   \item PMATS: Plant Maintenance and Technical Services.
   \item PO: Purchase Order.
   \item PPE: Personal Protective Equipment.
   \item SCADA: Supervisory Control and Data Acquisition.
   \item SDS: Safety Data Sheets.
+  \item \sout{Sharepoint: A Microsoft platform for collaboration and file storage.}
   \item Wet Well: A portion of a wastewater pumping station which receives
     and temporarily stores wastewater.
 \end{itemize}
@@ -794,11 +799,11 @@ N/A
 \section{Performance Requirements}
 \subsection{Speed and Latency Requirements}
 \begin{enumerate}[{PR-SL}1.]
-  \item Average time for retrieving the documents should not exceed 2 seconds
+  \item Average time for retrieving the documents should not exceed 2 seconds during ordinary use cases
   \item \sout{Synching documents with SharePoint should be completed in
     less than 7 seconds for file sizes up to 15 MB}
   \item The portal's user interface should be responsive and should
-    react accordingly with the user interactions.
+    react accordingly with the user interactions during ordinary use cases
 \end{enumerate}
 \subsection{Safety-Critical Requirements}
 \begin{enumerate}[{PR-SC}1.]
@@ -840,7 +845,7 @@ N/A
 
 \subsection{Longevity Requirements}
 \begin{enumerate}[{PR-LR}1.]
-  \item The system should have a modular design to easily allow the
+  \item The system should have a scalable design to easily allow the
     introduction of new features
 \end{enumerate}
 
@@ -1000,14 +1005,16 @@ N/A
     the city's resources must be at a certain standard to be
     deployed. The feasibility of reaching the required standards has
     yet to be determined.
-  \item The feasibility of integrating the application with the City
+  \item \sout{The feasibility of integrating the application with the City
     of Hamilton's current systems (e.g., MySDS, SharePoint) has yet
     to be determined. We require documentation and testing to assess
-    compatibility.
-  \item The feasibility of integration with upcoming systems, such as
+    compatibility.} \textcolor{red}{The SyncMaster Application will not directly connect to these existing
+    City systems due to their proprietary nature and security concerns.}
+  \item \sout{The feasibility of integration with upcoming systems, such as
     the work order tracking system in Infor EAM and security
     solutions, has yet to be determined. We require further
-    information and documentation from the City.
+    information and documentation from the City.} \textcolor{red}{The SyncMaster application will not directly tie into the InforEAM system
+    system as it is not yet deployed, is proprietary, and is outside of the core scope for this project.}
 \end{enumerate}
 
 \section{Off-the-Shelf Solutions}
@@ -1020,10 +1027,10 @@ but existing solutions do not provide this capability. They also want to be
 able to verify that people were at a given site, when completing work, which
 again there isn't a ready made product to do.
 \subsection{Reusable Components}
-We can use Sharepoint as file storage, since the city wants Sharepoint and this
+\sout{We can use Sharepoint as file storage, since the city wants Sharepoint and this
 system to be in sync, and storing the files in two seperate locations and then
 syncing them will introduce a lot of overhead. Instead, all files can just be
-stored on Sharepoint.
+stored on Sharepoint.} \textcolor{red}{The City's internal Sharepoint cannot be used as external actors are not permitted access.}
 \subsection{Products That Can Be Copied}
 N/A
 
@@ -1085,6 +1092,8 @@ requirements will be changed accordingly.
   \item Work on documentation and deliverables.
   \item Get feedback from stakeholders, TAs, and the professor and implement
     suggested changes.
+  \item Work on the initial prototype emphasizing the functional requirements and prepare a meeting in January
+to demonstrate to the stakeholder for feedback.
 \end{enumerate}
 
 \subsection{Planning of the Development Phases}
