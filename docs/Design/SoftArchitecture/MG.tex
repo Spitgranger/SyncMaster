@@ -65,7 +65,11 @@ This section records information for easy reference.
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   AC & Anticipated Change\\
+  API & Application Programming Interface \\
+  AWS & Amazon Web Services \\
   DAG & Directed Acyclic Graph \\
+  DB & Database \\
+  GPD & Global Positioning System \\
   M & Module \\
   MG & Module Guide \\
   OS & Operating System \\
@@ -74,7 +78,7 @@ This section records information for easy reference.
   SRS & Software Requirements Specification\\
   \progname & Explanation of program name\\
   UC & Unlikely Change \\
-  \wss{etc.} & \wss{...}\\
+  UI & User Interface \\
   \bottomrule
 \end{tabular}\\
 
@@ -157,11 +161,20 @@ adapted here is called design for
 change.
 
 \begin{description}
-\item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The specific
-  hardware on which the software is running.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
-  initial input data.
-\item ...
+\item[\refstepcounter{acnum} \actheacnum \label{acGps}:] Updates to the
+  GPS authentication mechanism.
+\item[\refstepcounter{acnum} \actheacnum \label{acLocationThreshod}:] Changes in
+  the geofencing radius or conditions for location-based authentication.
+\item[\refstepcounter{acnum} \actheacnum \label{acAuthenticationMethods}:]
+  Changes to user authentication methods such as the addition of one time
+  passwords.
+\item[\refstepcounter{acnum} \actheacnum \label{acDocuments}:] The different
+  types of supported document formats to be stored in the system.
+\item[\refstepcounter{acnum} \actheacnum \label{acIntegration}:] Incorporating
+  APIs from other city management systems (e.g. Infor EAM)
+\item[\refstepcounter{acnum} \actheacnum \label{acDataLogs}:] Analytic
+  information requested by administrators, such as located-based usage patterns.
+
 \end{description}
 
 \wss{Anticipated changes relate to changes that would be made in requirements,
