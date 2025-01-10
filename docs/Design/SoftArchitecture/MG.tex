@@ -191,9 +191,11 @@ will potentially need to be modified. Hence, it is not intended that these
 decisions will be changed.
 
 \begin{description}
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
-  (Input: File and/or Keyboard, Output: File, Memory, and/or Screen).
-\item ...
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucLocation}:] Removing location
+  authentication features completely.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucAWS}:] AWS as cloud
+  infrastructure provider.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucAWS}:] Removing document uploading, sharing, or storage functionalities.
 \end{description}
 
 \section{Module Hierarchy} \label{SecMH}
@@ -216,21 +218,21 @@ actually be implemented.
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding Module} & ~ \\
+{Hardware-Hiding Module} & N/A \\
 \midrule
 
 \multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & ?\\
-& ?\\
-& ?\\
-& ?\\
+& User Authentication Module\\
+& Location Verification Module\\
+& Logging Module\\
 & ?\\
 & ?\\
 & ?\\ 
 & ?\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & {?}\\
-& ?\\
+\multirow{3}{0.3\textwidth}{Software Decision Module} & {API Integration Module}\\
+& Database Interaction Module\\
 & ?\\
 \bottomrule
 
