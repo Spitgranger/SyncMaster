@@ -9,11 +9,11 @@
 \usepackage{float}
 \usepackage{hyperref}
 \hypersetup{
-    colorlinks,
-    citecolor=blue,
-    filecolor=black,
-    linkcolor=red,
-    urlcolor=blue
+  colorlinks,
+  citecolor=blue,
+  filecolor=black,
+  linkcolor=red,
+  urlcolor=blue
 }
 
 \input{../../Comments}
@@ -33,7 +33,7 @@
 
 \begin{document}
 
-\title{Module Guide for \progname{}} 
+\title{Module Guide for \progname{}}
 \author{\authname}
 \date{\today}
 
@@ -44,11 +44,11 @@
 \section{Revision History}
 
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-\toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
-\midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
-\bottomrule
+  \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+  \midrule
+  Date 1 & 1.0 & Notes\\
+  Date 2 & 1.1 & Notes\\
+  \bottomrule
 \end{tabularx}
 
 \newpage
@@ -60,10 +60,10 @@ This section records information for easy reference.
 \subsection{Abbreviations and Acronyms}
 
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l} 
-  \toprule		
+\begin{tabular}{l l}
+  \toprule
   \textbf{symbol} & \textbf{description}\\
-  \midrule 
+  \midrule
   AC & Anticipated Change\\
   DAG & Directed Acyclic Graph \\
   M & Module \\
@@ -99,35 +99,41 @@ based on the principle of information hiding~\citep{Parnas1972a}.  This
 principle supports design for change, because the ``secrets'' that each module
 hides represent likely future changes.  Design for change is valuable in SC,
 where modifications are frequent, especially during initial development as the
-solution space is explored.  
+solution space is explored.
 
 Our design follows the rules layed out by \citet{ParnasEtAl1984}, as follows:
 \begin{itemize}
-\item System details that are likely to change independently should be the
-  secrets of separate modules.
-\item Each data structure is implemented in only one module.
-\item Any other program that requires information stored in a module's data
-  structures must obtain it by calling access programs belonging to that module.
+  \item System details that are likely to change independently should be the
+    secrets of separate modules.
+  \item Each data structure is implemented in only one module.
+  \item Any other program that requires information stored in a module's data
+    structures must obtain it by calling access programs belonging to
+    that module.
 \end{itemize}
 
 After completing the first stage of the design, the Software Requirements
-Specification (SRS), the Module Guide (MG) is developed~\citep{ParnasEtAl1984}. The MG
+Specification (SRS), the Module Guide (MG) is
+developed~\citep{ParnasEtAl1984}. The MG
 specifies the modular structure of the system and is intended to allow both
 designers and maintainers to easily identify the parts of the software.  The
 potential readers of this document are as follows:
 
 \begin{itemize}
-\item New project members: This document can be a guide for a new project member
-  to easily understand the overall structure and quickly find the
-  relevant modules they are searching for.
-\item Maintainers: The hierarchical structure of the module guide improves the
-  maintainers' understanding when they need to make changes to the system. It is
-  important for a maintainer to update the relevant sections of the document
-  after changes have been made.
-\item Designers: Once the module guide has been written, it can be used to
-  check for consistency, feasibility, and flexibility. Designers can verify the
-  system in various ways, such as consistency among modules, feasibility of the
-  decomposition, and flexibility of the design.
+  \item New project members: This document can be a guide for a new
+    project member
+    to easily understand the overall structure and quickly find the
+    relevant modules they are searching for.
+  \item Maintainers: The hierarchical structure of the module guide improves the
+    maintainers' understanding when they need to make changes to the
+    system. It is
+    important for a maintainer to update the relevant sections of the document
+    after changes have been made.
+  \item Designers: Once the module guide has been written, it can be used to
+    check for consistency, feasibility, and flexibility. Designers
+    can verify the
+    system in various ways, such as consistency among modules,
+    feasibility of the
+    decomposition, and flexibility of the design.
 \end{itemize}
 
 The rest of the document is organized as follows. Section
@@ -157,15 +163,16 @@ adapted here is called design for
 change.
 
 \begin{description}
-\item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The specific
-  hardware on which the software is running.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
-  initial input data.
-\item ...
+  \item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The specific
+    hardware on which the software is running.
+  \item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
+    initial input data.
+  \item ...
 \end{description}
 
 \wss{Anticipated changes relate to changes that would be made in requirements,
-design or implementation choices.  They are not related to changes that are made
+  design or implementation choices.  They are not related to changes
+  that are made
 at run-time, like the values of parameters.}
 
 \subsection{Unlikely Changes} \label{SecUchange}
@@ -178,9 +185,9 @@ will potentially need to be modified. Hence, it is not intended that these
 decisions will be changed.
 
 \begin{description}
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
-  (Input: File and/or Keyboard, Output: File, Memory, and/or Screen).
-\item ...
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
+    (Input: File and/or Keyboard, Output: File, Memory, and/or Screen).
+  \item ...
 \end{description}
 
 \section{Module Hierarchy} \label{SecMH}
@@ -191,39 +198,38 @@ below, which are leaves in the hierarchy tree, are the modules that will
 actually be implemented.
 
 \begin{description}
-\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
-\item ...
+  \item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
+  \item ...
 \end{description}
 
-
 \begin{table}[h!]
-\centering
-\begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
-\toprule
-\textbf{Level 1} & \textbf{Level 2}\\
-\midrule
+  \centering
+  \begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
+    \toprule
+    \textbf{Level 1} & \textbf{Level 2}\\
+    \midrule
 
-{Hardware-Hiding Module} & ~ \\
-\midrule
+    {Hardware-Hiding Module} & ~ \\
+    \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\ 
-& ?\\
-\midrule
+    \multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & ?\\
+    & ?\\
+    & ?\\
+    & ?\\
+    & ?\\
+    & ?\\
+    & ?\\
+    & ?\\
+    \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & {?}\\
-& ?\\
-& ?\\
-\bottomrule
+    \multirow{3}{0.3\textwidth}{Software Decision Module} & {?}\\
+    & ?\\
+    & ?\\
+    \bottomrule
 
-\end{tabular}
-\caption{Module Hierarchy}
-\label{TblMH}
+  \end{tabular}
+  \caption{Module Hierarchy}
+  \label{TblMH}
 \end{table}
 
 \section{Connection Between Requirements and Design} \label{SecConnection}
@@ -237,7 +243,7 @@ between requirements and modules is listed in Table~\ref{TblRT}.
   design decisions need to be made.  Rather than make these decisions implicit,
   they are explicitly recorded here.  For instance, if a program has security
   requirements, a specific design decision may be made to satisfy those
-  requirements with a password.}
+requirements with a password.}
 
 \section{Module Decomposition} \label{SecMD}
 
@@ -248,7 +254,8 @@ module. The \emph{Services} field specifies \emph{what} the module will do
 without documenting \emph{how} to do it. For each module, a suggestion for the
 implementing software is given under the \emph{Implemented By} title. If the
 entry is \emph{OS}, this means that the module is provided by the operating
-system or by standard programming language libraries.  \emph{\progname{}} means the
+system or by standard programming language libraries.
+\emph{\progname{}} means the
 module will be implemented by the \progname{} software.
 
 Only the leaf modules in the hierarchy have to be implemented. If a dash
@@ -258,54 +265,158 @@ to be implemented.
 \subsection{Hardware Hiding Modules (\mref{mHH})}
 
 \begin{description}
-\item[Secrets:]The data structure and algorithm used to implement the virtual
-  hardware.
-\item[Services:]Serves as a virtual hardware used by the rest of the
-  system. This module provides the interface between the hardware and the
-  software. So, the system can use it to display outputs or to accept inputs.
-\item[Implemented By:] OS
+  \item[Secrets:]The data structure and algorithm used to implement the virtual
+    hardware.
+  \item[Services:]Serves as a virtual hardware used by the rest of the
+    system. This module provides the interface between the hardware and the
+    software. So, the system can use it to display outputs or to accept inputs.
+  \item[Implemented By:] OS
 \end{description}
 
 \subsection{Behaviour-Hiding Module}
 
 \begin{description}
-\item[Secrets:]The contents of the required behaviours.
-\item[Services:]Includes programs that provide externally visible behaviour of
-  the system as specified in the software requirements specification (SRS)
-  documents. This module serves as a communication layer between the
-  hardware-hiding module and the software decision module. The programs in this
-  module will need to change if there are changes in the SRS.
-\item[Implemented By:] --
+  \item[Secrets:]The contents of the required behaviours.
+  \item[Services:]Includes programs that provide externally visible behaviour of
+    the system as specified in the software requirements specification (SRS)
+    documents. This module serves as a communication layer between the
+    hardware-hiding module and the software decision module. The
+    programs in this
+    module will need to change if there are changes in the SRS.
+  \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Input Format Module (\mref{mInput})}
+\subsubsection{API Integration Module (\mref{mInput})}
 
 \begin{description}
-\item[Secrets:]The format and structure of the input data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+  \item[Secrets:] Raw user inputs.
+  \item[Services:] Module responsible for communication between the
+    user interface and the backend API's.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Object
 \end{description}
 
-\subsubsection{Etc.}
+\subsubsection{Database Interaction Module (\mref{mInput})}
 
+\begin{description}
+  \item[Secrets:] Records to add, remove, or update in a .
+  \item[Services:] Module responsible allowing read and write access
+    to a database.
+  \item[Implemented By:] boto3, AWS DynamoDB
+  \item[Type of Module:] Library
+\end{description}
+
+\subsubsection{File Storage Interaction Module (\mref{mInput})}
+
+\begin{description}
+  \item[Secrets:] File to add, remove, or update in the file management system.
+  \item[Services:] Module responsible allowing read and write access
+    to the file management system.
+  \item[Implemented By:] boto3, AWS S3
+  \item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Routing Module (\mref{mInput})}
+
+\begin{description}
+  \item[Secrets:] Requests sent to backend API.
+  \item[Services:] Module responsible routing requests to the
+    appropriate functions in the backend.
+  \item[Implemented By:] AWS API Gateway, AWS Lambda Powertools
+  \item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Function Compute Module (\mref{mInput})}
+
+\begin{description}
+  \item[Secrets:] Requests sent to backend API.
+  \item[Services:] Module responsible for provisioning compute in
+    response to requests recieved.
+  \item[Implemented By:] AWS Lambda
+  \item[Type of Module:] Library
+\end{description}
 
 \subsection{Software Decision Module}
 
 \begin{description}
-\item[Secrets:] The design decision based on mathematical theorems, physical
-  facts, or programming considerations. The secrets of this module are
-  \emph{not} described in the SRS.
-\item[Services:] Includes data structure and algorithms used in the system that
-  do not provide direct interaction with the user. 
-  % Changes in these modules are more likely to be motivated by a desire to
-  % improve performance than by externally imposed changes.
-\item[Implemented By:] --
+  \item[Secrets:] The design decision based on mathematical theorems, physical
+    facts, or programming considerations. The secrets of this module are
+    \emph{not} described in the SRS.
+  \item[Services:] Includes data structure and algorithms used in the
+    system that
+    do not provide direct interaction with the user.
+    % Changes in these modules are more likely to be motivated by a desire to
+    % improve performance than by externally imposed changes.
+  \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Etc.}
+\subsubsection{Location Verification Module (\mref{mInput})}
+\begin{description}
+  \item[Secrets:] user location/proximity to a known station.
+  \item[Services:] Uses the haversine distance formula to calculate
+    distance from a station based on coordinates and rejects the user
+    if they are too far from a site.
+  \item[Implemented By:] \progname
+\end{description}
+
+\subsubsection{User Authentication Module (\mref{mInput})}
+
+\begin{description}
+  \item[Secrets:] Uses the User's email, password, and location
+    verification state.
+  \item[Services:] Issues authorization token to the user to allow
+    access to backend API's if the email, and password match a known
+    user, and the user location has been verified to be on a known site.
+  \item[Implemented By:] \progname
+\end{description}
+
+\subsubsection{Logging Module (\mref{mInput})}
+\begin{description}
+  \item[Secrets:] Users entry/exit time, and current site.
+  \item[Services:] Saves users entry/exit time for the current site
+    into the database.
+  \item[Implemented By:] \progname
+\end{description}
+
+\subsubsection{Audit and Compliance Module (\mref{mInput})}
+
+\begin{description}
+  \item[Secrets:] Data logged from the Logging Module.
+  \item[Services:] Allows admin users to see entry/exit times of
+    contracters to ensure that they were on site to do their job.
+  \item[Implemented By:] \progname
+\end{description}
+
+\subsubsection{Analytics and Reporting Module (\mref{mInput})}
+\begin{description}
+  \item[Secrets:] Data logged from the Logging Module.
+  \item[Services:] Allows export of the logged entry/exit times into
+    a excel spreadsheet.
+  \item[Implemented By:] \progname
+\end{description}
+
+\subsubsection{User Management Module (\mref{mInput})}
+\begin{description}
+  \item[Secrets:] Requests for creating, updating, and deleting users.
+  \item[Services:] Allows the management of users, by an admin user.
+  \item[Implemented By:] AWS Cognito
+\end{description}
+
+\subsubsection{Document Management Module (\mref{mInput})}
+\begin{description}
+  \item[Secrets:] A file.
+  \item[Services:] Allows an admin user to upload a document relevant
+    to a specific site and/or job for contractors to see as the come on site.
+  \item[Implemented By:] \progname
+\end{description}
+
+\subsubsection{Job Management Module (\mref{mInput})}
+\begin{description}
+  \item[Secrets:] A job identifier, job details, and status.
+  \item[Services:] Allows contractor to fill in information relevant
+    to the job they are completing.
+  \item[Implemented By:] \progname
+\end{description}
 
 \section{Traceability Matrix} \label{SecTM}
 
@@ -315,50 +426,54 @@ requirements and between the modules and the anticipated changes.
 % the table should use mref, the requirements should be named, use something
 % like fref
 \begin{table}[H]
-\centering
-\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
-\toprule
-\textbf{Req.} & \textbf{Modules}\\
-\midrule
-R1 & \mref{mHH}, \mref{mInput}, \mref{mParams}, \mref{mControl}\\
-R2 & \mref{mInput}, \mref{mParams}\\
-R3 & \mref{mVerify}\\
-R4 & \mref{mOutput}, \mref{mControl}\\
-R5 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R6 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R7 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R8 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R9 & \mref{mVerifyOut}\\
-R10 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}\\
-R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
-\bottomrule
-\end{tabular}
-\caption{Trace Between Requirements and Modules}
-\label{TblRT}
+  \centering
+  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+    \toprule
+    \textbf{Req.} & \textbf{Modules}\\
+    \midrule
+    R1 & \mref{mHH}, \mref{mInput}, \mref{mParams}, \mref{mControl}\\
+    R2 & \mref{mInput}, \mref{mParams}\\
+    R3 & \mref{mVerify}\\
+    R4 & \mref{mOutput}, \mref{mControl}\\
+    R5 & \mref{mOutput}, \mref{mODEs}, \mref{mControl},
+    \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
+    R6 & \mref{mOutput}, \mref{mODEs}, \mref{mControl},
+    \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
+    R7 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl},
+    \mref{mSeqDS}, \mref{mPlot}\\
+    R8 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl},
+    \mref{mSeqDS}, \mref{mPlot}\\
+    R9 & \mref{mVerifyOut}\\
+    R10 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}\\
+    R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
+    \bottomrule
+  \end{tabular}
+  \caption{Trace Between Requirements and Modules}
+  \label{TblRT}
 \end{table}
 
 \begin{table}[H]
-\centering
-\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
-\toprule
-\textbf{AC} & \textbf{Modules}\\
-\midrule
-\acref{acHardware} & \mref{mHH}\\
-\acref{acInput} & \mref{mInput}\\
-\acref{acParams} & \mref{mParams}\\
-\acref{acVerify} & \mref{mVerify}\\
-\acref{acOutput} & \mref{mOutput}\\
-\acref{acVerifyOut} & \mref{mVerifyOut}\\
-\acref{acODEs} & \mref{mODEs}\\
-\acref{acEnergy} & \mref{mEnergy}\\
-\acref{acControl} & \mref{mControl}\\
-\acref{acSeqDS} & \mref{mSeqDS}\\
-\acref{acSolver} & \mref{mSolver}\\
-\acref{acPlot} & \mref{mPlot}\\
-\bottomrule
-\end{tabular}
-\caption{Trace Between Anticipated Changes and Modules}
-\label{TblACT}
+  \centering
+  \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+    \toprule
+    \textbf{AC} & \textbf{Modules}\\
+    \midrule
+    \acref{acHardware} & \mref{mHH}\\
+    \acref{acInput} & \mref{mInput}\\
+    \acref{acParams} & \mref{mParams}\\
+    \acref{acVerify} & \mref{mVerify}\\
+    \acref{acOutput} & \mref{mOutput}\\
+    \acref{acVerifyOut} & \mref{mVerifyOut}\\
+    \acref{acODEs} & \mref{mODEs}\\
+    \acref{acEnergy} & \mref{mEnergy}\\
+    \acref{acControl} & \mref{mControl}\\
+    \acref{acSeqDS} & \mref{mSeqDS}\\
+    \acref{acSolver} & \mref{mSolver}\\
+    \acref{acPlot} & \mref{mPlot}\\
+    \bottomrule
+  \end{tabular}
+  \caption{Trace Between Anticipated Changes and Modules}
+  \label{TblACT}
 \end{table}
 
 \section{Use Hierarchy Between Modules} \label{SecUse}
@@ -375,19 +490,19 @@ system, and modules in the higher level of the hierarchy are essentially simpler
 because they use modules from the lower levels.
 
 \wss{The uses relation is not a data flow diagram.  In the code there will often
-be an import statement in module A when it directly uses module B.  Module B
-provides the services that module A needs.  The code for module A needs to be
-able to see these services (hence the import statement).  Since the uses
-relation is transitive, there is a use relation without an import, but the
+  be an import statement in module A when it directly uses module B.  Module B
+  provides the services that module A needs.  The code for module A needs to be
+  able to see these services (hence the import statement).  Since the uses
+  relation is transitive, there is a use relation without an import, but the
 arrows in the diagram typically correspond to the presence of import statement.}
 
 \wss{If module A uses module B, the arrow is directed from A to B.}
 
 \begin{figure}[H]
-\centering
-%\includegraphics[width=0.7\textwidth]{UsesHierarchy.png}
-\caption{Use hierarchy among modules}
-\label{FigUH}
+  \centering
+  %\includegraphics[width=0.7\textwidth]{UsesHierarchy.png}
+  \caption{Use hierarchy among modules}
+  \label{FigUH}
 \end{figure}
 
 %\section*{References}
