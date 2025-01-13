@@ -236,15 +236,8 @@ actually be implemented.
 
 The design of the system is intended to satisfy the requirements
 developed in the SRS. In this stage, the system is decomposed into
-modules. The connection
-between requirements and modules is listed in Table~\ref{TblRT}.
-
-\wss{The intention of this section is to document decisions that are made
-  ``between'' the requirements and the design.  To satisfy some requirements,
-  design decisions need to be made.  Rather than make these decisions implicit,
-  they are explicitly recorded here.  For instance, if a program has security
-  requirements, a specific design decision may be made to satisfy those
-requirements with a password.}
+modules. The connection between requirements and modules is listed
+in Table~\ref{TblRT}.
 
 \section{Module Decomposition} \label{SecMD}
 
@@ -300,14 +293,14 @@ to be implemented.
 \subsubsection{Database Interaction Module (\mref{mInput})}
 
 \begin{description}
-  \item[Secrets:] Records to add, remove, or update in a .
+  \item[Secrets:] Records to add, remove, or update in a database.
   \item[Services:] Module responsible allowing read and write access
     to a database.
   \item[Implemented By:] boto3, AWS DynamoDB
   \item[Type of Module:] Library
 \end{description}
 
-\subsubsection{File Storage Interaction Module (\mref{mInput})}
+\subsubsection{Blob Storage Interaction Module (\mref{mInput})}
 
 \begin{description}
   \item[Secrets:] File to add, remove, or update in the file management system.
@@ -515,7 +508,7 @@ needed. Drawings, Sketches, Figma}
 
 \section{Design of Communication Protocols}
 
-\wss{If appropriate}
+N/A
 
 \section{Timeline}
 
