@@ -44,10 +44,10 @@
 \section{Revision History}
 
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-  \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+  \toprule {\bf Date} & {\bf Version} & {\bf Notes} \\
   \midrule
-  Date 1 & 1.0 & Notes\\
-  Date 2 & 1.1 & Notes\\
+  Date 1              & 1.0           & Notes       \\
+  Date 2              & 1.1           & Notes       \\
   \bottomrule
 \end{tabularx}
 
@@ -62,19 +62,27 @@ This section records information for easy reference.
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{l l}
   \toprule
-  \textbf{symbol} & \textbf{description}\\
+  \textbf{symbol} & \textbf{description}                \\
   \midrule
-  AC & Anticipated Change\\
-  DAG & Directed Acyclic Graph \\
-  M & Module \\
-  MG & Module Guide \\
-  OS & Operating System \\
-  R & Requirement\\
-  SC & Scientific Computing \\
-  SRS & Software Requirements Specification\\
-  \progname & Explanation of program name\\
-  UC & Unlikely Change \\
-  \wss{etc.} & \wss{...}\\
+  AC              & Anticipated Change                  \\
+  API             & Application Programming Interface   \\
+  AWS             & Amazon Web Services                 \\
+  DAG             & Directed Acyclic Graph              \\
+  DB              & Database                            \\
+  GPD             & Global Positioning System           \\
+  JSON            & Javascript Object Notation          \\
+  M               & Module                              \\
+  MG              & Module Guide                        \\
+  OS              & Operating System                    \\
+  R               & Requirement                         \\
+  REST            & Representational State Transfer     \\
+  RPC             & Remote Procedure Call               \\
+  SC              & Scientific Computing                \\
+  SOAP            & Simple Object Access Protocol       \\
+  SRS             & Software Requirements Specification \\
+  \progname       & Syncing to a single source of truth \\
+  UC              & Unlikely Change                     \\
+  UI              & User Interface                      \\
   \bottomrule
 \end{tabular}\\
 
@@ -163,17 +171,22 @@ adapted here is called design for
 change.
 
 \begin{description}
-  \item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The specific
-    hardware on which the software is running.
-  \item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
-    initial input data.
-  \item ...
+  \item[\refstepcounter{acnum} \actheacnum \label{acGps}:] Updates to the
+    GPS authentication mechanism.
+  \item[\refstepcounter{acnum} \actheacnum
+    \label{acLocationThreshod}:] Changes in
+    the geofencing radius or conditions for location-based authentication.
+  \item[\refstepcounter{acnum} \actheacnum \label{acAuthenticationMethods}:]
+    Changes to user authentication methods such as the addition of one time
+    passwords.
+  \item[\refstepcounter{acnum} \actheacnum \label{acDocuments}:] The different
+    types of supported document formats to be stored in the system.
+  \item[\refstepcounter{acnum} \actheacnum \label{acIntegration}:] Incorporating
+    APIs from other city management systems (e.g. Infor EAM)
+  \item[\refstepcounter{acnum} \actheacnum \label{acDataLogs}:] Analytic
+    information requested by administrators, such as located-based
+    usage patterns.
 \end{description}
-
-\wss{Anticipated changes relate to changes that would be made in requirements,
-  design or implementation choices.  They are not related to changes
-  that are made
-at run-time, like the values of parameters.}
 
 \subsection{Unlikely Changes} \label{SecUchange}
 
@@ -185,9 +198,19 @@ will potentially need to be modified. Hence, it is not intended that these
 decisions will be changed.
 
 \begin{description}
-  \item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
-    (Input: File and/or Keyboard, Output: File, Memory, and/or Screen).
-  \item ...
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucLocation}:]
+    Removing location
+    authentication features completely.
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucAWS}:] AWS as cloud
+    infrastructure provider.
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucUpload}:] Removing
+    document uploading, sharing, or storage functionalities.
+  \item[\refstepcounter{ucnum} \uctheucnum
+    \label{ucApplicationType}:] Application
+    type from web to desktop or any other type.
+  \item[\refstepcounter{ucnum} \uctheucnum
+    \label{ucAPIType}:] Web API type from REST to anything else (e.g. RPC,
+    SOAP, GraphQL).
 \end{description}
 
 \section{Module Hierarchy} \label{SecMH}
@@ -198,35 +221,61 @@ below, which are leaves in the hierarchy tree, are the modules that will
 actually be implemented.
 
 \begin{description}
-  \item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
-  \item ...
+  \item [\refstepcounter{mnum} \mthemnum \label{mAC}:] Audit and
+    Compliance Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mUA}:] User
+    Authentication Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mLV}:] Location Verification
+    Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mLM}:] Logging Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mAR}:] Analytics and Reporting
+    Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mUM}:] User Management Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mDM}:] Document
+    Management Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mJM}:] Job Management Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mAI}:] API Integration Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mDI}:] Database
+    Interaction Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mBS}:] Blob Storage Interation
+    Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mRR}:] Routing Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mFC}:] Function Compute Module
 \end{description}
 
 \begin{table}[h!]
   \centering
   \begin{tabular}{p{0.3\textwidth} p{0.6\textwidth}}
     \toprule
-    \textbf{Level 1} & \textbf{Level 2}\\
+    \textbf{Level 1}                                       &
+    \textbf{Level 2}
+    \\
     \midrule
 
-    {Hardware-Hiding Module} & ~ \\
+    {Hardware-Hiding Module}                               & N/A
+    \\
     \midrule
 
-    \multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & ?\\
-    & ?\\
-    & ?\\
-    & ?\\
-    & ?\\
-    & ?\\
-    & ?\\
-    & ?\\
+    \multirow{7}{0.3\textwidth}{Software Decision Modules} & Audit
+    and Compliance Module
+    \\
+    & User Authentication Module      \\
+    & Location Verification Module    \\
+    & Logging Module                  \\
+    & Analytics and Reporting Module  \\
+    & User Management Module          \\
+    & Document Management Module      \\
+    & Job Management Module           \\
     \midrule
 
-    \multirow{3}{0.3\textwidth}{Software Decision Module} & {?}\\
-    & ?\\
-    & ?\\
+    \multirow{3}{0.3\textwidth}{Behaviour-Hiding Modules}  & {API
+    Integration Module}
+    \\
+    & Database Interaction Module     \\
+    & Blob Storage Interaction Module \\
+    & Request Routing Module          \\
+    & Function Compute Module         \\
     \bottomrule
-
   \end{tabular}
   \caption{Module Hierarchy}
   \label{TblMH}
@@ -262,15 +311,9 @@ Only the leaf modules in the hierarchy have to be implemented. If a dash
 (\emph{--}) is shown, this means that the module is not a leaf and will not have
 to be implemented.
 
-\subsection{Hardware Hiding Modules (\mref{mHH})}
-
+\subsection{Hardware Hiding Modules}
 \begin{description}
-  \item[Secrets:]The data structure and algorithm used to implement the virtual
-    hardware.
-  \item[Services:]Serves as a virtual hardware used by the rest of the
-    system. This module provides the interface between the hardware and the
-    software. So, the system can use it to display outputs or to accept inputs.
-  \item[Implemented By:] OS
+  \item[N/A]
 \end{description}
 
 \subsection{Behaviour-Hiding Module}
@@ -286,7 +329,7 @@ to be implemented.
   \item[Implemented By:] --
 \end{description}
 
-\subsubsection{API Integration Module (\mref{mInput})}
+\subsubsection{API Integration Module (\mref{mAI})}
 
 \begin{description}
   \item[Secrets:] Raw user inputs.
@@ -296,7 +339,7 @@ to be implemented.
   \item[Type of Module:] Abstract Object
 \end{description}
 
-\subsubsection{Database Interaction Module (\mref{mInput})}
+\subsubsection{Database Interaction Module (\mref{mDI})}
 
 \begin{description}
   \item[Secrets:] Records to add, remove, or update in a .
@@ -306,7 +349,7 @@ to be implemented.
   \item[Type of Module:] Library
 \end{description}
 
-\subsubsection{File Storage Interaction Module (\mref{mInput})}
+\subsubsection{File Storage Interaction Module (\mref{mBS})}
 
 \begin{description}
   \item[Secrets:] File to add, remove, or update in the file management system.
@@ -316,7 +359,7 @@ to be implemented.
   \item[Type of Module:] Library
 \end{description}
 
-\subsubsection{Routing Module (\mref{mInput})}
+\subsubsection{Routing Module (\mref{mRR})}
 
 \begin{description}
   \item[Secrets:] Requests sent to backend API.
@@ -326,7 +369,7 @@ to be implemented.
   \item[Type of Module:] Library
 \end{description}
 
-\subsubsection{Function Compute Module (\mref{mInput})}
+\subsubsection{Function Compute Module (\mref{mFC})}
 
 \begin{description}
   \item[Secrets:] Requests sent to backend API.
@@ -350,7 +393,7 @@ to be implemented.
   \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Location Verification Module (\mref{mInput})}
+\subsubsection{Location Verification Module (\mref{mLV})}
 \begin{description}
   \item[Secrets:] user location/proximity to a known station.
   \item[Services:] Uses the haversine distance formula to calculate
@@ -359,7 +402,7 @@ to be implemented.
   \item[Implemented By:] \progname
 \end{description}
 
-\subsubsection{User Authentication Module (\mref{mInput})}
+\subsubsection{User Authentication Module (\mref{mUA})}
 
 \begin{description}
   \item[Secrets:] Uses the User's email, password, and location
@@ -370,7 +413,7 @@ to be implemented.
   \item[Implemented By:] \progname
 \end{description}
 
-\subsubsection{Logging Module (\mref{mInput})}
+\subsubsection{Logging Module (\mref{mLM})}
 \begin{description}
   \item[Secrets:] Users entry/exit time, and current site.
   \item[Services:] Saves users entry/exit time for the current site
@@ -378,7 +421,7 @@ to be implemented.
   \item[Implemented By:] \progname
 \end{description}
 
-\subsubsection{Audit and Compliance Module (\mref{mInput})}
+\subsubsection{Audit and Compliance Module (\mref{mAC})}
 
 \begin{description}
   \item[Secrets:] Data logged from the Logging Module.
@@ -387,7 +430,7 @@ to be implemented.
   \item[Implemented By:] \progname
 \end{description}
 
-\subsubsection{Analytics and Reporting Module (\mref{mInput})}
+\subsubsection{Analytics and Reporting Module (\mref{mAR})}
 \begin{description}
   \item[Secrets:] Data logged from the Logging Module.
   \item[Services:] Allows export of the logged entry/exit times into
@@ -395,14 +438,14 @@ to be implemented.
   \item[Implemented By:] \progname
 \end{description}
 
-\subsubsection{User Management Module (\mref{mInput})}
+\subsubsection{User Management Module (\mref{mUM})}
 \begin{description}
   \item[Secrets:] Requests for creating, updating, and deleting users.
   \item[Services:] Allows the management of users, by an admin user.
   \item[Implemented By:] AWS Cognito
 \end{description}
 
-\subsubsection{Document Management Module (\mref{mInput})}
+\subsubsection{Document Management Module (\mref{mDM})}
 \begin{description}
   \item[Secrets:] A file.
   \item[Services:] Allows an admin user to upload a document relevant
@@ -410,7 +453,7 @@ to be implemented.
   \item[Implemented By:] \progname
 \end{description}
 
-\subsubsection{Job Management Module (\mref{mInput})}
+\subsubsection{Job Management Module (\mref{mJM})}
 \begin{description}
   \item[Secrets:] A job identifier, job details, and status.
   \item[Services:] Allows contractor to fill in information relevant
@@ -429,23 +472,35 @@ requirements and between the modules and the anticipated changes.
   \centering
   \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
     \toprule
-    \textbf{Req.} & \textbf{Modules}\\
+    \textbf{Req.} & \textbf{Modules}
+    \\
     \midrule
-    R1 & \mref{mHH}, \mref{mInput}, \mref{mParams}, \mref{mControl}\\
-    R2 & \mref{mInput}, \mref{mParams}\\
-    R3 & \mref{mVerify}\\
-    R4 & \mref{mOutput}, \mref{mControl}\\
-    R5 & \mref{mOutput}, \mref{mODEs}, \mref{mControl},
-    \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-    R6 & \mref{mOutput}, \mref{mODEs}, \mref{mControl},
-    \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-    R7 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl},
-    \mref{mSeqDS}, \mref{mPlot}\\
-    R8 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl},
-    \mref{mSeqDS}, \mref{mPlot}\\
-    R9 & \mref{mVerifyOut}\\
-    R10 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}\\
-    R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
+    R1            & \mref{mHH}, \mref{mInput}, \mref{mParams},
+    \mref{mControl}                                                  \\
+    R2            & \mref{mInput}, \mref{mParams}
+    \\
+    R3            & \mref{mVerify}
+    \\
+    R4            & \mref{mOutput}, \mref{mControl}
+    \\
+    R5            & \mref{mOutput}, \mref{mODEs}, \mref{mControl},
+    \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}
+    \\
+    R6            & \mref{mOutput}, \mref{mODEs}, \mref{mControl},
+    \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}
+    \\
+    R7            & \mref{mOutput}, \mref{mEnergy}, \mref{mControl},
+    \mref{mSeqDS}, \mref{mPlot}
+    \\
+    R8            & \mref{mOutput}, \mref{mEnergy}, \mref{mControl},
+    \mref{mSeqDS}, \mref{mPlot}
+    \\
+    R9            & \mref{mVerifyOut}
+    \\
+    R10           & \mref{mOutput}, \mref{mODEs}, \mref{mControl}
+    \\
+    R11           & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy},
+    \mref{mControl}                                                  \\
     \bottomrule
   \end{tabular}
   \caption{Trace Between Requirements and Modules}
@@ -456,20 +511,20 @@ requirements and between the modules and the anticipated changes.
   \centering
   \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
     \toprule
-    \textbf{AC} & \textbf{Modules}\\
+    \textbf{AC}         & \textbf{Modules}  \\
     \midrule
-    \acref{acHardware} & \mref{mHH}\\
-    \acref{acInput} & \mref{mInput}\\
-    \acref{acParams} & \mref{mParams}\\
-    \acref{acVerify} & \mref{mVerify}\\
-    \acref{acOutput} & \mref{mOutput}\\
-    \acref{acVerifyOut} & \mref{mVerifyOut}\\
-    \acref{acODEs} & \mref{mODEs}\\
-    \acref{acEnergy} & \mref{mEnergy}\\
-    \acref{acControl} & \mref{mControl}\\
-    \acref{acSeqDS} & \mref{mSeqDS}\\
-    \acref{acSolver} & \mref{mSolver}\\
-    \acref{acPlot} & \mref{mPlot}\\
+    \acref{acHardware}  & \mref{mHH}        \\
+    \acref{acInput}     & \mref{mInput}     \\
+    \acref{acParams}    & \mref{mParams}    \\
+    \acref{acVerify}    & \mref{mVerify}    \\
+    \acref{acOutput}    & \mref{mOutput}    \\
+    \acref{acVerifyOut} & \mref{mVerifyOut} \\
+    \acref{acODEs}      & \mref{mODEs}      \\
+    \acref{acEnergy}    & \mref{mEnergy}    \\
+    \acref{acControl}   & \mref{mControl}   \\
+    \acref{acSeqDS}     & \mref{mSeqDS}     \\
+    \acref{acSolver}    & \mref{mSolver}    \\
+    \acref{acPlot}      & \mref{mPlot}      \\
     \bottomrule
   \end{tabular}
   \caption{Trace Between Anticipated Changes and Modules}
