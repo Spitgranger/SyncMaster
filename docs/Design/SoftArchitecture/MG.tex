@@ -76,7 +76,7 @@ This section records information for easy reference.
   R & Requirement\\
   SC & Scientific Computing \\
   SRS & Software Requirements Specification\\
-  \progname & Explanation of program name\\
+  \progname & Syncing to a single source of truth\\
   UC & Unlikely Change \\
   UI & User Interface \\
   \bottomrule
@@ -206,8 +206,21 @@ below, which are leaves in the hierarchy tree, are the modules that will
 actually be implemented.
 
 \begin{description}
-\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
-\item ...
+\item [\refstepcounter{mnum} \mthemnum \label{mAC}:] Audit and Compliance Module
+\item [\refstepcounter{mnum} \mthemnum \label{mUA}:] User Authentication Module
+\item [\refstepcounter{mnum} \mthemnum \label{mLV}:] Location Verification
+  Module
+\item [\refstepcounter{mnum} \mthemnum \label{mAR}:] Analysics and Reporting
+  Module
+\item [\refstepcounter{mnum} \mthemnum \label{mUM}:] User Management Module
+\item [\refstepcounter{mnum} \mthemnum \label{mDM}:] Document Management Module
+\item [\refstepcounter{mnum} \mthemnum \label{mJM}:] Job Management Module
+\item [\refstepcounter{mnum} \mthemnum \label{mAI}:] API Integration Module
+\item [\refstepcounter{mnum} \mthemnum \label{mDI}:] Database Interaction Module
+\item [\refstepcounter{mnum} \mthemnum \label{mBS}:] Blob Storage Interation
+  Module
+\item [\refstepcounter{mnum} \mthemnum \label{mRR}:] Request Routing Module
+\item [\refstepcounter{mnum} \mthemnum \label{mFC}:] Function Compute Module
 \end{description}
 
 
@@ -234,7 +247,7 @@ actually be implemented.
 \multirow{3}{0.3\textwidth}{Behaviour-Hiding Modules} & {API Integration Module}\\
 & Database Interaction Module\\
 & Blob Storage Interaction Module\\
-& Routing Module\\
+& Request Routing Module\\
 & Function Compute Module\\
 \bottomrule
 
@@ -359,7 +372,7 @@ R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
 \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
 \toprule
 \textbf{AC} & \textbf{Modules}\\
-\midrulehttps://en.wikipedia.org/wiki/Planned_obsolescence
+\midrule
 \acref{acHardware} & \mref{mHH}\\
 \acref{acInput} & \mref{mInput}\\
 \acref{acParams} & \mref{mParams}\\
