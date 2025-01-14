@@ -252,7 +252,8 @@ boto3 (AWS SDK for Python), AWS DynamoDB (AWS Cloud Service for NoSQL Databases)
     \hline
     DBTable.Name & The name of the underlying DynamoDB table resource. \\
     \hline
-    DBTable.Access & The level of access the DBTable object has on the DynamoDB table. Either ``read'' or ``write''. \\
+    DBTable.Access & The level of access the DBTable object has on
+    the DynamoDB table. Either ``read'' or ``write''. \\
     \hline
   \end{tabular}
 \end{center}
@@ -264,15 +265,24 @@ boto3 (AWS SDK for Python), AWS DynamoDB (AWS Cloud Service for NoSQL Databases)
     \hline
     \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
     \hline
-    DBTable & \{TableName: string, Role: enum[``general'', ``admin''], Access: enum[``read'', ``write'']\} & DBTable & PermissionException \\
+    DBTable & \{TableName: string, Role: enum[``general'',
+    ``admin''], Access: enum[``read'', ``write'']\} & DBTable &
+    PermissionException \\
     \hline
-    DBTable.get & \{Key: map[string {-\textgreater} any]\} & map[string {-\textgreater} any] & ItemNotFound, ExternalServiceFailure \\
+    DBTable.get & \{Key: map[string {-\textgreater} any]\} &
+    map[string {-\textgreater} any] & ItemNotFound, ExternalServiceFailure \\
     \hline
-    DBTable.put & \{Item: map[string {-\textgreater} any], Condition: AttributeCondition\} & map[string {-\textgreater} any] & ConditionCheckFailed, ExternalServiceFailure, PermissionException \\
+    DBTable.put & \{Item: map[string {-\textgreater} any], Condition:
+    AttributeCondition\} & map[string {-\textgreater} any] &
+    ConditionCheckFailed, ExternalServiceFailure, PermissionException \\
     \hline
-    DBTable.delete & \{Key: map[string {-\textgreater} any], Condition: AttributeCondition\} & map[string {-\textgreater} any] & ExternalServiceFailure, ConditionCheckFailed, PermissionException \\
+    DBTable.delete & \{Key: map[string {-\textgreater} any],
+    Condition: AttributeCondition\} & map[string {-\textgreater} any]
+    & ExternalServiceFailure, ConditionCheckFailed, PermissionException \\
     \hline
-    DBTable.query & \{KeyConditions: list[KeyCondition], AttributeConditions: list[AttributeCondition]\} & list[map[string {-\textgreater} any]] & ExternalServiceFailure \\
+    DBTable.query & \{KeyConditions: list[KeyCondition],
+    AttributeConditions: list[AttributeCondition]\} & list[map[string
+    {-\textgreater} any]] & ExternalServiceFailure \\
     \hline
   \end{tabular}
 \end{center}
@@ -286,7 +296,9 @@ boto3 (AWS SDK for Python), AWS DynamoDB (AWS Cloud Service for NoSQL Databases)
     \hline
     \textbf{Name} & \textbf{Description} \\
     \hline
-    Database & The underlying AWS DynamoDB table, can be represented as a set of items: $\{i_0, i_1, ..., i_n\}$, where $i_k: map[string -> any], k\in[0,n]$ \\
+    Database & The underlying AWS DynamoDB table, can be represented
+    as a set of items: $\{i_0, i_1, ..., i_n\}$, where $i_k:
+    map[string -> any], k\in[0,n]$ \\
     \hline
   \end{tabular}
 \end{center}
@@ -298,35 +310,46 @@ boto3 (AWS SDK for Python), AWS DynamoDB (AWS Cloud Service for NoSQL Databases)
     \hline
     \textbf{Name} & \textbf{Description} \\
     \hline
-    LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function (The chosen AWS compute service for this project), it has an AWS IAM role attached to it, that it uses when running. This role needs permission for database access for this module to work \\
+    LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function (The chosen
+    AWS compute service for this project), it has an AWS IAM role
+    attached to it, that it uses when running. This role needs
+    permission for database access for this module to work \\
     \hline
   \end{tabular}
 \end{center}
 
 \subsubsection{Assumptions}
 
-LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to access the database.
+LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to access
+the database.
 
 \subsubsection{Access Routine Semantics}
 
 \noindent DBTable.put(Item: $i_{new}$, Condition: c):
 \begin{itemize}
-  \item transition: $Database -> Database \cup \{i_{new}\}$, if $c == true \land DBTable.Access == ``write''$ 
+  \item transition: $Database -> Database \cup \{i_{new}\}$, if $c ==
+    true \land DBTable.Access == ``write''$
   \item output: $i_{new}$
-  \item exception: ExternalServiceFailure, ConditionCheckFailed, PermissionException
+  \item exception: ExternalServiceFailure, ConditionCheckFailed,
+    PermissionException
 \end{itemize}
 
 \noindent DBTable.delete(Key: k, Condition: c):
 \begin{itemize}
-  \item transition: $Database -> Database - \{i_{old}\}$, where $k==dbKey(i_{old}, DBTable.Name)$, if $c == true \land DBTable.Access == ``write''$ 
+  \item transition: $Database -> Database - \{i_{old}\}$, where
+    $k==dbKey(i_{old}, DBTable.Name)$, if $c == true \land
+    DBTable.Access == ``write''$
   \item output: $i_{old}$
-  \item exception: ExternalServiceFailure, ConditionCheckFailed, PermissionException
+  \item exception: ExternalServiceFailure, ConditionCheckFailed,
+    PermissionException
 \end{itemize}
 
 \subsubsection{Local Functions}
 
-dbKey(Item: map[string -\textgreater any], TableName: string) -\textgreater map[string -\textgreater any]:\\
-\indent Returns the keys of the given db item, assuming it is from the given table
+dbKey(Item: map[string -\textgreater any], TableName: string)
+-\textgreater map[string -\textgreater any]:\\
+\indent Returns the keys of the given db item, assuming it is from
+the given table
 
 \newpage
 
