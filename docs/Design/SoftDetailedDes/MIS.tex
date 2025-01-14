@@ -261,28 +261,27 @@ boto3 (AWS SDK for Python), AWS DynamoDB (AWS Cloud Service for NoSQL Databases)
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-  \begin{tabular}{p{3cm} p{4cm} p{3cm} p{3cm}}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{5cm} >{\raggedright}p{3cm} p{4cm}}
     \hline
     \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
     \hline
-    DBTable & \{TableName: string, Role: enum[``general'',
-    ``admin''], Access: enum[``read'', ``write'']\} & DBTable &
+    DBTable & TableName: string \newline Role: enum[``general'',
+    ``admin''] \newline Access: enum[``read'', ``write''] & DBTable &
     PermissionException \\
     \hline
-    DBTable.get & \{Key: map[string {-\textgreater} any]\} &
-    map[string {-\textgreater} any] & ItemNotFound, ExternalServiceFailure \\
+    DBTable.get & Key: map[string $\rightarrow$ any] &
+    map[string $\rightarrow$ any] & ItemNotFound \newline ExternalServiceFailure \\
     \hline
-    DBTable.put & \{Item: map[string {-\textgreater} any], Condition:
-    AttributeCondition\} & map[string {-\textgreater} any] &
-    ConditionCheckFailed, ExternalServiceFailure, PermissionException \\
+    DBTable.put & Item: map[string $\rightarrow$ any] \newline Condition:
+    AttributeCondition & map[string $\rightarrow$ any] &
+    ConditionCheckFailed \newline ExternalServiceFailure \newline PermissionException \\
     \hline
-    DBTable.delete & \{Key: map[string {-\textgreater} any],
-    Condition: AttributeCondition\} & map[string {-\textgreater} any]
-    & ExternalServiceFailure, ConditionCheckFailed, PermissionException \\
+    DBTable.delete & Key: map[string $\rightarrow$ any] \newline
+    Condition: AttributeCondition & map[string $\rightarrow$ any]
+    & ExternalServiceFailure \newline ConditionCheckFailed \newline PermissionException \\
     \hline
-    DBTable.query & \{KeyConditions: list[KeyCondition],
-    AttributeConditions: list[AttributeCondition]\} & list[map[string
-    {-\textgreater} any]] & ExternalServiceFailure \\
+    DBTable.query & KeyConditions: list[KeyCondition] \newline
+    AttributeConditions: list[AttributeCondition] & list[map[string $\rightarrow$ any]] & ExternalServiceFailure \\
     \hline
   \end{tabular}
 \end{center}
@@ -298,7 +297,7 @@ boto3 (AWS SDK for Python), AWS DynamoDB (AWS Cloud Service for NoSQL Databases)
     \hline
     Database & The underlying AWS DynamoDB table, can be represented
     as a set of items: $\{i_0, i_1, ..., i_n\}$, where $i_k:
-    map[string -> any], k\in[0,n]$ \\
+    map[string \rightarrow  any], k\in[0,n]$ \\
     \hline
   \end{tabular}
 \end{center}
@@ -327,7 +326,7 @@ the database.
 
 \noindent DBTable.put(Item: $i_{new}$, Condition: c):
 \begin{itemize}
-  \item transition: $Database -> Database \cup \{i_{new}\}$, if $c ==
+  \item transition: $Database \rightarrow Database \cup \{i_{new}\}$, if $c ==
     true \land DBTable.Access == ``write''$
   \item output: $i_{new}$
   \item exception: ExternalServiceFailure, ConditionCheckFailed,
@@ -336,7 +335,7 @@ the database.
 
 \noindent DBTable.delete(Key: k, Condition: c):
 \begin{itemize}
-  \item transition: $Database -> Database - \{i_{old}\}$, where
+  \item transition: $Database \rightarrow Database - \{i_{old}\}$, where
     $k==dbKey(i_{old}, DBTable.Name)$, if $c == true \land
     DBTable.Access == ``write''$
   \item output: $i_{old}$
@@ -346,10 +345,15 @@ the database.
 
 \subsubsection{Local Functions}
 
-dbKey(Item: map[string -\textgreater any], TableName: string)
--\textgreater map[string -\textgreater any]:\\
-\indent Returns the keys of the given db item, assuming it is from
-the given table
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{2cm} >{\raggedright}p{5cm} >{\raggedright}p{3.5cm} p{4.5cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Description} \\
+    \hline
+    dbKey & Item: map[string $\rightarrow$ any] \newline TableName: string & map[string $\rightarrow$ any] & Returns the keys of the given db item, assuming it is from the given table \\
+    \hline
+  \end{tabular}
+\end{center}
 
 \newpage
 
