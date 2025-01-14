@@ -261,7 +261,8 @@ boto3 (AWS SDK for Python), AWS DynamoDB (AWS Cloud Service for NoSQL Databases)
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{5cm} >{\raggedright}p{3cm} p{4cm}}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{5cm}
+    >{\raggedright}p{3cm} p{4cm}}
     \hline
     \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
     \hline
@@ -270,18 +271,22 @@ boto3 (AWS SDK for Python), AWS DynamoDB (AWS Cloud Service for NoSQL Databases)
     PermissionException \\
     \hline
     DBTable.get & Key: map[string $\rightarrow$ any] &
-    map[string $\rightarrow$ any] & ItemNotFound \newline ExternalServiceFailure \\
+    map[string $\rightarrow$ any] & ItemNotFound \newline
+    ExternalServiceFailure \\
     \hline
     DBTable.put & Item: map[string $\rightarrow$ any] \newline Condition:
     AttributeCondition & map[string $\rightarrow$ any] &
-    ConditionCheckFailed \newline ExternalServiceFailure \newline PermissionException \\
+    ConditionCheckFailed \newline ExternalServiceFailure \newline
+    PermissionException \\
     \hline
     DBTable.delete & Key: map[string $\rightarrow$ any] \newline
     Condition: AttributeCondition & map[string $\rightarrow$ any]
-    & ExternalServiceFailure \newline ConditionCheckFailed \newline PermissionException \\
+    & ExternalServiceFailure \newline ConditionCheckFailed \newline
+    PermissionException \\
     \hline
     DBTable.query & KeyConditions: list[KeyCondition] \newline
-    AttributeConditions: list[AttributeCondition] & list[map[string $\rightarrow$ any]] & ExternalServiceFailure \\
+    AttributeConditions: list[AttributeCondition] & list[map[string
+    $\rightarrow$ any]] & ExternalServiceFailure \\
     \hline
   \end{tabular}
 \end{center}
@@ -346,11 +351,14 @@ the database.
 \subsubsection{Local Functions}
 
 \begin{center}
-  \begin{tabular}{>{\raggedright}p{2cm} >{\raggedright}p{5cm} >{\raggedright}p{3.5cm} p{4.5cm}}
+  \begin{tabular}{>{\raggedright}p{2cm} >{\raggedright}p{5cm}
+    >{\raggedright}p{3.5cm} p{4.5cm}}
     \hline
     \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Description} \\
     \hline
-    dbKey & Item: map[string $\rightarrow$ any] \newline TableName: string & map[string $\rightarrow$ any] & Returns the keys of the given db item, assuming it is from the given table \\
+    dbKey & Item: map[string $\rightarrow$ any] \newline TableName:
+    string & map[string $\rightarrow$ any] & Returns the keys of the
+    given db item, assuming it is from the given table \\
     \hline
   \end{tabular}
 \end{center}
