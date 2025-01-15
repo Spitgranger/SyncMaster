@@ -111,18 +111,24 @@ The following table summarizes the primitive data types used by \progname.
     natural number & $\mathbb{N}$ & a number without a fractional
     component in [1, $\infty$) \\
     real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
+    any & any & any data type\\
     \bottomrule
   \end{tabular}
 \end{center}
 
 \noindent
 The specification of \progname \ uses some derived data types:
-sequences, strings, and
-tuples. Sequences are lists filled with elements of the same data type. Strings
+sequences, strings, tuples, map, KeyCondition, AttributeCondition. Sequences
+are lists filled with elements of the same data type. Strings
 are sequences of characters. Tuples contain a list of values, potentially of
 different types. In addition, \progname \ uses functions, which
 are defined by the data types of their inputs and outputs. Local functions are
-described by giving their type signature followed by their specification.
+described by giving their type signature followed by their specification. Maps
+are a collection of key-value pairs, where thre does not necessarily need to
+be a restriction on the data types of the keys and values, but one can be
+placed. AttributeConditions are conditionals placed on an attribute of a
+database entry. KeyConditions are a subset of AttributeConditions, and are
+condtionals placed on the key attributes of a database entry.
 
 \section{Module Decomposition}
 
