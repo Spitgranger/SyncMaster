@@ -268,7 +268,7 @@ boto3 (AWS SDK for Python), AWS DynamoDB (AWS Cloud Service for NoSQL Databases)
 
 \begin{center}
   \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{5cm}
-    >{\raggedright}p{3cm} p{4cm}}
+    >{\raggedright}p{4cm} p{4cm}}
     \hline
     \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
     \hline
@@ -295,10 +295,10 @@ boto3 (AWS SDK for Python), AWS DynamoDB (AWS Cloud Service for NoSQL Databases)
     condition is not met \newline \textbf{PermissionException:} If
     the current access level is read-only \\
     \hline
-    DBTable.query & \textbf{KeyConditions:} list[KeyCondition]
-    \newline \textbf{AttributeConditions:} list[AttributeCondition] &
-    list[map[string $\rightarrow$ any]] &
-    \textbf{ExternalServiceFailure:} An internal error from AWS \\
+    DBTable.query & \textbf{KeyConditions:} sequence[KeyCondition]
+    \newline \textbf{AttributeConditions:}
+    sequence[AttributeCondition] & sequence[map[string $\rightarrow$
+    any]] & \textbf{ExternalServiceFailure:} An internal error from AWS \\
     \hline
   \end{tabular}
 \end{center}
