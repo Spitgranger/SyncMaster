@@ -111,18 +111,24 @@ The following table summarizes the primitive data types used by \progname.
     natural number & $\mathbb{N}$ & a number without a fractional
     component in [1, $\infty$) \\
     real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
+    any & any & any data type\\
     \bottomrule
   \end{tabular}
 \end{center}
 
 \noindent
 The specification of \progname \ uses some derived data types:
-sequences, strings, and
-tuples. Sequences are lists filled with elements of the same data type. Strings
+sequences, strings, tuples, map, KeyCondition, AttributeCondition. Sequences
+are lists filled with elements of the same data type. Strings
 are sequences of characters. Tuples contain a list of values, potentially of
 different types. In addition, \progname \ uses functions, which
 are defined by the data types of their inputs and outputs. Local functions are
-described by giving their type signature followed by their specification.
+described by giving their type signature followed by their specification. Maps
+are a collection of key-value pairs, where thre does not necessarily need to
+be a restriction on the data types of the keys and values, but one can be
+placed. AttributeConditions are conditionals placed on an attribute of a
+database entry. KeyConditions are a subset of AttributeConditions, and are
+condtionals placed on the key attributes of a database entry.
 
 \section{Module Decomposition}
 
@@ -239,6 +245,145 @@ will have one or the other.}
   They are not necessarily something that is going to be implemented
   explicitly.  Even if they are implemented, they are not exported; they only
 have local scope.}
+
+\section{MIS of Database Interaction Module} \label{Module}
+
+\subsection{Module}
+
+Database Interaction Module
+
+\subsection{Uses}
+
+boto3 (AWS SDK for Python), AWS DynamoDB (AWS Cloud Service for NoSQL Databases)
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\begin{center}
+  \begin{tabular}{p{4cm} p{12cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    DBTable.Name & The name of the underlying DynamoDB table resource. \\
+    \hline
+    DBTable.Access & The level of access the DBTable object has on
+    the DynamoDB table. Either ``read'' or ``write''. \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{5cm}
+    >{\raggedright}p{4cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    DBTable & \textbf{TableName:} string \newline \textbf{Access:}
+    enum[``read'', ``write''] & DBTable & - \\
+    \hline
+    DBTable.get & \textbf{Key:} map[string $\rightarrow$ any] &
+    map[string $\rightarrow$ any] & \textbf{ItemNotFound:} Item with
+    requested key does not exist in the database \newline
+    \textbf{ExternalServiceFailure:} An internal error from AWS \\
+    \hline
+    DBTable.put & \textbf{Item:} map[string $\rightarrow$ any]
+    \newline \textbf{Condition:} AttributeCondition & map[string
+    $\rightarrow$ any] &
+    \textbf{ConditionCheckFailed:} The given condition is not met
+    \newline \textbf{ExternalServiceFailure:} An internal error from
+    AWS \newline \textbf{PermissionException:} If the current access
+    level is read-only \\
+    \hline
+    DBTable.delete & \textbf{Key:} map[string $\rightarrow$ any]
+    \newline \textbf{Condition:} AttributeCondition & map[string
+    $\rightarrow$ any] & \textbf{ExternalServiceFailure:} An internal
+    error from AWS \newline \textbf{ConditionCheckFailed:} The given
+    condition is not met \newline \textbf{PermissionException:} If
+    the current access level is read-only \\
+    \hline
+    DBTable.query & \textbf{KeyConditions:} sequence[KeyCondition]
+    \newline \textbf{AttributeConditions:}
+    sequence[AttributeCondition] & sequence[map[string $\rightarrow$
+    any]] & \textbf{ExternalServiceFailure:} An internal error from AWS \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\begin{center}
+  \begin{tabular}{p{4cm} p{12cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    Database & The underlying AWS DynamoDB table, can be represented
+    as a set of items: $\{i_0, i_1, ..., i_n\}$, where $i_k:
+    map[string \rightarrow  any], k\in[0,n]$ \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Environment Variables}
+
+\begin{center}
+  \begin{tabular}{p{6cm} p{10cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function (The chosen
+    AWS compute service for this project), it has an AWS IAM role
+    attached to it, that it uses when running. This role needs
+    permission for database access for this module to work \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Assumptions}
+
+LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to access
+the database.
+
+\subsubsection{Access Routine Semantics}
+
+\noindent DBTable.put(Item: $i_{new}$, Condition: c):
+\begin{itemize}
+  \item transition: $Database \rightarrow Database \cup \{i_{new}\}$, if $c ==
+    true \land DBTable.Access == ``write''$
+  \item output: $i_{new}$
+  \item exception: ExternalServiceFailure, ConditionCheckFailed,
+    PermissionException
+\end{itemize}
+
+\noindent DBTable.delete(Key: k, Condition: c):
+\begin{itemize}
+  \item transition: $Database \rightarrow Database - \{i_{old}\}$, where
+    $k==dbKey(i_{old}, DBTable.Name)$, if $c == true \land
+    DBTable.Access == ``write''$
+  \item output: $i_{old}$
+  \item exception: ExternalServiceFailure, ConditionCheckFailed,
+    PermissionException
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{2cm} >{\raggedright}p{5cm}
+    >{\raggedright}p{3.5cm} p{4.5cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Description} \\
+    \hline
+    dbKey & \textbf{Item:} map[string $\rightarrow$ any] \newline
+    \textbf{TableName:} string & map[string $\rightarrow$ any] &
+    Returns the keys of the given db item, assuming it is from the
+    given table \\
+    \hline
+  \end{tabular}
+\end{center}
 
 \newpage
 
