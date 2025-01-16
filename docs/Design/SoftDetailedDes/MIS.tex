@@ -118,7 +118,8 @@ The following table summarizes the primitive data types used by \progname.
 
 \noindent
 The specification of \progname \ uses some derived data types:
-sequences, strings, tuples, map, KeyCondition, AttributeCondition. Sequences
+sequences, strings, tuples, map, enum, KeyCondition,
+AttributeCondition, S3File. Sequences
 are lists filled with elements of the same data type. Strings
 are sequences of characters. Tuples contain a list of values, potentially of
 different types. In addition, \progname \ uses functions, which
@@ -126,9 +127,11 @@ are defined by the data types of their inputs and outputs. Local functions are
 described by giving their type signature followed by their specification. Maps
 are a collection of key-value pairs, where thre does not necessarily need to
 be a restriction on the data types of the keys and values, but one can be
-placed. AttributeConditions are conditionals placed on an attribute of a
-database entry. KeyConditions are a subset of AttributeConditions, and are
-condtionals placed on the key attributes of a database entry.
+placed. An enum is a set of values of which the data can be.
+AttributeConditions are conditionals placed on an attribute of a
+database entry. KeyConditions are a subset of AttributeConditions,
+and are condtionals placed on the key attributes of a database entry.
+An S3File, is a unique file that exists in AWS S3.
 
 \section{Module Decomposition}
 
@@ -384,6 +387,194 @@ the database.
     \hline
   \end{tabular}
 \end{center}
+
+\section{MIS of File Storage Interaction Module} \label{Module}
+
+\subsection{Module}
+
+File Storage Interaction Module
+
+\subsection{Uses}
+
+boto3 (AWS SDK for Python), AWS S3 (AWS Cloud Service for storing files)
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\begin{center}
+  \begin{tabular}{p{4cm} p{12cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    S3Bucket.Name & The name of the underlying S3 Bucket resource. \\
+    \hline
+    S3Bucket.Access & The level of access the S3Bucket object has on
+    the S3 Bucket resource in AWS. Either ``read'' or ``write''. \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{5cm} >{\raggedright}p{4cm}
+    >{\raggedright}p{2cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    S3Bucket & \textbf{BucketName:} string \newline \textbf{Access:}
+    enum[``read'', ``write''] & S3Bucket & - \\
+    \hline
+    S3Bucket.createPresignedUrl & \textbf{Key:} string \newline
+    \textbf{VersionID:} string \newline \textbf{ETag:} string
+    \newline \textbf{Method:} enum[``get'', ``upload''] \newline
+    \textbf{ExpiresIn:} integer & string &
+    \textbf{PermissionException:} If attempting to get an upload url,
+    while only having read permissions \newline
+    \textbf{ExternalServiceFailure:} An internal error from AWS \\
+    \hline
+    S3Bucket.delete & \textbf{Key:} string \newline
+    \textbf{VersionID:} string \newline \textbf{ETag:} string & - &
+    \textbf{FileNotFound:} The given key and version do not match any
+    file in the bucket \newline \textbf{ETagMismatch:} The given ETag
+    does not match the ETag of the file with the given key and
+    version \newline \textbf{ExternalServiceFailure:} An internal
+    error from AWS \newline \textbf{PermissionException:} If the
+    current access level is read-only \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\begin{center}
+  \begin{tabular}{p{4cm} p{12cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    Bucket & The underlying AWS S3 Bucket, can be represented
+    as a set of files: $\{f_0, f_1, ..., f_n\}$, where $f_k: S3File
+    \land k\in[0,n]$ \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Environment Variables}
+
+\begin{center}
+  \begin{tabular}{p{6cm} p{10cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function (The chosen
+    AWS compute service for this project), it has an AWS IAM role
+    attached to it, that it uses when running. This role needs
+    permission for S3 bucket access for this module to work \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Assumptions}
+
+LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to access
+the S3 bucket.
+
+\subsubsection{Access Routine Semantics}
+
+\noindent S3Bucket.delete(Key: k, VersionID: v, ETag: e):
+\begin{itemize}
+  \item transition: $Bucket \rightarrow Bucket - \{f_{old}\}$, where
+    $map\{Key: k, VersionID: v, ETag:
+    e\}==S3Bucket.metadata(f_{old})$, if $S3Bucket.Access == ``write''$
+  \item exception: ExternalServiceFailure, ConditionCheckFailed,
+    PermissionException
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{4cm} >{\raggedright}p{3cm}
+    >{\raggedright}p{3.5cm} p{5.5cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Description} \\
+    \hline
+    S3Bucket.metadata & \textbf{File:} S3File & map[string
+    $\rightarrow$ any] & Returns S3 key, versionID, and Etag of the
+    given file, assuming it is from the given S3Bucket \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\section{MIS of Function Compute Module} \label{Module}
+
+\subsection{Module}
+
+Function Compute Module
+
+\subsection{Uses}
+
+AWS Lambda (AWS Service that executes code in response to events and
+manages the compute resources needed to run the code)
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+N/A
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{5cm}
+    >{\raggedright}p{4cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    Invoke & \textbf{FunctionName:} string \newline \textbf{Event:}
+    map[any $\rightarrow$ any] & map[any $\rightarrow$ any] &
+    \textbf{ExternalServiceFailure:} An internal error from AWS
+    \newline \textbf{ExecutionError:} Any error that occurs while the
+    function is running \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+N/A
+
+\subsubsection{Environment Variables}
+
+\begin{center}
+  \begin{tabular}{p{6cm} p{10cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function runs, it
+    has an AWS IAM role attached to it, which it uses when running.
+    This role gives the function the necessary permissions to execute
+    without issue. \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Assumptions}
+
+LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to
+execute the lambda's required tasks.
+
+\subsubsection{Access Routine Semantics}
+
+N/A
+
+\subsubsection{Local Functions}
+
+N/A
 
 \section{MIS of Routing Module} \label{Module}
 
