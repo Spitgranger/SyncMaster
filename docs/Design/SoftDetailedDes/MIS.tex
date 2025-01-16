@@ -533,7 +533,7 @@ N/A
     \hline
     \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
     \hline
-    invoke & \textbf{FunctionName:} string \newline \textbf{Event:}
+    Invoke & \textbf{FunctionName:} string \newline \textbf{Event:}
     map[any $\rightarrow$ any] & map[any $\rightarrow$ any] &
     \textbf{ExternalServiceFailure:} An internal error from AWS
     \newline \textbf{ExecutionError:} Any error that occurs while the
@@ -567,6 +567,71 @@ N/A
 
 LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to
 execute the lambda's required tasks.
+
+\subsubsection{Access Routine Semantics}
+
+N/A
+
+\subsubsection{Local Functions}
+
+N/A
+
+\section{MIS of Routing Module} \label{Module}
+
+\subsection{Module}
+
+Routing Module
+
+\subsection{Uses}
+
+AWS APIGateway (AWS Cloud Service for handling routing of API to an
+underlying serverless function)
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\begin{center}
+  \begin{tabular}{p{4cm} p{12cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    BaseUrl & The base url of the REST API \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{5cm}
+    >{\raggedright}p{4cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    SubmitRequest & \textbf{Request:} map[any $\rightarrow$ any]
+    \newline \textbf{Path:} String & map[any $\rightarrow$ any] &
+    \textbf{ExternalServiceFailure:} An internal error from
+    AWS \newline \textbf{ExecutionError:} If the underlying compute
+    resource that the request gets routed to encounters an error
+    suring execution \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+N/A
+
+\subsubsection{Environment Variables}
+
+N/A
+
+\subsubsection{Assumptions}
+
+N/A
 
 \subsubsection{Access Routine Semantics}
 
