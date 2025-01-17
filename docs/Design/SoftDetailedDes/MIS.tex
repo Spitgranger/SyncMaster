@@ -710,8 +710,7 @@ N/A
 \noindent createUserUser(email: email, password: password):
 \begin{itemize}
   \item transition: $Database \rightarrow Database \cup
-    \{User_new\}$, if $(email \cap password) \in Database $, where
-    $authToken$ is uniquely generated for the user.
+    \{User_{new}\}$, if $email \notin Database $
   \item output: $authToken$
   \item exception: InvalidCredentials
 \end{itemize}
