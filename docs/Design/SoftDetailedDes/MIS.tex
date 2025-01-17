@@ -857,8 +857,6 @@ $\hypertarget{timeout}{TIMEOUT}$ = 5\\
 
 \section*{Appendix --- Reflection}
 
-\wss{Not required for CAS 741 projects}
-
 The information in this section will be used to evaluate the team members on the
 graduate attribute of Problem Analysis and Design.
 
@@ -866,22 +864,60 @@ graduate attribute of Problem Analysis and Design.
 
 \begin{enumerate}
   \item What went well while writing this deliverable?
+  \\
+  \\
+  In this deliverable, our team was able to delegate tasks and manage our time more effectively. 
+  The stakeholder was engaged to show progress on the prototype and obtain feedback that
+  influenced the design.
+
   \item What pain points did you experience during this deliverable, and how
     did you resolve them?
+    \\
+    \\
+    One pain point the team experienced was determining the specific technologies which would be the most appropriate
+    for the clients problem. One example was deciding the AWS modules to use, such as choosing an EC2 instance or using AWS lambda scaling to 0.
+    This was resolve through discussion of what the advantages of one tool would be over another. For this particular problem,
+    it was decided to use AWS lambda with scaling to 0, as the application could scale down to save cost during non-work hours.
+
   \item Which of your design decisions stemmed from speaking to your client(s)
     or a proxy (e.g. your peers, stakeholders, potential users)? For those that
     were not, why, and where did they come from?
+    \\
+    \\
+    Through meeting with the stakeholders, the design decisions about the location verification module, creating accounts, file system module,
+    and the function compute module were decided. These arose by discussing what these modules would be capable of doing, and how they would satisfy specific
+    requirements identified in the SRS.
+
   \item While creating the design doc, what parts of your other documents (e.g.
     requirements, hazard analysis, etc), it any, needed to be changed, and why?
+    \\
+    \\
+    One part of the SRS document which was required to be changed was the original SharePoint integration requirements. This was deemed
+    to be too difficult to do and would open up vulnerabilities for the stakeholder, and as such was removed from the initial requirements identified in the SRS.
+
   \item What are the limitations of your solution?  Put another way, given
     unlimited resources, what could you do to make the project
     better? (LO\_ProbSolutions)
+    \\
+    \\
+    The main limitations of the current solution is that it doesn't stream the location of users in real time.
+    It currently takes two points in time, (entering and exiting time) into account. This limitation provides reduced visibility on the actions of the user at each site,
+    which limits its sophistication but increases its simplicity. Given more time, the project could be further improved to increase the robustness of the verification
+    functionality to automatically collect more information from the user and consider more complicated edge cases that can arise.
+
   \item Give a brief overview of other design solutions you considered.  What
     are the benefits and tradeoffs of those other designs compared
     with the chosen
     design?  From all the potential options, why did you select the
     documented design?
     (LO\_Explores)
+    \\
+    \\
+    As discussed above, one design solution that was considered was an Amazon EC2 instance due to its widespread use and support which would be very maintainable
+    after the completion date of the project. However, the benefit of an AWS Lambda instance with scaling to 0 was determined to be the best choice due to the cost
+    saving which it is able to provide,
+
+    Another design decision which was explored was the ability to use presigned URLs that would permit larger uploads than non-presigned URLs.
 \end{enumerate}
 
 \end{document}
