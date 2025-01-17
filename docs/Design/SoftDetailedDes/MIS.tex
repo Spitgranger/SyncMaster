@@ -63,7 +63,8 @@
 
 \section{Symbols, Abbreviations and Acronyms}
 
-See SRS Documentation at \url{https://github.com/Spitgranger/SyncMaster/blob/main/docs/SRS-Volere/SRS.pdf}.
+See SRS Documentation at
+\url{https://github.com/Spitgranger/SyncMaster/blob/main/docs/SRS-Volere/SRS.pdf}.
 
 \newpage
 
@@ -76,10 +77,13 @@ See SRS Documentation at \url{https://github.com/Spitgranger/SyncMaster/blob/mai
 \section{Introduction}
 
 The following document details the Module Interface Specifications for
-SyncMaster, a facilities management application for the Technical Services team at the Water Division of the City of Hamilton.
+SyncMaster, a facilities management application for the Technical
+Services team at the Water Division of the City of Hamilton.
 This application enables the Technical Services team to effectively distribute
-water station documentation to stakeholders as a single source of truth. It also acts as an authentication tool for external
-contractors to verify their presence at stations and confirm work being performed.
+water station documentation to stakeholders as a single source of
+truth. It also acts as an authentication tool for external
+contractors to verify their presence at stations and confirm work
+being performed.
 
 Complementary documents include the System Requirement Specifications
 and Module Guide.  The full documentation and implementation can be
@@ -120,19 +124,22 @@ The following table summarizes the primitive data types used by \progname.
 \noindent
 The specification of \progname \ uses some derived data types:
 sequences, strings, tuples, map, enum, KeyCondition,
-AttributeCondition, S3File. Sequences
+AttributeCondition, S3File, HTTPRequest, HTTPResponse, and Optional. Sequences
 are lists filled with elements of the same data type. Strings
 are sequences of characters. Tuples contain a list of values, potentially of
 different types. In addition, \progname \ uses functions, which
 are defined by the data types of their inputs and outputs. Local functions are
 described by giving their type signature followed by their specification. Maps
-are a collection of key-value pairs, where thre does not necessarily need to
+are a collection of key-value pairs, where there does not necessarily need to
 be a restriction on the data types of the keys and values, but one can be
 placed. An enum is a set of values of which the data can be.
 AttributeConditions are conditionals placed on an attribute of a
 database entry. KeyConditions are a subset of AttributeConditions,
 and are condtionals placed on the key attributes of a database entry.
-An S3File, is a unique file that exists in AWS S3.
+An S3File, is a unique file that exists in AWS S3. HTTPRequest and HTTPResponse
+are a subset of maps which conform to the HTTP standard. An Optional is not a
+datatype by itself, but specifies that there may be the absence of a value of a
+specific type.
 
 \section{Module Decomposition}
 
@@ -615,7 +622,7 @@ underlying serverless function)
     \textbf{ExternalServiceFailure:} An internal error from
     AWS \newline \textbf{ExecutionError:} If the underlying compute
     resource that the request gets routed to encounters an error
-    suring execution \\
+    during execution \\
     \hline
   \end{tabular}
 \end{center}
@@ -642,6 +649,71 @@ N/A
 
 N/A
 
+\section{MIS of API Integration Module} \label{Module}
+
+\subsection{Module}
+API Integration Module
+\subsection{Uses}
+Routing Module
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+N/A
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{5cm}
+    >{\raggedright}p{4cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    submitApiRequest & \textbf{request:} HTTPRequest
+    \newline \textbf{url:} String \newline \textbf{apiToken
+    (optional):} String & HTTPResponse &
+    \textbf{NetworkException:} If a valid network connection is not detected.
+    \newline \textbf{TimeoutException:} If a response is not received within
+    $\hyperlink{timeout}{TIMEOUT}$ seconds.\\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+N/A
+
+\subsubsection{Environment Variables}
+
+\subsubsection{Assumptions}
+\begin{itemize}
+  \item API endpoints are up and functional
+  \item The system has a internet network connection
+\end{itemize}
+\subsubsection{Access Routine Semantics}
+
+\noindent submitApiRequest(url: String, request: HTTPRequest, apiToken:
+Optional\textless String\textgreater):
+\begin{itemize}
+  \item output: HTTPResponse
+  \item exception: NetworkException, TimeoutException
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{5cm}
+    >{\raggedright}p{4cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Description} \\
+    \hline
+    timeElapsed & \textbf{since:} $\mathbb{Z}$ & $\mathbb{Z}$ & Returns the
+    number of seconds elapsed since the provided time given in seconds since
+    Janurary 1, 1970 \\
+    \hline
+  \end{tabular}
+\end{center}
+
 \newpage
 
 \bibliographystyle {plainnat}
@@ -651,7 +723,8 @@ N/A
 
 \section{Appendix} \label{Appendix}
 
-\wss{Extra information if required}
+\subsection{Symbolic Parameters}
+$\hypertarget{timeout}{TIMEOUT}$ = 5\\
 
 \newpage{}
 
