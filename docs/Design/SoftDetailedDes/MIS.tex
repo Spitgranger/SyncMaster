@@ -131,7 +131,7 @@ placed. An enum is a set of values of which the data can be.
 AttributeConditions are conditionals placed on an attribute of a
 database entry. KeyConditions are a subset of AttributeConditions,
 and are condtionals placed on the key attributes of a database entry.
-An S3File, is a unique file that exists in AWS S3. LogEntry is an object 
+An S3File, is a unique file that exists in AWS S3. LogEntry is an object
 consisting of a UserID, SiteID, an ISO formatted date and time string, and
 a type of log (entry or exit).
 
@@ -382,7 +382,8 @@ the database.
 
 \noindent DBTable.query(KeyConditions: kc, AttributeConditions: ac):
 \begin{itemize}
-  \item output: [$i_k | i_k \in Database \land \forall c \in kc (c == true) \land \forall c \in ac (c == true)$]
+  \item output: [$i_k | i_k \in Database \land \forall c \in kc (c ==
+    true) \land \forall c \in ac (c == true)$]
   \item exception: ExternalServiceFailure
 \end{itemize}
 
@@ -426,12 +427,19 @@ N/A
     \hline
     \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
     \hline
-    AddLog & \textbf{UserID:} string \newline \textbf{SiteID:} string \newline \textbf{Datetime:} string \newline \textbf{Type:} enum["entry", "exit"] & LogEntry & \textbf{ExternalServiceFailure:} An internal error from AWS \\
+    AddLog & \textbf{UserID:} string \newline \textbf{SiteID:} string
+    \newline \textbf{Datetime:} string \newline \textbf{Type:}
+    enum["entry", "exit"] & LogEntry &
+    \textbf{ExternalServiceFailure:} An internal error from AWS \\
     \hline
-    ListLogs & \textbf{UserID:} string \newline \textbf{SiteID:} string \newline \textbf{FromDatetime:} string \newline \textbf{ToDatetime:} string &
-    sequence[LogEntry] & \textbf{ExternalServiceFailure:} An internal error from AWS \\
+    ListLogs & \textbf{UserID:} string \newline \textbf{SiteID:}
+    string \newline \textbf{FromDatetime:} string \newline
+    \textbf{ToDatetime:} string &
+    sequence[LogEntry] & \textbf{ExternalServiceFailure:} An internal
+    error from AWS \\
     \hline
-    PurgeLogs & \textbf{UserID:} string & - & \textbf{ExternalServiceFailure:} An internal error from AWS \\
+    PurgeLogs & \textbf{UserID:} string & - &
+    \textbf{ExternalServiceFailure:} An internal error from AWS \\
     \hline
   \end{tabular}
 \end{center}
@@ -445,7 +453,9 @@ N/A
     \hline
     \textbf{Name} & \textbf{Description} \\
     \hline
-    LogEntryDatabase & The underlying AWS DynamoDB table, can be represented as a set of items: $\{l_0, l_1, ..., l_n\}$, where $l_k: LogEntry, k\in[0,n]$ \\
+    LogEntryDatabase & The underlying AWS DynamoDB table, can be
+    represented as a set of items: $\{l_0, l_1, ..., l_n\}$, where
+    $l_k: LogEntry, k\in[0,n]$ \\
     \hline
   \end{tabular}
 \end{center}
@@ -474,20 +484,24 @@ the database.
 
 \noindent AddLog(UserID: u, SiteID: s, Datetime: d, Type: t):
 \begin{itemize}
-  \item transition: $LogEntryDatabase \rightarrow LogEntryDatabase \cup \{l_{new}\}$, where $l_{new}.UserID = u$, $l_{new}.SiteID = s$, $l_{new}.Datetime = d$, $l_{new}.Type = t$
+  \item transition: $LogEntryDatabase \rightarrow LogEntryDatabase
+    \cup \{l_{new}\}$, where $l_{new}.UserID = u$, $l_{new}.SiteID =
+    s$, $l_{new}.Datetime = d$, $l_{new}.Type = t$
   \item output: $l_{new}$
   \item exception: ExternalServiceFailure
 \end{itemize}
 
 \noindent ListLogs(UserID: u, SiteID: s, FromDatetime: fd, ToDatetime: td):
 \begin{itemize}
-  \item output: $[l_k | l_k \in LogEntryDatabase \land l_k.UserID == u \land l_k.SiteID == s \land fd \le l_k.Datetime \le td]$
+  \item output: $[l_k | l_k \in LogEntryDatabase \land l_k.UserID ==
+    u \land l_k.SiteID == s \land fd \le l_k.Datetime \le td]$
   \item exception: ExternalServiceFailure
 \end{itemize}
 
 \noindent PurgeLogs(UserID: u):
 \begin{itemize}
-  \item transition: $LogEntryDatabase \rightarrow LogEntryDatabase - \{l_k | l_k \in LogEntryDatabase \land l_k.UserID == u \}$
+  \item transition: $LogEntryDatabase \rightarrow LogEntryDatabase -
+    \{l_k | l_k \in LogEntryDatabase \land l_k.UserID == u \}$
   \item exception: ExternalServiceFailure
 \end{itemize}
 
@@ -591,7 +605,8 @@ the S3 bucket.
 
 \subsubsection{Access Routine Semantics}
 
-\noindent S3Bucket.createPresignedUrl(Key: k, VersionID: v, ETag: e, Method: m, ExpiresIn: x):
+\noindent S3Bucket.createPresignedUrl(Key: k, VersionID: v, ETag: e,
+Method: m, ExpiresIn: x):
 \begin{itemize}
   \item output: string
   \item exception: ExternalServiceFailure, PermissionException
