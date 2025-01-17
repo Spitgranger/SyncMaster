@@ -711,8 +711,9 @@ N/A
 \noindent authenticateUser(email: email, password: password):
 \begin{itemize}
   \item transition: $issuedTokens \rightarrow issuedTokens \cup
-    \{authToken\}$, if $(email \cap password) \in Database $, where
-    $authToken$ is uniquely generated for the user.
+    \{authToken\}$, if $(email \cap hashPassword) \in Database$,
+    where $authToken$ is uniquely generated for the user and
+    $hashPassword$ is the password after being hashed.
   \item output: $authToken$
   \item exception: InvalidCredentials
 \end{itemize}
@@ -743,6 +744,9 @@ N/A
     \hline
     generateToken & \textbf{userID:} string & \textbf{authToken:} string &
     Generates unique secure token for authenticated user \\
+    \hline
+    hashPassword & \textbf{password:} string & \textbf{hashPassword:} string &
+    Hashes password to securely check against database \\
     \hline
   \end{tabular}
 \end{center}
