@@ -649,7 +649,9 @@ User Authentication Module
 
 \subsection{Uses}
 
-Location Verification Module, Database Interaction Module, Routing Module
+boto3 (AWS SDK for Python), AWS Cognito (AWS Cloud Service for user
+authentication), Location Verification Module, Database Interaction
+Module, Routing Module
 
 \subsection{Syntax}
 
@@ -695,6 +697,8 @@ N/A
     of items $\{i_0, i_1, ..., i_n\}$, where $i_k:
     map[string \rightarrow  any], k\in[0,n]$ \\
     \hline
+    siteID & ID of site contractor is visiting \\
+    \hline
   \end{tabular}
 \end{center}
 
@@ -711,8 +715,7 @@ N/A
 \noindent authenticateUser(email: email, password: password):
 \begin{itemize}
   \item transition: $issuedTokens \rightarrow issuedTokens \cup
-    \{authToken\}$, if $(email \cap hashPassword) \in Database$,
-    where $hashPassword$ is the password after being hashed.
+    \{authToken\}$, if $(email \cap password) \in Database$.
   \item output: $authToken$, where $authToken$ is uniquely generated
     for the user.
   \item exception: InvalidCredentials
@@ -737,20 +740,7 @@ N/A
 
 \subsubsection{Local Functions}
 
-\begin{center}
-  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{4cm}
-    >{\raggedright}p{4cm} p{4.5cm}}
-    \hline
-    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Description} \\
-    \hline
-    generateToken & \textbf{userID:} string & \textbf{authToken:} string &
-    Generates unique secure token for authenticated user \\
-    \hline
-    hashPassword & \textbf{password:} string & \textbf{hashPassword:} string &
-    Hashes password to securely check against database \\
-    \hline
-  \end{tabular}
-\end{center}
+N/A
 
 \newpage
 
