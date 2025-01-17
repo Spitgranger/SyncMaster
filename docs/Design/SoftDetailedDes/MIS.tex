@@ -686,7 +686,13 @@ N/A
   \item The system has a internet network connection
 \end{itemize}
 \subsubsection{Access Routine Semantics}
-N/A
+
+\noindent submitApiRequest(url: String, request: HTTPRequest, apiToken:
+Optional\textless String\textgreater):
+\begin{itemize}
+  \item output: HTTPResponse
+  \item exception: NetworkException, TimeoutException
+\end{itemize}
 
 \subsubsection{Local Functions}
 
