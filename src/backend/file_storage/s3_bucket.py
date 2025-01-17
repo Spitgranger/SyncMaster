@@ -121,7 +121,7 @@ class S3Bucket:
             to abort a multipart upload, likely due to bucket being
             initialized with only read permissions
         """
-        self._client.complete_multipart_upload(Bucket=self.name, Key=key, UploadId=upload_id)
+        self._client.abort_multipart_upload(Bucket=self.name, Key=key, UploadId=upload_id)
 
     def create_get_url(self, key: str, e_tag: str) -> str:
         """
