@@ -1,13 +1,15 @@
 from http import HTTPStatus
 
-import requests
 import pytest
-from backend.file_storage.s3_bucket import S3Bucket
+import requests
 from backend.environment import DOCUMENT_STORAGE_BUCKET_NAME
+from backend.file_storage.s3_bucket import S3Bucket
 from botocore.exceptions import ClientError
+
 from ..constants import TEST_S3_FILE_CONTENT, TEST_S3_FILE_KEY
 
-@pytest.mark.parametrize('', [pytest.param(id="complete"), pytest.param(id="abort")])
+
+@pytest.mark.parametrize("", [pytest.param(id="complete"), pytest.param(id="abort")])
 def test_upload_file_completed(empty_s3_bucket, request):
     client = empty_s3_bucket
 
@@ -23,7 +25,6 @@ def test_upload_file_completed(empty_s3_bucket, request):
     # Upload to the url
     http_response = requests.put(url=url, data=TEST_S3_FILE_CONTENT)
     assert http_response.status_code == HTTPStatus.OK.value
-    
 
     if request.node.callspec.id == "complete":
         # Complete the multipart upload
@@ -44,6 +45,7 @@ def test_upload_file_completed(empty_s3_bucket, request):
             for upload in uploads:
                 if upload["Key"] == TEST_S3_FILE_KEY and upload["UploadId"] == upload_id:
                     pytest.fail("Found upload still active")
+
 
 def test_upload_file_aborted(empty_s3_bucket):
     client = empty_s3_bucket
@@ -69,6 +71,7 @@ def test_upload_file_aborted(empty_s3_bucket):
 
     obj = client.get_object(Bucket=bucket.name, Key=TEST_S3_FILE_KEY, IfMatch=final_e_tag)
     assert obj["Body"].read() == bytes(TEST_S3_FILE_CONTENT, encoding="utf-8")
+
 
 def test_get_object_url(s3_bucket_with_item):
     client, metadata = s3_bucket_with_item
@@ -98,7 +101,5 @@ def test_delete_object(s3_bucket_with_item):
 
     with pytest.raises(ClientError) as client_error:
         client.head_object(Bucket=bucket.name, Key=TEST_S3_FILE_KEY, IfMatch=e_tag)
-    
+
     assert client_error.value.response["Error"]["Code"] == str(HTTPStatus.NOT_FOUND.value)
-
-
