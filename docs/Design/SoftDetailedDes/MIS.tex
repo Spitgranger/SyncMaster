@@ -666,7 +666,7 @@ N/A
     \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
     \hline
     createUser & \textbf{email:} string \newline
-    \textbf{password:} string & \textbf{userID:} string &
+    \textbf{details:} map[string $\rightarrow$ any] & \textbf{userID:} string &
     \textbf{DuplicateUser:} Existing email address used \\
     \hline
     editUser & \textbf{userID:} string \newline
@@ -710,12 +710,14 @@ N/A
 
 \subsubsection{Access Routine Semantics}
 
-\noindent createUserUser(email: email, password: password):
+\noindent createUser(email: email, details: details):
 \begin{itemize}
   \item transition: $Database \rightarrow Database \cup
     \{User_{new}\}$, if $email \notin Database$, where $User_{new} =
-    \{userID, email, hashPassword, \ldots\}$
-  \item output: $userID$, where userID is uniquely generated for the email.
+    \{userID, email, password, \ldots\}$.
+  \item output: $\{userID, password\}$, where $userID$ is uniquely
+    generated for the email and $password$ is a temporary password
+    generated during account creation
   \item exception: DuplicateUser
 \end{itemize}
 
@@ -729,7 +731,7 @@ N/A
   \item exception: UserNotFound
 \end{itemize}
 
-\noindent deleteUserUser(userID: userID):
+\noindent deleteUser(userID: userID):
 \begin{itemize}
   \item transition: $Database \rightarrow Database - \{User\}$, if
     $\exists(\{User\} \in Database \wedge User.userID == userID)$.
@@ -756,8 +758,8 @@ N/A
     generateUserID & \textbf{email:} string & \textbf{authToken:} string &
     Generates unique userID for each email. \\
     \hline
-    hashPassword & \textbf{password:} string & \textbf{authToken:} string &
-    Hashes password for secure storage and verification in database.\\
+    generatePassword & \textbf{password:} string & \textbf{authToken:} string &
+    Creates one-time password for new users.\\
     \hline
   \end{tabular}
 \end{center}
