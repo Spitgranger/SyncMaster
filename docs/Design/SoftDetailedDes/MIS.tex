@@ -713,7 +713,8 @@ N/A
   \item transition: $issuedTokens \rightarrow issuedTokens \cup
     \{authToken\}$, if $(email \cap hashPassword) \in Database$,
     where $hashPassword$ is the password after being hashed.
-  \item output: $authToken$, where $authToken$ is uniquely generated for the user.
+  \item output: $authToken$, where $authToken$ is uniquely generated
+    for the user.
   \item exception: InvalidCredentials
 \end{itemize}
 
@@ -722,7 +723,8 @@ N/A
   \item transition: $issuedTokens \rightarrow issuedTokens \cup
     \{authToken\}$, if $(email \cap name) \in Database \wedge bool ==
     true$.
-  \item output: $authToken$ where $authToken$ is uniquely generated for the user.
+  \item output: $authToken$ where $authToken$ is uniquely generated
+    for the user.
   \item exception: InvalidCredentials, LocationVerificationFailed
 \end{itemize}
 
