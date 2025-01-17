@@ -672,9 +672,12 @@ N/A
     \textbf{InvalidCredentials:} Credentials not in database \\
     \hline
     authenticateContractor & \textbf{email:} string \newline
-    \textbf{name:} string \newline \textbf{locationState:} boolean &
+    \textbf{name:} string \newline \textbf{siteID:} String \newline
+    \textbf{userLocation:} \{float, float\} &
     \textbf{authToken:} string & \textbf{InvalidCredentials:}
     Credentials not in database \newline
+    \textbf{InvalidSiteID:}
+    siteID not in database \newline
     \textbf{LocationVerificationFailed:} Verification of users
     location failed \\
     \hline
@@ -719,14 +722,17 @@ N/A
   \item exception: InvalidCredentials
 \end{itemize}
 
-\noindent authenticateContractor(email: email, name: name, locationState: bool):
+\noindent authenticateContractor(email: email, name: name, siteID:
+siteID, userLocation: \{latitude, longitude\}):
 \begin{itemize}
   \item transition: $issuedTokens \rightarrow issuedTokens \cup
-    \{authToken\}$, if $(email \cap name) \in Database \wedge bool ==
-    true$.
+    \{authToken\}$, if $(email \cap name) \in Database \wedge siteID
+    \in Database \wedge locationState ==
+    true$, where locationState is a boolean returned from the
+    Location Verification Module.
   \item output: $authToken$ where $authToken$ is uniquely generated
     for the user.
-  \item exception: InvalidCredentials, LocationVerificationFailed
+  \item exception: InvalidCredentials, InvalidSiteID, LocationVerificationFailed
 \end{itemize}
 
 \noindent validateToken(authToken: token):
