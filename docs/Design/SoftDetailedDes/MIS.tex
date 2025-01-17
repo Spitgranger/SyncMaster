@@ -665,7 +665,8 @@ N/A
     \hline
     \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
     \hline
-    verifyLocation & \textbf{latitude:} float \newline
+    verifyLocation & \textbf{siteID:} string \newline
+    \textbf{latitude:} float \newline
     \textbf{longitude:} float \newline \textbf{accuracy:} float &
     \textbf{locationState:} boolean &
     \textbf{Invalidlocation:} co-ordinates are invalid \\
@@ -677,17 +678,7 @@ N/A
 
 \subsubsection{State Variables}
 
-\begin{center}
-  \begin{tabular}{p{4cm} p{12cm}}
-    \hline
-    \textbf{Name} & \textbf{Description} \\
-    \hline
-    issuedTokens & Table of tokens issued, can be represented as set
-    of items $\{i_0, i_1, ..., i_n\}$, where $i_k:
-    map[string \rightarrow  any], k\in[0,n]$ \\
-    \hline
-  \end{tabular}
-\end{center}
+N/A
 
 \subsubsection{Environment Variables}
 
@@ -699,31 +690,14 @@ N/A
 
 \subsubsection{Access Routine Semantics}
 
-\noindent authenticateUser(email: email, password: password):
-\begin{itemize}
-  \item transition: $issuedTokens \rightarrow issuedTokens \cup
-    \{authToken\}$, if $(email \cap hashPassword) \in Database$,
-    where $hashPassword$ is the password after being hashed.
-  \item output: $authToken$, where $authToken$ is uniquely generated
-    for the user.
-  \item exception: InvalidCredentials
-\end{itemize}
-
-\noindent authenticateContractor(email: email, name: name, locationState: bool):
-\begin{itemize}
-  \item transition: $issuedTokens \rightarrow issuedTokens \cup
-    \{authToken\}$, if $(email \cap name) \in Database \wedge bool ==
-    true$.
-  \item output: $authToken$ where $authToken$ is uniquely generated
-    for the user.
-  \item exception: InvalidCredentials, LocationVerificationFailed
-\end{itemize}
-
-\noindent validateToken(authToken: token):
+\noindent verifyLocation(siteID: siteID, latitude: lat, longitude:
+long, accuracy: acc):
 \begin{itemize}
   \item transition: N/A
-  \item output: true if $token \in issuedTokens$, else false.
-  \item exception: TokenInvalid
+  \item output: true if the distance calculated by calculateDistance
+    is within the range of the intended site, adjusted for accuracy;
+    false otherwise.
+  \item exception: Invalidlocation
 \end{itemize}
 
 \subsubsection{Local Functions}
@@ -734,11 +708,12 @@ N/A
     \hline
     \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Description} \\
     \hline
-    generateToken & \textbf{userID:} string & \textbf{authToken:} string &
-    Generates unique secure token for authenticated user \\
-    \hline
-    hashPassword & \textbf{password:} string & \textbf{hashPassword:} string &
-    Hashes password to securely check against database \\
+    calculateDistance & \textbf{siteID:} string \newline
+    \textbf{latitude:} float \newline
+    \textbf{longitude:} float & \textbf{distance:} float &
+    Uses siteID to get a second set of coordinates from Database.
+    Using two sets of coordinates the haversine distance between the
+    two points is returned. \\
     \hline
   \end{tabular}
 \end{center}
