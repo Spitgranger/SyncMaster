@@ -363,8 +363,8 @@ the database.
 
 \noindent DBTable.put(Item: $i_{new}$, Condition: c):
 \begin{itemize}
-  \item transition: $Database \rightarrow Database \cup \{i_{new}\}$, if $c ==
-    true \land DBTable.Access == ``write''$
+  \item transition: $Database \rightarrow Database \cup \{i_{new}\}$, if
+    $c == true \land DBTable.Access == ``write''$
   \item output: $i_{new}$
   \item exception: ExternalServiceFailure, ConditionCheckFailed,
     PermissionException
