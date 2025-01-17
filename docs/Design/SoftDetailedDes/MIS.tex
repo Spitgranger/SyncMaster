@@ -119,19 +119,22 @@ The following table summarizes the primitive data types used by \progname.
 \noindent
 The specification of \progname \ uses some derived data types:
 sequences, strings, tuples, map, enum, KeyCondition,
-AttributeCondition, S3File. Sequences
+AttributeCondition, S3File, HTTPRequest, HTTPResponse, and Optional. Sequences
 are lists filled with elements of the same data type. Strings
 are sequences of characters. Tuples contain a list of values, potentially of
 different types. In addition, \progname \ uses functions, which
 are defined by the data types of their inputs and outputs. Local functions are
 described by giving their type signature followed by their specification. Maps
-are a collection of key-value pairs, where thre does not necessarily need to
+are a collection of key-value pairs, where there does not necessarily need to
 be a restriction on the data types of the keys and values, but one can be
 placed. An enum is a set of values of which the data can be.
 AttributeConditions are conditionals placed on an attribute of a
 database entry. KeyConditions are a subset of AttributeConditions,
 and are condtionals placed on the key attributes of a database entry.
-An S3File, is a unique file that exists in AWS S3.
+An S3File, is a unique file that exists in AWS S3. HTTPRequest and HTTPResponse
+are a subset of maps which conform to the HTTP standard. An Optional is not a
+datatype by itself, but specifies that there may be the absence of a value of a
+specific type.
 
 \section{Module Decomposition}
 
@@ -614,7 +617,7 @@ underlying serverless function)
     \textbf{ExternalServiceFailure:} An internal error from
     AWS \newline \textbf{ExecutionError:} If the underlying compute
     resource that the request gets routed to encounters an error
-    suring execution \\
+    during execution \\
     \hline
   \end{tabular}
 \end{center}
@@ -640,6 +643,70 @@ N/A
 \subsubsection{Local Functions}
 
 N/A
+
+\section{MIS of API Integration Module} \label{Module}
+
+\subsection{Module}
+API Integration Module
+\subsection{Uses}
+N/A
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+N/A
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{5cm}
+    >{\raggedright}p{4cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    submitApiRequest & \textbf{request:} HTTPRequest
+    \newline \textbf{url:} String \newline \textbf{apiToken (optional):} String & HTTPResponse &
+    \textbf{NetworkException:} If a valid network connection is not detected.
+    \newline \textbf{TimeoutException:} If a response is not received within
+    TIMEOUT seconds.\\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+N/A
+
+\subsubsection{Environment Variables}
+
+\subsubsection{Assumptions}
+\begin{itemize}
+  \item API endpoints are up and functional
+  \item The system has a internet network connection
+\end{itemize}
+\subsubsection{Access Routine Semantics}
+
+\noindent submitApiRequest(url: String, request: HTTPRequest, apiToken:
+Optional\textless String\textgreater):
+\begin{itemize}
+  \item output: HTTPResponse
+  \item exception: NetworkException, TimeoutException
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{5cm}
+    >{\raggedright}p{4cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Description} \\
+    \hline
+    timeElapsed & \textbf{since:} $\mathbb{Z}$ & $\mathbb{Z} & Returns the
+    number of seconds elapsed since the provided time given in seconds since
+    Janurary 1, 1970 \\
+    \hline
+  \end{tabular}
+\end{center}
 
 \newpage
 
