@@ -12,3 +12,4 @@ jobs:
       - run: cargo install tex-fmt
       - run: tex-fmt --check ./docs/**/*.tex
       - run: tex-fmt --check ./docs/**/**/*.tex
+      - run: tex-fmt --print ./docs/Design/SoftDetailedDes/MIS.tex
