@@ -641,6 +641,111 @@ N/A
 
 N/A
 
+\section{MIS of User Management Module} \label{Module}
+
+\subsection{Module}
+
+User Management Module
+
+\subsection{Uses}
+
+Database Interaction Module, Routing Module
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+N/A
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{2.5cm} >{\raggedright}p{3.5cm}
+    >{\raggedright}p{3.5cm} p{5cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    createUser & \textbf{email:} string \newline
+    \textbf{password:} string & \textbf{userID:} string &
+    \textbf{DuplicateUser:} Existing email address used \\
+    \hline
+    editUser & \textbf{userID:} string \newline
+    \textbf{edit:} map[string $\rightarrow$ any] & boolean & \textbf{UserNotFound:}
+    userID not in database \\
+    \hline
+    deleteUser & \textbf{userID:} string & boolean & \textbf{UserNotFound:}
+    userID not in database \\
+    \hline
+    getUser & \textbf{userID:} string & map[string $\rightarrow$ any] & \textbf{UserNotFound:}
+    userID not in database \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\begin{center}
+  \begin{tabular}{p{4cm} p{12cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    Database & Set of registered users, can be represented as set of items $\{i_0, i_1, ..., i_n\}$, where $i_k:
+    map[string \rightarrow  any], k\in[0,n]$ \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Environment Variables}
+
+N/A
+
+\subsubsection{Assumptions}
+
+N/A
+
+\subsubsection{Access Routine Semantics}
+
+\noindent createUserUser(email: email, password: password):
+\begin{itemize}
+  \item transition: $Database \rightarrow Database \cup
+    \{User_new\}$, if $(email \cap password) \in Database $, where
+    $authToken$ is uniquely generated for the user.
+  \item output: $authToken$
+  \item exception: InvalidCredentials
+\end{itemize}
+
+\noindent authenticateContractor(email: email, name: name, locationState: bool):
+\begin{itemize}
+  \item transition: $issuedTokens \rightarrow issuedTokens \cup
+    \{authToken\}$, if $(email \cap name) \in Database \wedge bool ==
+    true$, where $authToken$ is uniquely generated for the user.
+  \item output: $authToken$
+  \item exception: InvalidCredentials, LocationVerificationFailed
+\end{itemize}
+
+\noindent validateToken(authToken: token):
+\begin{itemize}
+  \item transition: N/A
+  \item output: true if $token \in issuedTokens$, else false.
+  \item exception: TokenInvalid
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{4cm}
+    >{\raggedright}p{4cm} p{4.5cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Description} \\
+    \hline
+    generateToken & \textbf{userID:} string & \textbf{authToken:} string &
+    Generates unique secure token for authenticated user \\
+    \hline
+  \end{tabular}
+\end{center}
+
 \newpage
 
 \bibliographystyle {plainnat}
