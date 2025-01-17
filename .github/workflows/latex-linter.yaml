@@ -11,5 +11,4 @@ jobs:
       - uses: actions-rust-lang/setup-rust-toolchain@v1
       - run: cargo install tex-fmt
       - run: tex-fmt --check ./docs/**/*.tex
-      - run: tex-fmt --print ./docs/Design/SoftDetailedDes/MIS.tex
       - run: tex-fmt --check ./docs/**/**/*.tex
