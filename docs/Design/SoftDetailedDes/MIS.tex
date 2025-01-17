@@ -649,7 +649,7 @@ N/A
 \subsection{Module}
 API Integration Module
 \subsection{Uses}
-N/A
+Routing Module
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
@@ -667,7 +667,7 @@ N/A
     \newline \textbf{url:} String \newline \textbf{apiToken (optional):} String & HTTPResponse &
     \textbf{NetworkException:} If a valid network connection is not detected.
     \newline \textbf{TimeoutException:} If a response is not received within
-    TIMEOUT seconds.\\
+    $\hyperlink{timeout}{TIMEOUT}$ seconds.\\
     \hline
   \end{tabular}
 \end{center}
@@ -685,13 +685,7 @@ N/A
   \item The system has a internet network connection
 \end{itemize}
 \subsubsection{Access Routine Semantics}
-
-\noindent submitApiRequest(url: String, request: HTTPRequest, apiToken:
-Optional\textless String\textgreater):
-\begin{itemize}
-  \item output: HTTPResponse
-  \item exception: NetworkException, TimeoutException
-\end{itemize}
+N/A
 
 \subsubsection{Local Functions}
 
@@ -717,7 +711,8 @@ Optional\textless String\textgreater):
 
 \section{Appendix} \label{Appendix}
 
-\wss{Extra information if required}
+\subsection{Symbolic Parameters}
+$\hypertarget{timeout}{TIMEOUT}$ = 5\\
 
 \newpage{}
 
