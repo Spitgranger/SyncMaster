@@ -702,7 +702,6 @@ N/A
 
 \noindent authenticateUser(email: email, password: password):
 \begin{itemize}
-  \item transition: N/A
   \item output: $authToken$, where $authToken$ is a unique token
     generated for the user, tracked, and validated by AWS Cognito.
   \item exception: InvalidCredentials
@@ -711,7 +710,6 @@ N/A
 \noindent authenticateContractor(email: email, name: name, siteID:
 siteID, userLocation: \{latitude, longitude\}):
 \begin{itemize}
-  \item transition: N/A
   \item output: $authToken$, where $authToken$ is a unique token
     generated for the user, tracked, and validated by AWS Cognito.
   \item exception: InvalidCredentials, InvalidSiteID, LocationVerificationFailed
