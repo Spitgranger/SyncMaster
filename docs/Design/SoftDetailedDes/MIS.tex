@@ -116,6 +116,7 @@ The following table summarizes the primitive data types used by \progname.
     natural number & $\mathbb{N}$ & a number without a fractional
     component in [1, $\infty$) \\
     real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
+    boolean & boolean & either true or false\\
     any & any & any data type\\
     \bottomrule
   \end{tabular}
@@ -140,7 +141,12 @@ An S3File, is a unique file that exists in AWS S3. HTTPRequest and HTTPResponse
 are a subset of maps which conform to the HTTP standard. An Optional is not a
 datatype by itself, but specifies that there may be the absence of a value of a
 specific type. LogEntry is an object consisting of a UserID, SiteID, an ISO
-formatted date and time string, and a type of log (entry or exit).
+formatted date and time string, and a type of log (entry or exit). A
+Document is an object
+consisting of the following fields [ siteId: string, expiryDate: string, name:
+  string, createdDatetime: string, lastEditedDateTime: string, s3Link: string,
+  parentDocumentId: map[string $\rightarrow$ any], requireAck: boolean, userId:
+string ]
 
 \section{Module Decomposition}
 
@@ -843,25 +849,176 @@ Optional\textless String\textgreater):
 
 \newpage
 
-\bibliographystyle {plainnat}
-\bibliography {../../../refs/References}
+\section{MIS of Document Management Module} \label{Module}
 
-\newpage
+\subsection{Module}
 
-\section{Appendix} \label{Appendix}
+Document Management Module
 
-\subsection{Symbolic Parameters}
-$\hypertarget{timeout}{TIMEOUT}$ = 5\\
+\subsection{Uses}
 
-\newpage{}
+Database Interaction Module
 
-\section*{Appendix --- Reflection}
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+N/A
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{5cm}
+    >{\raggedright}p{4cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    RetrieveDocs & \textbf{siteID:} string & sequence[Document] &
+    \textbf{ExternalServiceFailure:} An internal error from AWS \\
+    \hline
+    CreateDoc & \textbf{s3Link:} string \newline \textbf{userID:}
+    string \newline \textbf{siteID:} string \newline
+    \textbf{parentDocumentID:} Optional \textless map[string
+    $\rightarrow$ any]\textgreater \newline \textbf{expiryDate:}
+    Optional \textless string\textgreater \newline
+    \textbf{requiresAck:} boolean & map[string $\rightarrow$ any] &
+    \textbf{ExternalServiceFailure:} An internal error from AWS \newline
+    \textbf{ValidationError:} Non-existent IDs provided \\
+    \hline
+    EditDoc & \textbf{documentID:} map[string $\rightarrow$ any
+      \newline \textbf{userID:} string \newline
+      \textbf{s3Link:}
+      string & - &
+      \textbf{ExternalServiceFailure:} An internal error from AWS \newline
+      \textbf{ValidationError:} Non-existent IDs provided \\
+      \hline
+      DeleteDoc & \textbf{documentID:} map[string $\rightarrow$ any] & - &
+      \textbf{ExternalServiceFailure:} An internal error from AWS \newline
+      \textbf{ValidationError:} Non-existent IDs provided \\
+      \hline
+    \end{tabular}
+  \end{center}
+
+  \subsection{Semantics}
+
+  \subsubsection{State Variables}
+
+  \begin{center}
+    \begin{tabular}{p{4cm} p{12cm}}
+      \hline
+      \textbf{Name} & \textbf{Description} \\
+      \hline
+      DocumentDatabase & The underlying AWS DynamoDB table, can be
+      represented as a set of items: $\{D_0, D_1, ..., D_n\}$, where
+      $D_k \in Documents, k\in[0,n]$ \\
+      \hline
+    \end{tabular}
+  \end{center}
+
+  \subsubsection{Environment Variables}
+
+  \begin{center}
+    \begin{tabular}{p{6cm} p{10cm}}
+      \hline
+      \textbf{Name} & \textbf{Description} \\
+      \hline
+      LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function (The chosen
+      AWS compute service for this project), it has an AWS IAM role
+      attached to it, that it uses when running. This role needs
+      permission for document database access for this module to work \\
+      \hline
+    \end{tabular}
+  \end{center}
+
+  \subsubsection{Assumptions}
+
+  LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to
+  execute the lambda's required tasks.
+
+  \subsubsection{Access Routine Semantics}
+
+  \noindent RetrieveDocs(siteId: sID):
+  \begin{itemize}
+    \item output: $[D_{k} \in DocumentDatabase \land D_{k}$.siteId ==
+      sID], $\forall
+      k \in \mathbb{Z}$
+    \item exception: ExternalServiceFailure
+  \end{itemize}
+
+  \noindent CreateDoc(s3Link: sL, userID: uID, siteID: sID,
+    parentDocumentID: pID,
+  expiryDate: eD, requiresAck: rA):
+  \begin{itemize}
+    \item transition: $DocumentDatabase \rightarrow DocumentDatabase
+      \cup \{D_{new}\}$, where $D_{new}$.userId = uID $\land$ $D_{new}$.siteId =
+      sId $\land$ $D_{new}$.createdDateTime = $getDateTime()$ $\land$
+      $D_{new}$.expiryDate = eD $\land$
+      $D_{new}$.requiresAck = rA $\land$ $D_{new}$.s3Link = sL
+    \item output: map[string $\rightarrow$ any]: The documentId of the created
+      document
+    \item exception: ExternalServiceFailure, ValidationError
+  \end{itemize}
+
+  \noindent EditDoc(documentId: dID, userId: uID, s3Link: sL):
+  \begin{itemize}
+    \item transition: $DocumentDatabase \rightarrow DocumentDatabase - \{D_{old}
+      | D_{old} \in DocumentDatabase \land D_{old} == dID\}$\\
+      $DocumentDatabase \rightarrow DocumentDatabase \cup
+      \{D_{new}\}$ where $D_{new} = copy(D_{old})$ $\land$ $D_{new}$.s3Link = sL
+      $\land$ $D_{new}$.userId = uID $\land$
+      $D_{old}$.lastEditedDateTime = $getDateTime()$ and $copy(D)$ is
+      a predicate indicating the
+      deep copy of document $D$.
+    \item exception: ExternalServiceFailure, ValidationError
+  \end{itemize}
+
+  \noindent DeleteDoc(documentId: dID):
+  \begin{itemize}
+    \item transition: $DocumentDatabase \rightarrow DocumentDatabase -
+      \{D_{old} | D_{old} \in DocumentDatabase$ $\land$
+      $D_{old}$.documentId == dID \}
+    \item exception: ExternalServiceFailure, ValidationError
+  \end{itemize}
+
+  \subsubsection{Local Functions}
+
+  \begin{center}
+    \begin{tabular}{>{\raggedright}p{4cm} >{\raggedright}p{3cm}
+      >{\raggedright}p{3.5cm} p{5.5cm}}
+      \hline
+      \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Description} \\
+      \hline
+      getDateTime & - & string & Returns the current date and time in ISO8601
+      string format\\
+      \hline
+    \end{tabular}
+  \end{center}
+
+  \newpage
+
+  \bibliographystyle {plainnat}
+  \bibliography {../../../refs/References}
+
+  \newpage
+
+  \section{Appendix} \label{Appendix}
+
+  \subsection{Symbolic Parameters}
+  $\hypertarget{timeout}{TIMEOUT}$ = 5\\
+
+  \newpage{}
+
+  \section*{Appendix --- Reflection}
+
+  \wss{Not required for CAS 741 projects}
+
+  The information in this section will be used to evaluate the team
+  members on the
+  graduate attribute of Problem Analysis and Design.
+
+  \input{../../Reflection.tex}
 
 The information in this section will be used to evaluate the team members on the
 graduate attribute of Problem Analysis and Design.
-
-\input{../../Reflection.tex}
-
 \begin{enumerate}
   \item What went well while writing this deliverable?
     \\
@@ -946,4 +1103,4 @@ graduate attribute of Problem Analysis and Design.
     through API Gateway.
 \end{enumerate}
 
-\end{document}
+  \end{document}
