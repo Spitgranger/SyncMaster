@@ -63,7 +63,8 @@
 
 \section{Symbols, Abbreviations and Acronyms}
 
-See SRS Documentation at \url{https://github.com/Spitgranger/SyncMaster/blob/main/docs/SRS-Volere/SRS.pdf}.
+See SRS Documentation at
+\url{https://github.com/Spitgranger/SyncMaster/blob/main/docs/SRS-Volere/SRS.pdf}.
 
 \newpage
 
@@ -76,10 +77,13 @@ See SRS Documentation at \url{https://github.com/Spitgranger/SyncMaster/blob/mai
 \section{Introduction}
 
 The following document details the Module Interface Specifications for
-SyncMaster, a facilities management application for the Technical Services team at the Water Division of the City of Hamilton.
+SyncMaster, a facilities management application for the Technical
+Services team at the Water Division of the City of Hamilton.
 This application enables the Technical Services team to effectively distribute
-water station documentation to stakeholders as a single source of truth. It also acts as an authentication tool for external
-contractors to verify their presence at stations and confirm work being performed.
+water station documentation to stakeholders as a single source of
+truth. It also acts as an authentication tool for external
+contractors to verify their presence at stations and confirm work
+being performed.
 
 Complementary documents include the System Requirement Specifications
 and Module Guide.  The full documentation and implementation can be
@@ -112,6 +116,7 @@ The following table summarizes the primitive data types used by \progname.
     natural number & $\mathbb{N}$ & a number without a fractional
     component in [1, $\infty$) \\
     real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
+    boolean & boolean & either true or false\\
     any & any & any data type\\
     \bottomrule
   \end{tabular}
@@ -132,7 +137,11 @@ placed. An enum is a set of values of which the data can be.
 AttributeConditions are conditionals placed on an attribute of a
 database entry. KeyConditions are a subset of AttributeConditions,
 and are condtionals placed on the key attributes of a database entry.
-An S3File, is a unique file that exists in AWS S3.
+An S3File, is a unique file that exists in AWS S3. A Document is an object
+consisting of the following fields [ siteId: string, expiryDate: string, name:
+  string, createdDatetime: string, lastEditedDateTime: string, s3Link: string,
+  parentDocumentId: map[string $\rightarrow$ any], requireAck: boolean, userId:
+string ]
 
 \section{Module Decomposition}
 
@@ -642,46 +651,186 @@ N/A
 
 N/A
 
-\newpage
+\section{MIS of Document Management Module} \label{Module}
 
-\bibliographystyle {plainnat}
-\bibliography {../../../refs/References}
+\subsection{Module}
 
-\newpage
+Document Management Module
 
-\section{Appendix} \label{Appendix}
+\subsection{Uses}
 
-\wss{Extra information if required}
+Database Interaction Module
 
-\newpage{}
+\subsection{Syntax}
 
-\section*{Appendix --- Reflection}
+\subsubsection{Exported Constants}
 
-\wss{Not required for CAS 741 projects}
+N/A
 
-The information in this section will be used to evaluate the team members on the
-graduate attribute of Problem Analysis and Design.
+\subsubsection{Exported Access Programs}
 
-\input{../../Reflection.tex}
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{5cm}
+    >{\raggedright}p{4cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    RetrieveDocs & \textbf{siteID:} string & sequence[Document] &
+    \textbf{ExternalServiceFailure:} An internal error from AWS \\
+    \hline
+    CreateDoc & \textbf{s3Link:} string \newline \textbf{userID:}
+    string \newline \textbf{siteID:} string \newline
+    \textbf{parentDocumentID:} Optional \textless map[string
+    $\rightarrow$ any]\textgreater \newline \textbf{expiryDate:}
+    Optional \textless string\textgreater \newline
+    \textbf{requiresAck:} boolean & - &
+    \textbf{ExternalServiceFailure:} An internal error from AWS \\
+    \hline
+    EditDoc & \textbf{documentID:} map[string $\rightarrow$ any
+      \newline \textbf{userID:} string \newline
+      \textbf{s3Link:}
+      string & - &
+      \textbf{ExternalServiceFailure:} An internal error from AWS \\
+      \hline
+      DeleteDoc & \textbf{documentID:} map[string $\rightarrow$ any] & - &
+      \textbf{ExternalServiceFailure:} An internal error from AWS \\
+      \hline
+    \end{tabular}
+  \end{center}
 
-\begin{enumerate}
-  \item What went well while writing this deliverable?
-  \item What pain points did you experience during this deliverable, and how
-    did you resolve them?
-  \item Which of your design decisions stemmed from speaking to your client(s)
-    or a proxy (e.g. your peers, stakeholders, potential users)? For those that
-    were not, why, and where did they come from?
-  \item While creating the design doc, what parts of your other documents (e.g.
-    requirements, hazard analysis, etc), it any, needed to be changed, and why?
-  \item What are the limitations of your solution?  Put another way, given
-    unlimited resources, what could you do to make the project
-    better? (LO\_ProbSolutions)
-  \item Give a brief overview of other design solutions you considered.  What
-    are the benefits and tradeoffs of those other designs compared
-    with the chosen
-    design?  From all the potential options, why did you select the
-    documented design?
-    (LO\_Explores)
-\end{enumerate}
+  \subsection{Semantics}
 
-\end{document}
+  \subsubsection{State Variables}
+
+  \begin{center}
+    \begin{tabular}{p{4cm} p{12cm}}
+      \hline
+      \textbf{Name} & \textbf{Description} \\
+      \hline
+      DocumentDatabase & The underlying AWS DynamoDB table, can be
+      represented as a set of items: $\{D_0, D_1, ..., D_n\}$, where
+      $D_k \in Documents, k\in[0,n]$ \\
+      \hline
+    \end{tabular}
+  \end{center}
+
+  \subsubsection{Environment Variables}
+
+  \begin{center}
+    \begin{tabular}{p{6cm} p{10cm}}
+      \hline
+      \textbf{Name} & \textbf{Description} \\
+      \hline
+      LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function (The chosen
+      AWS compute service for this project), it has an AWS IAM role
+      attached to it, that it uses when running. This role needs
+      permission for document database access for this module to work \\
+      \hline
+    \end{tabular}
+  \end{center}
+
+  \subsubsection{Assumptions}
+
+  LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to
+  execute the lambda's required tasks.
+
+  \subsubsection{Access Routine Semantics}
+
+  \noindent RetrieveDocs(siteId: sID):
+  \begin{itemize}
+    \item output: $[D_{k} \in DocumentDatabase \land D_{k}$.siteId ==
+      sID], $\forall
+      k \in \mathbb{Z}$
+    \item exception: ExternalServiceFailure
+  \end{itemize}
+
+  \noindent CreateDoc(s3Link: sL, userID: uID, siteID: sID,
+    parentDocumentID: pID,
+  expiryDate: eD, requiresAck: rA):
+  \begin{itemize}
+    \item transition: $DocumentDatabase \rightarrow DocumentDatabase
+      \cup \{D_{new}\}$, where $D_{new}$.userId = uID $\land$ $D_{new}$.siteId =
+      sId $\land$ $D_{new}$.createdDateTime = $getDateTime()$ $\land$
+      $D_{new}$.expiryDate = eD $\land$
+      $D_{new}$.requiresAck = rA $\land$ $D_{new}$.s3Link = sL
+    \item exception: ExternalServiceFailure
+  \end{itemize}
+
+  \noindent EditDoc(documentId: dID, userId: uID, s3Link: sL):
+  \begin{itemize}
+    \item transition: $DocumentDatabase \rightarrow DocumentDatabase - \{D_{old}
+      | D_{old} \in DocumentDatabase \land D_{old} == dID\}$\\
+    $DocumentDatabase \rightarrow DocumentDatabase \cup \{D_{new}\}$ where $D_{new} = copy(D_{old})$ $\land$ $D_{new}$.s3Link = sL
+    $\land$ $D_{new}$.userId = uID $\land$ $D_{old}$.lastEditedDateTime = $getDateTime()$ and $copy(D)$ is a predicate indicating the
+    deep copy of document $D$.
+    \item exception: ExternalServiceFailure
+  \end{itemize}
+
+  \noindent DeleteDoc(documentId: dID):
+  \begin{itemize}
+    \item transition: $DocumentDatabase \rightarrow DocumentDatabase -
+      \{D_{old} | D_{old} \in DocumentDatabase$ $\land$ $D_{old}$.documentId == dID \}
+    \item exception: ExternalServiceFailure
+  \end{itemize}
+
+  \subsubsection{Local Functions}
+
+  \begin{center}
+    \begin{tabular}{>{\raggedright}p{4cm} >{\raggedright}p{3cm}
+      >{\raggedright}p{3.5cm} p{5.5cm}}
+      \hline
+      \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Description} \\
+      \hline
+      getDateTime & - & string & Returns the current date and time in ISO8601
+      string format\\
+      \hline
+    \end{tabular}
+  \end{center}
+
+  \newpage
+
+  \bibliographystyle {plainnat}
+  \bibliography {../../../refs/References}
+
+  \newpage
+
+  \section{Appendix} \label{Appendix}
+
+  \wss{Extra information if required}
+
+  \newpage{}
+
+  \section*{Appendix --- Reflection}
+
+  \wss{Not required for CAS 741 projects}
+
+  The information in this section will be used to evaluate the team
+  members on the
+  graduate attribute of Problem Analysis and Design.
+
+  \input{../../Reflection.tex}
+
+  \begin{enumerate}
+    \item What went well while writing this deliverable?
+    \item What pain points did you experience during this deliverable, and how
+      did you resolve them?
+    \item Which of your design decisions stemmed from speaking to your client(s)
+      or a proxy (e.g. your peers, stakeholders, potential users)?
+      For those that
+      were not, why, and where did they come from?
+    \item While creating the design doc, what parts of your other
+      documents (e.g.
+      requirements, hazard analysis, etc), it any, needed to be
+      changed, and why?
+    \item What are the limitations of your solution?  Put another way, given
+      unlimited resources, what could you do to make the project
+      better? (LO\_ProbSolutions)
+    \item Give a brief overview of other design solutions you considered.  What
+      are the benefits and tradeoffs of those other designs compared
+      with the chosen
+      design?  From all the potential options, why did you select the
+      documented design?
+      (LO\_Explores)
+  \end{enumerate}
+
+  \end{document}
