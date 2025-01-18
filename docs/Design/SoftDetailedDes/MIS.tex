@@ -666,10 +666,10 @@ N/A
     \hline
     \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
     \hline
-    createJob & \textbf{jobType:}string, \textbf{workOrder:}int, \textbf{userID:}string, \textbf{description:}string & \textbf{jobID:}string & ExecutionError \\
-    editJob & \textbf{jobID:}string, \textbf{workOrder:}int, \textbf{description:}string, \textbf{jobType:}string & None & ExecutionError \\
-    completeJob & \textbf{jobID:}string & None & InternalException in AWS \\
-    deleteJob & \textbf{jobID:}string & None & ExecutionError\\
+    createJob & \textbf{jobType:}string, \textbf{workOrder:}int, \textbf{userID:}string, \textbf{description:}string & \textbf{jobID:}string & ExternalServiceFailure in AWS \\
+    editJob & \textbf{jobID:}string, \textbf{workOrder:}int, \textbf{description:}string, \textbf{jobType:}string & None & ExternalServiceFailure in AWS \\
+    completeJob & \textbf{jobID:}string & None & ExternalServiceFailure in AWS\\
+    deleteJob & \textbf{jobID:}string & None & ExternalServiceFailure in AWS\\
     \hline
   \end{tabular}
 \end{center}
@@ -714,21 +714,18 @@ N/A
 \noindent editJob(\textbf{jobID:}string, \textbf{workOrder}int, \textbf{description}string, \textbf{jobType}string):
 \begin{itemize}
   \item transition: edit job attributes if not closed
-  \item output: N/A
   \item exception: ExecutionError if method fails
 \end{itemize}
 
 \noindent completeJob(\textbf{jobID:}string):
 \begin{itemize}
   \item transition: status = closed
-  \item output: N/A
   \item exception: InternalException in AWS
 \end{itemize}
 
 \noindent deleteJob(\textbf{jobID:}string):
 \begin{itemize}
   \item transition: remove job if status is open
-  \item output: N/A
   \item exception: ExecutionError if method fails
 \end{itemize}
 
