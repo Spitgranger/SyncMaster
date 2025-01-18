@@ -683,17 +683,20 @@ N/A
     \textbf{parentDocumentID:} Optional \textless map[string
     $\rightarrow$ any]\textgreater \newline \textbf{expiryDate:}
     Optional \textless string\textgreater \newline
-    \textbf{requiresAck:} boolean & - &
-    \textbf{ExternalServiceFailure:} An internal error from AWS \\
+    \textbf{requiresAck:} boolean & map[string $\rightarrow$ any] &
+    \textbf{ExternalServiceFailure:} An internal error from AWS \newline
+    \textbf{ValidationError:} Non-existent IDs provided \\
     \hline
     EditDoc & \textbf{documentID:} map[string $\rightarrow$ any
       \newline \textbf{userID:} string \newline
       \textbf{s3Link:}
       string & - &
-      \textbf{ExternalServiceFailure:} An internal error from AWS \\
+      \textbf{ExternalServiceFailure:} An internal error from AWS \newline
+      \textbf{ValidationError:} Non-existent IDs provided \\
       \hline
       DeleteDoc & \textbf{documentID:} map[string $\rightarrow$ any] & - &
-      \textbf{ExternalServiceFailure:} An internal error from AWS \\
+      \textbf{ExternalServiceFailure:} An internal error from AWS \newline
+      \textbf{ValidationError:} Non-existent IDs provided \\
       \hline
     \end{tabular}
   \end{center}
@@ -753,6 +756,8 @@ N/A
       sId $\land$ $D_{new}$.createdDateTime = $getDateTime()$ $\land$
       $D_{new}$.expiryDate = eD $\land$
       $D_{new}$.requiresAck = rA $\land$ $D_{new}$.s3Link = sL
+    \item output: map[string $\rightarrow$ any]: The documentId of the created
+      document
     \item exception: ExternalServiceFailure
   \end{itemize}
 
@@ -760,16 +765,20 @@ N/A
   \begin{itemize}
     \item transition: $DocumentDatabase \rightarrow DocumentDatabase - \{D_{old}
       | D_{old} \in DocumentDatabase \land D_{old} == dID\}$\\
-    $DocumentDatabase \rightarrow DocumentDatabase \cup \{D_{new}\}$ where $D_{new} = copy(D_{old})$ $\land$ $D_{new}$.s3Link = sL
-    $\land$ $D_{new}$.userId = uID $\land$ $D_{old}$.lastEditedDateTime = $getDateTime()$ and $copy(D)$ is a predicate indicating the
-    deep copy of document $D$.
+      $DocumentDatabase \rightarrow DocumentDatabase \cup
+      \{D_{new}\}$ where $D_{new} = copy(D_{old})$ $\land$ $D_{new}$.s3Link = sL
+      $\land$ $D_{new}$.userId = uID $\land$
+      $D_{old}$.lastEditedDateTime = $getDateTime()$ and $copy(D)$ is
+      a predicate indicating the
+      deep copy of document $D$.
     \item exception: ExternalServiceFailure
   \end{itemize}
 
   \noindent DeleteDoc(documentId: dID):
   \begin{itemize}
     \item transition: $DocumentDatabase \rightarrow DocumentDatabase -
-      \{D_{old} | D_{old} \in DocumentDatabase$ $\land$ $D_{old}$.documentId == dID \}
+      \{D_{old} | D_{old} \in DocumentDatabase$ $\land$
+      $D_{old}$.documentId == dID \}
     \item exception: ExternalServiceFailure
   \end{itemize}
 
