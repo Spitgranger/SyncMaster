@@ -696,11 +696,23 @@ N/A
 
 \subsubsection{Environment Variables}
 
-N/A
+\begin{center}
+  \begin{tabular}{p{6cm} p{10cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function (The chosen
+    AWS compute service for this project), it has an AWS IAM role
+    attached to it, that it uses when running. This role needs
+    permission for S3 bucket access for this module to work \\
+    \hline
+  \end{tabular}
+\end{center}
 
 \subsubsection{Assumptions}
 
-N/A
+LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to
+execute the lambda's required tasks.
 
 \subsubsection{Access Routine Semantics}
 
@@ -708,25 +720,25 @@ N/A
 \begin{itemize}
   \item transition: creates job associated with userID
   \item output: the jobID
-  \item exception: ExecutionError if method fails
+  \item exception: ExternalServiceFailure if method fails
 \end{itemize}
 
 \noindent editJob(\textbf{jobID:}string, \textbf{workOrder}int, \textbf{description}string, \textbf{jobType}string):
 \begin{itemize}
   \item transition: edit job attributes if not closed
-  \item exception: ExecutionError if method fails
+  \item exception: ExternalServiceFailure if method fails
 \end{itemize}
 
 \noindent completeJob(\textbf{jobID:}string):
 \begin{itemize}
   \item transition: status = closed
-  \item exception: InternalException in AWS
+  \item exception: ExternalServiceFailure in AWS
 \end{itemize}
 
 \noindent deleteJob(\textbf{jobID:}string):
 \begin{itemize}
   \item transition: remove job if status is open
-  \item exception: ExecutionError if method fails
+  \item exception: ExternalServiceFailure if method fails
 \end{itemize}
 
 %\wss{A module without environment variables or state variables is unlikely to
