@@ -956,7 +956,7 @@ N/A
       $D_{new}$.requiresAck = rA $\land$ $D_{new}$.s3Link = sL
     \item output: map[string $\rightarrow$ any]: The documentId of the created
       document
-    \item exception: ExternalServiceFailure
+    \item exception: ExternalServiceFailure, ValidationError
   \end{itemize}
 
   \noindent EditDoc(documentId: dID, userId: uID, s3Link: sL):
@@ -969,7 +969,7 @@ N/A
       $D_{old}$.lastEditedDateTime = $getDateTime()$ and $copy(D)$ is
       a predicate indicating the
       deep copy of document $D$.
-    \item exception: ExternalServiceFailure
+    \item exception: ExternalServiceFailure, ValidationError
   \end{itemize}
 
   \noindent DeleteDoc(documentId: dID):
@@ -977,7 +977,7 @@ N/A
     \item transition: $DocumentDatabase \rightarrow DocumentDatabase -
       \{D_{old} | D_{old} \in DocumentDatabase$ $\land$
       $D_{old}$.documentId == dID \}
-    \item exception: ExternalServiceFailure
+    \item exception: ExternalServiceFailure, ValidationError
   \end{itemize}
 
   \subsubsection{Local Functions}
