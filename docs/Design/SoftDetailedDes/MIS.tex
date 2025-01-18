@@ -860,7 +860,6 @@ long, accuracy: acc):
 
 \section{MIS of User Management Module} \label{Module}
 
-
 \subsection{Module}
 
 User Management Module
@@ -906,7 +905,6 @@ N/A
 \subsection{Semantics}
 
 \subsubsection{State Variables}
-
 \begin{center}
   \begin{tabular}{p{4cm} p{12cm}}
     \hline
@@ -993,6 +991,96 @@ execute the lambda's required tasks.
     \hline
   \end{tabular}
 \end{center}
+
+\section{MIS of User Authentication Module} \label{Module}
+
+\subsection{Module}
+
+User Authentication Module
+
+\subsection{Uses}
+
+boto3 (AWS SDK for Python), AWS Cognito (AWS Cloud Service for user
+authentication), Location Verification Module, Database Interaction
+Module, Routing Module
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+N/A
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{4cm} >{\raggedright}p{3cm}
+    >{\raggedright}p{4cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    authenticateUser & \textbf{email:} string \newline
+    \textbf{password:} string & \textbf{authToken:} string &
+    \textbf{InvalidCredentials:} Credentials not in database \\
+    \hline
+    authenticateContractor & \textbf{email:} string \newline
+    \textbf{name:} string \newline \textbf{siteID:} String \newline
+    \textbf{userLocation:} \{float, float\} &
+    \textbf{authToken:} string & \textbf{InvalidCredentials:}
+    Credentials not in database \newline
+    \textbf{InvalidSiteID:}
+    siteID not in database \newline
+    \textbf{LocationVerificationFailed:} Verification of users
+    location failed \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+N/A
+
+\subsubsection{Environment Variables}
+
+\begin{center}
+  \begin{tabular}{p{6cm} p{10cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function runs, it
+    has an AWS IAM role attached to it, which it uses when running.
+    This role gives the function the necessary permissions to execute
+    without issue. \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Assumptions}
+
+LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to
+execute the lambda's required tasks.
+
+\subsubsection{Access Routine Semantics}
+
+\noindent authenticateUser(email: email, password: password):
+\begin{itemize}
+  \item output: $authToken$, where $authToken$ is a unique token
+    generated for the user, tracked, and validated by AWS Cognito.
+  \item exception: InvalidCredentials
+\end{itemize}
+
+\noindent authenticateContractor(email: email, name: name, siteID:
+siteID, userLocation: \{latitude, longitude\}):
+\begin{itemize}
+  \item output: $authToken$, where $authToken$ is a unique token
+    generated for the user, tracked, and validated by AWS Cognito.
+  \item exception: InvalidCredentials, InvalidSiteID, LocationVerificationFailed
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+N/A
 
 \section{MIS of API Integration Module} \label{Module}
 
