@@ -418,19 +418,16 @@ to be implemented.
 \subsubsection{Audit and Compliance Module (\mref{mAC})}
 
 \begin{description}
-  \item[Secrets:] Data logged into database.
-  \item[Services:] Allows export of the logged entry/exit times,
-    site, jobs details, and other info into an excel spreadsheet.
+  \item[Secrets:] Data obtained from the Job Management and Logging Module.
+  \item[Services:] Allows admin users users to retrieve data regarding
+  contractors in the frontend
   \item[Implemented By:] \progname
 \end{description}
 
 \subsubsection{Analytics and Reporting Module (\mref{mAR})}
 \begin{description}
-  \item[Secrets:] Data logged into database.
-  \item[Services:] Allows admin users to see entry/exit times of
-    contracters to ensure that they were on site to do their job.
-    Also allows viewing of other information such as job details,
-    login attempts, current site, etc.
+  \item[Secrets:] Data obtained from the Server Log.
+  \item[Services:] Retrieves server analytics and reports
   \item[Implemented By:] \progname
 \end{description}
 
