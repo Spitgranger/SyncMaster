@@ -879,11 +879,13 @@ graduate attribute of Problem Analysis and Design.
     One pain point the team experienced was determining the specific
     technologies which would be the most appropriate
     for the clients problem. One example was deciding the AWS modules
-    to use, such as choosing an EC2 instance or using AWS lambda scaling to 0.
-    This was resolve through discussion of what the advantages of one
+    to use, such as choosing an EC2 instance or using AWS lambda.
+    This was resolved through discussion of what the advantages of one
     tool would be over another. For this particular problem,
-    it was decided to use AWS lambda with scaling to 0, as the
-    application could scale down to save cost during non-work hours.
+    it was decided to use AWS lambda because it makes it easy to scale 
+    to 0 instances when not in use, and the application is only expected to
+    be used sporadically during working hours, so costs can be saved by 
+    being able to scale to zero when not in use.
 
   \item Which of your design decisions stemmed from speaking to your client(s)
     or a proxy (e.g. your peers, stakeholders, potential users)? For those that
