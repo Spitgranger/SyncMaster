@@ -125,19 +125,24 @@ The following table summarizes the primitive data types used by \progname.
 \noindent
 The specification of \progname \ uses some derived data types:
 sequences, strings, tuples, map, enum, KeyCondition,
-AttributeCondition, S3File. Sequences
+AttributeCondition, S3File, HTTPRequest, HTTPResponse, and Optional. Sequences
 are lists filled with elements of the same data type. Strings
 are sequences of characters. Tuples contain a list of values, potentially of
 different types. In addition, \progname \ uses functions, which
 are defined by the data types of their inputs and outputs. Local functions are
 described by giving their type signature followed by their specification. Maps
-are a collection of key-value pairs, where thre does not necessarily need to
+are a collection of key-value pairs, where there does not necessarily need to
 be a restriction on the data types of the keys and values, but one can be
 placed. An enum is a set of values of which the data can be.
 AttributeConditions are conditionals placed on an attribute of a
 database entry. KeyConditions are a subset of AttributeConditions,
 and are condtionals placed on the key attributes of a database entry.
-An S3File, is a unique file that exists in AWS S3. A Document is an object
+An S3File, is a unique file that exists in AWS S3. HTTPRequest and HTTPResponse
+are a subset of maps which conform to the HTTP standard. An Optional is not a
+datatype by itself, but specifies that there may be the absence of a value of a
+specific type. LogEntry is an object consisting of a UserID, SiteID, an ISO
+formatted date and time string, and a type of log (entry or exit). A
+Document is an object
 consisting of the following fields [ siteId: string, expiryDate: string, name:
   string, createdDatetime: string, lastEditedDateTime: string, s3Link: string,
   parentDocumentId: map[string $\rightarrow$ any], requireAck: boolean, userId:
@@ -363,10 +368,16 @@ the database.
 
 \subsubsection{Access Routine Semantics}
 
+\noindent DBTable.get(Key: k):
+\begin{itemize}
+  \item output: $i_k$, where $i_k \in Database \land dbKey(i_k) == k$
+  \item exception: ExternalServiceFailure
+\end{itemize}
+
 \noindent DBTable.put(Item: $i_{new}$, Condition: c):
 \begin{itemize}
-  \item transition: $Database \rightarrow Database \cup \{i_{new}\}$, if $c ==
-    true \land DBTable.Access == ``write''$
+  \item transition: $Database \rightarrow Database \cup \{i_{new}\}$, if
+    $c == true \land DBTable.Access == ``write''$
   \item output: $i_{new}$
   \item exception: ExternalServiceFailure, ConditionCheckFailed,
     PermissionException
@@ -380,6 +391,13 @@ the database.
   \item output: $i_{old}$
   \item exception: ExternalServiceFailure, ConditionCheckFailed,
     PermissionException
+\end{itemize}
+
+\noindent DBTable.query(KeyConditions: kc, AttributeConditions: ac):
+\begin{itemize}
+  \item output: [$i_k | i_k \in Database \land \forall c \in kc (c ==
+    true) \land \forall c \in ac (c == true)$]
+  \item exception: ExternalServiceFailure
 \end{itemize}
 
 \subsubsection{Local Functions}
@@ -397,6 +415,112 @@ the database.
     \hline
   \end{tabular}
 \end{center}
+
+\section{MIS of Logging Module} \label{Module}
+
+\subsection{Module}
+
+Logging Module
+
+\subsection{Uses}
+
+Database Interaction Module
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+N/A
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{5cm}
+    >{\raggedright}p{4cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    AddLog & \textbf{UserID:} string \newline \textbf{SiteID:} string
+    \newline \textbf{Datetime:} string \newline \textbf{Type:}
+    enum[``entry'', ``exit''] & LogEntry &
+    \textbf{ExternalServiceFailure:} An internal error from AWS \\
+    \hline
+    ListLogs & \textbf{UserID:} string \newline \textbf{SiteID:}
+    string \newline \textbf{FromDatetime:} string \newline
+    \textbf{ToDatetime:} string &
+    sequence[LogEntry] & \textbf{ExternalServiceFailure:} An internal
+    error from AWS \\
+    \hline
+    PurgeLogs & \textbf{UserID:} string & - &
+    \textbf{ExternalServiceFailure:} An internal error from AWS \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\begin{center}
+  \begin{tabular}{p{4cm} p{12cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    LogEntryDatabase & The underlying AWS DynamoDB table, can be
+    represented as a set of items: $\{l_0, l_1, ..., l_n\}$, where
+    $l_k: LogEntry, k\in[0,n]$ \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Environment Variables}
+
+\begin{center}
+  \begin{tabular}{p{6cm} p{10cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function (The chosen
+    AWS compute service for this project), it has an AWS IAM role
+    attached to it, that it uses when running. This role needs
+    permission for logging database access for this module to work \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Assumptions}
+
+LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to access
+the database.
+
+\subsubsection{Access Routine Semantics}
+
+\noindent AddLog(UserID: u, SiteID: s, Datetime: d, Type: t):
+\begin{itemize}
+  \item transition: $LogEntryDatabase \rightarrow LogEntryDatabase
+    \cup \{l_{new}\}$, where $l_{new}.UserID = u$, $l_{new}.SiteID =
+    s$, $l_{new}.Datetime = d$, $l_{new}.Type = t$
+  \item output: $l_{new}$
+  \item exception: ExternalServiceFailure
+\end{itemize}
+
+\noindent ListLogs(UserID: u, SiteID: s, FromDatetime: fd, ToDatetime: td):
+\begin{itemize}
+  \item output: $[l_k | l_k \in LogEntryDatabase \land l_k.UserID ==
+    u \land l_k.SiteID == s \land fd \le l_k.Datetime \le td]$
+  \item exception: ExternalServiceFailure
+\end{itemize}
+
+\noindent PurgeLogs(UserID: u):
+\begin{itemize}
+  \item transition: $LogEntryDatabase \rightarrow LogEntryDatabase -
+    \{l_k | l_k \in LogEntryDatabase \land l_k.UserID == u \}$
+  \item exception: ExternalServiceFailure
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+N/A
 
 \section{MIS of File Storage Interaction Module} \label{Module}
 
@@ -493,6 +617,13 @@ LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to access
 the S3 bucket.
 
 \subsubsection{Access Routine Semantics}
+
+\noindent S3Bucket.createPresignedUrl(Key: k, VersionID: v, ETag: e,
+Method: m, ExpiresIn: x):
+\begin{itemize}
+  \item output: string
+  \item exception: ExternalServiceFailure, PermissionException
+\end{itemize}
 
 \noindent S3Bucket.delete(Key: k, VersionID: v, ETag: e):
 \begin{itemize}
@@ -624,7 +755,7 @@ underlying serverless function)
     \textbf{ExternalServiceFailure:} An internal error from
     AWS \newline \textbf{ExecutionError:} If the underlying compute
     resource that the request gets routed to encounters an error
-    suring execution \\
+    during execution \\
     \hline
   \end{tabular}
 \end{center}
@@ -650,6 +781,73 @@ N/A
 \subsubsection{Local Functions}
 
 N/A
+
+\section{MIS of API Integration Module} \label{Module}
+
+\subsection{Module}
+API Integration Module
+\subsection{Uses}
+Routing Module
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+N/A
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{5cm}
+    >{\raggedright}p{4cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    submitApiRequest & \textbf{request:} HTTPRequest
+    \newline \textbf{url:} String \newline \textbf{apiToken
+    (optional):} String & HTTPResponse &
+    \textbf{NetworkException:} If a valid network connection is not detected.
+    \newline \textbf{TimeoutException:} If a response is not received within
+    $\hyperlink{timeout}{TIMEOUT}$ seconds.\\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+N/A
+
+\subsubsection{Environment Variables}
+
+\subsubsection{Assumptions}
+\begin{itemize}
+  \item API endpoints are up and functional
+  \item The system has a internet network connection
+\end{itemize}
+\subsubsection{Access Routine Semantics}
+
+\noindent submitApiRequest(url: String, request: HTTPRequest, apiToken:
+Optional\textless String\textgreater):
+\begin{itemize}
+  \item output: HTTPResponse
+  \item exception: NetworkException, TimeoutException
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{5cm}
+    >{\raggedright}p{4cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Description} \\
+    \hline
+    timeElapsed & \textbf{since:} $\mathbb{Z}$ & $\mathbb{Z}$ & Returns the
+    number of seconds elapsed since the provided time given in seconds since
+    Janurary 1, 1970 \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\newpage
 
 \section{MIS of Document Management Module} \label{Module}
 
@@ -805,7 +1003,8 @@ N/A
 
   \section{Appendix} \label{Appendix}
 
-  \wss{Extra information if required}
+  \subsection{Symbolic Parameters}
+  $\hypertarget{timeout}{TIMEOUT}$ = 5\\
 
   \newpage{}
 
