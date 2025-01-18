@@ -537,33 +537,38 @@ N/A
     \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
     \hline
     
-    GetErrorReport & \textbf{Datetime:} string & 
+    GetErrorsReport & \textbf{FromDatetime:} string \newline 
+    \textbf{ToDatetime:} string& 
     sequence[map[string $\rightarrow$ any]] &     
     \textbf{ExternalServiceFailure:} An internal error from AWS
     \newline \textbf{ExecutionError:} Any error that occurs while the
     function is running \\
     \hline
-    GetResourceUsageReport & \textbf{Datetime:} string \newline
+    GetResourceUsageReport & \textbf{FromDatetime:} string \newline 
+    \textbf{ToDatetime:} string \newline
      \textbf{Resources:} \newline sequence[resource]& 
     sequence[map[string $\rightarrow$ any]] &     
     \textbf{ExternalServiceFailure:} An internal error from AWS
     \newline \textbf{ExecutionError:} Any error that occurs while the
     function is running \\
     \hline
-    GetUserActivityReport & \textbf{Datetime:} string \newline
+    GetUserActivityReport & \textbf{FromDatetime:} string \newline 
+    \textbf{ToDatetime:} string \newline
      \textbf{UserID:} string& 
     sequence[map[string $\rightarrow$ any]] &     
     \textbf{ExternalServiceFailure:} An internal error from AWS
     \newline \textbf{ExecutionError:} Any error that occurs while the
     function is running \\
     \hline
-    GetSystemHealthReport & \textbf{Datetime:} string & 
+    GetSystemHealthReport & \textbf{FromDatetime:} string \newline 
+    \textbf{ToDatetime:} string & 
     sequence[map[string $\rightarrow$ any]] &     
     \textbf{ExternalServiceFailure:} An internal error from AWS
     \newline \textbf{ExecutionError:} Any error that occurs while the
     function is running \\
     \hline
-    GetLoginAttemptsReport & \textbf{Datetime:} string & 
+    GetLoginAttemptsReport & \textbf{FromDatetime:} string \newline 
+    \textbf{ToDatetime:} string & 
     sequence[map[string $\rightarrow$ any]] &     
     \textbf{ExternalServiceFailure:} An internal error from AWS
     \newline \textbf{ExecutionError:} Any error that occurs while the
@@ -596,8 +601,35 @@ N/A
 N/A
 
 \subsubsection{Access Routine Semantics}
+\noindent GetErrorsReport(FromDatetime: string, ToDatetime: string):
+\begin{itemize}
+  \item output: sequence[map[string $\rightarrow$ any]]
+  \item exception: ExternalServiceFailure, ExecutionError
+\end{itemize}
 
-N/A
+\noindent GetResourceUsageReport(FromDatetime: string, ToDatetime: string):
+\begin{itemize}
+  \item output: sequence[map[string $\rightarrow$ any]]
+  \item exception: ExternalServiceFailure, ExecutionError
+\end{itemize}
+
+\noindent GetUserActivityReport(FromDatetime: string, ToDatetime: string):
+\begin{itemize}
+  \item output: sequence[map[string $\rightarrow$ any]]
+  \item exception: ExternalServiceFailure, ExecutionError
+\end{itemize}
+
+\noindent GetSystemHealthReport(FromDatetime: string, ToDatetime: string):
+\begin{itemize}
+  \item output: sequence[map[string $\rightarrow$ any]]
+  \item exception: ExternalServiceFailure, ExecutionError
+\end{itemize}
+
+\noindent GetLoginAttemptsReport(FromDatetime: string, ToDatetime: string):
+\begin{itemize}
+  \item output: sequence[map[string $\rightarrow$ any]]
+  \item exception: ExternalServiceFailure, ExecutionError
+\end{itemize}
 
 \subsubsection{Local Functions}
 
