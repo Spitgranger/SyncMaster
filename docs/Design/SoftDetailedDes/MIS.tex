@@ -668,9 +668,9 @@ N/A
     \hline
     createJob & \textbf{jobType:}string, \textbf{workOrder:}int, \textbf{userID:}string & boolean & None \\
     addDescription & \textbf{description:}string & boolean & None \\
-    editJob & \textbf{job:}job & boolean & None \\
-    completeJob & \textbf{job:}job & boolean & None \\
-    deleteJob & \textbf{job:}job & boolean & None\\
+    editJob & \textbf{jobID:}string & boolean & None \\
+    completeJob & \textbf{jobID:}string & boolean & None \\
+    deleteJob & \textbf{jobID:}string & boolean & None\\
     \hline
   \end{tabular}
 \end{center}
@@ -687,6 +687,7 @@ N/A
     jobTypes & Set of available jobs $\{j_0, j_1, ..., j_n\}$, where
     $j_k:string, k\in[0,n]$ \\
     jobType & string $\in$ jobTypes \\
+    jobID & string identifying a created job \\
     workOrder & number of type int \\
     description & work description of type string \\
     status & status of job, value in $\{open, closed$\}\\
