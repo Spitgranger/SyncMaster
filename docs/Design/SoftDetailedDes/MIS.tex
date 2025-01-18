@@ -654,7 +654,7 @@ N/A
 Module for contractors to enter their job information.
 
 \subsection{Uses}
-File storage interaction module, Database Interaction Module
+Database Interaction Module
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
@@ -662,15 +662,14 @@ N/A
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-  \begin{tabular}{p{3cm} p{4cm} p{2cm} p{3cm}}
+  \begin{tabular}{p{2cm} p{4cm} p{2cm} p{2cm}}
     \hline
     \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
     \hline
-    createJob & \textbf{jobType:}string, \textbf{workOrder:}int, \textbf{userID:}string & boolean & None \\
-    addDescription & \textbf{description:}string & boolean & None \\
-    editJob & \textbf{jobID:}string & boolean & None \\
-    completeJob & \textbf{jobID:}string & boolean & None \\
-    deleteJob & \textbf{jobID:}string & boolean & None\\
+    createJob & \textbf{jobType:}string, \textbf{workOrder:}int, \textbf{userID:}string, \textbf{description:}string & \textbf{jobID:}string & ExecutionError \\
+    editJob & \textbf{jobID:}string, \textbf{workOrder:}int, \textbf{description:}string, \textbf{jobType:}string & None & ExecutionError \\
+    completeJob & \textbf{jobID:}string & None & InternalException in AWS \\
+    deleteJob & \textbf{jobID:}string & None & ExecutionError\\
     \hline
   \end{tabular}
 \end{center}
@@ -705,39 +704,32 @@ N/A
 
 \subsubsection{Access Routine Semantics}
 
-\noindent createJob(jobType:string, userID:string):
+\noindent createJob(\textbf{jobType:}string, \textbf{workOrder:}int, \textbf{userID:}string, \textbf{description:}string):
 \begin{itemize}
-  \item transition: creates job associated with userID.
-  \item output: true if job creation successful, false otherwise.
-  \item exception: N/A
+  \item transition: creates job associated with userID
+  \item output: the jobID
+  \item exception: ExecutionError if method fails
 \end{itemize}
 
-\noindent addDescription(description:string):
+\noindent editJob(\textbf{jobID:}string, \textbf{workOrder}int, \textbf{description}string, \textbf{jobType}string):
 \begin{itemize}
-  \item transition: updates description in job if not closed.
-  \item output: true if adding of description successful, false otherwise.
-  \item exception: N/A
+  \item transition: edit job attributes if not closed
+  \item output: N/A
+  \item exception: ExecutionError if method fails
 \end{itemize}
 
-\noindent editJob():
-\begin{itemize}
-  \item transition: edit job attributes if not closed.
-  \item output: true if successful and false otherwise.
-  \item exception: N/A
-\end{itemize}
-
-\noindent completeJob():
+\noindent completeJob(\textbf{jobID:}string):
 \begin{itemize}
   \item transition: status = closed
-  \item output: true if successful and false otherwise.
-  \item exception: N/A
+  \item output: N/A
+  \item exception: InternalException in AWS
 \end{itemize}
 
-\noindent deleteJob():
+\noindent deleteJob(\textbf{jobID:}string):
 \begin{itemize}
-  \item transition: remove job if status is open.
-  \item output: true if successful and false otherwise.
-  \item exception: N/A
+  \item transition: remove job if status is open
+  \item output: N/A
+  \item exception: ExecutionError if method fails
 \end{itemize}
 
 %\wss{A module without environment variables or state variables is unlikely to
