@@ -703,11 +703,23 @@ N/A
 
 \subsubsection{Environment Variables}
 
-N/A
+\begin{center}
+  \begin{tabular}{p{6cm} p{10cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function runs, it
+    has an AWS IAM role attached to it, which it uses when running.
+    This role gives the function the necessary permissions to execute
+    without issue. \\
+    \hline
+  \end{tabular}
+\end{center}
 
 \subsubsection{Assumptions}
 
-N/A
+LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to
+execute the lambda's required tasks.
 
 \subsubsection{Access Routine Semantics}
 
