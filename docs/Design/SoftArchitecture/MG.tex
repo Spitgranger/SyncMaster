@@ -339,7 +339,7 @@ to be implemented.
   \item[Secrets:] Records to add, remove, or update in a database.
   \item[Services:] Module responsible allowing read and write access
     to a database.
-  \item[Implemented By:] boto3, AWS DynamoDB
+  \item[Implemented By:] boto3, AWS DynamoDB, \progname
   \item[Type of Module:] Library
 \end{description}
 
@@ -349,7 +349,7 @@ to be implemented.
   \item[Secrets:] File to add, remove, or update in the file management system.
   \item[Services:] Module responsible allowing read and write access
     to the file management system.
-  \item[Implemented By:] boto3, AWS S3
+  \item[Implemented By:] boto3, AWS S3, \progname
   \item[Type of Module:] Library
 \end{description}
 
@@ -418,17 +418,19 @@ to be implemented.
 \subsubsection{Audit and Compliance Module (\mref{mAC})}
 
 \begin{description}
-  \item[Secrets:] Data logged from the Logging Module.
-  \item[Services:] Allows admin users to see entry/exit times of
-    contracters to ensure that they were on site to do their job.
+  \item[Secrets:] Data logged into database.
+  \item[Services:] Allows export of the logged entry/exit times,
+    site, jobs details, and other info into an excel spreadsheet.
   \item[Implemented By:] \progname
 \end{description}
 
 \subsubsection{Analytics and Reporting Module (\mref{mAR})}
 \begin{description}
-  \item[Secrets:] Data logged from the Logging Module.
-  \item[Services:] Allows export of the logged entry/exit times into
-    a excel spreadsheet.
+  \item[Secrets:] Data logged into database.
+  \item[Services:] Allows admin users to see entry/exit times of
+    contracters to ensure that they were on site to do their job.
+    Also allows viewing of other information such as job details,
+    login attempts, current site, etc.
   \item[Implemented By:] \progname
 \end{description}
 
@@ -436,7 +438,7 @@ to be implemented.
 \begin{description}
   \item[Secrets:] Requests for creating, updating, and deleting users.
   \item[Services:] Allows the management of users, by an admin user.
-  \item[Implemented By:] AWS Cognito
+  \item[Implemented By:] AWS Cognito, \progname
 \end{description}
 
 \subsubsection{Document Management Module (\mref{mDM})}
@@ -500,7 +502,7 @@ requirements and between the modules and the anticipated changes.
     \midrule
     \acref{acGps}                      & \mref{mLV} \\
     \acref{acLocationThreshod}         & \mref{mLV} \\
-    \acref{acAuthenticationMethods}    & \mref{mAC} \\
+    \acref{acAuthenticationMethods}    & \mref{mUA} \\
     \acref{acDocuments}                & \mref{mDM} \\
     \acref{acIntegration}              & \mref{mAI} \\
     \acref{acDataLogs}                 & \mref{mLM} \\

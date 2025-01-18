@@ -782,6 +782,216 @@ N/A
 
 N/A
 
+\section{MIS of Location Verification Module} \label{Module}
+
+\subsection{Module}
+
+Location Verification Module
+
+\subsection{Uses}
+
+Browser location/GPS API, Database Interaction Module, Routing Module
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+N/A
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{2.75cm} >{\raggedright}p{3.25cm}
+    >{\raggedright}p{4.5cm} p{5cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    verifyLocation & \textbf{siteID:} string \newline
+    \textbf{latitude:} float \newline
+    \textbf{longitude:} float \newline \textbf{accuracy:} float &
+    \textbf{locationState:} boolean &
+    \textbf{Invalidlocation:} co-ordinates are invalid \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+N/A
+
+\subsubsection{Environment Variables}
+
+N/A
+
+\subsubsection{Assumptions}
+
+N/A
+
+\subsubsection{Access Routine Semantics}
+
+\noindent verifyLocation(siteID: siteID, latitude: lat, longitude:
+long, accuracy: acc):
+\begin{itemize}
+  \item output: true if the distance calculated by calculateDistance
+    is within the range of the intended site, adjusted for accuracy;
+    false otherwise.
+  \item exception: Invalidlocation
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{4cm}
+    >{\raggedright}p{4cm} p{4.5cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Description} \\
+    \hline
+    calculateDistance & \textbf{siteID:} string \newline
+    \textbf{latitude:} float \newline
+    \textbf{longitude:} float & \textbf{distance:} float &
+    Uses siteID to get a second set of coordinates from Database.
+    Using two sets of coordinates the haversine distance between the
+    two points is returned. \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\section{MIS of User Management Module} \label{Module}
+
+\subsection{Module}
+
+User Management Module
+
+\subsection{Uses}
+
+boto3 (AWS SDK for Python), AWS Cognito (AWS Cloud Service for user
+authentication), Database Interaction Module, Routing Module
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+N/A
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{2.5cm} >{\raggedright}p{3.5cm}
+    >{\raggedright}p{3.5cm} p{5cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    createUser & \textbf{email:} string \newline
+    \textbf{details:} map[string $\rightarrow$ any] & \textbf{userID:} string &
+    \textbf{DuplicateUser:} Existing email address used \\
+    \hline
+    editUser & \textbf{userID:} string \newline
+    \textbf{edit:} map[string $\rightarrow$ any] & boolean &
+    \textbf{UserNotFound:}
+    userID not in database \\
+    \hline
+    deleteUser & \textbf{userID:} string & boolean & \textbf{UserNotFound:}
+    userID not in database \\
+    \hline
+    getUser & \textbf{userID:} string & map[string $\rightarrow$ any]
+    & \textbf{UserNotFound:}
+    userID not in database \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\begin{center}
+  \begin{tabular}{p{4cm} p{12cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    Database & Set of registered users, can be represented as set of
+    items $\{i_0, i_1, ..., i_n\}$, where $i_k:
+    map[string \rightarrow  any], k\in[0,n]$ \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Environment Variables}
+
+\begin{center}
+  \begin{tabular}{p{6cm} p{10cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function runs, it
+    has an AWS IAM role attached to it, which it uses when running.
+    This role gives the function the necessary permissions to execute
+    without issue. \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Assumptions}
+
+LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to
+execute the lambda's required tasks.
+
+\subsubsection{Access Routine Semantics}
+
+\noindent createUser(email: email, details: details):
+\begin{itemize}
+  \item transition: $Database \rightarrow Database \cup
+    \{User_{new}\}$, if $email \notin Database$, where $User_{new} =
+    \{userID, email, password, \ldots\}$.
+  \item output: $\{userID, password\}$, where $userID$ is uniquely
+    generated for the email and $password$ is a temporary password
+    generated during account creation
+  \item exception: DuplicateUser
+\end{itemize}
+
+\noindent editUser(userID: userID, edit: changes):
+\begin{itemize}
+  \item transition: $Database \rightarrow Database \cup
+    \{User_{edited}\}$, if $(userID \in Database) \wedge
+    (changes.email \notin Database)$, where $User_{edited} =
+    \{userID, changes\}$
+  \item output: true if transition successful, false otherwise.
+  \item exception: UserNotFound
+\end{itemize}
+
+\noindent deleteUser(userID: userID):
+\begin{itemize}
+  \item transition: $Database \rightarrow Database - \{User\}$, if
+    $\exists(\{User\} \in Database \wedge User.userID == userID)$.
+  \item output: true if transition successful, false otherwise.
+  \item exception: UserNotFound
+\end{itemize}
+
+\noindent getUser(userID: userID):
+\begin{itemize}
+  \item output: $\{User\}$, if $\exists(\{User\} \in Database \wedge
+    User.userID == userID)$.
+  \item exception: UserNotFound
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{4cm}
+    >{\raggedright}p{4cm} p{4.5cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Description} \\
+    \hline
+    generateUserID & \textbf{email:} string & \textbf{authToken:} string &
+    Generates unique userID for each email. \\
+    \hline
+    generatePassword & \textbf{password:} string & \textbf{authToken:} string &
+    Creates one-time password for new users.\\
+    \hline
+  \end{tabular}
+\end{center}
+
 \section{MIS of User Authentication Module} \label{Module}
 
 \subsection{Module}
@@ -952,7 +1162,6 @@ Database Interaction Module
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-
 N/A
 
 \subsubsection{Exported Access Programs}
@@ -1108,27 +1317,94 @@ N/A
 
   \input{../../Reflection.tex}
 
+  The information in this section will be used to evaluate the team
+  members on the
+  graduate attribute of Problem Analysis and Design.
   \begin{enumerate}
     \item What went well while writing this deliverable?
+      \\
+      \\
+      In this deliverable, our team was able to delegate tasks and
+      manage our time more effectively.
+      The stakeholder was engaged to show progress on the prototype and
+      obtain feedback that
+      influenced the design.
+
     \item What pain points did you experience during this deliverable, and how
       did you resolve them?
+      \\
+      \\
+      One pain point the team experienced was determining the specific
+      technologies which would be the most appropriate
+      for the clients problem. One example was deciding the AWS modules
+      to use, such as choosing an EC2 instance or using AWS lambda.
+      This was resolved through discussion of what the advantages of one
+      tool would be over another. For this particular problem,
+      it was decided to use AWS lambda because it makes it easy to scale
+      to 0 instances when not in use, and the application is only expected to
+      be used sporadically during working hours, so costs can be saved by
+      being able to scale to zero when not in use.
+
     \item Which of your design decisions stemmed from speaking to your client(s)
       or a proxy (e.g. your peers, stakeholders, potential users)?
       For those that
       were not, why, and where did they come from?
+      \\
+      \\
+      Through meeting with the stakeholders, the design decisions about
+      the location verification module, creating accounts, file system module,
+      and the function compute module were decided. These arose by
+      discussing what these modules would be capable of doing, and how
+      they would satisfy specific
+      requirements identified in the SRS.
+
     \item While creating the design doc, what parts of your other
       documents (e.g.
       requirements, hazard analysis, etc), it any, needed to be
       changed, and why?
+      \\
+      \\
+      One part of the SRS document which was required to be changed was
+      the original SharePoint integration requirements. This was deemed
+      to be too difficult to do and would open up vulnerabilities for
+      the stakeholder, and as such was removed from the initial
+      requirements identified in the SRS.
+
     \item What are the limitations of your solution?  Put another way, given
       unlimited resources, what could you do to make the project
       better? (LO\_ProbSolutions)
+      \\
+      \\
+      The main limitations of the current solution is that it doesn't
+      stream the location of users in real time.
+      It currently takes two points in time, (entering and exiting
+      time) into account. This limitation provides reduced visibility
+      on the actions of the user at each site,
+      which limits its sophistication but increases its simplicity.
+      Given more time, the project could be further improved to
+      increase the robustness of the verification
+      functionality to automatically collect more information from the
+      user and consider more complicated edge cases that can arise.
+
     \item Give a brief overview of other design solutions you considered.  What
       are the benefits and tradeoffs of those other designs compared
       with the chosen
       design?  From all the potential options, why did you select the
       documented design?
       (LO\_Explores)
+      \\
+      \\
+      As discussed above, one design solution that was considered was
+      an Amazon EC2 instance due to its widespread use and support
+      which would be very maintainable
+      after the completion date of the project. However, the benefit of
+      an AWS Lambda instance with scaling to 0 was determined to be the
+      best choice due to the cost
+      saving which it is able to provide,
+
+      Another design decision which was explored was the ability to use
+      presigned URLs that would permit larger uploads than uploading
+      through API Gateway.
   \end{enumerate}
 
   \end{document}
