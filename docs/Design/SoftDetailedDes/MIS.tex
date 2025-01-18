@@ -654,7 +654,7 @@ N/A
 Module for contractors to enter their job information.
 
 \subsection{Uses}
-boto3 (AWS SDK for Python), Database Interaction Module
+File storage interaction module, Database Interaction Module
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
@@ -666,12 +666,11 @@ N/A
     \hline
     \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
     \hline
-    createJob & \textbf{jobType:}string & boolean & None \\
-    addWorkOrder & \textbf{workOrder:}int & boolean &
-    illegalArgument: Work Order not valid number \\
+    createJob & \textbf{jobType:}string, \textbf{workOrder:}int, \textbf{userID:}string & boolean & None \\
     addDescription & \textbf{description:}string & boolean & None \\
-    uploadFile & \textbf{file}: any file type & boolean &
-    FileSizeLimit: file exceeds accepted size\\
+    editJob & \textbf{job:}job & boolean & None \\
+    completeJob & \textbf{job:}job & boolean & None \\
+    deleteJob & \textbf{job:}job & boolean & None\\
     \hline
   \end{tabular}
 \end{center}
@@ -687,11 +686,10 @@ N/A
     \hline
     jobTypes & Set of available jobs $\{j_0, j_1, ..., j_n\}$, where
     $j_k:string, k\in[0,n]$ \\
-    files & Set of uploaded files $\{f_0, f_1, ..., f_m\}$, where
-    $f_k:file, k\in[0,m]$ \\
     jobType & string $\in$ jobTypes \\
     workOrder & number of type int \\
     description & work description of type string \\
+    status & status of job, value in $\{open, closed$\}\\
     \hline
   \end{tabular}
 \end{center}
@@ -706,33 +704,39 @@ N/A
 
 \subsubsection{Access Routine Semantics}
 
-\noindent createJob(jobType:string):
+\noindent createJob(jobType:string, userID:string):
 \begin{itemize}
-  \item transition: jobType := jobType $\in$ jobType, the set of
-    possible job types.
+  \item transition: creates job associated with userID.
   \item output: true if job creation successful, false otherwise.
   \item exception: N/A
 \end{itemize}
 
-\noindent addWorkOrder():
+\noindent addDescription(description:string):
 \begin{itemize}
-  \item transition: workOrder := workOrder
-  \item output: true if adding of work order number successful, false otherwise.
-  \item exception: illegalArgument if not a valid work order number.
-\end{itemize}
-
-\noindent addDescription():
-\begin{itemize}
-  \item transition: description := description
+  \item transition: updates description in job if not closed.
   \item output: true if adding of description successful, false otherwise.
   \item exception: N/A
 \end{itemize}
 
-\noindent uploadFile():
+\noindent editJob():
 \begin{itemize}
-  \item transition: $files := files \cup file$
-  \item output: true if file upload successful, false otherwise
-  \item exception: FileSizeLimit: file exceeds accepted size
+  \item transition: edit job attributes if not closed.
+  \item output: true if successful and false otherwise.
+  \item exception: N/A
+\end{itemize}
+
+\noindent completeJob():
+\begin{itemize}
+  \item transition: status = closed
+  \item output: true if successful and false otherwise.
+  \item exception: N/A
+\end{itemize}
+
+\noindent deleteJob():
+\begin{itemize}
+  \item transition: remove job if status is open.
+  \item output: true if successful and false otherwise.
+  \item exception: N/A
 \end{itemize}
 
 %\wss{A module without environment variables or state variables is unlikely to
