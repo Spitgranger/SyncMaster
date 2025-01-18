@@ -339,7 +339,7 @@ to be implemented.
   \item[Secrets:] Records to add, remove, or update in a database.
   \item[Services:] Module responsible allowing read and write access
     to a database.
-  \item[Implemented By:] boto3, AWS DynamoDB
+  \item[Implemented By:] boto3, AWS DynamoDB, \progname
   \item[Type of Module:] Library
 \end{description}
 
@@ -349,7 +349,7 @@ to be implemented.
   \item[Secrets:] File to add, remove, or update in the file management system.
   \item[Services:] Module responsible allowing read and write access
     to the file management system.
-  \item[Implemented By:] boto3, AWS S3
+  \item[Implemented By:] boto3, AWS S3, \progname
   \item[Type of Module:] Library
 \end{description}
 
@@ -435,7 +435,7 @@ to be implemented.
 \begin{description}
   \item[Secrets:] Requests for creating, updating, and deleting users.
   \item[Services:] Allows the management of users, by an admin user.
-  \item[Implemented By:] AWS Cognito
+  \item[Implemented By:] AWS Cognito, \progname
 \end{description}
 
 \subsubsection{Document Management Module (\mref{mDM})}
@@ -499,7 +499,7 @@ requirements and between the modules and the anticipated changes.
     \midrule
     \acref{acGps}                      & \mref{mLV} \\
     \acref{acLocationThreshod}         & \mref{mLV} \\
-    \acref{acAuthenticationMethods}    & \mref{mAC} \\
+    \acref{acAuthenticationMethods}    & \mref{mUA} \\
     \acref{acDocuments}                & \mref{mDM} \\
     \acref{acIntegration}              & \mref{mAI} \\
     \acref{acDataLogs}                 & \mref{mLM} \\
@@ -550,10 +550,50 @@ needed. Drawings, Sketches, Figma}
 N/A
 
 \section{Timeline}
-
-\wss{Schedule of tasks and who is responsible}
-
-\wss{You can point to GitHub if this information is included there}
+Below is an timeline for the implementation of modules in this
+project. The foundational modules User Authentication, User
+Management, Database Interaction, Logging, Routing, and API
+Integration will be developed first, as they form the core
+infrastructure on which the remaining modules will depend. Once these
+core modules are in place the other modules will be implemented. Task
+responsibilities and deadlines are tracked on GitHub using GitHub
+Issues \href{https://github.com/Spitgranger/SyncMaster/issues}{here}.
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|l|l|}
+    \hline
+    \textbf{Module} & \textbf{Responsible} & \textbf{Deadline} \\
+    \hline
+    M1: Audit and Compliance Module  & Akshit Gulia & January 31st, 2025 \\
+    \hline
+    M2: User Authentication Module    & Rafeed Iqbal & January 24th, 2025 \\
+    \hline
+    M3: Location Verification Module  & Rafeed Iqbal & January 31st, 2025 \\
+    \hline
+    M4: Logging Module                & Kyle D'Souza & January 24th, 2025 \\
+    \hline
+    M5: Analytics and Reporting Module & Akshit Gulia & January 31st, 2025 \\
+    \hline
+    M6: User Management Module        & Rafeed Iqbal & January 24th, 2025 \\
+    \hline
+    M7: Document Management Module    & Richard Fan & January 31st, 2025 \\
+    \hline
+    M8: Job Management Module         & Mitchell Hynes & January 31st, 2025 \\
+    \hline
+    M9: API Integration Module        & Richard Fan & January 24th, 2025 \\
+    \hline
+    M10: Database Interaction Module  & Kyle D'Souza & January 24th, 2025 \\
+    \hline
+    M11: Blob Storage Interaction Module & Kyle D'Souza & January 31st, 2025 \\
+    \hline
+    M12: Routing Module               & Kyle D'Souza & January 24th, 2025 \\
+    \hline
+    M13: Function Compute Module      & Kyle D'Souza & January 31st, 2025 \\
+    \hline
+  \end{tabular}
+  \caption{Schedule for module implementation}
+  \label{TblTimeline}
+\end{table}
 
 \bibliographystyle {plainnat}
 \bibliography{../../../refs/References}
