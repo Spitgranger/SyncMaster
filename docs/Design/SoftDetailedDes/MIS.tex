@@ -662,14 +662,22 @@ N/A
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-  \begin{tabular}{p{2cm} p{4cm} p{2cm} p{2cm}}
+  \begin{tabular}{>{\raggedright}p{2cm} >{\raggedright}p{5cm}
+    >{\raggedright}p{3cm} p{3cm}}
     \hline
     \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
     \hline
-    createJob & \textbf{jobType:}string, \textbf{workOrder:}int, \textbf{userID:}string, \textbf{description:}string & \textbf{jobID:}string & ExternalServiceFailure in AWS \\
-    editJob & \textbf{jobID:}string, \textbf{workOrder:}int, \textbf{description:}string, \textbf{jobType:}string & None & ExternalServiceFailure in AWS \\
-    completeJob & \textbf{jobID:}string & None & ExternalServiceFailure in AWS\\
-    deleteJob & \textbf{jobID:}string & None & ExternalServiceFailure in AWS\\
+    createJob & \textbf{jobType:} string, \textbf{workOrder:} int, \textbf{userID:} string, \textbf{description:} string & \textbf{jobID:} string &  \textbf{ExternalServiceFailure:} An internal error from AWS \newline
+    \textbf{DuplicateWorkOrder:} Job with same work order already in database \\
+    \hline
+    editJob & \textbf{jobID:} string, \textbf{workOrder:} int, \textbf{description:} string, \textbf{jobType:} string & None &  \textbf{ExternalServiceFailure:} An internal error from AWS \newline
+   
+    \textbf{JobAlreadyCompleted:} This job is already closed\\
+    \hline
+    completeJob & \textbf{jobID:} string & None &  \textbf{ExternalServiceFailure:} An internal error from AWS\\
+    \hline
+    deleteJob & \textbf{jobID:} string & None &  \textbf{ExternalServiceFailure:} An internal error from AWS \newline
+    \textbf{JobAlreadyCompleted:} This job is already closed\\
     \hline
   \end{tabular}
 \end{center}
@@ -720,25 +728,25 @@ execute the lambda's required tasks.
 \begin{itemize}
   \item transition: creates job associated with userID
   \item output: the jobID
-  \item exception: ExternalServiceFailure if method fails
+  \item exception:  ExternalServiceFailure, DuplicateWorkOrder
 \end{itemize}
 
 \noindent editJob(\textbf{jobID:}string, \textbf{workOrder}int, \textbf{description}string, \textbf{jobType}string):
 \begin{itemize}
   \item transition: edit job attributes if not closed
-  \item exception: ExternalServiceFailure if method fails
+  \item exception:  ExternalServiceFailure, JobAlreadyCompleted
 \end{itemize}
 
 \noindent completeJob(\textbf{jobID:}string):
 \begin{itemize}
   \item transition: status = closed
-  \item exception: ExternalServiceFailure in AWS
+  \item exception:  ExternalServiceFailure
 \end{itemize}
 
 \noindent deleteJob(\textbf{jobID:}string):
 \begin{itemize}
   \item transition: remove job if status is open
-  \item exception: ExternalServiceFailure if method fails
+  \item exception:  ExternalServiceFailure, JobAlreadyCompleted
 \end{itemize}
 
 %\wss{A module without environment variables or state variables is unlikely to
