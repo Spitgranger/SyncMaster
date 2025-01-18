@@ -516,6 +516,69 @@ the database.
 
 N/A
 
+\section{MIS of Analytics and Reporting Module} \label{Module}
+
+
+\subsection{Module}
+Analytics and Reporting Module
+
+\subsection{Uses}
+Database Interaction Module
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+N/A
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{p{4.5cm} p{4cm} p{4cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    
+    GetErrorReport & \textbf{Datetime:} string & 
+    sequence[map[string $\rightarrow$ any]] & An internal error from AWS \\
+    \hline
+    GetResourceUsageReport & \textbf{Datetime:} string \newline
+     \textbf{Resources:} \newline sequence[resource]& 
+    sequence[map[string $\rightarrow$ any]] & An internal error from AWS \\
+    \hline
+    GetUserActivityReport & \textbf{Datetime:} string \newline
+     \textbf{UserID:} string& 
+    sequence[map[string $\rightarrow$ any]] & An internal error from AWS \\    
+    \hline
+    GetSystemHealthReport & \textbf{Datetime:} string & 
+    sequence[map[string $\rightarrow$ any]] & An internal error from AWS \\    
+    \hline
+    GetLoginAttemptsReport & \textbf{Datetime:} string & 
+    sequence[map[string $\rightarrow$ any]] & An internal error from AWS \\    
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+N/A
+\subsubsection{Environment Variables}
+
+N/A
+
+\subsubsection{Assumptions}
+
+N/A
+
+\subsubsection{Access Routine Semantics}
+
+N/A
+
+\subsubsection{Local Functions}
+
+N/A
+
 \section{MIS of File Storage Interaction Module} \label{Module}
 
 \subsection{Module}
