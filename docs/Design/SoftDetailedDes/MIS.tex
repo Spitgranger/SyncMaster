@@ -54,8 +54,7 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
   \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
   \midrule
-  Date 1 & 1.0 & Notes\\
-  Date 2 & 1.1 & Notes\\
+  1/17/2025 & 1.0 & Initial Draft of MIS for Rev0\\
   \bottomrule
 \end{tabularx}
 
@@ -91,9 +90,6 @@ and Module Guide.  The full documentation and implementation can be
 found at \url{https://github.com/Spitgranger/SyncMaster}.
 
 \section{Notation}
-
-\wss{You should describe your notation.  You can use what is below as
-a starting point.}
 
 The structure of the MIS for modules comes from \citet{HoffmanAndStrooper1995},
 with the addition that template modules have been adapted from
@@ -194,76 +190,6 @@ for this project.
 
 \newpage
 ~\newpage
-
-\section{MIS of \wss{Module Name}} \label{Module} \wss{Use labels for
-cross-referencing}
-
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
-
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
-
-\subsection{Module}
-
-\wss{Short name for the module}
-
-\subsection{Uses}
-
-\subsection{Syntax}
-
-\subsubsection{Exported Constants}
-
-\subsubsection{Exported Access Programs}
-
-\begin{center}
-  \begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-    \hline
-    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-    \hline
-    \wss{accessProg} & - & - & - \\
-    \hline
-  \end{tabular}
-\end{center}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-
-\wss{Not all modules will have state variables.  State variables give the module
-a memory.}
-
-\subsubsection{Environment Variables}
-
-\wss{This section is not necessary for all modules.  Its purpose is to capture
-  when the module has external interaction with the environment, such as for a
-device driver, screen interface, keyboard, file, etc.}
-
-\subsubsection{Assumptions}
-
-\wss{Try to minimize assumptions and anticipate programmer errors via
-exceptions, but for practical purposes assumptions are sometimes appropriate.}
-
-\subsubsection{Access Routine Semantics}
-
-\noindent \wss{accessProg}():
-\begin{itemize}
-  \item transition: \wss{if appropriate}
-  \item output: \wss{if appropriate}
-  \item exception: \wss{if appropriate}
-\end{itemize}
-
-\wss{A module without environment variables or state variables is unlikely to
-  have a state transition.  In this case a state transition can only occur if
-the module is changing the state of another module.}
-
-\wss{Modules rarely have both a transition and an output.  In most cases you
-will have one or the other.}
-
-\subsubsection{Local Functions}
-
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-have local scope.}
 
 \section{MIS of Audit and Compliance Module} \label{Module}
 
@@ -898,6 +824,9 @@ Function Compute Module
 AWS Lambda (AWS Service that executes code in response to events and
 manages the compute resources needed to run the code)
 
+All other modules run on function compute. Therefore, this module
+uses all the others, except for the Routing Module, and API Integration Module.
+
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
@@ -1093,7 +1022,7 @@ N/A
     LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function (The chosen
     AWS compute service for this project), it has an AWS IAM role
     attached to it, that it uses when running. This role needs
-    permission for S3 bucket access for this module to work \\
+    permission for job database access for this module to work \\
     \hline
   \end{tabular}
 \end{center}
@@ -1185,11 +1114,23 @@ N/A
 
 \subsubsection{Environment Variables}
 
-N/A
+\begin{center}
+  \begin{tabular}{p{6cm} p{10cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function (The chosen
+    AWS compute service for this project), it has an AWS IAM role
+    attached to it, that it uses when running. This role needs
+    permission for site database access for this module to work \\
+    \hline
+  \end{tabular}
+\end{center}
 
 \subsubsection{Assumptions}
 
-N/A
+LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to
+execute the lambda's required tasks.
 
 \subsubsection{Access Routine Semantics}
 
@@ -1670,8 +1611,6 @@ N/A
   \newpage{}
 
   \section*{Appendix --- Reflection}
-
-  \wss{Not required for CAS 741 projects}
 
   The information in this section will be used to evaluate the team
   members on the
