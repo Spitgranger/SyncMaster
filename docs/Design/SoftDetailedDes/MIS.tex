@@ -681,9 +681,6 @@ N/A
     \textbf{LocationVerificationFailed:} Verification of users
     location failed \\
     \hline
-    validateToken & \textbf{authToken:} string  & boolean &
-    \textbf{TokenInvalid:} Token invalid \\
-    \hline
   \end{tabular}
 \end{center}
 
@@ -691,17 +688,7 @@ N/A
 
 \subsubsection{State Variables}
 
-\begin{center}
-  \begin{tabular}{p{4cm} p{12cm}}
-    \hline
-    \textbf{Name} & \textbf{Description} \\
-    \hline
-    issuedTokens & Table of tokens issued, can be represented as set
-    of items $\{i_0, i_1, ..., i_n\}$, where $i_k:
-    map[string \rightarrow  any], k\in[0,n]$ \\
-    \hline
-  \end{tabular}
-\end{center}
+N/A
 
 \subsubsection{Environment Variables}
 
@@ -716,7 +703,8 @@ N/A
 \noindent authenticateUser(email: email, password: password):
 \begin{itemize}
   \item transition: $issuedTokens \rightarrow issuedTokens \cup
-    \{authToken\}$, if $(email \cap password) \in Database$.
+    \{authToken\}$, if $(email \cap password) \in Database$, where
+    tokens are tracked, issued and validated using AWS Cognito.
   \item output: $authToken$, where $authToken$ is uniquely generated
     for the user.
   \item exception: InvalidCredentials
@@ -729,17 +717,11 @@ siteID, userLocation: \{latitude, longitude\}):
     \{authToken\}$, if $(email \cap name) \in Database \wedge siteID
     \in Database \wedge locationState ==
     true$, where locationState is a boolean returned from the
-    Location Verification Module.
+    Location Verification Module and where tokens are tracked, issued
+    and validated using AWS Cognito.
   \item output: $authToken$ where $authToken$ is uniquely generated
     for the user.
   \item exception: InvalidCredentials, InvalidSiteID, LocationVerificationFailed
-\end{itemize}
-
-\noindent validateToken(authToken: token):
-\begin{itemize}
-  \item transition: N/A
-  \item output: true if $token \in issuedTokens$, else false.
-  \item exception: TokenInvalid
 \end{itemize}
 
 \subsubsection{Local Functions}
