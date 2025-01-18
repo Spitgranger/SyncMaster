@@ -116,6 +116,7 @@ The following table summarizes the primitive data types used by \progname.
     natural number & $\mathbb{N}$ & a number without a fractional
     component in [1, $\infty$) \\
     real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
+    boolean & boolean & either true or false\\
     any & any & any data type\\
     \bottomrule
   \end{tabular}
@@ -124,19 +125,28 @@ The following table summarizes the primitive data types used by \progname.
 \noindent
 The specification of \progname \ uses some derived data types:
 sequences, strings, tuples, map, enum, KeyCondition,
-AttributeCondition, S3File. Sequences
+AttributeCondition, S3File, HTTPRequest, HTTPResponse, and Optional. Sequences
 are lists filled with elements of the same data type. Strings
 are sequences of characters. Tuples contain a list of values, potentially of
 different types. In addition, \progname \ uses functions, which
 are defined by the data types of their inputs and outputs. Local functions are
 described by giving their type signature followed by their specification. Maps
-are a collection of key-value pairs, where thre does not necessarily need to
+are a collection of key-value pairs, where there does not necessarily need to
 be a restriction on the data types of the keys and values, but one can be
 placed. An enum is a set of values of which the data can be.
 AttributeConditions are conditionals placed on an attribute of a
 database entry. KeyConditions are a subset of AttributeConditions,
 and are condtionals placed on the key attributes of a database entry.
-An S3File, is a unique file that exists in AWS S3.
+An S3File, is a unique file that exists in AWS S3. HTTPRequest and HTTPResponse
+are a subset of maps which conform to the HTTP standard. An Optional is not a
+datatype by itself, but specifies that there may be the absence of a value of a
+specific type. LogEntry is an object consisting of a UserID, SiteID, an ISO
+formatted date and time string, and a type of log (entry or exit). A
+Document is an object
+consisting of the following fields [ siteId: string, expiryDate: string, name:
+  string, createdDatetime: string, lastEditedDateTime: string, s3Link: string,
+  parentDocumentId: map[string $\rightarrow$ any], requireAck: boolean, userId:
+string ]
 
 \section{Module Decomposition}
 
@@ -358,10 +368,16 @@ the database.
 
 \subsubsection{Access Routine Semantics}
 
+\noindent DBTable.get(Key: k):
+\begin{itemize}
+  \item output: $i_k$, where $i_k \in Database \land dbKey(i_k) == k$
+  \item exception: ExternalServiceFailure
+\end{itemize}
+
 \noindent DBTable.put(Item: $i_{new}$, Condition: c):
 \begin{itemize}
-  \item transition: $Database \rightarrow Database \cup \{i_{new}\}$, if $c ==
-    true \land DBTable.Access == ``write''$
+  \item transition: $Database \rightarrow Database \cup \{i_{new}\}$, if
+    $c == true \land DBTable.Access == ``write''$
   \item output: $i_{new}$
   \item exception: ExternalServiceFailure, ConditionCheckFailed,
     PermissionException
@@ -375,6 +391,13 @@ the database.
   \item output: $i_{old}$
   \item exception: ExternalServiceFailure, ConditionCheckFailed,
     PermissionException
+\end{itemize}
+
+\noindent DBTable.query(KeyConditions: kc, AttributeConditions: ac):
+\begin{itemize}
+  \item output: [$i_k | i_k \in Database \land \forall c \in kc (c ==
+    true) \land \forall c \in ac (c == true)$]
+  \item exception: ExternalServiceFailure
 \end{itemize}
 
 \subsubsection{Local Functions}
@@ -392,6 +415,112 @@ the database.
     \hline
   \end{tabular}
 \end{center}
+
+\section{MIS of Logging Module} \label{Module}
+
+\subsection{Module}
+
+Logging Module
+
+\subsection{Uses}
+
+Database Interaction Module
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+N/A
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{5cm}
+    >{\raggedright}p{4cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    AddLog & \textbf{UserID:} string \newline \textbf{SiteID:} string
+    \newline \textbf{Datetime:} string \newline \textbf{Type:}
+    enum[``entry'', ``exit''] & LogEntry &
+    \textbf{ExternalServiceFailure:} An internal error from AWS \\
+    \hline
+    ListLogs & \textbf{UserID:} string \newline \textbf{SiteID:}
+    string \newline \textbf{FromDatetime:} string \newline
+    \textbf{ToDatetime:} string &
+    sequence[LogEntry] & \textbf{ExternalServiceFailure:} An internal
+    error from AWS \\
+    \hline
+    PurgeLogs & \textbf{UserID:} string & - &
+    \textbf{ExternalServiceFailure:} An internal error from AWS \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\begin{center}
+  \begin{tabular}{p{4cm} p{12cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    LogEntryDatabase & The underlying AWS DynamoDB table, can be
+    represented as a set of items: $\{l_0, l_1, ..., l_n\}$, where
+    $l_k: LogEntry, k\in[0,n]$ \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Environment Variables}
+
+\begin{center}
+  \begin{tabular}{p{6cm} p{10cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function (The chosen
+    AWS compute service for this project), it has an AWS IAM role
+    attached to it, that it uses when running. This role needs
+    permission for logging database access for this module to work \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Assumptions}
+
+LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to access
+the database.
+
+\subsubsection{Access Routine Semantics}
+
+\noindent AddLog(UserID: u, SiteID: s, Datetime: d, Type: t):
+\begin{itemize}
+  \item transition: $LogEntryDatabase \rightarrow LogEntryDatabase
+    \cup \{l_{new}\}$, where $l_{new}.UserID = u$, $l_{new}.SiteID =
+    s$, $l_{new}.Datetime = d$, $l_{new}.Type = t$
+  \item output: $l_{new}$
+  \item exception: ExternalServiceFailure
+\end{itemize}
+
+\noindent ListLogs(UserID: u, SiteID: s, FromDatetime: fd, ToDatetime: td):
+\begin{itemize}
+  \item output: $[l_k | l_k \in LogEntryDatabase \land l_k.UserID ==
+    u \land l_k.SiteID == s \land fd \le l_k.Datetime \le td]$
+  \item exception: ExternalServiceFailure
+\end{itemize}
+
+\noindent PurgeLogs(UserID: u):
+\begin{itemize}
+  \item transition: $LogEntryDatabase \rightarrow LogEntryDatabase -
+    \{l_k | l_k \in LogEntryDatabase \land l_k.UserID == u \}$
+  \item exception: ExternalServiceFailure
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+N/A
 
 \section{MIS of File Storage Interaction Module} \label{Module}
 
@@ -488,6 +617,13 @@ LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to access
 the S3 bucket.
 
 \subsubsection{Access Routine Semantics}
+
+\noindent S3Bucket.createPresignedUrl(Key: k, VersionID: v, ETag: e,
+Method: m, ExpiresIn: x):
+\begin{itemize}
+  \item output: string
+  \item exception: ExternalServiceFailure, PermissionException
+\end{itemize}
 
 \noindent S3Bucket.delete(Key: k, VersionID: v, ETag: e):
 \begin{itemize}
@@ -619,7 +755,7 @@ underlying serverless function)
     \textbf{ExternalServiceFailure:} An internal error from
     AWS \newline \textbf{ExecutionError:} If the underlying compute
     resource that the request gets routed to encounters an error
-    suring execution \\
+    during execution \\
     \hline
   \end{tabular}
 \end{center}
@@ -645,6 +781,7 @@ N/A
 \subsubsection{Local Functions}
 
 N/A
+
 
 % MIS of Job Management Module Beginning
 \section{MIS of Job Management Module} \label{Module}
@@ -760,46 +897,631 @@ execute the lambda's required tasks.
 
 N/A
 % MIS of Job Management Module Ending
+
+\section{MIS of Location Verification Module} \label{Module}
+
+
+\subsection{Module}
+
+Location Verification Module
+
+\subsection{Uses}
+
+Browser location/GPS API, Database Interaction Module, Routing Module
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+N/A
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{2.75cm} >{\raggedright}p{3.25cm}
+    >{\raggedright}p{4.5cm} p{5cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    verifyLocation & \textbf{siteID:} string \newline
+    \textbf{latitude:} float \newline
+    \textbf{longitude:} float \newline \textbf{accuracy:} float &
+    \textbf{locationState:} boolean &
+    \textbf{Invalidlocation:} co-ordinates are invalid \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+N/A
+
+\subsubsection{Environment Variables}
+
+N/A
+
+\subsubsection{Assumptions}
+
+N/A
+
+\subsubsection{Access Routine Semantics}
+
+\noindent verifyLocation(siteID: siteID, latitude: lat, longitude:
+long, accuracy: acc):
+\begin{itemize}
+  \item output: true if the distance calculated by calculateDistance
+    is within the range of the intended site, adjusted for accuracy;
+    false otherwise.
+  \item exception: Invalidlocation
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{4cm}
+    >{\raggedright}p{4cm} p{4.5cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Description} \\
+    \hline
+    calculateDistance & \textbf{siteID:} string \newline
+    \textbf{latitude:} float \newline
+    \textbf{longitude:} float & \textbf{distance:} float &
+    Uses siteID to get a second set of coordinates from Database.
+    Using two sets of coordinates the haversine distance between the
+    two points is returned. \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\section{MIS of User Management Module} \label{Module}
+
+\subsection{Module}
+
+User Management Module
+
+\subsection{Uses}
+
+boto3 (AWS SDK for Python), AWS Cognito (AWS Cloud Service for user
+authentication), Database Interaction Module, Routing Module
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+N/A
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{2.5cm} >{\raggedright}p{3.5cm}
+    >{\raggedright}p{3.5cm} p{5cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    createUser & \textbf{email:} string \newline
+    \textbf{details:} map[string $\rightarrow$ any] & \textbf{userID:} string &
+    \textbf{DuplicateUser:} Existing email address used \\
+    \hline
+    editUser & \textbf{userID:} string \newline
+    \textbf{edit:} map[string $\rightarrow$ any] & boolean &
+    \textbf{UserNotFound:}
+    userID not in database \\
+    \hline
+    deleteUser & \textbf{userID:} string & boolean & \textbf{UserNotFound:}
+    userID not in database \\
+    \hline
+    getUser & \textbf{userID:} string & map[string $\rightarrow$ any]
+    & \textbf{UserNotFound:}
+    userID not in database \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\begin{center}
+  \begin{tabular}{p{4cm} p{12cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    Database & Set of registered users, can be represented as set of
+    items $\{i_0, i_1, ..., i_n\}$, where $i_k:
+    map[string \rightarrow  any], k\in[0,n]$ \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Environment Variables}
+
+\begin{center}
+  \begin{tabular}{p{6cm} p{10cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function runs, it
+    has an AWS IAM role attached to it, which it uses when running.
+    This role gives the function the necessary permissions to execute
+    without issue. \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Assumptions}
+
+LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to
+execute the lambda's required tasks.
+
+\subsubsection{Access Routine Semantics}
+
+\noindent createUser(email: email, details: details):
+\begin{itemize}
+  \item transition: $Database \rightarrow Database \cup
+    \{User_{new}\}$, if $email \notin Database$, where $User_{new} =
+    \{userID, email, password, \ldots\}$.
+  \item output: $\{userID, password\}$, where $userID$ is uniquely
+    generated for the email and $password$ is a temporary password
+    generated during account creation
+  \item exception: DuplicateUser
+\end{itemize}
+
+\noindent editUser(userID: userID, edit: changes):
+\begin{itemize}
+  \item transition: $Database \rightarrow Database \cup
+    \{User_{edited}\}$, if $(userID \in Database) \wedge
+    (changes.email \notin Database)$, where $User_{edited} =
+    \{userID, changes\}$
+  \item output: true if transition successful, false otherwise.
+  \item exception: UserNotFound
+\end{itemize}
+
+\noindent deleteUser(userID: userID):
+\begin{itemize}
+  \item transition: $Database \rightarrow Database - \{User\}$, if
+    $\exists(\{User\} \in Database \wedge User.userID == userID)$.
+  \item output: true if transition successful, false otherwise.
+  \item exception: UserNotFound
+\end{itemize}
+
+\noindent getUser(userID: userID):
+\begin{itemize}
+  \item output: $\{User\}$, if $\exists(\{User\} \in Database \wedge
+    User.userID == userID)$.
+  \item exception: UserNotFound
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{4cm}
+    >{\raggedright}p{4cm} p{4.5cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Description} \\
+    \hline
+    generateUserID & \textbf{email:} string & \textbf{authToken:} string &
+    Generates unique userID for each email. \\
+    \hline
+    generatePassword & \textbf{password:} string & \textbf{authToken:} string &
+    Creates one-time password for new users.\\
+    \hline
+  \end{tabular}
+\end{center}
+
+\section{MIS of User Authentication Module} \label{Module}
+
+\subsection{Module}
+
+User Authentication Module
+
+\subsection{Uses}
+
+boto3 (AWS SDK for Python), AWS Cognito (AWS Cloud Service for user
+authentication), Location Verification Module, Database Interaction
+Module, Routing Module
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+N/A
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{4cm} >{\raggedright}p{3cm}
+    >{\raggedright}p{4cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    authenticateUser & \textbf{email:} string \newline
+    \textbf{password:} string & \textbf{authToken:} string &
+    \textbf{InvalidCredentials:} Credentials not in database \\
+    \hline
+    authenticateContractor & \textbf{email:} string \newline
+    \textbf{name:} string \newline \textbf{siteID:} String \newline
+    \textbf{userLocation:} \{float, float\} &
+    \textbf{authToken:} string & \textbf{InvalidCredentials:}
+    Credentials not in database \newline
+    \textbf{InvalidSiteID:}
+    siteID not in database \newline
+    \textbf{LocationVerificationFailed:} Verification of users
+    location failed \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+N/A
+
+\subsubsection{Environment Variables}
+
+\begin{center}
+  \begin{tabular}{p{6cm} p{10cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function runs, it
+    has an AWS IAM role attached to it, which it uses when running.
+    This role gives the function the necessary permissions to execute
+    without issue. \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Assumptions}
+
+LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to
+execute the lambda's required tasks.
+
+\subsubsection{Access Routine Semantics}
+
+\noindent authenticateUser(email: email, password: password):
+\begin{itemize}
+  \item output: $authToken$, where $authToken$ is a unique token
+    generated for the user, tracked, and validated by AWS Cognito.
+  \item exception: InvalidCredentials
+\end{itemize}
+
+\noindent authenticateContractor(email: email, name: name, siteID:
+siteID, userLocation: \{latitude, longitude\}):
+\begin{itemize}
+  \item output: $authToken$, where $authToken$ is a unique token
+    generated for the user, tracked, and validated by AWS Cognito.
+  \item exception: InvalidCredentials, InvalidSiteID, LocationVerificationFailed
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+N/A
+
+\section{MIS of API Integration Module} \label{Module}
+
+\subsection{Module}
+API Integration Module
+\subsection{Uses}
+Routing Module
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+N/A
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{5cm}
+    >{\raggedright}p{4cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    submitApiRequest & \textbf{request:} HTTPRequest
+    \newline \textbf{url:} String \newline \textbf{apiToken
+    (optional):} String & HTTPResponse &
+    \textbf{NetworkException:} If a valid network connection is not detected.
+    \newline \textbf{TimeoutException:} If a response is not received within
+    $\hyperlink{timeout}{TIMEOUT}$ seconds.\\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+N/A
+
+\subsubsection{Environment Variables}
+
+\subsubsection{Assumptions}
+\begin{itemize}
+  \item API endpoints are up and functional
+  \item The system has a internet network connection
+\end{itemize}
+\subsubsection{Access Routine Semantics}
+
+\noindent submitApiRequest(url: String, request: HTTPRequest, apiToken:
+Optional\textless String\textgreater):
+\begin{itemize}
+  \item output: HTTPResponse
+  \item exception: NetworkException, TimeoutException
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{5cm}
+    >{\raggedright}p{4cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Description} \\
+    \hline
+    timeElapsed & \textbf{since:} $\mathbb{Z}$ & $\mathbb{Z}$ & Returns the
+    number of seconds elapsed since the provided time given in seconds since
+    Janurary 1, 1970 \\
+    \hline
+  \end{tabular}
+\end{center}
+
 \newpage
 
-\bibliographystyle {plainnat}
-\bibliography {../../../refs/References}
+\section{MIS of Document Management Module} \label{Module}
 
-\newpage
+\subsection{Module}
 
-\section{Appendix} \label{Appendix}
+Document Management Module
 
-\wss{Extra information if required}
+\subsection{Uses}
 
-\newpage{}
+Database Interaction Module
 
-\section*{Appendix --- Reflection}
+\subsection{Syntax}
 
-\wss{Not required for CAS 741 projects}
+\subsubsection{Exported Constants}
+N/A
 
-The information in this section will be used to evaluate the team members on the
-graduate attribute of Problem Analysis and Design.
+\subsubsection{Exported Access Programs}
 
-\input{../../Reflection.tex}
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{5cm}
+    >{\raggedright}p{4cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    RetrieveDocs & \textbf{siteID:} string & sequence[Document] &
+    \textbf{ExternalServiceFailure:} An internal error from AWS \\
+    \hline
+    CreateDoc & \textbf{s3Link:} string \newline \textbf{userID:}
+    string \newline \textbf{siteID:} string \newline
+    \textbf{parentDocumentID:} Optional \textless map[string
+    $\rightarrow$ any]\textgreater \newline \textbf{expiryDate:}
+    Optional \textless string\textgreater \newline
+    \textbf{requiresAck:} boolean & map[string $\rightarrow$ any] &
+    \textbf{ExternalServiceFailure:} An internal error from AWS \newline
+    \textbf{ValidationError:} Non-existent IDs provided \\
+    \hline
+    EditDoc & \textbf{documentID:} map[string $\rightarrow$ any
+      \newline \textbf{userID:} string \newline
+      \textbf{s3Link:}
+      string & - &
+      \textbf{ExternalServiceFailure:} An internal error from AWS \newline
+      \textbf{ValidationError:} Non-existent IDs provided \\
+      \hline
+      DeleteDoc & \textbf{documentID:} map[string $\rightarrow$ any] & - &
+      \textbf{ExternalServiceFailure:} An internal error from AWS \newline
+      \textbf{ValidationError:} Non-existent IDs provided \\
+      \hline
+    \end{tabular}
+  \end{center}
 
-\begin{enumerate}
-  \item What went well while writing this deliverable?
-  \item What pain points did you experience during this deliverable, and how
-    did you resolve them?
-  \item Which of your design decisions stemmed from speaking to your client(s)
-    or a proxy (e.g. your peers, stakeholders, potential users)? For those that
-    were not, why, and where did they come from?
-  \item While creating the design doc, what parts of your other documents (e.g.
-    requirements, hazard analysis, etc), it any, needed to be changed, and why?
-  \item What are the limitations of your solution?  Put another way, given
-    unlimited resources, what could you do to make the project
-    better? (LO\_ProbSolutions)
-  \item Give a brief overview of other design solutions you considered.  What
-    are the benefits and tradeoffs of those other designs compared
-    with the chosen
-    design?  From all the potential options, why did you select the
-    documented design?
-    (LO\_Explores)
-\end{enumerate}
+  \subsection{Semantics}
 
-\end{document}
+  \subsubsection{State Variables}
+
+  \begin{center}
+    \begin{tabular}{p{4cm} p{12cm}}
+      \hline
+      \textbf{Name} & \textbf{Description} \\
+      \hline
+      DocumentDatabase & The underlying AWS DynamoDB table, can be
+      represented as a set of items: $\{D_0, D_1, ..., D_n\}$, where
+      $D_k \in Documents, k\in[0,n]$ \\
+      \hline
+    \end{tabular}
+  \end{center}
+
+  \subsubsection{Environment Variables}
+
+  \begin{center}
+    \begin{tabular}{p{6cm} p{10cm}}
+      \hline
+      \textbf{Name} & \textbf{Description} \\
+      \hline
+      LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function (The chosen
+      AWS compute service for this project), it has an AWS IAM role
+      attached to it, that it uses when running. This role needs
+      permission for document database access for this module to work \\
+      \hline
+    \end{tabular}
+  \end{center}
+
+  \subsubsection{Assumptions}
+
+  LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to
+  execute the lambda's required tasks.
+
+  \subsubsection{Access Routine Semantics}
+
+  \noindent RetrieveDocs(siteId: sID):
+  \begin{itemize}
+    \item output: $[D_{k} \in DocumentDatabase \land D_{k}$.siteId ==
+      sID], $\forall
+      k \in \mathbb{Z}$
+    \item exception: ExternalServiceFailure
+  \end{itemize}
+
+  \noindent CreateDoc(s3Link: sL, userID: uID, siteID: sID,
+    parentDocumentID: pID,
+  expiryDate: eD, requiresAck: rA):
+  \begin{itemize}
+    \item transition: $DocumentDatabase \rightarrow DocumentDatabase
+      \cup \{D_{new}\}$, where $D_{new}$.userId = uID $\land$ $D_{new}$.siteId =
+      sId $\land$ $D_{new}$.createdDateTime = $getDateTime()$ $\land$
+      $D_{new}$.expiryDate = eD $\land$
+      $D_{new}$.requiresAck = rA $\land$ $D_{new}$.s3Link = sL
+    \item output: map[string $\rightarrow$ any]: The documentId of the created
+      document
+    \item exception: ExternalServiceFailure, ValidationError
+  \end{itemize}
+
+  \noindent EditDoc(documentId: dID, userId: uID, s3Link: sL):
+  \begin{itemize}
+    \item transition: $DocumentDatabase \rightarrow DocumentDatabase - \{D_{old}
+      | D_{old} \in DocumentDatabase \land D_{old} == dID\}$\\
+      $DocumentDatabase \rightarrow DocumentDatabase \cup
+      \{D_{new}\}$ where $D_{new} = copy(D_{old})$ $\land$ $D_{new}$.s3Link = sL
+      $\land$ $D_{new}$.userId = uID $\land$
+      $D_{old}$.lastEditedDateTime = $getDateTime()$ and $copy(D)$ is
+      a predicate indicating the
+      deep copy of document $D$.
+    \item exception: ExternalServiceFailure, ValidationError
+  \end{itemize}
+
+  \noindent DeleteDoc(documentId: dID):
+  \begin{itemize}
+    \item transition: $DocumentDatabase \rightarrow DocumentDatabase -
+      \{D_{old} | D_{old} \in DocumentDatabase$ $\land$
+      $D_{old}$.documentId == dID \}
+    \item exception: ExternalServiceFailure, ValidationError
+  \end{itemize}
+
+  \subsubsection{Local Functions}
+
+  \begin{center}
+    \begin{tabular}{>{\raggedright}p{4cm} >{\raggedright}p{3cm}
+      >{\raggedright}p{3.5cm} p{5.5cm}}
+      \hline
+      \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Description} \\
+      \hline
+      getDateTime & - & string & Returns the current date and time in ISO8601
+      string format\\
+      \hline
+    \end{tabular}
+  \end{center}
+
+  \newpage
+
+  \bibliographystyle {plainnat}
+  \bibliography {../../../refs/References}
+
+  \newpage
+
+  \section{Appendix} \label{Appendix}
+
+  \subsection{Symbolic Parameters}
+  $\hypertarget{timeout}{TIMEOUT}$ = 5\\
+
+  \newpage{}
+
+  \section*{Appendix --- Reflection}
+
+  \wss{Not required for CAS 741 projects}
+
+  The information in this section will be used to evaluate the team
+  members on the
+  graduate attribute of Problem Analysis and Design.
+
+  \input{../../Reflection.tex}
+
+  The information in this section will be used to evaluate the team
+  members on the
+  graduate attribute of Problem Analysis and Design.
+  \begin{enumerate}
+    \item What went well while writing this deliverable?
+      \\
+      \\
+      In this deliverable, our team was able to delegate tasks and
+      manage our time more effectively.
+      The stakeholder was engaged to show progress on the prototype and
+      obtain feedback that
+      influenced the design.
+
+    \item What pain points did you experience during this deliverable, and how
+      did you resolve them?
+      \\
+      \\
+      One pain point the team experienced was determining the specific
+      technologies which would be the most appropriate
+      for the clients problem. One example was deciding the AWS modules
+      to use, such as choosing an EC2 instance or using AWS lambda.
+      This was resolved through discussion of what the advantages of one
+      tool would be over another. For this particular problem,
+      it was decided to use AWS lambda because it makes it easy to scale
+      to 0 instances when not in use, and the application is only expected to
+      be used sporadically during working hours, so costs can be saved by
+      being able to scale to zero when not in use.
+
+    \item Which of your design decisions stemmed from speaking to your client(s)
+      or a proxy (e.g. your peers, stakeholders, potential users)?
+      For those that
+      were not, why, and where did they come from?
+      \\
+      \\
+      Through meeting with the stakeholders, the design decisions about
+      the location verification module, creating accounts, file system module,
+      and the function compute module were decided. These arose by
+      discussing what these modules would be capable of doing, and how
+      they would satisfy specific
+      requirements identified in the SRS.
+
+    \item While creating the design doc, what parts of your other
+      documents (e.g.
+      requirements, hazard analysis, etc), it any, needed to be
+      changed, and why?
+      \\
+      \\
+      One part of the SRS document which was required to be changed was
+      the original SharePoint integration requirements. This was deemed
+      to be too difficult to do and would open up vulnerabilities for
+      the stakeholder, and as such was removed from the initial
+      requirements identified in the SRS.
+
+    \item What are the limitations of your solution?  Put another way, given
+      unlimited resources, what could you do to make the project
+      better? (LO\_ProbSolutions)
+      \\
+      \\
+      The main limitations of the current solution is that it doesn't
+      stream the location of users in real time.
+      It currently takes two points in time, (entering and exiting
+      time) into account. This limitation provides reduced visibility
+      on the actions of the user at each site,
+      which limits its sophistication but increases its simplicity.
+      Given more time, the project could be further improved to
+      increase the robustness of the verification
+      functionality to automatically collect more information from the
+      user and consider more complicated edge cases that can arise.
+
+    \item Give a brief overview of other design solutions you considered.  What
+      are the benefits and tradeoffs of those other designs compared
+      with the chosen
+      design?  From all the potential options, why did you select the
+      documented design?
+      (LO\_Explores)
+      \\
+      \\
+      As discussed above, one design solution that was considered was
+      an Amazon EC2 instance due to its widespread use and support
+      which would be very maintainable
+      after the completion date of the project. However, the benefit of
+      an AWS Lambda instance with scaling to 0 was determined to be the
+      best choice due to the cost
+      saving which it is able to provide,
+
+      Another design decision which was explored was the ability to use
+      presigned URLs that would permit larger uploads than uploading
+      through API Gateway.
+  \end{enumerate}
+
+  \end{document}
