@@ -782,7 +782,6 @@ N/A
 
 N/A
 
-
 % MIS of Job Management Module Beginning
 \section{MIS of Job Management Module} \label{Module}
 
@@ -804,16 +803,23 @@ N/A
     \hline
     \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
     \hline
-    createJob & \textbf{jobType:} string, \textbf{workOrder:} int, \textbf{userID:} string, \textbf{description:} string & \textbf{jobID:} string &  \textbf{ExternalServiceFailure:} An internal error from AWS \newline
+    createJob & \textbf{jobType:} string, \textbf{workOrder:} int,
+    \textbf{userID:} string, \textbf{description:} string &
+    \textbf{jobID:} string &  \textbf{ExternalServiceFailure:} An
+    internal error from AWS \newline
     \textbf{DuplicateWorkOrder:} Job with same work order already in database \\
     \hline
-    editJob & \textbf{jobID:} string, \textbf{workOrder:} int, \textbf{description:} string, \textbf{jobType:} string & None &  \textbf{ExternalServiceFailure:} An internal error from AWS \newline
-   
+    editJob & \textbf{jobID:} string, \textbf{workOrder:} int,
+    \textbf{description:} string, \textbf{jobType:} string & None &
+    \textbf{ExternalServiceFailure:} An internal error from AWS \newline
+
     \textbf{JobAlreadyCompleted:} This job is already closed\\
     \hline
-    completeJob & \textbf{jobID:} string & None &  \textbf{ExternalServiceFailure:} An internal error from AWS\\
+    completeJob & \textbf{jobID:} string & None &
+    \textbf{ExternalServiceFailure:} An internal error from AWS\\
     \hline
-    deleteJob & \textbf{jobID:} string & None &  \textbf{ExternalServiceFailure:} An internal error from AWS \newline
+    deleteJob & \textbf{jobID:} string & None &
+    \textbf{ExternalServiceFailure:} An internal error from AWS \newline
     \textbf{JobAlreadyCompleted:} This job is already closed\\
     \hline
   \end{tabular}
@@ -861,14 +867,16 @@ execute the lambda's required tasks.
 
 \subsubsection{Access Routine Semantics}
 
-\noindent createJob(\textbf{jobType:}string, \textbf{workOrder:}int, \textbf{userID:}string, \textbf{description:}string):
+\noindent createJob(\textbf{jobType:}string, \textbf{workOrder:}int,
+\textbf{userID:}string, \textbf{description:}string):
 \begin{itemize}
   \item transition: creates job associated with userID
   \item output: the jobID
   \item exception:  ExternalServiceFailure, DuplicateWorkOrder
 \end{itemize}
 
-\noindent editJob(\textbf{jobID:}string, \textbf{workOrder}int, \textbf{description}string, \textbf{jobType}string):
+\noindent editJob(\textbf{jobID:}string, \textbf{workOrder}int,
+\textbf{description}string, \textbf{jobType}string):
 \begin{itemize}
   \item transition: edit job attributes if not closed
   \item exception:  ExternalServiceFailure, JobAlreadyCompleted
@@ -899,7 +907,6 @@ N/A
 % MIS of Job Management Module Ending
 
 \section{MIS of Location Verification Module} \label{Module}
-
 
 \subsection{Module}
 
