@@ -530,9 +530,7 @@ Database Interaction Module
 
 \subsubsection{Exported Constants}
 N/A
-
 \subsubsection{Exported Access Programs}
-
 \begin{center}
   \begin{tabular}{p{4.5cm} p{4cm} p{4cm} p{4cm}}
     \hline
@@ -540,21 +538,36 @@ N/A
     \hline
     
     GetErrorReport & \textbf{Datetime:} string & 
-    sequence[map[string $\rightarrow$ any]] & An internal error from AWS \\
+    sequence[map[string $\rightarrow$ any]] &     
+    \textbf{ExternalServiceFailure:} An internal error from AWS
+    \newline \textbf{ExecutionError:} Any error that occurs while the
+    function is running \\
     \hline
     GetResourceUsageReport & \textbf{Datetime:} string \newline
      \textbf{Resources:} \newline sequence[resource]& 
-    sequence[map[string $\rightarrow$ any]] & An internal error from AWS \\
+    sequence[map[string $\rightarrow$ any]] &     
+    \textbf{ExternalServiceFailure:} An internal error from AWS
+    \newline \textbf{ExecutionError:} Any error that occurs while the
+    function is running \\
     \hline
     GetUserActivityReport & \textbf{Datetime:} string \newline
      \textbf{UserID:} string& 
-    sequence[map[string $\rightarrow$ any]] & An internal error from AWS \\    
+    sequence[map[string $\rightarrow$ any]] &     
+    \textbf{ExternalServiceFailure:} An internal error from AWS
+    \newline \textbf{ExecutionError:} Any error that occurs while the
+    function is running \\
     \hline
     GetSystemHealthReport & \textbf{Datetime:} string & 
-    sequence[map[string $\rightarrow$ any]] & An internal error from AWS \\    
+    sequence[map[string $\rightarrow$ any]] &     
+    \textbf{ExternalServiceFailure:} An internal error from AWS
+    \newline \textbf{ExecutionError:} Any error that occurs while the
+    function is running \\
     \hline
     GetLoginAttemptsReport & \textbf{Datetime:} string & 
-    sequence[map[string $\rightarrow$ any]] & An internal error from AWS \\    
+    sequence[map[string $\rightarrow$ any]] &     
+    \textbf{ExternalServiceFailure:} An internal error from AWS
+    \newline \textbf{ExecutionError:} Any error that occurs while the
+    function is running \\
     \hline
   \end{tabular}
 \end{center}
@@ -565,8 +578,18 @@ N/A
 
 N/A
 \subsubsection{Environment Variables}
-
-N/A
+\begin{center}
+  \begin{tabular}{p{6cm} p{10cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function (The chosen
+    AWS compute service for this project), it has an AWS IAM role
+    attached to it, that it uses when running. This role needs
+    permission for S3 bucket access for this module to work \\
+    \hline
+  \end{tabular}
+\end{center}
 
 \subsubsection{Assumptions}
 
