@@ -260,7 +260,6 @@ have local scope.}
 
 \section{MIS of Audit and Compliance Module} \label{Module}
 
-
 \subsection{Module}
 Analytics and Reporting Module
 
@@ -279,41 +278,41 @@ N/A
     \hline
     \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
     \hline
-    
+
     GetSignedDocuments & \textbf{FromDatetime:} string \newline
     \textbf{ToDatetime:} string&
     sequence[map[string $\rightarrow$ any]] &
     \textbf{ExternalServiceFailure:} An internal error from AWS
-     \\
+    \\
     \hline
     GetUnsignedDocuments & \textbf{FromDatetime:} string \newline
     \textbf{ToDatetime:} string&
     sequence[map[string $\rightarrow$ any]] &
     \textbf{ExternalServiceFailure:} An internal error from AWS
-     \\
+    \\
     \hline
     GetTrainingData & \textbf{FromDatetime:} string \newline
     \textbf{ToDatetime:} string&
     sequence[map[string $\rightarrow$ any]] &
     \textbf{ExternalServiceFailure:} An internal error from AWS
-     \\
+    \\
     \hline
     GetIncidentsData & \textbf{FromDatetime:} string \newline
     \textbf{ToDatetime:} string&
     sequence[map[string $\rightarrow$ any]] &
     \textbf{ExternalServiceFailure:} An internal error from AWS
-     \\    
+    \\
     \hline
     GetWorkOrders & \textbf{FromDatetime:} string \newline
     \textbf{ToDatetime:} string&
     sequence[map[string $\rightarrow$ any]] &
     \textbf{ExternalServiceFailure:} An internal error from AWS
-     \\    
+    \\
     \hline
     GetFlaggedContractors & \textbf{FromDatetime:} string \newline
     \textbf{ToDatetime:} string&
     sequence[map[string $\rightarrow$ any]] &
-    \textbf{ExternalServiceFailure:} An internal error from AWS\\    
+    \textbf{ExternalServiceFailure:} An internal error from AWS\\
     \hline
   \end{tabular}
 \end{center}
@@ -378,7 +377,6 @@ the database.
   \item output: sequence[map[string $\rightarrow$ any]]
   \item exception: ExternalServiceFailure
 \end{itemize}
-
 
 \subsubsection{Local Functions}
 
