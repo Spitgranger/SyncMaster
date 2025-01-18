@@ -258,6 +258,132 @@ will have one or the other.}
   explicitly.  Even if they are implemented, they are not exported; they only
 have local scope.}
 
+\section{MIS of Audit and Compliance Module} \label{Module}
+
+
+\subsection{Module}
+Analytics and Reporting Module
+
+\subsection{Uses}
+Database Interaction Module
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+N/A
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{p{4.5cm} p{4cm} p{4cm} p{4cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    
+    GetSignedDocuments & \textbf{FromDatetime:} string \newline
+    \textbf{ToDatetime:} string&
+    sequence[map[string $\rightarrow$ any]] &
+    \textbf{ExternalServiceFailure:} An internal error from AWS
+     \\
+    \hline
+    GetUnsignedDocuments & \textbf{FromDatetime:} string \newline
+    \textbf{ToDatetime:} string&
+    sequence[map[string $\rightarrow$ any]] &
+    \textbf{ExternalServiceFailure:} An internal error from AWS
+     \\
+    \hline
+    GetTrainingData & \textbf{FromDatetime:} string \newline
+    \textbf{ToDatetime:} string&
+    sequence[map[string $\rightarrow$ any]] &
+    \textbf{ExternalServiceFailure:} An internal error from AWS
+     \\
+    \hline
+    GetIncidentsData & \textbf{FromDatetime:} string \newline
+    \textbf{ToDatetime:} string&
+    sequence[map[string $\rightarrow$ any]] &
+    \textbf{ExternalServiceFailure:} An internal error from AWS
+     \\    
+    \hline
+    GetWorkOrders & \textbf{FromDatetime:} string \newline
+    \textbf{ToDatetime:} string&
+    sequence[map[string $\rightarrow$ any]] &
+    \textbf{ExternalServiceFailure:} An internal error from AWS
+     \\    
+    \hline
+    GetFlaggedContractors & \textbf{FromDatetime:} string \newline
+    \textbf{ToDatetime:} string&
+    sequence[map[string $\rightarrow$ any]] &
+    \textbf{ExternalServiceFailure:} An internal error from AWS\\    
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+N/A
+\subsubsection{Environment Variables}
+\begin{center}
+  \begin{tabular}{p{6cm} p{10cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function (The chosen
+    AWS compute service for this project), it has an AWS IAM role
+    attached to it, that it uses when running. This role needs
+    permission for database access for this module to work \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Assumptions}
+
+LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to access
+the database.
+
+\subsubsection{Access Routine Semantics}
+\noindent GetSignedDocuments(FromDatetime: string, ToDatetime: string):
+\begin{itemize}
+  \item output: sequence[map[string $\rightarrow$ any]]
+  \item exception: ExternalServiceFailure
+\end{itemize}
+
+\noindent GetUnsignedDocuments(FromDatetime: string, ToDatetime: string):
+\begin{itemize}
+  \item output: sequence[map[string $\rightarrow$ any]]
+  \item exception: ExternalServiceFailure
+\end{itemize}
+
+\noindent GetTrainingData(FromDatetime: string, ToDatetime: string):
+\begin{itemize}
+  \item output: sequence[map[string $\rightarrow$ any]]
+  \item exception: ExternalServiceFailure
+\end{itemize}
+
+\noindent GetIncidentsData(FromDatetime: string, ToDatetime: string):
+\begin{itemize}
+  \item output: sequence[map[string $\rightarrow$ any]]
+  \item exception: ExternalServiceFailure
+\end{itemize}
+
+\noindent GetWorkOrders(FromDatetime: string, ToDatetime: string):
+\begin{itemize}
+  \item output: sequence[map[string $\rightarrow$ any]]
+  \item exception: ExternalServiceFailure
+\end{itemize}
+
+\noindent GetFlaggedContractors(FromDatetime: string, ToDatetime: string):
+\begin{itemize}
+  \item output: sequence[map[string $\rightarrow$ any]]
+  \item exception: ExternalServiceFailure
+\end{itemize}
+
+
+\subsubsection{Local Functions}
+
+N/A
+
 \section{MIS of Database Interaction Module} \label{Module}
 
 \subsection{Module}
