@@ -702,25 +702,18 @@ N/A
 
 \noindent authenticateUser(email: email, password: password):
 \begin{itemize}
-  \item transition: $issuedTokens \rightarrow issuedTokens \cup
-    \{authToken\}$, if $(email \cap password) \in Database$, where
-    tokens are tracked, issued and validated using AWS Cognito.
-  \item output: $authToken$, where $authToken$ is uniquely generated
-    for the user.
+  \item transition: N/A
+  \item output: $authToken$, where $authToken$ is a unique token
+    generated for the user, tracked, and validated by AWS Cognito.
   \item exception: InvalidCredentials
 \end{itemize}
 
 \noindent authenticateContractor(email: email, name: name, siteID:
 siteID, userLocation: \{latitude, longitude\}):
 \begin{itemize}
-  \item transition: $issuedTokens \rightarrow issuedTokens \cup
-    \{authToken\}$, if $(email \cap name) \in Database \wedge siteID
-    \in Database \wedge locationState ==
-    true$, where locationState is a boolean returned from the
-    Location Verification Module and where tokens are tracked, issued
-    and validated using AWS Cognito.
-  \item output: $authToken$ where $authToken$ is uniquely generated
-    for the user.
+  \item transition: N/A
+  \item output: $authToken$, where $authToken$ is a unique token
+    generated for the user, tracked, and validated by AWS Cognito.
   \item exception: InvalidCredentials, InvalidSiteID, LocationVerificationFailed
 \end{itemize}
 
