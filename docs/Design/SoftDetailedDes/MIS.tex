@@ -782,7 +782,84 @@ N/A
 
 N/A
 
+\section{MIS of Location Verification Module} \label{Module}
+
+\subsection{Module}
+
+Location Verification Module
+
+\subsection{Uses}
+
+Browser location/GPS API, Database Interaction Module, Routing Module
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+N/A
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{2.75cm} >{\raggedright}p{3.25cm}
+    >{\raggedright}p{4.5cm} p{5cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    verifyLocation & \textbf{siteID:} string \newline
+    \textbf{latitude:} float \newline
+    \textbf{longitude:} float \newline \textbf{accuracy:} float &
+    \textbf{locationState:} boolean &
+    \textbf{Invalidlocation:} co-ordinates are invalid \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+N/A
+
+\subsubsection{Environment Variables}
+
+N/A
+
+\subsubsection{Assumptions}
+
+N/A
+
+\subsubsection{Access Routine Semantics}
+
+\noindent verifyLocation(siteID: siteID, latitude: lat, longitude:
+long, accuracy: acc):
+\begin{itemize}
+  \item output: true if the distance calculated by calculateDistance
+    is within the range of the intended site, adjusted for accuracy;
+    false otherwise.
+  \item exception: Invalidlocation
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{4cm}
+    >{\raggedright}p{4cm} p{4.5cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Description} \\
+    \hline
+    calculateDistance & \textbf{siteID:} string \newline
+    \textbf{latitude:} float \newline
+    \textbf{longitude:} float & \textbf{distance:} float &
+    Uses siteID to get a second set of coordinates from Database.
+    Using two sets of coordinates the haversine distance between the
+    two points is returned. \\
+    \hline
+  \end{tabular}
+\end{center}
+
 \section{MIS of User Management Module} \label{Module}
+
 
 \subsection{Module}
 
