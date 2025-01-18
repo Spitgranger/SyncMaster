@@ -782,6 +782,141 @@ N/A
 
 N/A
 
+\section{MIS of User Management Module} \label{Module}
+
+\subsection{Module}
+
+User Management Module
+
+\subsection{Uses}
+
+boto3 (AWS SDK for Python), AWS Cognito (AWS Cloud Service for user
+authentication), Database Interaction Module, Routing Module
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+N/A
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{2.5cm} >{\raggedright}p{3.5cm}
+    >{\raggedright}p{3.5cm} p{5cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+    \hline
+    createUser & \textbf{email:} string \newline
+    \textbf{details:} map[string $\rightarrow$ any] & \textbf{userID:} string &
+    \textbf{DuplicateUser:} Existing email address used \\
+    \hline
+    editUser & \textbf{userID:} string \newline
+    \textbf{edit:} map[string $\rightarrow$ any] & boolean &
+    \textbf{UserNotFound:}
+    userID not in database \\
+    \hline
+    deleteUser & \textbf{userID:} string & boolean & \textbf{UserNotFound:}
+    userID not in database \\
+    \hline
+    getUser & \textbf{userID:} string & map[string $\rightarrow$ any]
+    & \textbf{UserNotFound:}
+    userID not in database \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+\begin{center}
+  \begin{tabular}{p{4cm} p{12cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    Database & Set of registered users, can be represented as set of
+    items $\{i_0, i_1, ..., i_n\}$, where $i_k:
+    map[string \rightarrow  any], k\in[0,n]$ \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Environment Variables}
+
+\begin{center}
+  \begin{tabular}{p{6cm} p{10cm}}
+    \hline
+    \textbf{Name} & \textbf{Description} \\
+    \hline
+    LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function runs, it
+    has an AWS IAM role attached to it, which it uses when running.
+    This role gives the function the necessary permissions to execute
+    without issue. \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsubsection{Assumptions}
+
+LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to
+execute the lambda's required tasks.
+
+\subsubsection{Access Routine Semantics}
+
+\noindent createUser(email: email, details: details):
+\begin{itemize}
+  \item transition: $Database \rightarrow Database \cup
+    \{User_{new}\}$, if $email \notin Database$, where $User_{new} =
+    \{userID, email, password, \ldots\}$.
+  \item output: $\{userID, password\}$, where $userID$ is uniquely
+    generated for the email and $password$ is a temporary password
+    generated during account creation
+  \item exception: DuplicateUser
+\end{itemize}
+
+\noindent editUser(userID: userID, edit: changes):
+\begin{itemize}
+  \item transition: $Database \rightarrow Database \cup
+    \{User_{edited}\}$, if $(userID \in Database) \wedge
+    (changes.email \notin Database)$, where $User_{edited} =
+    \{userID, changes\}$
+  \item output: true if transition successful, false otherwise.
+  \item exception: UserNotFound
+\end{itemize}
+
+\noindent deleteUser(userID: userID):
+\begin{itemize}
+  \item transition: $Database \rightarrow Database - \{User\}$, if
+    $\exists(\{User\} \in Database \wedge User.userID == userID)$.
+  \item output: true if transition successful, false otherwise.
+  \item exception: UserNotFound
+\end{itemize}
+
+\noindent getUser(userID: userID):
+\begin{itemize}
+  \item output: $\{User\}$, if $\exists(\{User\} \in Database \wedge
+    User.userID == userID)$.
+  \item exception: UserNotFound
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\begin{center}
+  \begin{tabular}{>{\raggedright}p{3cm} >{\raggedright}p{4cm}
+    >{\raggedright}p{4cm} p{4.5cm}}
+    \hline
+    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Description} \\
+    \hline
+    generateUserID & \textbf{email:} string & \textbf{authToken:} string &
+    Generates unique userID for each email. \\
+    \hline
+    generatePassword & \textbf{password:} string & \textbf{authToken:} string &
+    Creates one-time password for new users.\\
+    \hline
+  \end{tabular}
+\end{center}
+
 \section{MIS of API Integration Module} \label{Module}
 
 \subsection{Module}
