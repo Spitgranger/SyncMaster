@@ -519,7 +519,6 @@ N/A
 
 \section{MIS of Analytics and Reporting Module} \label{Module}
 
-
 \subsection{Module}
 Analytics and Reporting Module
 
@@ -536,40 +535,40 @@ N/A
     \hline
     \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
     \hline
-    
-    GetErrorsReport & \textbf{FromDatetime:} string \newline 
-    \textbf{ToDatetime:} string& 
-    sequence[map[string $\rightarrow$ any]] &     
+
+    GetErrorsReport & \textbf{FromDatetime:} string \newline
+    \textbf{ToDatetime:} string&
+    sequence[map[string $\rightarrow$ any]] &
     \textbf{ExternalServiceFailure:} An internal error from AWS
     \newline \textbf{ExecutionError:} Any error that occurs while the
     function is running \\
     \hline
-    GetResourceUsageReport & \textbf{FromDatetime:} string \newline 
+    GetResourceUsageReport & \textbf{FromDatetime:} string \newline
     \textbf{ToDatetime:} string \newline
-     \textbf{Resources:} \newline sequence[resource]& 
-    sequence[map[string $\rightarrow$ any]] &     
+    \textbf{Resources:} \newline sequence[resource]&
+    sequence[map[string $\rightarrow$ any]] &
     \textbf{ExternalServiceFailure:} An internal error from AWS
     \newline \textbf{ExecutionError:} Any error that occurs while the
     function is running \\
     \hline
-    GetUserActivityReport & \textbf{FromDatetime:} string \newline 
+    GetUserActivityReport & \textbf{FromDatetime:} string \newline
     \textbf{ToDatetime:} string \newline
-     \textbf{UserID:} string& 
-    sequence[map[string $\rightarrow$ any]] &     
+    \textbf{UserID:} string&
+    sequence[map[string $\rightarrow$ any]] &
     \textbf{ExternalServiceFailure:} An internal error from AWS
     \newline \textbf{ExecutionError:} Any error that occurs while the
     function is running \\
     \hline
-    GetSystemHealthReport & \textbf{FromDatetime:} string \newline 
-    \textbf{ToDatetime:} string & 
-    sequence[map[string $\rightarrow$ any]] &     
+    GetSystemHealthReport & \textbf{FromDatetime:} string \newline
+    \textbf{ToDatetime:} string &
+    sequence[map[string $\rightarrow$ any]] &
     \textbf{ExternalServiceFailure:} An internal error from AWS
     \newline \textbf{ExecutionError:} Any error that occurs while the
     function is running \\
     \hline
-    GetLoginAttemptsReport & \textbf{FromDatetime:} string \newline 
-    \textbf{ToDatetime:} string & 
-    sequence[map[string $\rightarrow$ any]] &     
+    GetLoginAttemptsReport & \textbf{FromDatetime:} string \newline
+    \textbf{ToDatetime:} string &
+    sequence[map[string $\rightarrow$ any]] &
     \textbf{ExternalServiceFailure:} An internal error from AWS
     \newline \textbf{ExecutionError:} Any error that occurs while the
     function is running \\
