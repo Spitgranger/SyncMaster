@@ -1,13 +1,13 @@
 from typing import Optional
 
-from .db_base import DatabaseBaseModel, KeySchema
+from .db_base import DBItemModel, KeySchema
 
 
-class DBJob(DatabaseBaseModel):
+class DBJob(DBItemModel):
     user_id: str
     job_type: str
     work_order: str
-    description: str | None = None
+    description: Optional[str] = None
 
     @staticmethod
     def key_schema(gsi: Optional[str] = None) -> KeySchema:

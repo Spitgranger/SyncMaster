@@ -13,7 +13,7 @@ class KeySchema(TypedDict):
     range: NotRequired[str]
 
 
-class DatabaseBaseModel(BaseModel, ABC):
+class DBItemModel(BaseModel, ABC):
     model_config = ConfigDict(
         frozen=True,
         extra="ignore",

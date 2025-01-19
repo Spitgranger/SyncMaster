@@ -2,17 +2,15 @@
 Module allowing interaction with a DynamoDB table, for getting, updating, and deleting items
 """
 
-from typing import Generic, Optional, Type, TypeVar
+from typing import Optional, Type
 
 import boto3
 from boto3.dynamodb.conditions import ConditionBase
 
-from ..models.db.db_base import DatabaseBaseModel
-
-T = TypeVar("DatabaseBaseModel", bound=DatabaseBaseModel)
+from ..models.db.db_base import DBItemModel
 
 
-class DBTable(Generic[T]):
+class DBTable[T: DBItemModel]:
     """
     Abstraction around an DynamoDB Table providing a limited selection of operations on a given table.
     """
