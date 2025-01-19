@@ -13,8 +13,8 @@ class DBJob(DatabaseBaseModel):
     def key_schema(gsi: Optional[str] = None) -> KeySchema:
         match gsi:
             case None:
-                return KeySchema(primary_key="WorkOrder")
+                return KeySchema(hash="WorkOrder")
             case "ListGSI":
-                return KeySchema(primary_key="UserId", secondary_key="JobType")
+                return KeySchema(hash="UserId", range="JobType")
             case _:
                 raise TypeError(f"No GSI [{gsi}] for this model")

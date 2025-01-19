@@ -9,8 +9,8 @@ from pydantic.config import ConfigDict
 
 
 class KeySchema(TypedDict):
-    primary_key: str
-    secondary_key: NotRequired[str]
+    hash: str
+    range: NotRequired[str]
 
 
 class DatabaseBaseModel(BaseModel, ABC):
@@ -18,6 +18,7 @@ class DatabaseBaseModel(BaseModel, ABC):
         frozen=True,
         extra="ignore",
         loc_by_alias=True,
+        populate_by_name= True,
         use_enum_values=True,
         alias_generator=to_pascal,
     )
@@ -28,14 +29,15 @@ class DatabaseBaseModel(BaseModel, ABC):
     def model_dump_json(self, *args, **kwargs):
         return super().model_dump_json(*args, **kwargs, exclude_none=True, by_alias=True)
 
-    @abstractmethod
+    
     @staticmethod
+    @abstractmethod
     def key_schema(gsi: Optional[str] = None) -> KeySchema: ...
 
     @classmethod
     def create_key(cls, gsi: Optional[str] = None, **kwargs) -> dict:
         key_schema = cls.key_schema(gsi=gsi)
-        key = {key_schema["primary_key"]: kwargs[to_snake(key_schema["primary_key"])]}
-        if secondary_key_name := key_schema.get("secondary_key"):
-            key[secondary_key_name] = kwargs[to_snake(secondary_key_name)]
+        key = {key_schema["hash"]: kwargs[to_snake(key_schema["hash"])]}
+        if range_key_name := key_schema.get("range"):
+            key[range_key_name] = kwargs[to_snake(range_key_name)]
         return key

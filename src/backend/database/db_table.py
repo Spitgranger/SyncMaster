@@ -2,34 +2,35 @@
 Module allowing interaction with a DynamoDB table, for getting, updating, and deleting items
 """
 
+from typing import Generic, Optional, Type, TypeVar
+
 import boto3
+from boto3.dynamodb.conditions import ConditionBase
 
-from ..environment import DOCUMENT_STORAGE_BUCKET_READ_ROLE, DOCUMENT_STORAGE_BUCKET_WRITE_ROLE
+from ..models.db.db_base import DatabaseBaseModel
+
+T = TypeVar("DatabaseBaseModel", bound=DatabaseBaseModel)
 
 
-class DBTable:
+class DBTable(Generic[T]):
     """
     Abstraction around an DynamoDB Table providing a limited selection of operations on a given table.
     """
 
-    def __init__(self, table_name: str, access: str):
+    def __init__(self, table_name: str, role: str, item_schema: Type[T]):
         """
         Initialize a connection to a DynamoDB Table
 
         :param table_name: The name of the underlying DynamoDB Table in AWS
         :param access: The level of permission desired for this connection
-        :return: The S3 Bucket object
-        :raises ExternalServiceException: Unable to connect to the S3 Service
+        :return: The DynamoDB Table object
+        :raises ExternalServiceException: Unable to connect to the DynamoDB Service
         :raises IAMPermissionError: Unable to assume IAM role for required access level
         """
         self.name = table_name
-        self.access = access
+        self.item_schema = item_schema
 
-        role_to_assume = None
-        if access == "read":
-            role_to_assume = DOCUMENT_STORAGE_BUCKET_READ_ROLE
-        elif access == "write":
-            role_to_assume = DOCUMENT_STORAGE_BUCKET_WRITE_ROLE
+        role_to_assume = role
 
         assumed_role_object: dict = boto3.client("sts").assume_role(
             RoleArn=role_to_assume, RoleSessionName="SyncMasterRoleSession"
@@ -48,110 +49,74 @@ class DBTable:
     def get(
         self,
         key: dict,
-    ) -> str:
+    ) -> T:
         """
-        Initiates a multipart upload and creates an upload ID
+        get an item from the database with the given key
 
-        :param key: The S3 key to initiate the multipart upload for
-        :return: The upload ID of the new multipart upload
-        :raises ExternalServiceException: Unexpected error occurs in S3
-        :raises PermissionException: Assumed role does not have permission to start a multipart
-            upload, likely due to bucket being initialized with only read permissions
+        :param key: The key of the item in the database
+        :return: The item with the given key stored in the database
+        :raises ExternalServiceException: Unexpected error occurs in AWS
+        :raises ItemNotFound: The item with the given key could not be found in the database
         """
-        response: dict = self._client.create_multipart_upload(Bucket=self.name, Key=key)
-        upload_id: str = response["UploadId"]
-        return upload_id
+        response: dict = self._table.get_item(TableName=self.name, Key=key)
+        return self.item_schema.model_validate(response["Item"])
 
-    def create_upload_part_url(self, key: str, upload_id: str, part_number: int) -> str:
+    def put(self, item: T, condition_expression: Optional[ConditionBase] = None) -> T:
         """
-        Creates a presigned URL for the UI to upload a part of the
-        initialized multipart upload to the S3 Bucket
+        Puts the given item into the DynamoDB Table
 
-        :param key: The S3 key that this upload is going to
-        :param upload_id: The id of the initialized multipart upload
-        :param part_number: The part number of the part being uploaded, indexing from 1-10,000
-        :return: The presigned url to upload the part to S3
-        :raises UploadNotFound: The multipart upload with the given id could not be found
-        :raises ExternalServiceException: Unexpected error occurs in S3
-        :raises PermissionException: Assumed role does not have permission to make an upload url,
-            likely due to bucket being initialized with only read permissions
+        :param item: The item to put into the DynamoDB Table
+        :param condition_expression: The condition that must be met before the item can be put into the table
+        :return: The newly added item
+        :raises ConditionCheckFailed: The provided condition was not met
+        :raises ExternalServiceException: Unexpected error occurs in AWS
+        :raises PermissionException: Assumed role does not have permission to make an put and item into the DB,
+            likely due to table being initialized with only read permissions
         """
-        url: str = self._client.generate_presigned_url(
-            ClientMethod="upload_part",
-            Params={
-                "Bucket": self.name,
-                "Key": key,
-                "UploadId": upload_id,
-                "PartNumber": part_number,
-            },
-        )
-        return url
+        kwargs = {"Item": item.model_dump()}
+        if condition_expression:
+            kwargs["ConditionExpression"] = condition_expression
 
-    def complete_multipart_upload(self, key: str, upload_id: str, parts: list[dict]) -> str:
+        self._table.put_item(**kwargs)
+        return item
+
+    def delete(self, key: dict, condition_expression: Optional[ConditionBase] = None) -> None:
         """
         Completes an existing multipart upload
 
-        :param key: The S3 key that this upload is going to
-        :param upload_id: The id of the initialized multipart upload
-        :param parts: A list of dictionaries of containing metadata of the completed upload parts.
-            The dictionaries should be formatted as:
-            ```
-            {
-                "ETag": str
-                "PartNumber": int
-            }
-            ```
-        :return: The ETag of the new S3 Object
-        :raises UploadNotFound: The multipart upload with the given id could not be found
-        :raises ExternalServiceException: Unexpected error occurs in S3
-        :raises PermissionException: Assumed role does not have permission
-            to complete a multipart upload, likely due to bucket being
-            initialized with only read permissions
+        :param key: The key of the item to delete in the database
+        :param condition_expression: The condition that must be met before the item can be deleted from the table
+        :raises ConditionCheckFailed: The provided condition was not met
+        :raises ExternalServiceException: Unexpected error occurs in AWS
+        :raises PermissionException: Assumed role does not have permission delete an item,
+            likely due to the table being initialized with only read permissions
         """
-        response: dict = self._client.complete_multipart_upload(
-            Bucket=self.name, Key=key, MultipartUpload={"Parts": parts}, UploadId=upload_id
-        )
-        e_tag: str = response["ETag"]
-        return e_tag
+        kwargs = {"Key": key}
+        if condition_expression:
+            kwargs["ConditionExpression"] = condition_expression
+        self._table.delete_item(**kwargs)
 
-    def abort_multipart_upload(self, key: str, upload_id: str) -> None:
+    def query(
+        self,
+        gsi: Optional[str] = None,
+        key_condition_expression: Optional[ConditionBase] = None,
+        filter_expression: Optional[ConditionBase] = None,
+    ) -> list[T]:
         """
-        Aborts an existing multipart upload
+        Queries the database based on the given list of criterion
 
-        :param key: The S3 key that this upload is going to
-        :param upload_id: The id of the initialized multipart upload
-        :raises UploadNotFound: The multipart upload with the given id could not be found
-        :raises ExternalServiceException: Unexpected error occurs in S3
-        :raises PermissionException: Assumed role does not have permission
-            to abort a multipart upload, likely due to bucket being
-            initialized with only read permissions
-        """
-        self._client.abort_multipart_upload(Bucket=self.name, Key=key, UploadId=upload_id)
-
-    def create_get_url(self, key: str, e_tag: str) -> str:
-        """
-        Creates a presigned get url to get an object from S3
-
-        :param key: The key of the object to get from S3
-        :param e_tag: The e_tag to match when getting the object
-        :return: The get object presigned url
+        :param gsi: The index being used to query the database, the key attributes of the items change depending on GSI
+        :param key_condition_expression: A condition placed on the key attributes, only items meeting this condition are returned
+        :param filter_expression: A condition placed on any attributes, only items meeting this condition are returned
         :raises ExternalServiceException: Unexpected error occurs in S3
         """
-        url = self._client.generate_presigned_url(
-            ClientMethod="get_object", Params={"Bucket": self.name, "Key": key, "IfMatch": e_tag}
-        )
-        return url
-
-    def delete(self, key: str, e_tag: str) -> None:
-        """
-        Delete an object from S3
-
-        :param key: The key of the S3 Object to delete
-        :param e_tag: The ETag to match against the object to delete
-        :raises FileNotFound: The S3 Object with the given key, and ETag could not be found
-        :raises ExternalServiceException: Unexpected error occurs in S3
-        :raises PermissionException: Assumed role does not have permission
-            to delete a file, likely due to bucket being
-            initialized with only read permissions
-        """
-        self._client.delete_object(Bucket=self.name, Key=key, IfMatch=e_tag)
+        kwargs = dict()
+        if gsi:
+            kwargs["IndexName"] = gsi
+        if key_condition_expression:
+            kwargs["KeyConditionExpression"] = key_condition_expression
+        if filter_expression:
+            kwargs["FilterExpression"] = filter_expression
+        response: dict = self._table.query(**kwargs)
+        items: list[dict] = response["Items"] if response["Items"] else list()
+        return [self.item_schema.model_validate(item) for item in items]

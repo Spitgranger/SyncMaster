@@ -1,2 +1,6 @@
 TEST_S3_FILE_KEY = "hello.txt"
 TEST_S3_FILE_CONTENT = "Hello World"
+TEST_WORK_ORDER = "145ER09"
+TEST_USER_ID = "b15b955a-0ffc-4890-9025-49f37bab09f9"
+TEST_JOB_TYPE = "Plumbing"
+TEST_JOB_DESCRIPTION = "This is a job"
