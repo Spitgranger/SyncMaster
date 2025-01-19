@@ -4,7 +4,6 @@ from abc import ABC, abstractmethod
 from typing import NotRequired, Optional, TypedDict
 
 from pydantic import BaseModel
-from pydantic.alias_generators import to_pascal, to_snake
 from pydantic.config import ConfigDict
 
 
@@ -19,8 +18,7 @@ class DBItemModel(BaseModel, ABC):
         extra="ignore",
         loc_by_alias=True,
         populate_by_name= True,
-        use_enum_values=True,
-        alias_generator=to_pascal,
+        use_enum_values=True
     )
 
     def model_dump(self, *args, **kwargs):
@@ -37,7 +35,7 @@ class DBItemModel(BaseModel, ABC):
     @classmethod
     def create_key(cls, gsi: Optional[str] = None, **kwargs) -> dict:
         key_schema = cls.key_schema(gsi=gsi)
-        key = {key_schema["hash"]: kwargs[to_snake(key_schema["hash"])]}
+        key = {key_schema["hash"]: kwargs[key_schema["hash"]]}
         if range_key_name := key_schema.get("range"):
-            key[range_key_name] = kwargs[to_snake(range_key_name)]
+            key[range_key_name] = kwargs[range_key_name]
         return key
