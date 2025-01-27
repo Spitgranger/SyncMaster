@@ -60,7 +60,8 @@ Resources:
   ApiFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: handler.lambda_handler
+      Handler: service.handler.lambda_handler
+      Role: !GetAtt 'LambdaExecutionRole.Arn'
       CodeUri: ../src/backend
       Description: API handler function
       Events:
