@@ -6,6 +6,8 @@ from typing import NotRequired, Optional, TypedDict
 from pydantic import BaseModel
 from pydantic.config import ConfigDict
 
+from datetime import datetime
+
 
 class KeySchema(TypedDict):
     hash: str
@@ -18,8 +20,11 @@ class DBItemModel(BaseModel, ABC):
         extra="ignore",
         loc_by_alias=True,
         populate_by_name= True,
-        use_enum_values=True
+        use_enum_values=True,
+        ser_json_timedelta="float"
     )
+
+    last_modified: datetime
 
     def model_dump(self, *args, **kwargs):
         return super().model_dump(*args, **kwargs, exclude_none=True, by_alias=True, mode="json")
