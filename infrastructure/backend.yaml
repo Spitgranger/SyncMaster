@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: SAM Template for SyncMaster Backend
+
+Parameters:
+  Name:
+    Type: String
+    Description: >-
+      AWS Resources frequently have a name tag, to help identify the resource.
+      Use this parameter as the name tag to help identify it as belonging to
+      this template.
+
+  Env:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - test
+      - prod
+    Description: >-
+      Deployment environment of the stack
+
+Globals:
+  Function:
+    Timeout: 15
+    MemorySize: 128
+    Runtime: python3.13
+    Architectures:
+      - x86_64
+
+Resources:
+  API:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub ${Name}
+      EndpointConfiguration: REGIONAL
+      StageName: !Sub ${Env}
+      TracingEnabled: False
+      Cors:
+        AllowOrigin: "'*'"
+        AllowHeaders: "'Content-Type,Authorization,X-Amz-Date'"
+        MaxAge: 600
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Sid: AllowLambdaServiceToAssumeRole
+            Principal:
+              Service:
+                - !Sub 'lambda.${AWS::URLSuffix}'
+            Action:
+              - sts:AssumeRole
+
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handler.lambda_handler
+      CodeUri: ../src/backend
+      Description: API handler function
+      Events:
+        AnyApiEvent:
+          Type: Api
+          Properties:
+            # NOTE: this is a catch-all rule to simplify rev0 development.
+            # explicit routes and methods are recommended once we move to Rev1
+            Path: /{proxy+} # Send requests on any path to the lambda function
+            Method: ANY # Send requests using any http method to the lambda function
+            RestApiId: !Ref API
+
+Outputs:
+    SyncMasterApi:
+        Description: "API Gateway Base Path for SyncMaster backend API"
+        Value: !Sub "https://${API}.execute-api.${AWS::Region}.amazonaws.com/${Env}/"
