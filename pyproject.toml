@@ -1,0 +1,63 @@
+[project]
+name = "capstone"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aws-lambda-powertools==3.4.0",
+    "boto3==1.35.90",
+    "botocore==1.35.90",
+    "pydantic==2.10.4",
+]
+
+[dependency-groups]
+dev = [
+    "bandit>=1.8.0",
+    "cfn-lint==1.22.2",
+    "coverage==7.6.10",
+    "coverage-threshold==0.5.0",
+    "moto==5.0.25",
+    "mypy==1.14.1",
+    "pylint==3.3.3",
+    "pytest==8.3.4",
+    "pytest-cov==6.0.0",
+    "pytest-env==1.1.5",
+    "pytest-socket==0.7.0",
+    "ruff==0.8.4",
+]
+
+[tool.pytest.ini_options]
+pythonpath = "src"
+addopts = "--disable-socket --cov src/backend -vv"
+testpaths = "test/backend/unit"
+env = [
+    "LOG_LEVEL=DEBUG"
+]
+
+[tool.coverage.run]
+branch = true
+
+[coverage-threshold]
+line_coverage_min = 95
+branch_coverage_min = 90
+
+[tool.ruff]
+src = ["src/backend"]
+line-length = 100
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+docstring-code-line-length = 80
+
+[tool.ruff.lint]
+select = ["I"]
+
+[tool.pylint.'MAIN']
+load-plugins="pylint.extensions.docparams"
+accept-no-param-doc="no"
+
+[tool.pylint.'DOCSTRING']
+default-docstring-type="sphinx"
