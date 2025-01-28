@@ -276,7 +276,8 @@ N/A
 \begin{enumerate} [{C-SCH}1.]
   \item \sout{A requirement is to integrate with the Infor EAM system the city intends
     on using however, this system will not be available until
-    February 2025, so no testing can be done on this system until then.}
+    February 2025, so no testing can be done on this system until then.} 
+    \textcolor{red}{Removing as this software is not yet implemented and is proprietary.}
 
   \item The project deadline is April 2, 2025.
 \end{enumerate}
@@ -615,8 +616,8 @@ N/A.
 \subsection{Formal Definitions}
 \begin{itemize}
   \item Let \(U = \{u_1, u_2, \cdots, u_i\}\) be the set of users in the system.
-  \item Let \(R = \{r_1, r_2, \cdots, r_r\}\) be the set of roles (e.g. manager,
-    contractor, subcontractor).
+  \item Let \(R = \{r_1, r_2, \cdots, r_r\}\) be the set of roles (e.g. admin,
+    contractor, employee).
   \item Let \(A = \{a_1, a_2, \cdots, a_s\}\) be the set of actions (e.g.
     upload, authenticate, sign, view).
   \item Let \(C = \{c_1, c_2, \cdots, c_t\}\) be the set of compliance
@@ -691,11 +692,12 @@ N/A.
       reflected in the corresponding Sharepoint document, and any
     changes to the document in Sharepoint must be reflected in this system.}
   \item The system should have 3 types of users: Contractor, Employee, and Admin. 
-    Only Admin users should be able to change
+    Only Admin users can change
     access permissions of other users and have read and write
     accesses to all documents in the system. Contractors and Employee
-    users should only have read access to documents and be able to
-    acknowledge documents. See (1) in \textbf{Section 9.2 Formal Expressions}.
+    users only have read access to documents. Employees have read-only access from the manager portal
+    and can't view contractor logs. Contractor station access and file uploads are logged.
+    See (1) in \textbf{Section 9.2 Formal Expressions}.
   \item The current site, work order number, job details, and entry/exit time of
     contractors should be visible to admin users in the system.
   \item The system should implement a form of geolocation verification before
@@ -845,8 +847,8 @@ N/A
 
 \subsection{Longevity Requirements}
 \begin{enumerate}[{PR-LR}1.]
-  \item The system should have a scalable design to easily allow the
-    introduction of new features
+  \item \sout{The system should have a scalable design to easily allow the
+    introduction of new features} \textcolor{red}{Removing as it's a constraint.}
 \end{enumerate}
 
 \newpage{}
@@ -900,9 +902,11 @@ N/A
   \item The system should have rigourous unit testing, line coverage should be
     $\ge$ 95\%, branch coverage should be $\ge$ 90\%.
   \item All core functionalities of the system (i.e. Functional Requirements),
-    should have both automated end-to-end and unit testing corresponding to them
+    should have automated end-to-end testing.
   \item The project must be able to be maintained by its users, as original
     developers will not be maintaining it after April 2, 2025.
+  \item All core functionalities of the system (i.e. Functional Requirements),
+    should have automated unit testing.
 \end{enumerate}
 \subsection{Supportability Requirements}
 \begin{enumerate} [{MS-SUP}1.]
