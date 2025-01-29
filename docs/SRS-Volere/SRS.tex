@@ -801,11 +801,11 @@ N/A
 \section{Performance Requirements}
 \subsection{Speed and Latency Requirements}
 \begin{enumerate}[{PR-SL}1.]
-  \item Average time for retrieving the documents should not exceed 2 seconds during ordinary use cases
+  \item Average time for retrieving the documents should not exceed 2 seconds to minimize user frustration
   \item \sout{Synching documents with SharePoint should be completed in
     less than 7 seconds for file sizes up to 15 MB}
   \item The portal's user interface should be responsive and should
-    react accordingly with the user interactions during ordinary use cases
+    react accordingly with the user interactions to minimize user frustration
 \end{enumerate}
 \subsection{Safety-Critical Requirements}
 \begin{enumerate}[{PR-SC}1.]
@@ -816,9 +816,10 @@ N/A
 \subsection{Precision or Accuracy Requirements}
 \begin{enumerate}[{PR-PA}1.]
   \item Search queries related to documents or user data should
-    return at least 95\% relevant results
+    return at least 95\% relevant results as it strikes a balance in being confident in results 
+    while allowing a reasonable margin for error
   \item A data integrity of 99.99\% should be maintained to ensure no
-    corruption or data loss during upload or retrieval
+    corruption or data loss during upload or retrieval as data integrity is of high importance to maintain a single source of truth
 \end{enumerate}
 
 \subsection{Robustness or Fault-Tolerance Requirements}
