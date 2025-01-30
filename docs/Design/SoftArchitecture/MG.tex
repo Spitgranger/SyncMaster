@@ -46,8 +46,8 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
   \toprule {\bf Date} & {\bf Version} & {\bf Notes} \\
   \midrule
-  Date 1              & 1.0           & Notes       \\
-  Date 2              & 1.1           & Notes       \\
+  January 17, 2024              & 1.0           & Initial version of Module
+  Guide      \\
   \bottomrule
 \end{tabularx}
 
@@ -237,7 +237,7 @@ actually be implemented.
   \item [\refstepcounter{mnum} \mthemnum \label{mAI}:] API Integration Module
   \item [\refstepcounter{mnum} \mthemnum \label{mDI}:] Database
     Interaction Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mBS}:] Blob Storage Interation
+  \item [\refstepcounter{mnum} \mthemnum \label{mBS}:] File Storage Interation
     Module
   \item [\refstepcounter{mnum} \mthemnum \label{mRR}:] Routing Module
   \item [\refstepcounter{mnum} \mthemnum \label{mFC}:] Function Compute Module
@@ -272,7 +272,7 @@ actually be implemented.
     Integration Module}
     \\
     & Database Interaction Module     \\
-    & Blob Storage Interaction Module \\
+    & File Storage Interaction Module \\
     & Request Routing Module          \\
     & Function Compute Module         \\
     \bottomrule
@@ -339,7 +339,7 @@ to be implemented.
   \item[Secrets:] Records to add, remove, or update in a database.
   \item[Services:] Module responsible allowing read and write access
     to a database.
-  \item[Implemented By:] boto3, AWS DynamoDB
+  \item[Implemented By:] boto3, AWS DynamoDB, \progname
   \item[Type of Module:] Library
 \end{description}
 
@@ -349,7 +349,7 @@ to be implemented.
   \item[Secrets:] File to add, remove, or update in the file management system.
   \item[Services:] Module responsible allowing read and write access
     to the file management system.
-  \item[Implemented By:] boto3, AWS S3
+  \item[Implemented By:] boto3, AWS S3, \progname
   \item[Type of Module:] Library
 \end{description}
 
@@ -418,17 +418,16 @@ to be implemented.
 \subsubsection{Audit and Compliance Module (\mref{mAC})}
 
 \begin{description}
-  \item[Secrets:] Data logged from the Logging Module.
-  \item[Services:] Allows admin users to see entry/exit times of
-    contracters to ensure that they were on site to do their job.
+  \item[Secrets:] Data obtained from the Job Management and Logging Module.
+  \item[Services:] Allows admin users users to retrieve data regarding
+    contractors in the frontend
   \item[Implemented By:] \progname
 \end{description}
 
 \subsubsection{Analytics and Reporting Module (\mref{mAR})}
 \begin{description}
-  \item[Secrets:] Data logged from the Logging Module.
-  \item[Services:] Allows export of the logged entry/exit times into
-    a excel spreadsheet.
+  \item[Secrets:] Data obtained from the Server Log.
+  \item[Services:] Retrieves server analytics and reports
   \item[Implemented By:] \progname
 \end{description}
 
@@ -436,7 +435,7 @@ to be implemented.
 \begin{description}
   \item[Secrets:] Requests for creating, updating, and deleting users.
   \item[Services:] Allows the management of users, by an admin user.
-  \item[Implemented By:] AWS Cognito
+  \item[Implemented By:] AWS Cognito, \progname
 \end{description}
 
 \subsubsection{Document Management Module (\mref{mDM})}
@@ -500,7 +499,7 @@ requirements and between the modules and the anticipated changes.
     \midrule
     \acref{acGps}                      & \mref{mLV} \\
     \acref{acLocationThreshod}         & \mref{mLV} \\
-    \acref{acAuthenticationMethods}    & \mref{mAC} \\
+    \acref{acAuthenticationMethods}    & \mref{mUA} \\
     \acref{acDocuments}                & \mref{mDM} \\
     \acref{acIntegration}              & \mref{mAI} \\
     \acref{acDataLogs}                 & \mref{mLM} \\
@@ -523,18 +522,9 @@ the modules. It can be seen that the graph is a directed acyclic graph
 system, and modules in the higher level of the hierarchy are essentially simpler
 because they use modules from the lower levels.
 
-\wss{The uses relation is not a data flow diagram.  In the code there will often
-  be an import statement in module A when it directly uses module B.  Module B
-  provides the services that module A needs.  The code for module A needs to be
-  able to see these services (hence the import statement).  Since the uses
-  relation is transitive, there is a use relation without an import, but the
-arrows in the diagram typically correspond to the presence of import statement.}
-
-\wss{If module A uses module B, the arrow is directed from A to B.}
-
 \begin{figure}[H]
   \centering
-  %\includegraphics[width=0.7\textwidth]{UsesHierarchy.png}
+  \includegraphics[width=0.7\textwidth]{userHierarchy.png}
   \caption{Use hierarchy among modules}
   \label{FigUH}
 \end{figure}
@@ -543,18 +533,78 @@ arrows in the diagram typically correspond to the presence of import statement.}
 
 \section{User Interfaces}
 
-\wss{Design of user interface for software and hardware.  Attach an appendix if
-needed. Drawings, Sketches, Figma}
+In this section, we have included our Figma design and prototype links for
+the user interfaces of the contractor and admin portals.
+The following are the links:\\
 
+Contractor Portal Figma Design Link:
+\href{https://www.figma.com/design/GahKyyNYENo3SdcAqpEoiX/SyncMaster?
+node-id=6036-164056}{Click here to view}\\
+
+Contractor Portal Figma Prototype Link:
+\href{https://www.figma.com/proto/GahKyyNYENo3SdcAqpEoiX/SyncMaster?
+  node-id=11645-13888&p=f&t=jk9BlgaZnti1meDo-1&scaling=scale-down&
+  content-scaling=fixed&page-id=6036\%3A164056&starting-point-node-
+id=11645\%3A13888}{Click here to view}\\
+
+Admin Portal Figma Design Link:
+\href{https://www.figma.com/design/GahKyyNYENo3SdcAqpEoiX/SyncMaster?
+node-id=11668-1623}{Click here to view}\\
+
+Admin Portal Figma Prototype Link:
+\href{https://www.figma.com/proto/GahKyyNYENo3SdcAqpEoiX/SyncMaster?
+  node-id=11668-1625&t=NMRH5A1EbNxP3k37-1&scaling=min-zoom&
+  content-scaling=fixed&page-id=11668\%3A1623&
+starting-point-node-id=11668\%3A1625}{Click here to view}\\
 \section{Design of Communication Protocols}
 
 N/A
 
 \section{Timeline}
-
-\wss{Schedule of tasks and who is responsible}
-
-\wss{You can point to GitHub if this information is included there}
+Below is an timeline for the implementation of modules in this
+project. The foundational modules User Authentication, User
+Management, Database Interaction, Logging, Routing, and API
+Integration will be developed first, as they form the core
+infrastructure on which the remaining modules will depend. Once these
+core modules are in place the other modules will be implemented. Task
+responsibilities and deadlines are tracked on GitHub using GitHub
+Issues \href{https://github.com/Spitgranger/SyncMaster/issues}{here}.
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|l|l|}
+    \hline
+    \textbf{Module} & \textbf{Responsible} & \textbf{Deadline} \\
+    \hline
+    M1: Audit and Compliance Module  & Akshit Gulia & January 31st, 2025 \\
+    \hline
+    M2: User Authentication Module    & Rafeed Iqbal & January 24th, 2025 \\
+    \hline
+    M3: Location Verification Module  & Rafeed Iqbal & January 31st, 2025 \\
+    \hline
+    M4: Logging Module                & Kyle D'Souza & January 24th, 2025 \\
+    \hline
+    M5: Analytics and Reporting Module & Akshit Gulia & January 31st, 2025 \\
+    \hline
+    M6: User Management Module        & Rafeed Iqbal & January 24th, 2025 \\
+    \hline
+    M7: Document Management Module    & Richard Fan & January 31st, 2025 \\
+    \hline
+    M8: Job Management Module         & Mitchell Hynes & January 31st, 2025 \\
+    \hline
+    M9: API Integration Module        & Richard Fan & January 24th, 2025 \\
+    \hline
+    M10: Database Interaction Module  & Kyle D'Souza & January 24th, 2025 \\
+    \hline
+    M11: File Storage Interaction Module & Kyle D'Souza & January 31st, 2025 \\
+    \hline
+    M12: Routing Module               & Kyle D'Souza & January 24th, 2025 \\
+    \hline
+    M13: Function Compute Module      & Kyle D'Souza & January 31st, 2025 \\
+    \hline
+  \end{tabular}
+  \caption{Schedule for module implementation}
+  \label{TblTimeline}
+\end{table}
 
 \bibliographystyle {plainnat}
 \bibliography{../../../refs/References}
