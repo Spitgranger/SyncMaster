@@ -2,7 +2,7 @@ from io import BytesIO
 
 import boto3
 import pytest
-from backend.environment import DOCUMENT_STORAGE_BUCKET_NAME
+from backend.service.environment import DOCUMENT_STORAGE_BUCKET_NAME
 from moto import mock_aws
 
 from ..constants import TEST_S3_FILE_CONTENT, TEST_S3_FILE_KEY
