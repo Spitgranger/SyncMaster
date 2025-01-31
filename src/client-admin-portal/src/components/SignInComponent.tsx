@@ -35,7 +35,7 @@ const SignInComponent = () => {
         }}>
             <form onSubmit={() => { }}>
                 <Grid size={12} py={2}>
-                    <Typography variant='h5'>Log In</Typography>
+                    <Typography variant='h5'>Sign In</Typography>
                 </Grid>
                 <Grid size={12} container direction={'column'} spacing={2} py={2}>
                     <TextField
