@@ -57,6 +57,35 @@ Resources:
             Action:
               - sts:AssumeRole
 
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: SyncMasterUsers
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireUppercase: true
+          RequireLowercase: true
+          RequireNumbers: true
+      AutoVerifiedAttributes:
+        - email
+      Schema:
+        - AttributeDataType: String
+          Name: company
+          Required: false
+        - AttributeDataType: String
+          Name: role
+          Required: false
+
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      AccessTokenValidity: 12
+      ClientName: SyncMasterAppClient
+      IdTokenValidity: 12
+      UserPoolId: !Ref UserPool
+      GenerateSecret: false
+
   ApiFunction:
     Type: AWS::Serverless::Function
     Properties:
