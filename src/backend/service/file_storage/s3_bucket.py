@@ -2,8 +2,14 @@
 Module allowing interaction with S3 Buckets for file uploads, deletion, and reading
 """
 
+from aws_lambda_powertools.logging import Logger
+from botocore.exceptions import ClientError
+
 from ..environment import DOCUMENT_STORAGE_BUCKET_READ_ROLE, DOCUMENT_STORAGE_BUCKET_WRITE_ROLE
+from ..exceptions import ExternalServiceException, PermissionException, ResourceNotFound
 from ..util import AWSAccessLevel, create_client_with_role
+
+logger = Logger()
 
 
 class S3Bucket:
@@ -36,18 +42,20 @@ class S3Bucket:
 
         :param key: The S3 key to create the upload url for
         :return: The presigned upload url
-        :raises ExternalServiceException: Unexpected error occurs in S3
         :raises PermissionException: Assumed role does not have permission to create an
-            upload url, likely due to bucket being initialized with only read permissions
+            upload url, due to bucket being initialized with only read permissions
         """
-        url = self._client.generate_presigned_url(
+        if self.access != AWSAccessLevel.WRITE:
+            # creating presigned URL's is a local operation, so will not get permission
+            # errors from S3, instead we try our best to do the permission check here
+            raise PermissionException("Creating an upload URL requires write access")
+        return self._client.generate_presigned_url(
             ClientMethod="put_object",
             Params={
                 "Bucket": self.name,
                 "Key": key,
             },
         )
-        return url
 
     def create_get_url(self, key: str, e_tag: str) -> str:
         """
@@ -56,12 +64,10 @@ class S3Bucket:
         :param key: The key of the object to get from S3
         :param e_tag: The e_tag to match when getting the object
         :return: The get object presigned url
-        :raises ExternalServiceException: Unexpected error occurs in S3
         """
-        url = self._client.generate_presigned_url(
+        return self._client.generate_presigned_url(
             ClientMethod="get_object", Params={"Bucket": self.name, "Key": key, "IfMatch": e_tag}
         )
-        return url
 
     def delete(self, key: str, e_tag: str) -> None:
         """
@@ -69,10 +75,23 @@ class S3Bucket:
 
         :param key: The key of the S3 Object to delete
         :param e_tag: The ETag to match against the object to delete
-        :raises FileNotFound: The S3 Object with the given key, and ETag could not be found
+        :raises ResourceNotFound: The S3 Object exists, but the given ETag does not,
+            This means that you are attempting to delete the wrong object
         :raises ExternalServiceException: Unexpected error occurs in S3
         :raises PermissionException: Assumed role does not have permission
-            to delete a file, likely due to bucket being
+            to delete a file, due to bucket being
             initialized with only read permissions
         """
-        self._client.delete_object(Bucket=self.name, Key=key, IfMatch=e_tag)
+        try:
+            return self._client.delete_object(Bucket=self.name, Key=key, IfMatch=e_tag)
+        except ClientError as err:
+            logger.exception(err)
+            if err.response["Error"]["Code"] == "AccessDenied":
+                raise PermissionException(
+                    "Insufficient permissions to perform upload on the S3 Bucket"
+                ) from err
+            if err.response["Error"]["Code"] == "PreconditionFailed":
+                raise ResourceNotFound(
+                    resource_type="file", resource_id=str({"Key": key, "ETag": e_tag})
+                ) from err
+            raise ExternalServiceException("Unknown Error from AWS") from err

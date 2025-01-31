@@ -42,7 +42,7 @@ env = [
     "AWS_SESSION_TOKEN=testing",
     "AWS_DEFAULT_REGION=us-east-1",
     "DOCUMENT_STORAGE_BUCKET_NAME=test_document_bucket",
-    "DOCUMENT_STORAGE_BUCKET_READ_ROLE=arn:aws:iam::123456789012:role/document_s3_write_role",
+    "DOCUMENT_STORAGE_BUCKET_READ_ROLE=arn:aws:iam::123456789012:role/document_s3_read_role",
     "DOCUMENT_STORAGE_BUCKET_WRITE_ROLE=arn:aws:iam::123456789012:role/document_s3_write_role"
 ]
 
@@ -75,6 +75,7 @@ default-docstring-type="sphinx"
 
 [[tool.mypy.overrides]]
 module = [
-    "boto3",
+    "boto3.*",
+    "botocore.*",
 ]
 ignore_missing_imports = true
