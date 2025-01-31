@@ -1,18 +1,18 @@
 import React from 'react'
 import Grid from '@mui/material/Grid2';
 import Image from 'next/image';
-import hamiltonLogo from "../../public/hamiltonCityLogo.svg";
+import hamiltonLogo from "../../../public/hamiltonCityLogo.svg";
 import { Typography } from '@mui/material';
 
-const NonNavLogoComponent = () => {
+const NonNavbarLogo = () => {
   return (
     <Grid container direction={"column"} spacing={1}
       sx={{
         width: "100%",
         maxWidth: "552px",
         justifyContent: "center",
-        alignItems:"center",
-        pb:3
+        alignItems: "center",
+        pb: 3
       }}
     >
       <Grid size={12} textAlign={"center"}>
@@ -25,4 +25,4 @@ const NonNavLogoComponent = () => {
   )
 }
 
-export default NonNavLogoComponent
+export default NonNavbarLogo

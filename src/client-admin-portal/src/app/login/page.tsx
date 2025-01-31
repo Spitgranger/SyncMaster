@@ -1,6 +1,6 @@
 'use client'
-import NonNavLogoComponent from '@/components/nonNavLogoComponent'
-import SignInComponent from '@/components/SignInComponent'
+import NonNavbarLogo from '@/components/NonNavbarLogo'
+import SignInForm from '@/components/SignInForm'
 import { Container } from '@mui/material'
 import React from 'react'
 
@@ -15,8 +15,8 @@ const LoginPage = () => {
                 py: 6,
                 overflowY: "auto"
             }}>
-            <NonNavLogoComponent />
-            <SignInComponent />
+            <NonNavbarLogo />
+            <SignInForm />
         </Container>
     )
 }
