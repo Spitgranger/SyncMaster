@@ -13,11 +13,11 @@ DOCUMENT_STORAGE_BUCKET_READ_ROLE = getenv("DOCUMENT_STORAGE_BUCKET_READ_ROLE", 
 DOCUMENT_STORAGE_BUCKET_WRITE_ROLE = getenv("DOCUMENT_STORAGE_BUCKET_WRITE_ROLE", "")
 # Role used for writing to the document storage bucket
 
-JOB_TABLE_NAME = getenv("JOB_TABLE_NAME", "")
-# Name of the table used to store job info
+TABLE_NAME = getenv("TABLE_NAME", "")
+# Name of the DB table used to store job info
 
-JOB_TABLE_READ_ROLE = getenv("JOB_TABLE_READ_ROLE", "")
-# Role used for reading from the job table
+TABLE_READ_ROLE = getenv("TABLE_READ_ROLE", "")
+# Role used for reading from the DB table
 
-JOB_TABLE_WRITE_ROLE = getenv("JOB_TABLE_WRITE_ROLE", "")
-# Role used for writing to the job table
+TABLE_WRITE_ROLE = getenv("TABLE_WRITE_ROLE", "")
+# Role used for writing to the DB table

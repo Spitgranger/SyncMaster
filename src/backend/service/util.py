@@ -57,3 +57,37 @@ def create_client_with_role(service_name: str, role: str):
         if err.response["Error"]["Code"] == "AccessDenied":
             raise PermissionException("Insufficient permissions to assume role") from err
         raise ExternalServiceException("Unknown Error from AWS") from err
+    
+
+@ttl_cache(maxsize=16, ttl=15 * 60)
+def create_table_with_role(table_name: str, role: str):
+    """
+    Creates a boto3 table resource, with the given role
+
+    :param table_name: The name of the table to create the table resource for
+    :param role: The role for this resource to assume
+    :raises PermissionException: The lambda does not have permission to assume
+        the provided role
+    :raises ExternalServiceException: Unable to connect to AWS
+    :return: The table resource for the given table name, with the provided credentials
+    """
+    try:
+        assumed_role_object: dict = boto3.client("sts").assume_role(
+            RoleArn=role, RoleSessionName="SyncMasterRoleSession", DurationSeconds=16 * 60
+        )
+
+        creds: dict = assumed_role_object["Credentials"]
+
+        resource = boto3.resource(
+            "dynamodb",
+            aws_access_key_id=creds["AccessKeyId"],
+            aws_secret_access_key=creds["SecretAccessKey"],
+            aws_session_token=creds["SessionToken"],
+        )
+
+        return resource.Table(table_name)
+    except ClientError as err:
+        logger.exception(err)
+        if err.response["Error"]["Code"] == "AccessDenied":
+            raise PermissionException("Insufficient permissions to assume role") from err
+        raise ExternalServiceException("Unknown Error from AWS") from err

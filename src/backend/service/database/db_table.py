@@ -2,12 +2,15 @@
 Module allowing interaction with a DynamoDB table, for getting, updating, and deleting items
 """
 
-from typing import Optional, Type
-
-import boto3
+from typing import Optional, Type, TypedDict
 from boto3.dynamodb.conditions import ConditionBase
 
 from ..models.db.db_base import DBItemModel
+from ..util import create_table_with_role
+
+class KeySchema(TypedDict):
+    pk: str
+    sk: str
 
 
 class DBTable[T: DBItemModel]:
@@ -28,25 +31,11 @@ class DBTable[T: DBItemModel]:
         self.name = table_name
         self.item_schema = item_schema
 
-        role_to_assume = role
-
-        assumed_role_object: dict = boto3.client("sts").assume_role(
-            RoleArn=role_to_assume, RoleSessionName="SyncMasterRoleSession"
-        )
-        self._creds: dict = assumed_role_object["Credentials"]
-
-        self._resource = boto3.resource(
-            "dynamodb",
-            aws_access_key_id=self._creds["AccessKeyId"],
-            aws_secret_access_key=self._creds["SecretAccessKey"],
-            aws_session_token=self._creds["SessionToken"],
-        )
-
-        self._table = self._resource.Table(table_name)
+        self._table = create_table_with_role(table_name=table_name, role=role)
 
     def get(
         self,
-        key: dict,
+        key: KeySchema,
     ) -> T:
         """
         get an item from the database with the given key
@@ -78,7 +67,7 @@ class DBTable[T: DBItemModel]:
         self._table.put_item(**kwargs)
         return item
 
-    def delete(self, key: dict, condition_expression: Optional[ConditionBase] = None) -> None:
+    def delete(self, key: KeySchema, condition_expression: Optional[ConditionBase] = None) -> None:
         """
         Completes an existing multipart upload
 

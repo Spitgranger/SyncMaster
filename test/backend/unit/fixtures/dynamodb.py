@@ -1,22 +1,23 @@
 import boto3
 import pytest
-from backend.environment import JOB_TABLE_NAME
+from backend.service.environment import TABLE_NAME
 from moto import mock_aws
 
-JOB_TABLE_SPEC = dict(
-    TableName=JOB_TABLE_NAME,
+TABLE_SPEC = dict(
+    TableName=TABLE_NAME,
     AttributeDefinitions=[
-        {"AttributeName": "work_order", "AttributeType": "S"},
-        {"AttributeName": "user_id", "AttributeType": "S"},
-        {"AttributeName": "job_type", "AttributeType": "S"},
+        {"AttributeName": "pk", "AttributeType": "S"},
+        {"AttributeName": "sk", "AttributeType": "S"},
+        {"AttributeName": "gsi_1_pk", "AttributeType": "S"},
+        {"AttributeName": "last_modified_time", "AttributeType": "S"},
     ],
-    KeySchema=[{"AttributeName": "work_order", "KeyType": "HASH"}],
+    KeySchema=[{"AttributeName": "pk", "KeyType": "HASH"}, {"AttributeName": "sk", "KeyType": "RANGE"}],
     GlobalSecondaryIndexes=[
         {
-            "IndexName": "ListGSI",
+            "IndexName": "GSI1",
             "KeySchema": [
-                {"AttributeName": "user_id", "KeyType": "HASH"},
-                {"AttributeName": "job_type", "KeyType": "RANGE"},
+                {"AttributeName": "gsi_1_pk", "KeyType": "HASH"},
+                {"AttributeName": "last_modified_time", "KeyType": "RANGE"},
             ],
             "Projection": {
                 "ProjectionType": "ALL"
@@ -28,16 +29,16 @@ JOB_TABLE_SPEC = dict(
 
 
 @pytest.fixture()
-def empty_job_database():
+def empty_database():
     with mock_aws():
         # setup
         resource = boto3.resource("dynamodb")
-        resource.create_table(**JOB_TABLE_SPEC)
-        resource.meta.client.get_waiter("table_exists").wait(TableName=JOB_TABLE_NAME)
-        yield resource.Table(JOB_TABLE_NAME)
+        resource.create_table(**TABLE_SPEC)
+        resource.meta.client.get_waiter("table_exists").wait(TableName=TABLE_NAME)
+        yield resource.Table(TABLE_NAME)
         # implicit teardown from closing mock_aws
 
 @pytest.fixture()
-def job_database_with_item(empty_job_database, db_job_all_attributes):
-    empty_job_database.put_item(Item=db_job_all_attributes.model_dump())
-    return empty_job_database, db_job_all_attributes
+def database_with_item(empty_database, db_document):
+    empty_database.put_item(Item=db_document.model_dump())
+    return empty_database, db_document

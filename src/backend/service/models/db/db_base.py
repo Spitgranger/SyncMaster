@@ -1,17 +1,12 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import NotRequired, Optional, TypedDict
+from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, computed_field
 from pydantic.config import ConfigDict
 
 from datetime import datetime
-
-
-class KeySchema(TypedDict):
-    hash: str
-    range: NotRequired[str]
 
 
 class DBItemModel(BaseModel, ABC):
@@ -21,26 +16,36 @@ class DBItemModel(BaseModel, ABC):
         loc_by_alias=True,
         populate_by_name= True,
         use_enum_values=True,
-        ser_json_timedelta="float"
     )
 
-    last_modified: datetime
+    last_modified_by: str
+    last_modified_time: datetime
 
     def model_dump(self, *args, **kwargs):
         return super().model_dump(*args, **kwargs, exclude_none=True, by_alias=True, mode="json")
 
     def model_dump_json(self, *args, **kwargs):
         return super().model_dump_json(*args, **kwargs, exclude_none=True, by_alias=True)
-
     
     @staticmethod
-    @abstractmethod
-    def key_schema(gsi: Optional[str] = None) -> KeySchema: ...
+    @property
+    def item_type() -> str: 
+        ...
 
-    @classmethod
-    def create_key(cls, gsi: Optional[str] = None, **kwargs) -> dict:
-        key_schema = cls.key_schema(gsi=gsi)
-        key = {key_schema["hash"]: kwargs[key_schema["hash"]]}
-        if range_key_name := key_schema.get("range"):
-            key[range_key_name] = kwargs[range_key_name]
-        return key
+
+    @abstractmethod
+    @computed_field
+    @property
+    def pk(self) -> str:
+        ...
+
+    @abstractmethod
+    @computed_field
+    @property
+    def sk(self) -> str:
+        ...
+
+    @computed_field
+    @property
+    def gsi_1_pk(self) -> str:
+        return f"{self.item_type}#{self.last_modified_by}"
