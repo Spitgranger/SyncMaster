@@ -8,6 +8,7 @@ dependencies = [
     "aws-lambda-powertools==3.4.0",
     "boto3==1.35.90",
     "botocore==1.35.90",
+    "cachetools==5.5.1",
     "pydantic==2.10.4",
 ]
 
@@ -26,6 +27,7 @@ dev = [
     "pytest-socket==0.7.0",
     "requests==2.32.3",
     "ruff==0.8.4",
+    "types-cachetools==5.5.*",
 ]
 
 [tool.pytest.ini_options]
@@ -40,7 +42,7 @@ env = [
     "AWS_SESSION_TOKEN=testing",
     "AWS_DEFAULT_REGION=us-east-1",
     "DOCUMENT_STORAGE_BUCKET_NAME=test_document_bucket",
-    "DOCUMENT_STORAGE_BUCKET_READ_ROLE=arn:aws:iam::123456789012:role/document_s3_write_role",
+    "DOCUMENT_STORAGE_BUCKET_READ_ROLE=arn:aws:iam::123456789012:role/document_s3_read_role",
     "DOCUMENT_STORAGE_BUCKET_WRITE_ROLE=arn:aws:iam::123456789012:role/document_s3_write_role",
     "JOB_TABLE_NAME=test_job_table",
     "JOB_TABLE_READ_ROLE=arn:aws:iam::123456789012:role/job_table_read_role",
@@ -76,6 +78,7 @@ default-docstring-type="sphinx"
 
 [[tool.mypy.overrides]]
 module = [
-    "boto3",
+    "boto3.*",
+    "botocore.*",
 ]
 ignore_missing_imports = true
