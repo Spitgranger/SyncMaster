@@ -88,7 +88,7 @@ class S3Bucket:
             logger.exception(err)
             if err.response["Error"]["Code"] == "AccessDenied":
                 raise PermissionException(
-                    "Insufficient permissions to perform upload on the S3 Bucket"
+                    "Insufficient permissions to perform delete on the S3 Bucket"
                 ) from err
             if err.response["Error"]["Code"] == "PreconditionFailed":
                 raise ResourceNotFound(
