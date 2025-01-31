@@ -6,15 +6,15 @@ import React from 'react'
 
 const LoginPage = () => {
     return (
-        <Container sx={
-            {
-                height: "100vh",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                py: 6,
-                overflowY: "auto"
-            }}>
+        <Container
+            sx={
+                {
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    py: 6,
+                }}
+        >
             <NonNavbarLogo />
             <SignInForm />
         </Container>
