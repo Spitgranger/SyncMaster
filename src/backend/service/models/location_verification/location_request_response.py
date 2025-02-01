@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 
+
 class LocationVerificationRequest(BaseModel):
     latitude: float = Field(..., description="Latitude of the current location.")
     longitude: float = Field(..., description="Longitude of the current location.")
