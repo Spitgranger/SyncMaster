@@ -20,7 +20,7 @@ def haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     return distance
 
 
-def verify_location(location_request: LocationVerificationRequest) -> dict:
+def verify_location(location_request: LocationVerificationRequest) -> Response:
     """
     Verify if provided coordinates are within a certain radius of the target point.
     """
@@ -36,3 +36,4 @@ def verify_location(location_request: LocationVerificationRequest) -> dict:
         content_type=content_types.APPLICATION_JSON,
         body=response_body,
     )
+

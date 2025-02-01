@@ -2,6 +2,7 @@
 Temporary route for initial setup
 """
 
+from aws_lambda_powertools.event_handler import Response
 from aws_lambda_powertools.event_handler.api_gateway import Router
 from aws_lambda_powertools.event_handler.openapi.params import Body
 from typing_extensions import Annotated
@@ -23,7 +24,7 @@ def thingy() -> dict:
 
 
 @router.post("/verify-location")
-def verify_location_handler(body: Annotated[LocationVerificationRequest, Body()]) -> dict:
+def verify_location_handler(body: Annotated[LocationVerificationRequest, Body()]) -> Response:
     """
     Route to verify user location
     """
