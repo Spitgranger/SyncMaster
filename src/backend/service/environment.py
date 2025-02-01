@@ -14,4 +14,4 @@ DOCUMENT_STORAGE_BUCKET_WRITE_ROLE = getenv("DOCUMENT_STORAGE_BUCKET_WRITE_ROLE"
 # Role used for writing to the document storage bucket
 #
 USER_POOL_CLIENT_ID = getenv("USER_POOL_CLIENT_ID", "")
-# Role used for writing to the document storage bucket
+# ID of the user pool client to use the user provided user pool

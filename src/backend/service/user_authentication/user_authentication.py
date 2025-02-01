@@ -4,7 +4,7 @@ from http import HTTPStatus
 from botocore.exceptions import ClientError
 from ..models.user_authentication.user_request_response import SignupRequest, SigninRequest
 from aws_lambda_powertools.event_handler import Response, content_types
-from service.environment import USER_POOL_CLIENT_ID
+from ..environment import USER_POOL_CLIENT_ID
 
 cognito_client = boto3.client("cognito-idp")
 
