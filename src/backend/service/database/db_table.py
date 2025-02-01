@@ -175,11 +175,21 @@ class DBTable[T: DBItemModel]:
         if filter_expression:
             kwargs["FilterExpression"] = filter_expression
 
+        last_eval_key = None
+        items: list[dict] = []
+
         try:
-            response: dict = self._table.query(**kwargs)
+            while True:
+                if last_eval_key:
+                    kwargs["ExclusiveStartKey"] = last_eval_key
+                response: dict = self._table.query(**kwargs)
+
+                items.extend(response.get("Items", []))
+
+                if not (last_eval_key := response.get("LastEvaluatedKey")):
+                    break
         except ClientError as err:
             if err.response["Error"]["Code"] == "ValidationException":
                 raise ConditionValidationError() from err
             raise ExternalServiceException("Unknown Error from AWS") from err
-        items: list[dict] = response["Items"] if response["Items"] else []
         return [self.item_schema.model_validate(item) for item in items]
