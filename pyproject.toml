@@ -76,6 +76,9 @@ accept-no-param-doc="no"
 [tool.pylint.'DOCSTRING']
 default-docstring-type="sphinx"
 
+[tool.mypy]
+disable_error_code="prop-decorator"
+
 [[tool.mypy.overrides]]
 module = [
     "boto3.*",

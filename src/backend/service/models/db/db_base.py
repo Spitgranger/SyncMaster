@@ -1,51 +1,73 @@
+"""
+Defines the abstract base model for all database items to implement
+"""
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Optional
+from datetime import datetime
 
 from pydantic import BaseModel, computed_field
 from pydantic.config import ConfigDict
 
-from datetime import datetime
+from ...util import ItemType
 
 
 class DBItemModel(BaseModel, ABC):
+    """
+    An abstract model representing a database item that all database items must implement
+    """
+
     model_config = ConfigDict(
         frozen=True,
         extra="ignore",
         loc_by_alias=True,
-        populate_by_name= True,
+        populate_by_name=True,
         use_enum_values=True,
     )
 
     last_modified_by: str
     last_modified_time: datetime
 
-    def model_dump(self, *args, **kwargs):
+    def model_dump(self, *args, **kwargs) -> dict:
+        """
+        Equivalent to `BaseModel.model_dump` except with extra default arguments
+
+        :param args: Any positional argument that `BaseModel.model_dump` takes
+        :param kwargs: Any named argument that `BaseModel.model_dump` takes
+        :return: A dictionary representing the item, using JSON serializable types
+        """
         return super().model_dump(*args, **kwargs, exclude_none=True, by_alias=True, mode="json")
 
-    def model_dump_json(self, *args, **kwargs):
+    def model_dump_json(self, *args, **kwargs) -> str:
+        """
+        Equivalent to `BaseModel.model_dump_json` except with extra default arguments
+
+        :param args: Any positional argument that `BaseModel.model_dump_json` takes
+        :param kwargs: Any named argument that `BaseModel.model_dump_json` takes
+        :return: A string representing the item as a JSON
+        """
         return super().model_dump_json(*args, **kwargs, exclude_none=True, by_alias=True)
-    
+
     @staticmethod
-    @property
-    def item_type() -> str: 
-        ...
-
-
     @abstractmethod
+    def item_type() -> ItemType:
+        """The type of the database item"""
+
     @computed_field
     @property
+    @abstractmethod
     def pk(self) -> str:
-        ...
+        """The partition key of the database item, this is the hash key for the database"""
 
-    @abstractmethod
     @computed_field
     @property
+    @abstractmethod
     def sk(self) -> str:
-        ...
+        """The sort key of the database item, this is the range key for the database"""
 
     @computed_field
     @property
     def gsi_1_pk(self) -> str:
-        return f"{self.item_type}#{self.last_modified_by}"
+        """The hash key for GSI 1, formatted as `{item_type}#{last_modified_by}`"""
+        return f"{self.item_type()}#{self.last_modified_by}"

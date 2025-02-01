@@ -11,7 +11,10 @@ TABLE_SPEC = dict(
         {"AttributeName": "gsi_1_pk", "AttributeType": "S"},
         {"AttributeName": "last_modified_time", "AttributeType": "S"},
     ],
-    KeySchema=[{"AttributeName": "pk", "KeyType": "HASH"}, {"AttributeName": "sk", "KeyType": "RANGE"}],
+    KeySchema=[
+        {"AttributeName": "pk", "KeyType": "HASH"},
+        {"AttributeName": "sk", "KeyType": "RANGE"},
+    ],
     GlobalSecondaryIndexes=[
         {
             "IndexName": "GSI1",
@@ -19,9 +22,7 @@ TABLE_SPEC = dict(
                 {"AttributeName": "gsi_1_pk", "KeyType": "HASH"},
                 {"AttributeName": "last_modified_time", "KeyType": "RANGE"},
             ],
-            "Projection": {
-                "ProjectionType": "ALL"
-            }
+            "Projection": {"ProjectionType": "ALL"},
         }
     ],
     BillingMode="PAY_PER_REQUEST",
@@ -37,6 +38,7 @@ def empty_database():
         resource.meta.client.get_waiter("table_exists").wait(TableName=TABLE_NAME)
         yield resource.Table(TABLE_NAME)
         # implicit teardown from closing mock_aws
+
 
 @pytest.fixture()
 def database_with_item(empty_database, db_document):
