@@ -43,7 +43,10 @@ env = [
     "AWS_DEFAULT_REGION=us-east-1",
     "DOCUMENT_STORAGE_BUCKET_NAME=test_document_bucket",
     "DOCUMENT_STORAGE_BUCKET_READ_ROLE=arn:aws:iam::123456789012:role/document_s3_read_role",
-    "DOCUMENT_STORAGE_BUCKET_WRITE_ROLE=arn:aws:iam::123456789012:role/document_s3_write_role"
+    "DOCUMENT_STORAGE_BUCKET_WRITE_ROLE=arn:aws:iam::123456789012:role/document_s3_write_role",
+    "TABLE_NAME=test_table",
+    "TABLE_READ_ROLE=arn:aws:iam::123456789012:role/table_read_role",
+    "TABLE_WRITE_ROLE=arn:aws:iam::123456789012:role/table_write_role"
 ]
 
 [tool.coverage.run]
@@ -72,6 +75,9 @@ accept-no-param-doc="no"
 
 [tool.pylint.'DOCSTRING']
 default-docstring-type="sphinx"
+
+[tool.mypy]
+disable_error_code="prop-decorator"
 
 [[tool.mypy.overrides]]
 module = [

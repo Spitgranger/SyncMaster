@@ -29,6 +29,28 @@ class ExternalServiceException(HTTPError):
     http_code = HTTPStatus.INTERNAL_SERVER_ERROR
 
 
+class ConditionCheckFailed(HTTPError):
+    """
+    Errors relating to a failing condition in dynamodb
+    """
+
+    http_code = HTTPStatus.INTERNAL_SERVER_ERROR
+
+    def __init__(self, msg: str = "The provided condition was not met"):
+        super().__init__(msg)
+
+
+class ConditionValidationError(HTTPError):
+    """
+    Errors relating to a condition that is not valid by dynamodb constraints
+    """
+
+    http_code = HTTPStatus.INTERNAL_SERVER_ERROR
+
+    def __init__(self, msg: str = "The provided condition does not meet dynamodb constraints"):
+        super().__init__(msg)
+
+
 class ResourceNotFound(HTTPError):
     """
     Error relating to a resource not being found

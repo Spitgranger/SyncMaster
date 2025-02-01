@@ -83,7 +83,7 @@ class S3Bucket:
             initialized with only read permissions
         """
         try:
-            return self._client.delete_object(Bucket=self.name, Key=key, IfMatch=e_tag)
+            self._client.delete_object(Bucket=self.name, Key=key, IfMatch=e_tag)
         except ClientError as err:
             logger.exception(err)
             if err.response["Error"]["Code"] == "AccessDenied":
