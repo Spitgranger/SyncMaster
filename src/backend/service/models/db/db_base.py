@@ -30,23 +30,9 @@ class DBItemModel(BaseModel, ABC):
     last_modified_time: datetime
 
     def model_dump(self, *args, **kwargs) -> dict:
-        """
-        Equivalent to `BaseModel.model_dump` except with extra default arguments
-
-        :param args: Any positional argument that `BaseModel.model_dump` takes
-        :param kwargs: Any named argument that `BaseModel.model_dump` takes
-        :return: A dictionary representing the item, using JSON serializable types
-        """
         return super().model_dump(*args, **kwargs, exclude_none=True, by_alias=True, mode="json")
 
     def model_dump_json(self, *args, **kwargs) -> str:
-        """
-        Equivalent to `BaseModel.model_dump_json` except with extra default arguments
-
-        :param args: Any positional argument that `BaseModel.model_dump_json` takes
-        :param kwargs: Any named argument that `BaseModel.model_dump_json` takes
-        :return: A string representing the item as a JSON
-        """
         return super().model_dump_json(*args, **kwargs, exclude_none=True, by_alias=True)
 
     @staticmethod
