@@ -3,8 +3,10 @@ Temporary route for initial setup
 """
 
 from aws_lambda_powertools.event_handler.api_gateway import Router
-import json
+from aws_lambda_powertools.event_handler.openapi.params import Body
 from ..user_authentication.user_authentication import signup_user, signin_user
+from typing_extensions import Annotated
+from ..models.user_authentication.user_request_response import SignupRequest, SigninRequest
 
 router = Router()
 
@@ -20,18 +22,21 @@ def thingy() -> dict:
 
 
 @router.post("/signup")
-def signup_handler():
-    event = router.current_event
-    # Extract HTTP method and path from the event
-    body = json.loads(event.get("body", "{}"))
+def signup_handler(body: Annotated[SignupRequest, Body()]) -> dict:
+    """
+    Route to signup a new user
 
+    :return: dictionary containing http response
+    """
     return signup_user(body)
 
 
 @router.post("/signin")
-def signin_handler():
-    event = router.current_event
-    # Extract HTTP method and path from the event
-    body = json.loads(event.get("body", "{}"))
+def signin_handler(body: Annotated[SigninRequest, Body()]) -> dict:
+    """
+    Route to signup a new user
+
+    :return: dictionary containing http response
+    """
 
     return signin_user(body)

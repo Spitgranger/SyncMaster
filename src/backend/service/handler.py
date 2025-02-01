@@ -10,7 +10,7 @@ from aws_lambda_powertools.utilities.typing import LambdaContext
 from .routes import temp
 
 logger = Logger()
-app = APIGatewayRestResolver()
+app = APIGatewayRestResolver(enable_validation=True)
 app.include_router(router=temp.router)
 
 
