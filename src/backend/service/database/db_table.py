@@ -80,7 +80,7 @@ class DBTable[T: DBItemModel]:
         :raises ResourceNotFound: The item with the given key could not be found in the database
         """
         try:
-            response: dict = self._table.get_item(TableName=self.name, Key=key)
+            response: dict = self._table.get_item(Key=key)
             if not response.get("Item"):
                 raise ResourceNotFound(
                     resource_type=self.item_schema.item_type().value, resource_id=str(key)
@@ -141,7 +141,7 @@ class DBTable[T: DBItemModel]:
         except ClientError as err:
             if err.response["Error"]["Code"] == "AccessDeniedException":
                 raise PermissionException(
-                    "Insufficient permissions to perform put on the table"
+                    "Insufficient permissions to perform delete on the table"
                 ) from err
             if err.response["Error"]["Code"] == "ConditionalCheckFailedException":
                 raise ConditionCheckFailed() from err
