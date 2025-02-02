@@ -1,7 +1,9 @@
 'use client'
 import React, { useState } from 'react'
 import Grid from '@mui/material/Grid2';
-import { Button, TextField, Typography } from '@mui/material';
+import { Button, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Link from 'next/link';
 
 const SignInForm = () => {
@@ -9,6 +11,7 @@ const SignInForm = () => {
     const [emailError, setEmailError] = useState(false);
 
     const [password, setPassword] = useState("")
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleEmailChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
         setEmail(e.target.value);
@@ -24,6 +27,14 @@ const SignInForm = () => {
     const handlePasswordChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
         setPassword(e.target.value);
     }
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+    };
+
+    const handleMouseUpPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+    };
 
     return (
         <Grid container boxShadow={16} direction={"column"} sx={{
@@ -50,7 +61,7 @@ const SignInForm = () => {
                         helperText={emailError && 'Please enter a valid email address'} />
 
                     <TextField
-                        type='password'
+                        type={showPassword ? 'text' : 'password'}
                         required
                         name='password'
                         value={password}
@@ -58,6 +69,26 @@ const SignInForm = () => {
                         fullWidth
                         variant='outlined'
                         placeholder='Password'
+                        slotProps={{
+                            input: {
+                                endAdornment: (
+                                    <InputAdornment
+                                        position='end'
+                                    >
+                                        <IconButton
+                                            aria-label={
+                                                showPassword ? 'hide the password' : 'display the password'
+                                            }
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                            onMouseUp={handleMouseUpPassword}
+                                        >
+                                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                )
+                            }
+                        }}
                     />
                     <Grid display={"flex"} justifyContent={"flex-end"}>
                         <Link style={{ textAlign: 'right', color: "#1976d2" }} href={'/forgot-password'}><Typography variant='body1'>Forgot Password?</Typography></Link>
