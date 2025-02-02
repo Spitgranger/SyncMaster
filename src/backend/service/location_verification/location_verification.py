@@ -1,9 +1,4 @@
-from http import HTTPStatus
 from math import asin, cos, radians, sin, sqrt
-
-from aws_lambda_powertools.event_handler import Response, content_types
-
-from ..models.location_verification.location_request_response import LocationVerificationRequest
 
 TARGET_LATITUDE = 43.2588581564085
 TARGET_LONGITUDE = -79.92097591189501
@@ -26,7 +21,7 @@ def haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     return distance
 
 
-def verify_location(location_request: LocationVerificationRequest) -> bool:
+def verify_location(latitude: float, longitude: float, accuracy: float) -> bool:
     """
     Verify if provided coordinates are within a certain radius of the target point.
 
@@ -34,8 +29,8 @@ def verify_location(location_request: LocationVerificationRequest) -> bool:
     :return: boolean for if a location is within range of the desired site
     """
     distance = haversine(
-        location_request.latitude, location_request.longitude, TARGET_LATITUDE, TARGET_LONGITUDE
+        latitude, longitude, TARGET_LATITUDE, TARGET_LONGITUDE
     )
-    is_within_range = distance <= (ACCEPTABLE_RADIUS_METERS + location_request.accuracy)
+    is_within_range = distance <= (ACCEPTABLE_RADIUS_METERS + accuracy)
 
     return is_within_range
