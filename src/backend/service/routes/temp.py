@@ -4,7 +4,6 @@ Temporary route for initial setup
 
 from aws_lambda_powertools.event_handler.api_gateway import Router
 
-
 router = Router()
 
 
@@ -16,5 +15,3 @@ def thingy() -> dict:
     :return: dummy dict.
     """
     return {"Hello": "World"}
-
-

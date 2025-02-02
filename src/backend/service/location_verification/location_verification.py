@@ -5,10 +5,10 @@ from aws_lambda_powertools.event_handler import Response, content_types
 
 from ..models.location_verification.location_request_response import LocationVerificationRequest
 
-
 TARGET_LATITUDE = 43.2588581564085
 TARGET_LONGITUDE = -79.92097591189501
 ACCEPTABLE_RADIUS_METERS = 100
+
 
 def haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     """
@@ -33,4 +33,3 @@ def verify_location(location_request: LocationVerificationRequest) -> bool:
     is_within_range = distance <= (ACCEPTABLE_RADIUS_METERS + location_request.accuracy)
 
     return is_within_range
-
