@@ -27,12 +27,6 @@ Globals:
     Runtime: python3.13
     Architectures:
       - x86_64
-    Environment:
-      Variables:
-        TARGET_LATITUDE: 43.2588581564085
-        TARGET_LONGITUDE: -79.92097591189501
-        ACCEPTABLE_RADIUS_METERS: 100
-
 
 Resources:
   API:
