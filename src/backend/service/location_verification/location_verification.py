@@ -12,7 +12,10 @@ ACCEPTABLE_RADIUS_METERS = 100
 
 def haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     """
-    Calculate the great circle distance between two points on Earth (in meters).
+    Calculate the great circle distance between two points on Earth in meters.
+
+    :param lat1, lon1, lat2, lon2: coordinates for two locations
+    :return: the distance between two locations in meters
     """
     lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
     dlat = lat2 - lat1
@@ -26,6 +29,9 @@ def haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
 def verify_location(location_request: LocationVerificationRequest) -> bool:
     """
     Verify if provided coordinates are within a certain radius of the target point.
+
+    :param location_request: model response for location request
+    :return: boolean for if a location is within range of the desired site
     """
     distance = haversine(
         location_request.latitude, location_request.longitude, TARGET_LATITUDE, TARGET_LONGITUDE
