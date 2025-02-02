@@ -1,7 +1,8 @@
 'use client'
 import React, { useState } from 'react'
 import Grid from '@mui/material/Grid2';
-import { Button, Link, TextField, Typography } from '@mui/material';
+import { Button, TextField, Typography } from '@mui/material';
+import Link from 'next/link';
 
 const SignInForm = () => {
     const [email, setEmail] = useState("")
@@ -58,11 +59,11 @@ const SignInForm = () => {
                         variant='outlined'
                         placeholder='Password'
                     />
-                    <Link textAlign={'right'} href={'/forgot-password'}><Typography variant='body1'>Forgot Password?</Typography></Link>
+                    <Link style={{textAlign:'right', color:"#1976d2"}} href={'/forgot-password'}><Typography variant='body1'>Forgot Password?</Typography></Link>
 
                     <Button size='large' variant='contained'>Sign In</Button>
 
-                    <Link textAlign={'center'} href={'/sign-up'}><Typography variant='body1'>Sign Up</Typography></Link>
+                    <Link style={{textAlign:'center', color:"#1976d2"}} href={'/sign-up'}><Typography variant='body1'>Sign Up</Typography></Link>
 
                 </Grid>
             </form>
