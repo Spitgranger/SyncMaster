@@ -4,9 +4,15 @@ Temporary route for initial setup
 
 from aws_lambda_powertools.event_handler.api_gateway import Router
 from aws_lambda_powertools.event_handler.openapi.params import Body
-from ..user_authentication.user_authentication import signup_user, signin_user
 from typing_extensions import Annotated
-from ..models.user_authentication.user_request_response import SignupRequest, SigninRequest
+
+from ..environment import USER_POOL_CLIENT_ID
+from ..models.user_authentication.user_request_response import SigninRequest, SignupRequest
+from ..user_authentication.user_authentication import (
+    CognitoClient,
+    signin_user_handler,
+    signup_user_handler,
+)
 
 router = Router()
 
@@ -22,21 +28,22 @@ def thingy() -> dict:
 
 
 @router.post("/signup")
-def signup_handler(body: Annotated[SignupRequest, Body()]) -> dict:
+def signup_handler(body: Annotated[SignupRequest, Body()]):
     """
     Route to signup a new user
-
+    :param body: The body of the HTTP request
     :return: dictionary containing http response
     """
-    return signup_user(body)
+    cognito_client = CognitoClient(USER_POOL_CLIENT_ID)
+    return signup_user_handler(body, cognito_client)
 
 
 @router.post("/signin")
-def signin_handler(body: Annotated[SigninRequest, Body()]) -> dict:
+def signin_handler(body: Annotated[SigninRequest, Body()]):
     """
     Route to signup a new user
-
+    :param body: The body of the HTTP request
     :return: dictionary containing http response
     """
-
-    return signin_user(body)
+    cognito_client = CognitoClient(USER_POOL_CLIENT_ID)
+    return signin_user_handler(body, cognito_client)

@@ -1,5 +1,6 @@
-from pydantic import BaseModel, EmailStr, Field
 from typing import Dict
+
+from pydantic import BaseModel, EmailStr, Field
 
 
 class SignupRequest(BaseModel):
