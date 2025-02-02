@@ -25,12 +25,11 @@ def verify_location(latitude: float, longitude: float, accuracy: float) -> bool:
     """
     Verify if provided coordinates are within a certain radius of the target point.
 
-    :param location_request: model response for location request
+    :param latitude, longitude: coordinates for user location
+    :param accuracy: accuracy of user location in meters
     :return: boolean for if a location is within range of the desired site
     """
-    distance = haversine(
-        latitude, longitude, TARGET_LATITUDE, TARGET_LONGITUDE
-    )
+    distance = haversine(latitude, longitude, TARGET_LATITUDE, TARGET_LONGITUDE)
     is_within_range = distance <= (ACCEPTABLE_RADIUS_METERS + accuracy)
 
     return is_within_range
