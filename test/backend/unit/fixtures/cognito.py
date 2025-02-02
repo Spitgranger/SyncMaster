@@ -1,0 +1,87 @@
+import boto3
+import pytest
+from backend.service.models.user_authentication.user_request_response import (
+    SigninRequest,
+    SignupRequest,
+)
+from backend.service.user_authentication.user_authentication import CognitoClient
+from moto import mock_aws
+
+
+@pytest.fixture
+def cognito_mock():
+    """Creates a mock Cognito client."""
+    with mock_aws():
+        client = boto3.client("cognito-idp")
+        response = client.create_user_pool(PoolName="test-user-pool")
+        user_pool_id = response["UserPool"]["Id"]
+        response = client.create_user_pool_client(UserPoolId=user_pool_id, ClientName="test-client")
+        client_id = response["UserPoolClient"]["ClientId"]
+        yield client, client_id, user_pool_id
+
+
+@pytest.fixture
+def cognito_client(cognito_mock):
+    """Returns a CognitoClient instance with the mocked Cognito client."""
+    client, client_id, _ = cognito_mock
+    cognito_client = CognitoClient(client_id)
+    cognito_client._client = client  # Override with mock
+    yield cognito_client
+
+
+@pytest.fixture
+def signup_request():
+    """Creates a mock signup request."""
+    yield SignupRequest(
+        email="testuser@example.com",
+        name="Test test",
+        password="TestPassword123!",
+        attributes={"custom:role": "admin"},
+    )
+
+
+@pytest.fixture
+def signup_request_bad_password():
+    """Creates a mock signup request."""
+    yield SignupRequest(
+        email="testuser@example.com",
+        name="Test test",
+        password="testtest",
+        attributes={"custom:role": "admin"},
+    )
+
+
+@pytest.fixture
+def signin_request():
+    """Creates a mock signin request."""
+    yield SigninRequest(email="testuser@example.com", password="TestPassword123!")
+
+
+@pytest.fixture
+def cognito_client_with_user(cognito_mock):
+    """Creates and registers a user in the mock Cognito user pool."""
+    client, client_id, user_pool_id = cognito_mock
+    cognito_client = CognitoClient(client_id)
+    cognito_client._client = client
+
+    email = "testuser@example.com"
+    password = "TestPassword123!"
+
+    client.admin_create_user(
+        UserPoolId=user_pool_id,
+        Username=email,
+        UserAttributes=[
+            {"Name": "email", "Value": email},
+            {"Name": "custom:role", "Value": "admin"},
+        ],
+        MessageAction="SUPPRESS",  # Suppresses email verification in the mock
+    )
+
+    client.admin_set_user_password(
+        UserPoolId=user_pool_id,
+        Username=email,
+        Password=password,
+        Permanent=True,
+    )
+
+    yield cognito_client, SigninRequest(email=email, password=password)

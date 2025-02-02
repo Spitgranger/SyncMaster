@@ -27,6 +27,9 @@ Globals:
     Runtime: python3.13
     Architectures:
       - x86_64
+    Environment:
+      Variables:
+        USER_POOL_CLIENT_ID: !Ref UserPoolClient
 
 Resources:
   API:
@@ -85,6 +88,9 @@ Resources:
       IdTokenValidity: 12
       UserPoolId: !Ref UserPool
       GenerateSecret: false
+      ExplicitAuthFlows:
+        - ADMIN_NO_SRP_AUTH
+        - USER_PASSWORD_AUTH
 
   ApiFunction:
     Type: AWS::Serverless::Function
