@@ -24,7 +24,6 @@ class CognitoClient:
         :param clientid: The Cognito user pool client id
         :return: The CognitoClient object
         :raises ExternalServiceException: Unable to connect to AWS Cognito
-        :raises PermissionException: Unable to assume IAM role for required access level
         """
         self._client = boto3.client("cognito-idp")
         self._clientid = clientid
