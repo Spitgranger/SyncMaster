@@ -59,12 +59,15 @@ const SignInForm = () => {
                         variant='outlined'
                         placeholder='Password'
                     />
-                    <Link style={{textAlign:'right', color:"#1976d2"}} href={'/forgot-password'}><Typography variant='body1'>Forgot Password?</Typography></Link>
+                    <Grid display={"flex"} justifyContent={"flex-end"}>
+                        <Link style={{ textAlign: 'right', color: "#1976d2" }} href={'/forgot-password'}><Typography variant='body1'>Forgot Password?</Typography></Link>
+                    </Grid>
 
                     <Button size='large' variant='contained'>Sign In</Button>
 
-                    <Link style={{textAlign:'center', color:"#1976d2"}} href={'/sign-up'}><Typography variant='body1'>Sign Up</Typography></Link>
-
+                    <Grid display={"flex"} justifyContent={"center"}>
+                        <Link style={{ textAlign: 'center', color: "#1976d2" }} href={'/sign-up'}><Typography variant='body1'>Sign Up</Typography></Link>
+                    </Grid>
                 </Grid>
             </form>
         </Grid>
