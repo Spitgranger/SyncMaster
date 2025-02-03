@@ -1,5 +1,5 @@
 import pytest
-from location_verification import (
+from backend.service.location_verification.location_verification import (
     ACCEPTABLE_RADIUS_METERS,
     TARGET_LATITUDE,
     TARGET_LONGITUDE,
@@ -16,10 +16,10 @@ def test_haversine_identical_coordinates():
 
 def test_haversine_known_distance():
     # Coordinates roughly 1km apart
-    lat1, lon1 = 43.2588581564085, -79.92097591189501
-    lat2, lon2 = 43.2688581564085, -79.92097591189501
+    lat1, lon1 = 43.25, -79.92
+    lat2, lon2 = 43.26, -79.92
     distance = haversine(lat1, lon1, lat2, lon2)
-    assert 999 < distance < 1001  # Allowing a small margin of error
+    assert 1111.9 < distance < 1112  # Allowing a small margin of error
 
 
 def test_haversine_antipodal_points():
