@@ -12,3 +12,12 @@ DOCUMENT_STORAGE_BUCKET_READ_ROLE = getenv("DOCUMENT_STORAGE_BUCKET_READ_ROLE", 
 
 DOCUMENT_STORAGE_BUCKET_WRITE_ROLE = getenv("DOCUMENT_STORAGE_BUCKET_WRITE_ROLE", "")
 # Role used for writing to the document storage bucket
+
+TABLE_NAME = getenv("TABLE_NAME", "")
+# Name of the DB table used store all items
+
+TABLE_READ_ROLE = getenv("TABLE_READ_ROLE", "")
+# Role used for reading from the DB table
+
+TABLE_WRITE_ROLE = getenv("TABLE_WRITE_ROLE", "")
+# Role used for writing to the DB table
