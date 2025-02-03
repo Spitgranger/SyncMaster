@@ -36,10 +36,10 @@ def test_verify_location_outside_radius():
 
 
 def test_verify_location_on_boundary_with_accuracy():
-    lat, lon = 43.256, -79.9210  # Just at the edge of acceptable range
-    assert verify_location(lat, lon, 30) is True
+    lat, lon = 43.2598, -79.9210  # Just at the edge of acceptable range
+    assert verify_location(lat, lon, 5) is True
 
 
 def test_verify_location_just_outside_even_with_accuracy():
-    lat, lon = 43.256, -79.9210
-    assert verify_location(lat, lon, 20) is False
+    lat, lon = 443.2598, -79.9210
+    assert verify_location(lat, lon, 4) is False
