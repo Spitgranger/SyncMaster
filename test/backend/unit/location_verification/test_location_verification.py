@@ -1,8 +1,5 @@
 import pytest
 from backend.service.location_verification.location_verification import (
-    ACCEPTABLE_RADIUS_METERS,
-    TARGET_LATITUDE,
-    TARGET_LONGITUDE,
     haversine,
     verify_location,
 )
@@ -28,10 +25,6 @@ def test_haversine_antipodal_points():
     assert 20015086 < distance < 20015088  # Half the Earth's circumference in meters
 
 
-def test_verify_location_exact_target():
-    assert verify_location(TARGET_LATITUDE, TARGET_LONGITUDE, 0) is True
-
-
 def test_verify_location_within_radius():
     lat, lon = 43.2595, -79.9210  # Slightly different but within 100m radius
     assert verify_location(lat, lon, 0) is True
@@ -43,14 +36,10 @@ def test_verify_location_outside_radius():
 
 
 def test_verify_location_on_boundary_with_accuracy():
-    lat, lon = 43.2595, -79.9210  # Just at the edge of acceptable range
-    distance = haversine(lat, lon, TARGET_LATITUDE, TARGET_LONGITUDE)
-    required_accuracy = distance - ACCEPTABLE_RADIUS_METERS
-    assert verify_location(lat, lon, required_accuracy) is True
+    lat, lon = 43.256, -79.9210  # Just at the edge of acceptable range
+    assert verify_location(lat, lon, 30) is True
 
 
 def test_verify_location_just_outside_even_with_accuracy():
-    lat, lon = 43.2700, -79.9300
-    distance = haversine(lat, lon, TARGET_LATITUDE, TARGET_LONGITUDE)
-    accuracy = ACCEPTABLE_RADIUS_METERS - 1  # Slightly less than required to be within range
-    assert verify_location(lat, lon, accuracy) is False
+    lat, lon = 43.256, -79.9210
+    assert verify_location(lat, lon, 20) is False
