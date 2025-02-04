@@ -57,3 +57,9 @@ class DBItemModel(BaseModel, ABC):
     def gsi_1_pk(self) -> str:
         """The hash key for GSI 1, formatted as `{item_type}#{last_modified_by}`"""
         return f"{self.item_type()}#{self.last_modified_by}"
+
+    @computed_field
+    @property
+    def gsi_1_sk(self) -> str:
+        """The range key for GSI 1, formatted as `{last_modified_date}`"""
+        return self.last_modified_time.isoformat()

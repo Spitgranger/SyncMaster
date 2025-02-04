@@ -9,7 +9,7 @@ TABLE_SPEC = dict(
         {"AttributeName": "pk", "AttributeType": "S"},
         {"AttributeName": "sk", "AttributeType": "S"},
         {"AttributeName": "gsi_1_pk", "AttributeType": "S"},
-        {"AttributeName": "last_modified_time", "AttributeType": "S"},
+        {"AttributeName": "gsi_1_sk", "AttributeType": "S"},
     ],
     KeySchema=[
         {"AttributeName": "pk", "KeyType": "HASH"},
@@ -20,7 +20,7 @@ TABLE_SPEC = dict(
             "IndexName": "GSI1",
             "KeySchema": [
                 {"AttributeName": "gsi_1_pk", "KeyType": "HASH"},
-                {"AttributeName": "last_modified_time", "KeyType": "RANGE"},
+                {"AttributeName": "gsi_1_sk", "KeyType": "RANGE"},
             ],
             "Projection": {"ProjectionType": "ALL"},
         }

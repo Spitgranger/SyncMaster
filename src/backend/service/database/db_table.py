@@ -3,7 +3,7 @@ Module allowing interaction with a DynamoDB table, for getting, updating, and de
 """
 
 from enum import Enum, auto
-from typing import Optional, Type, TypedDict
+from typing import Any, Literal, Optional, Type, TypedDict
 
 from aws_lambda_powertools.logging import Logger
 from boto3.dynamodb.conditions import ConditionBase
@@ -120,6 +120,38 @@ class DBTable[T: DBItemModel]:
             raise ExternalServiceException("Unknown Error from AWS") from err
         return item
 
+    def update(
+        self,
+        key: KeySchema,
+        update_attributes: dict[str, Any],
+        condition_expression: Optional[ConditionBase] = None,
+    ) -> T:
+        expression_attribute_values: dict[str, Any] = {}
+        set_attributes: list[str] = []
+        delete_attributes: list[str] = []
+
+        for k, v in update_attributes.items():
+            if v is not None:
+                expression_attribute_values[f":{k}"] = v
+                set_attributes.append(f"{k} = :{k}")
+            else:
+                delete_attributes.append(k)
+
+        update_expression = f"SET {", ".join(set_attributes)} REMOVE {", ".join(delete_attributes)}"
+
+        kwargs = {}
+        if condition_expression:
+            kwargs["ConditionExpression"] = condition_expression
+        response = self._table.update_item(
+            Key=key,
+            UpdateExpression=update_expression,
+            ExpressionAttributeValues=expression_attribute_values,
+            ReturnValues="ALL_NEW",
+            **kwargs,
+        )
+
+        return self.item_schema.model_validate(response["Attributes"])
+
     def delete(self, key: KeySchema, condition_expression: Optional[ConditionBase] = None) -> None:
         """
         Completes an existing multipart upload
@@ -152,6 +184,7 @@ class DBTable[T: DBItemModel]:
         gsi: Optional[GSI] = None,
         key_condition_expression: Optional[ConditionBase] = None,
         filter_expression: Optional[ConditionBase] = None,
+        limit: Optional[int] = None,
     ) -> list[T]:
         """
         Queries the database based on the given list of criterion
@@ -162,6 +195,7 @@ class DBTable[T: DBItemModel]:
             meeting this condition are returned
         :param filter_expression: A condition placed on any attributes, only items meeting this
             condition are returned
+        :param limit: The maximum number of entries to be returned from the query
         :raises ConditionValidationError: The key condition is not valid, this usually happens
             when using a condition other than `.eq` on a hash key
         :raises ValidationError: The returned items did not match the provided schema for the table
@@ -182,11 +216,17 @@ class DBTable[T: DBItemModel]:
             while True:
                 if last_eval_key:
                     kwargs["ExclusiveStartKey"] = last_eval_key
+                if limit:
+                    kwargs["Limit"] = limit
+
                 response: dict = self._table.query(**kwargs)
 
                 items.extend(response.get("Items", []))
 
                 if not (last_eval_key := response.get("LastEvaluatedKey")):
+                    break
+
+                if limit and not (limit := limit - response.get("Count", 0)):
                     break
         except ClientError as err:
             if err.response["Error"]["Code"] == "ValidationException":

@@ -60,3 +60,25 @@ class ResourceNotFound(HTTPError):
 
     def __init__(self, resource_type: str, resource_id: str):
         super().__init__(f"Resource [{resource_id}] of type [{resource_type}] not found")
+
+
+class ResourceConflict(HTTPError):
+    """
+    Error relating to a conflict in resources
+    """
+
+    http_code = HTTPStatus.CONFLICT
+
+    def __init__(self, resource_type: str, resource_id: str):
+        super().__init__(f"Resource [{resource_id}] of type [{resource_type}] already exists")
+
+
+class ExitTimeConflict(ResourceConflict):
+    """
+    Error relating to an exit time already existing for a user's most recent visit
+    """
+
+    def __init__(self, site_id: str, user_id: str):
+        super().__init__(
+            f"An exit time is already logged at site [{site_id}] for user [{user_id}]'s most recent visit"
+        )
