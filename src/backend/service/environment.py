@@ -15,6 +15,12 @@ DOCUMENT_STORAGE_BUCKET_WRITE_ROLE = getenv("DOCUMENT_STORAGE_BUCKET_WRITE_ROLE"
 
 USER_POOL_CLIENT_ID = getenv("USER_POOL_CLIENT_ID", "")
 # ID of the user pool client to use the user provided user pool
+#
+USER_POOL_ID = getenv("USER_POOL_ID", "")
+# ID of the user pool
+#
+COGNITO_ACCESS_ROLE = getenv("COGNITO_ACCESS_ROLE", "")
+# Role user for accessing cognito admin operations
 
 TABLE_NAME = getenv("TABLE_NAME", "")
 # Name of the DB table used store all items
