@@ -3,13 +3,28 @@ Module implementing operations relating to user authentication
 """
 
 from http import HTTPStatus
-from typing import List
+from typing import List, Optional
 
 import boto3
 from aws_lambda_powertools.event_handler import Response, content_types
 from botocore.exceptions import ClientError
 
-from ..models.user_authentication.user_request_response import SigninRequest, SignupRequest
+from ..models.user_authentication.user_request_response import (
+    AdminSignupRequest,
+    SigninRequest,
+    SignupRequest,
+)
+from ..util import create_client_with_role
+from ..environment import COGNITO_ACCESS_ROLE
+
+from ..exceptions import (
+    ForceChangePasswordException,
+    ResourceNotFound,
+    UnauthorizedException,
+    ExternalServiceException,
+    BadRequestException,
+    ConflictException,
+)
 
 
 class CognitoClient:
@@ -28,11 +43,13 @@ class CognitoClient:
         self._client = boto3.client("cognito-idp")
         self._clientid = clientid
 
-    def authenticate_user(self, username: str, password: str):
+    def authenticate_user(self, username: str, password: str, new_password: Optional[str]):
         """
         Authenticate a user with their credentials
         :param username: The Cognito username (aliased to email)
         :param password: The users password
+        :param new_password: Optional field for users in a force change password
+        state
         :return: The respose from Cognito
         :raises ClientError Unable to process request for the given parameters
         """
@@ -41,6 +58,23 @@ class CognitoClient:
             AuthParameters={"USERNAME": username, "PASSWORD": password},
             ClientId=self._clientid,
         )
+
+        # Check if the user is in "NEW_PASSWORD_REQUIRED" state, admin auth flow
+        # requires users to change their assigned one time password
+        if response.get("ChallengeName") == "NEW_PASSWORD_REQUIRED":
+            if not new_password:
+                raise ForceChangePasswordException()
+
+            response = self._client.respond_to_auth_challenge(
+                ClientId=self._clientid,
+                ChallengeName="NEW_PASSWORD_REQUIRED",
+                Session=response["Session"],  # Use the same session from previous response
+                ChallengeResponses={
+                    "USERNAME": username,
+                    "NEW_PASSWORD": new_password,
+                },
+            )
+
         return response
 
     def signup_user(self, username: str, password: str, attributes: List[dict[str, str]]):
@@ -59,6 +93,36 @@ class CognitoClient:
             UserAttributes=attributes,
         )
         return response
+
+
+class AdminCognitoClient:
+    """
+    Wrapper class for AWS Cognito providing an interface for admin cognito
+    operations
+    """
+
+    def __init__(self, clientid: str, user_pool_id: str):
+        self._client = create_client_with_role(service_name="cognito-idp", role=COGNITO_ACCESS_ROLE)
+        self._clientid = clientid
+        self._user_pool_id = user_pool_id
+
+    def admin_create_user(self, username: str, attributes: List[dict[str, str]]):
+        response = self._client.admin_create_user(
+            UserPoolId=self._user_pool_id,
+            Username=username,
+            UserAttributes=attributes,
+        )
+        return response
+
+    def add_user_to_group(self, username: str, group_name: str):
+        self._client.admin_add_user_to_group(
+            UserPoolId=self._user_pool_id, Username=username, GroupName=group_name
+        )
+
+    def update_user_attributes(self, username: str, attributes: List[dict[str, str]]):
+        self._client.admin_update_user_attributes(
+            UserPoolId=self._user_pool_id, Username=username, UserAttributes=attributes
+        )
 
 
 def signup_user_handler(signup_request: SignupRequest, cognito_client: CognitoClient) -> Response:
@@ -87,16 +151,13 @@ def signup_user_handler(signup_request: SignupRequest, cognito_client: CognitoCl
         error_code = err.response["Error"]["Code"]
         match error_code:
             case "UsernameExistsException":
-                status_code = HTTPStatus.CONFLICT.value
+                raise ConflictException("User with this username already exists") from err
             case "InvalidPasswordException":
-                status_code = HTTPStatus.BAD_REQUEST.value
+                raise BadRequestException(
+                    "Password does not meet organization policy requirements"
+                ) from err
             case _:
-                status_code = HTTPStatus.INTERNAL_SERVER_ERROR.value
-        return Response(
-            status_code=status_code,
-            content_type=content_types.APPLICATION_JSON,
-            body={"error": f"An unexpected error occurred {str(err)}"},
-        )
+                raise ExternalServiceException from err
 
 
 def signin_user_handler(signin_request: SigninRequest, cognito_client: CognitoClient) -> Response:
@@ -108,7 +169,9 @@ def signin_user_handler(signin_request: SigninRequest, cognito_client: CognitoCl
     return the AccessToken, IdToken, and RefreshToken
     """
     try:
-        response = cognito_client.authenticate_user(signin_request.email, signin_request.password)
+        response = cognito_client.authenticate_user(
+            signin_request.email, signin_request.password, signin_request.new_password
+        )
 
         # Extract tokens from the response
         tokens = response.get("AuthenticationResult", {})
@@ -127,13 +190,32 @@ def signin_user_handler(signin_request: SigninRequest, cognito_client: CognitoCl
         error_code = err.response["Error"]["Code"]
         match error_code:
             case "NotAuthorizedException":
-                status_code = HTTPStatus.UNAUTHORIZED.value
+                raise UnauthorizedException("Incorrect Credentials") from err
             case "UserNotFoundException":
-                status_code = HTTPStatus.NOT_FOUND.value
+                raise ResourceNotFound("user", "username") from err
             case _:
-                status_code = HTTPStatus.INTERNAL_SERVER_ERROR.value
+                raise ExternalServiceException from err
+
+
+def admin_create_user_handler(
+    create_user_request: AdminSignupRequest, cognito_client: AdminCognitoClient
+) -> Response:
+    try:
+        attributes = [{"Name": "email", "Value": create_user_request.email}]
+        for key, value in create_user_request.attributes.items():
+            attributes.append({"Name": key, "Value": value})
+
+        cognito_client.admin_create_user(create_user_request.email, attributes)
+
         return Response(
-            status_code=status_code,
+            status_code=HTTPStatus.CREATED.value,
             content_type=content_types.APPLICATION_JSON,
-            body={"error": f"An unexpected error occurred {str(err)}"},
+            body={"message": "User created successfully"},
         )
+    except ClientError as err:
+        error_code = err.response["Error"]["Code"]
+        match error_code:
+            case "UsernameExistsException":
+                raise ConflictException("User with this username already exists") from err
+            case _:
+                raise ExternalServiceException from err
