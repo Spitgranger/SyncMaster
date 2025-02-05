@@ -12,8 +12,8 @@ from .db_base import DBItemModel
 
 
 class DBSiteVisit(DBItemModel):
-    user_id = str
-    site_id = str
+    user_id: str
+    site_id: str
     entry_time: datetime
     exit_time: Optional[datetime] = None
 
