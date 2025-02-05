@@ -3,13 +3,22 @@ Module implementing operations relating to user authentication
 """
 
 from http import HTTPStatus
-from typing import List, Optional, Dict
+from typing import Dict, List, Optional
 
 import boto3
 from aws_lambda_powertools.event_handler import Response, content_types
-from botocore.exceptions import ClientError
 from aws_lambda_powertools.logging import Logger
+from botocore.exceptions import ClientError
 
+from ..environment import COGNITO_ACCESS_ROLE
+from ..exceptions import (
+    BadRequestException,
+    ConflictException,
+    ExternalServiceException,
+    ForceChangePasswordException,
+    ResourceNotFound,
+    UnauthorizedException,
+)
 from ..models.user_authentication.user_request_response import (
     AdminSignupRequest,
     GetUsersByAttributeRequest,
@@ -18,16 +27,6 @@ from ..models.user_authentication.user_request_response import (
     UpdateUserAttributeRequest,
 )
 from ..util import create_client_with_role
-from ..environment import COGNITO_ACCESS_ROLE
-
-from ..exceptions import (
-    ForceChangePasswordException,
-    ResourceNotFound,
-    UnauthorizedException,
-    ExternalServiceException,
-    BadRequestException,
-    ConflictException,
-)
 
 logger = Logger()
 
@@ -107,16 +106,42 @@ class AdminCognitoClient:
     """
 
     def __init__(self, clientid: str, user_pool_id: str):
+        """
+        Initialize a connection to Cognito with admin access
+        :param clientid: The Cognito user pool client id
+        :param user_pool_id: The Cognito user pool id for this connection
+        :return: The AdminCognitoClient object
+        :raises ExternalServiceException: Unable to connect to AWS Cognito
+        """
         self._client = create_client_with_role(service_name="cognito-idp", role=COGNITO_ACCESS_ROLE)
         self._clientid = clientid
         self._user_pool_id = user_pool_id
 
-    def admin_create_user(self, username: str, attributes: List[dict[str, str]]):
-        response = self._client.admin_create_user(
-            UserPoolId=self._user_pool_id,
-            Username=username,
-            UserAttributes=attributes,
-        )
+    def admin_create_user(
+        self, username: str, attributes: List[dict[str, str]], temp_password: Optional[str] = None
+    ):
+        """
+        Create an user using the admin creation flow
+        :param username:  The username of the user
+        :param attributes: List of dictionaries containing the attributes of the
+        :param temp_password: Used for testing, sets the users temporary
+        password
+        user
+        :return: A list of matching user records
+        """
+        if temp_password:
+            response = self._client.admin_create_user(
+                UserPoolId=self._user_pool_id,
+                Username=username,
+                UserAttributes=attributes,
+                TemporaryPassword=temp_password,
+            )
+        else:
+            response = self._client.admin_create_user(
+                UserPoolId=self._user_pool_id,
+                Username=username,
+                UserAttributes=attributes,
+            )
         return response
 
     # This maybe useful in the future, keeping it commented out for Rev0
@@ -130,7 +155,7 @@ class AdminCognitoClient:
         Updates the user attributes for the given username
         :param attributes:  List of attributes stored as key value pairs in a
         dictionary
-        :param attribute_value: The expected value of the attribute
+        :param username: The user to update the attributes for
         :return: A list of matching user records
         """
         response = self._client.admin_update_user_attributes(
@@ -141,8 +166,8 @@ class AdminCognitoClient:
     def get_users_by_attribute(self, attributes: Dict[str, str]) -> List[Dict]:
         """
         Retrieve all users from the user pool who have a specific attribute value.
-        :param attribute_name: The attribute name to filter users by (e.g., "email", "role")
-        :param attribute_value: The expected value of the attribute
+        Will select users matching any of the given attributes
+        :param attributes: a dictionary containing attributes to search for
         :return: A list of matching user records
         """
         users = []
@@ -284,7 +309,7 @@ def admin_update_user_attributes_handler(
 ):
     """
     Function to create a update a users attributes given the username
-    :param create_user_request: The body of the HTTP request from API gateway
+    :param update_user_request: The body of the HTTP request from API gateway
     :param cognito_client: The AdminCognitoClient used to process the operation
     :return Response containg the result of the cognito operation
     """
@@ -312,7 +337,7 @@ def admin_get_users_handler(
 ):
     """
     Function to get a list of users based on a given attribute
-    :param create_user_request: The body of the HTTP request from API gateway
+    :param get_users_request: The body of the HTTP request from API gateway
     :param cognito_client: The AdminCognitoClient used to process the operation
     :return Response containg the result of the cognito operation
     """
@@ -327,10 +352,4 @@ def admin_get_users_handler(
 
     except ClientError as err:
         logger.error(err)
-        error_code = err.response["Error"]["Code"]
-
-        match error_code:
-            case "UserNotFoundException":
-                raise ResourceNotFound("user", "username") from err
-            case _:
-                raise ExternalServiceException(str(err)) from err
+        raise ExternalServiceException(str(err)) from err

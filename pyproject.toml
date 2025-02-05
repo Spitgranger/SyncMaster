@@ -48,7 +48,8 @@ env = [
     "USER_POOL_CLIENT_ID=aeffa230awe24",
     "TABLE_NAME=test_table",
     "TABLE_READ_ROLE=arn:aws:iam::123456789012:role/table_read_role",
-    "TABLE_WRITE_ROLE=arn:aws:iam::123456789012:role/table_write_role"
+    "TABLE_WRITE_ROLE=arn:aws:iam::123456789012:role/table_write_role",
+    "COGNITO_ACCESS_ROLE=arn:aws:iam::123456789012:role/cognito_access_role"
 ]
 
 [tool.coverage.run]
@@ -87,3 +88,9 @@ module = [
     "botocore.*",
 ]
 ignore_missing_imports = true
+
+[tool.pyright]
+executionEnvironments = [{ root = "src/backend" }]
+typeCheckingMode = "standard"
+venv = ".venv"
+venvPath = "."

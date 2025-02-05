@@ -2,18 +2,20 @@
 Temporary route for initial setup
 """
 
-from aws_lambda_powertools.event_handler.api_gateway import Router
-from aws_lambda_powertools.event_handler.openapi.params import Body
-from aws_lambda_powertools.event_handler import Response, content_types
-from typing_extensions import Annotated
 from http import HTTPStatus
 
+from aws_lambda_powertools.event_handler import Response, content_types
+from aws_lambda_powertools.event_handler.api_gateway import Router
+from aws_lambda_powertools.event_handler.openapi.params import Body
+from typing_extensions import Annotated
+
 from ..environment import USER_POOL_CLIENT_ID, USER_POOL_ID
+from ..exceptions import HTTPError
 from ..models.user_authentication.user_request_response import (
+    AdminSignupRequest,
     GetUsersByAttributeRequest,
     SigninRequest,
     SignupRequest,
-    AdminSignupRequest,
     UpdateUserAttributeRequest,
 )
 from ..user_authentication.user_authentication import (
@@ -25,9 +27,6 @@ from ..user_authentication.user_authentication import (
     signin_user_handler,
     signup_user_handler,
 )
-
-from ..exceptions import HTTPError
-
 
 router = Router()
 

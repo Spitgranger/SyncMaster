@@ -3,8 +3,18 @@ import pytest
 from backend.service.models.user_authentication.user_request_response import (
     SigninRequest,
     SignupRequest,
+    AdminSignupRequest,
+    GetUsersByAttributeRequest,
+    UpdateUserAttributeRequest,
 )
-from backend.service.user_authentication.user_authentication import CognitoClient
+from backend.service.user_authentication.user_authentication import (
+    CognitoClient,
+    AdminCognitoClient,
+)
+
+from backend.service.environment import COGNITO_ACCESS_ROLE
+
+from backend.service.util import create_client_with_role
 from moto import mock_aws
 
 
@@ -13,6 +23,18 @@ def cognito_mock():
     """Creates a mock Cognito client."""
     with mock_aws():
         client = boto3.client("cognito-idp")
+        response = client.create_user_pool(PoolName="test-user-pool")
+        user_pool_id = response["UserPool"]["Id"]
+        response = client.create_user_pool_client(UserPoolId=user_pool_id, ClientName="test-client")
+        client_id = response["UserPoolClient"]["ClientId"]
+        yield client, client_id, user_pool_id
+
+
+@pytest.fixture
+def cognito_mock_admin():
+    """Creates a mock Cognito client with IAM role"""
+    with mock_aws():
+        client = create_client_with_role("s3", COGNITO_ACCESS_ROLE)
         response = client.create_user_pool(PoolName="test-user-pool")
         user_pool_id = response["UserPool"]["Id"]
         response = client.create_user_pool_client(UserPoolId=user_pool_id, ClientName="test-client")
@@ -30,31 +52,72 @@ def cognito_client(cognito_mock):
 
 
 @pytest.fixture
+def cognito_client_admin(cognito_mock):
+    """Returns a AdminCognitoClient instance with the mocked Cognito client."""
+    client, client_id, user_pool_id = cognito_mock
+    cognito_client = AdminCognitoClient(client_id, user_pool_id)
+    cognito_client._client = client  # Override with mock
+    yield cognito_client
+
+
+@pytest.fixture
 def signup_request():
     """Creates a mock signup request."""
     yield SignupRequest(
         email="testuser@example.com",
-        name="Test test",
         password="TestPassword123!",
+        attributes={"custom:role": "admin", "name": "test"},
+    )
+
+
+@pytest.fixture
+def create_user_request():
+    """Creates a mock create user request."""
+    yield AdminSignupRequest(
+        email="testuser@example.com",
+        attributes={"custom:role": "admin", "name": "test"},
+    )
+
+
+@pytest.fixture
+def get_users_request():
+    """Creates a mock create user request."""
+    yield GetUsersByAttributeRequest(
         attributes={"custom:role": "admin"},
     )
 
 
 @pytest.fixture
+def get_users_request_changed():
+    """Creates a mock create user request."""
+    yield GetUsersByAttributeRequest(
+        attributes={"custom:role": "user"},
+    )
+
+
+@pytest.fixture
+def update_user_attribute_request():
+    """Creates a mock create user request."""
+    yield UpdateUserAttributeRequest(
+        email="testuser@example.com",
+        attributes=[{"Name": "custom:role", "Value": "user"}],
+    )
+
+
+@pytest.fixture
 def signup_request_bad_password():
-    """Creates a mock signup request."""
+    """Creates a mock signup request with bad password"""
     yield SignupRequest(
         email="testuser@example.com",
-        name="Test test",
         password="testtest",
-        attributes={"custom:role": "admin"},
+        attributes={"custom:role": "admin", "name": "test"},
     )
 
 
 @pytest.fixture
 def signin_request():
     """Creates a mock signin request."""
-    yield SigninRequest(email="testuser@example.com", password="TestPassword123!")
+    yield SigninRequest(email="testuser@example.com", password="TestTest123!")
 
 
 @pytest.fixture
