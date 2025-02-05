@@ -23,6 +23,7 @@ import { AiOutlineGlobal } from 'react-icons/ai';
 import SpecificIcon from '../Icons/SpecificIcon';
 import UserIcon from '../Icons/UserIcon';
 import { Avatar } from '@mui/material';
+import { useRouter } from 'next/router';
 interface Props {
   children: React.ReactNode;
 }
@@ -96,12 +97,14 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 interface SidebarLink {
   text: string;
-  icon: React.JSX.Element
+  icon: React.JSX.Element;
+  route: string;
 }
 
 export default function DashboardLayout({ children }: Props) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const router = useRouter();
 
   const handleDrawerOpen = () => {
     setOpen((open) => !open);
@@ -163,9 +166,9 @@ export default function DashboardLayout({ children }: Props) {
           <Divider />
           <Typography pt={1} px={2} variant='subtitle1' color="textSecondary">Documents</Typography>
           <List>
-            {[{ text: 'Site Wide', icon: <AiOutlineGlobal color='black' size={24} /> }, { text: 'Site Specific', icon: <SpecificIcon /> }].map((link: SidebarLink) => (
+            {[{ text: 'Site Wide', icon: <AiOutlineGlobal color='black' size={24} />, route: "/dashboard/sitewide" }, { text: 'Site Specific', icon: <SpecificIcon />, route: "/dashboard/sitespecific" }].map((link: SidebarLink) => (
               <ListItem key={link.text} disablePadding>
-                <ListItemButton>
+                <ListItemButton onClick={() => { router.push(link.route) }} selected={router.pathname.startsWith(link.route)}>
                   <ListItemIcon >
                     {link.icon}
                   </ListItemIcon>
@@ -178,9 +181,9 @@ export default function DashboardLayout({ children }: Props) {
           <Typography pt={1} px={2} variant='subtitle1' color="textSecondary">Organization</Typography>
           <List>
 
-            {[{ text: 'Manage Sites', icon: <Apartment sx={{ color: "black" }} /> }, { text: 'Manage Users', icon: <UserIcon /> }, { text: 'Settings', icon: <Settings sx={{ color: "black" }} /> }].map((link: SidebarLink) => (
+            {[{ text: 'Manage Sites', icon: <Apartment sx={{ color: "black" }} />, route: "/dashboard/managesites" }, { text: 'Manage Users', icon: <UserIcon />, route: "/dashboard/manageusers" }, { text: 'Settings', icon: <Settings sx={{ color: "black" }} />, route: "/dashboard/settings" }].map((link: SidebarLink) => (
               <ListItem key={link.text} disablePadding>
-                <ListItemButton>
+                <ListItemButton onClick={() => { router.push(link.route) }} selected={router.pathname.startsWith(link.route)}>
                   <ListItemIcon>
                     {link.icon}
                   </ListItemIcon>
