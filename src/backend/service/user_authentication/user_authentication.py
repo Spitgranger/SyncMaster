@@ -3,16 +3,19 @@ Module implementing operations relating to user authentication
 """
 
 from http import HTTPStatus
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 import boto3
 from aws_lambda_powertools.event_handler import Response, content_types
 from botocore.exceptions import ClientError
+from aws_lambda_powertools.logging import Logger
 
 from ..models.user_authentication.user_request_response import (
     AdminSignupRequest,
+    GetUsersByAttributeRequest,
     SigninRequest,
     SignupRequest,
+    UpdateUserAttributeRequest,
 )
 from ..util import create_client_with_role
 from ..environment import COGNITO_ACCESS_ROLE
@@ -25,6 +28,8 @@ from ..exceptions import (
     BadRequestException,
     ConflictException,
 )
+
+logger = Logger()
 
 
 class CognitoClient:
@@ -114,15 +119,59 @@ class AdminCognitoClient:
         )
         return response
 
-    def add_user_to_group(self, username: str, group_name: str):
-        self._client.admin_add_user_to_group(
-            UserPoolId=self._user_pool_id, Username=username, GroupName=group_name
-        )
+    # This maybe useful in the future, keeping it commented out for Rev0
+    #  def add_user_to_group(self, username: str, group_name: str):
+    #      self._client.admin_add_user_to_group(
+    #          UserPoolId=self._user_pool_id, Username=username, GroupName=group_name
+    #      )
 
-    def update_user_attributes(self, username: str, attributes: List[dict[str, str]]):
-        self._client.admin_update_user_attributes(
+    def update_user_attributes(self, username: str, attributes: List[Dict[str, str]]) -> Dict:
+        """
+        Updates the user attributes for the given username
+        :param attributes:  List of attributes stored as key value pairs in a
+        dictionary
+        :param attribute_value: The expected value of the attribute
+        :return: A list of matching user records
+        """
+        response = self._client.admin_update_user_attributes(
             UserPoolId=self._user_pool_id, Username=username, UserAttributes=attributes
         )
+        return response
+
+    def get_users_by_attribute(self, attributes: Dict[str, str]) -> List[Dict]:
+        """
+        Retrieve all users from the user pool who have a specific attribute value.
+        :param attribute_name: The attribute name to filter users by (e.g., "email", "role")
+        :param attribute_value: The expected value of the attribute
+        :return: A list of matching user records
+        """
+        users = []
+        pagination_token: Optional[str] = None
+
+        while True:
+            params = {"UserPoolId": self._user_pool_id}
+            if pagination_token:
+                params["PaginationToken"] = pagination_token
+
+            response = self._client.list_users(**params)
+            # Right now the pagination is implemented within this method itself.
+            # Might be worthwhile in the future to move to client side instead
+            # when there are a large number of users to be returned
+            for user in response.get("Users", []):
+                user_attributes = {
+                    attr["Name"]: attr["Value"] for attr in user.get("Attributes", [])
+                }
+                if (
+                    any(user_attributes.get(k) == v for k, v in attributes.items())
+                    or not attributes
+                ):
+                    users.append(user)
+
+            pagination_token = response.get("PaginationToken")
+            if not pagination_token:
+                break
+
+        return users
 
 
 def signup_user_handler(signup_request: SignupRequest, cognito_client: CognitoClient) -> Response:
@@ -148,6 +197,7 @@ def signup_user_handler(signup_request: SignupRequest, cognito_client: CognitoCl
         )
 
     except ClientError as err:
+        logger.error(err)
         error_code = err.response["Error"]["Code"]
         match error_code:
             case "UsernameExistsException":
@@ -187,6 +237,7 @@ def signin_user_handler(signin_request: SigninRequest, cognito_client: CognitoCl
             body=response_body,
         )
     except ClientError as err:
+        logger.error(err)
         error_code = err.response["Error"]["Code"]
         match error_code:
             case "NotAuthorizedException":
@@ -219,9 +270,67 @@ def admin_create_user_handler(
             body=response_body,
         )
     except ClientError as err:
+        logger.error(err)
         error_code = err.response["Error"]["Code"]
         match error_code:
             case "UsernameExistsException":
                 raise ConflictException("User with this username already exists") from err
             case _:
                 raise ExternalServiceException from err
+
+
+def admin_update_user_attributes_handler(
+    update_user_request: UpdateUserAttributeRequest, cognito_client: AdminCognitoClient
+):
+    """
+    Function to create a update a users attributes given the username
+    :param create_user_request: The body of the HTTP request from API gateway
+    :param cognito_client: The AdminCognitoClient used to process the operation
+    :return Response containg the result of the cognito operation
+    """
+    try:
+        cognito_client.update_user_attributes(
+            update_user_request.email, update_user_request.attributes
+        )
+
+        return Response(
+            status_code=HTTPStatus.NO_CONTENT.value,
+        )
+
+    except ClientError as err:
+        logger.error(err)
+        error_code = err.response["Error"]["Code"]
+        match error_code:
+            case "UserNotFoundException":
+                raise ResourceNotFound("user", "username") from err
+            case _:
+                raise ExternalServiceException from err
+
+
+def admin_get_users_handler(
+    get_users_request: GetUsersByAttributeRequest, cognito_client: AdminCognitoClient
+):
+    """
+    Function to get a list of users based on a given attribute
+    :param create_user_request: The body of the HTTP request from API gateway
+    :param cognito_client: The AdminCognitoClient used to process the operation
+    :return Response containg the result of the cognito operation
+    """
+    try:
+        user_array = cognito_client.get_users_by_attribute(get_users_request.attributes)
+
+        return Response(
+            status_code=HTTPStatus.OK.value,
+            content_type=content_types.APPLICATION_JSON,
+            body=user_array,
+        )
+
+    except ClientError as err:
+        logger.error(err)
+        error_code = err.response["Error"]["Code"]
+
+        match error_code:
+            case "UserNotFoundException":
+                raise ResourceNotFound("user", "username") from err
+            case _:
+                raise ExternalServiceException(str(err)) from err

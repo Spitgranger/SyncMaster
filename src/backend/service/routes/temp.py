@@ -10,14 +10,18 @@ from http import HTTPStatus
 
 from ..environment import USER_POOL_CLIENT_ID, USER_POOL_ID
 from ..models.user_authentication.user_request_response import (
+    GetUsersByAttributeRequest,
     SigninRequest,
     SignupRequest,
     AdminSignupRequest,
+    UpdateUserAttributeRequest,
 )
 from ..user_authentication.user_authentication import (
     AdminCognitoClient,
     CognitoClient,
     admin_create_user_handler,
+    admin_get_users_handler,
+    admin_update_user_attributes_handler,
     signin_user_handler,
     signup_user_handler,
 )
@@ -70,6 +74,30 @@ def signin_handler(body: Annotated[SigninRequest, Body()]):
     """
     cognito_client = CognitoClient(USER_POOL_CLIENT_ID)
     return signin_user_handler(body, cognito_client)
+
+
+@router.post("/update_user")
+def update_user_handler(body: Annotated[UpdateUserAttributeRequest, Body()]):
+    """
+    Route to signup a new user
+    :param body: The body of the HTTP request
+    :return: dictionary containing http response
+    """
+    cognito_client = AdminCognitoClient(USER_POOL_CLIENT_ID, USER_POOL_ID)
+
+    return admin_update_user_attributes_handler(body, cognito_client)
+
+
+@router.post("/get_users")
+def get_users_handler(body: Annotated[GetUsersByAttributeRequest, Body()]):
+    """
+    Route to get a list of users based on provided attributes
+    :param body: The body of the HTTP request
+    :return: dictionary containing http response
+    """
+    cognito_client = AdminCognitoClient(USER_POOL_CLIENT_ID, USER_POOL_ID)
+
+    return admin_get_users_handler(body, cognito_client)
 
 
 @router.exception_handler(Exception)
