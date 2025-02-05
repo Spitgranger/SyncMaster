@@ -200,17 +200,23 @@ def signin_user_handler(signin_request: SigninRequest, cognito_client: CognitoCl
 def admin_create_user_handler(
     create_user_request: AdminSignupRequest, cognito_client: AdminCognitoClient
 ) -> Response:
+    """
+    Function to create a user using admin create user flow
+    :param create_user_request: The body of the HTTP request from API gateway
+    :param cognito_client: The AdminCognitoClient used to process the operation
+    :return Response containg the result of the cognito operation
+    """
     try:
         attributes = [{"Name": "email", "Value": create_user_request.email}]
         for key, value in create_user_request.attributes.items():
             attributes.append({"Name": key, "Value": value})
 
-        cognito_client.admin_create_user(create_user_request.email, attributes)
+        response_body = cognito_client.admin_create_user(create_user_request.email, attributes)
 
         return Response(
             status_code=HTTPStatus.CREATED.value,
             content_type=content_types.APPLICATION_JSON,
-            body={"message": "User created successfully"},
+            body=response_body,
         )
     except ClientError as err:
         error_code = err.response["Error"]["Code"]

@@ -22,12 +22,7 @@ from ..user_authentication.user_authentication import (
     signup_user_handler,
 )
 
-from ..exceptions import (
-    ForceChangePasswordException,
-    ResourceNotFound,
-    UnauthorizedException,
-    ResourceNotFound,
-)
+from ..exceptions import HTTPError
 
 
 router = Router()
@@ -84,15 +79,16 @@ def exception_handler(exception: Exception):
     :param exception: The exception caught
     :return: Response containing the correct HTTP code and message of exception
     """
-    if isinstance(exception, ForceChangePasswordException):
-        return Response(
-            status_code=exception.http_code.value,
-            content_type=content_types.APPLICATION_JSON,
-            body={"error": str(exception)},
-        )
+    status_code = HTTPStatus.INTERNAL_SERVER_ERROR.value
+    content_type = content_types.APPLICATION_JSON
+    body = {"error": str(exception)}
+    if isinstance(exception, HTTPError):
+        status_code = exception.http_code.value
+        content_type = content_types.APPLICATION_JSON
+        body = {"error": str(exception)}
 
     return Response(
-        status_code=HTTPStatus.INTERNAL_SERVER_ERROR.value,
-        content_type=content_types.APPLICATION_JSON,
-        body={"error": str(exception)},
+        status_code=status_code,
+        content_type=content_type,
+        body=body,
     )
