@@ -96,3 +96,25 @@ def test_list_site_entries(database_with_two_site_visits):
 
     assert len(visits) == 2
     assert set(visits) == set_of_visits
+
+
+def test_list_site_entries_to_early_time(database_with_two_site_visits):
+    table = DBTable(access=AWSAccessLevel.READ, item_schema=DBSiteVisit)
+
+    visits = list_site_visits(
+        table=table,
+        to_time=PREV_DATE_TIME,
+    )
+
+    assert len(visits) == 0
+
+
+def test_list_site_entries_from_future_time(database_with_two_site_visits):
+    table = DBTable(access=AWSAccessLevel.READ, item_schema=DBSiteVisit)
+
+    visits = list_site_visits(
+        table=table,
+        from_time=FUTURE_DATE_TIME,
+    )
+
+    assert len(visits) == 0
