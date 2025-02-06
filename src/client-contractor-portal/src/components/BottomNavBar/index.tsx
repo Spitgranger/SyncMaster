@@ -1,4 +1,3 @@
-// components/BottomNavBar.js
 import React from 'react';
 import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material';
 import WorkIcon from '@mui/icons-material/Work';
