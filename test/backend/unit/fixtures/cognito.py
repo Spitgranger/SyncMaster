@@ -65,8 +65,8 @@ def signup_request():
     """Creates a mock signup request."""
     yield SignupRequest(
         email="testuser@example.com",
-        password="TestPassword123!",
-        attributes={"custom:role": "admin", "name": "test"},
+        password="TestTest123!",
+        attributes={"custom:role": "contractor", "name": "test"},
     )
 
 
@@ -135,7 +135,7 @@ def cognito_client_with_user(cognito_mock):
         Username=email,
         UserAttributes=[
             {"Name": "email", "Value": email},
-            {"Name": "custom:role", "Value": "admin"},
+            {"Name": "custom:role", "Value": "contractor"},
         ],
         MessageAction="SUPPRESS",  # Suppresses email verification in the mock
     )
@@ -147,4 +147,10 @@ def cognito_client_with_user(cognito_mock):
         Permanent=True,
     )
 
-    yield cognito_client, SigninRequest(email=email, password=password)
+    yield (
+        cognito_client,
+        SigninRequest(email=email, password=password),
+        SigninRequest(
+            email=email, password=password, location=[43.2588581564085, -79.92097591189501]
+        ),
+    )

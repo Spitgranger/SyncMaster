@@ -88,11 +88,18 @@ def test_signup_bad_password(cognito_client, signup_request_bad_password):
 
 
 def test_signin_success(cognito_client_with_user):
-    cognito_client, signin_request = cognito_client_with_user
-    response = signin_user_handler(signin_request, cognito_client)
+    cognito_client, _, signin_request_location = cognito_client_with_user
+    response = signin_user_handler(signin_request_location, cognito_client)
     assert response.status_code == HTTPStatus.OK.value
     assert "AccessToken" in response.body
     assert "IdToken" in response.body
+
+
+def test_signin_fail_location(cognito_client_with_user):
+    cognito_client, signin_request, _ = cognito_client_with_user
+    with pytest.raises(UnauthorizedException) as excinfo:
+        signin_user_handler(signin_request, cognito_client)
+    assert "Location not provided for contractor" in str(excinfo.value)
 
 
 def test_signin_password_challenge(
@@ -105,7 +112,7 @@ def test_signin_password_challenge(
 
 
 def test_signin_wrong_password(cognito_client_with_user):
-    cognito_client, signin_request = cognito_client_with_user
+    cognito_client, signin_request, _ = cognito_client_with_user
     signin_request.password = "test12341!"
     with pytest.raises(UnauthorizedException) as excinfo:
         signin_user_handler(signin_request, cognito_client)

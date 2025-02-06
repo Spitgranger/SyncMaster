@@ -18,6 +18,8 @@ class SigninRequest(BaseModel):
     email: EmailStr
     password: str = Field(..., min_length=8)
     new_password: Optional[str] = Field(default=None)
+    location: Optional[List[float]] = Field(min_length=2, max_length=2, default=None)
+    expected_location: Optional[List[float]] = Field(min_length=2, max_length=2, default=None)
 
 
 class UpdateUserAttributeRequest(BaseModel):

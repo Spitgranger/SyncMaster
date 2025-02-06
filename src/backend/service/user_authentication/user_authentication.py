@@ -19,6 +19,7 @@ from ..exceptions import (
     ResourceNotFound,
     UnauthorizedException,
 )
+from ..location_verification.location_verification import verify_location
 from ..models.user_authentication.user_request_response import (
     AdminSignupRequest,
     GetUsersByAttributeRequest,
@@ -47,7 +48,7 @@ class CognitoClient:
         self._client = boto3.client("cognito-idp")
         self._clientid = clientid
 
-    def authenticate_user(self, username: str, password: str, new_password: Optional[str]):
+    def authenticate_user(self, username: str, password: str, new_password: Optional[str]) -> dict:
         """
         Authenticate a user with their credentials
         :param username: The Cognito username (aliased to email)
@@ -62,6 +63,7 @@ class CognitoClient:
             AuthParameters={"USERNAME": username, "PASSWORD": password},
             ClientId=self._clientid,
         )
+        logger.info(response)
 
         # Check if the user is in "NEW_PASSWORD_REQUIRED" state, admin auth flow
         # requires users to change their assigned one time password
@@ -81,7 +83,27 @@ class CognitoClient:
 
         return response
 
-    def signup_user(self, username: str, password: str, attributes: List[dict[str, str]]):
+    def get_user(self, access_token: str) -> dict:
+        """
+        Authenticate a user with their credentials
+        :param access_token: The unexpired access token for the user
+        :return: The respose from Cognito
+        :raises ClientError Unable to process request for the given parameters
+        """
+        response = self._client.get_user(AccessToken=access_token)
+        return response
+
+    def sign_out(self, access_token: str) -> dict:
+        """
+        Invalidate all tokens issued by cognito to a user
+        :param access_token: The unexpired access token for the user
+        :return: The respose from Cognito
+        :raises ClientError Unable to process request for the given parameters
+        """
+        response = self._client.global_sign_out(AccessToken=access_token)
+        return response
+
+    def signup_user(self, username: str, password: str, attributes: List[dict[str, str]]) -> dict:
         """
         Sign up a user to Cognito
         :param username: The Cognito username (aliased to email)
@@ -250,6 +272,15 @@ def signin_user_handler(signin_request: SigninRequest, cognito_client: CognitoCl
 
         # Extract tokens from the response
         tokens = response.get("AuthenticationResult", {})
+        access_token = tokens.get("AccessToken")
+        user = cognito_client.get_user(access_token)
+        for attr in user.get("UserAttributes", {}):
+            if attr["Name"] == "custom:role" and attr["Value"] == "contractor":
+                if signin_request.location is None:
+                    raise UnauthorizedException("Location not provided for contractor")
+                if not verify_location(signin_request.location[0], signin_request.location[1], 10):
+                    cognito_client.sign_out(access_token)
+                    raise UnauthorizedException("User is not on site")
 
         response_body = {
             "AccessToken": tokens.get("AccessToken"),
