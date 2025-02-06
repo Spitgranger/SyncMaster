@@ -3,16 +3,41 @@ Main lambda handler for all API Gateway events
 """
 
 from aws_lambda_powertools import Logger
-from aws_lambda_powertools.event_handler import APIGatewayRestResolver
+from aws_lambda_powertools.event_handler import APIGatewayRestResolver, Response, content_types
 from aws_lambda_powertools.logging import correlation_paths
 from aws_lambda_powertools.utilities.typing import LambdaContext
+from http import HTTPStatus
 
+from .exceptions import HTTPError
 from .routes import site_visits, users
 
 logger = Logger()
 app = APIGatewayRestResolver(enable_validation=True)
 app.include_router(router=site_visits.router, prefix="/site")
 app.include_router(router=users.router, prefix="/users")
+
+
+@app.exception_handler(Exception)
+def exception_handler(exception: Exception):
+    """
+    Exception handler for all exceptions generated on invocation of this router
+
+    :param exception: The exception caught
+    :return: Response containing the correct HTTP code and message of exception
+    """
+    status_code = HTTPStatus.INTERNAL_SERVER_ERROR.value
+    content_type = content_types.APPLICATION_JSON
+    body = {"error": str(exception)}
+    if isinstance(exception, HTTPError):
+        status_code = exception.http_code.value
+        content_type = content_types.APPLICATION_JSON
+        body = {"error": str(exception)}
+
+    return Response(
+        status_code=status_code,
+        content_type=content_type,
+        body=body,
+    )
 
 
 @logger.inject_lambda_context(correlation_id_path=correlation_paths.API_GATEWAY_REST)
