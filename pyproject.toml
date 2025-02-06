@@ -72,6 +72,7 @@ select = ["I"]
 [tool.pylint.'MAIN']
 load-plugins="pylint.extensions.docparams"
 accept-no-param-doc="no"
+disable=["too-many-locals", "too-many-positional-arguments", "too-many-arguments"]
 
 [tool.pylint.'DOCSTRING']
 default-docstring-type="sphinx"

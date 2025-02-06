@@ -14,7 +14,7 @@ from ....constants import (
 @pytest.fixture()
 def db_site_visit_complete():
     return DBSiteVisit(
-        last_modified_by=TEST_SITE_ID,
+        last_modified_by=TEST_USER_ID,
         last_modified_time=CURRENT_DATE_TIME,
         site_id=TEST_SITE_ID,
         user_id=TEST_USER_ID,
@@ -26,9 +26,9 @@ def db_site_visit_complete():
 @pytest.fixture()
 def db_site_visit_only_entry():
     return DBSiteVisit(
-        last_modified_by=TEST_SITE_ID,
-        last_modified_time=PREV_DATE_TIME,
+        last_modified_by=TEST_USER_ID,
+        last_modified_time=CURRENT_DATE_TIME,
         site_id=TEST_SITE_ID,
         user_id=TEST_USER_ID,
-        entry_time=PREV_DATE_TIME,
+        entry_time=CURRENT_DATE_TIME,
     )

@@ -9,11 +9,17 @@ from backend.service.exceptions import (
 )
 from backend.service.models.db.document import DBDocument
 from backend.service.models.db.site_visit import DBSiteVisit
-from backend.service.util import AWSAccessLevel
+from backend.service.util import AWSAccessLevel, ItemType
 from boto3.dynamodb.conditions import Attr, Key
 from botocore.stub import Stubber
 
-from ..constants import FUTURE_DATE_TIME, PREV_DATE_TIME, TEST_DOCUMENT_PATH_ALT, TEST_USER_ID
+from ..constants import (
+    FUTURE_DATE_TIME,
+    PREV_DATE_TIME,
+    TEST_DOCUMENT_PATH_ALT,
+    TEST_SITE_ID,
+    TEST_USER_ID,
+)
 
 
 def test_put_item(empty_database, db_document):
@@ -270,6 +276,19 @@ def test_query_items_with_gsi(database_with_document):
     items = table.query(gsi=GSI.GSI1, key_condition_expression=Key("type").eq(document.type.value))
     assert len(items) == 1
     assert items[0] == document
+
+
+def test_query_items_in_reverse(database_with_two_site_visits):
+    table = DBTable(access=AWSAccessLevel.READ, item_schema=DBSiteVisit)
+
+    items = table.query(
+        key_condition_expression=Key("pk").eq(
+            f"{ItemType.SITE_VISIT.value}#{TEST_SITE_ID}#{TEST_USER_ID}"
+        ),
+        scan_reverse=True,
+    )
+    assert len(items) == 2
+    assert items[0].entry_time > items[1].entry_time
 
 
 def test_query_items_with_filter(database_with_document):

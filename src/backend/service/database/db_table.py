@@ -227,6 +227,7 @@ class DBTable[T: DBItemModel]:
         key_condition_expression: Optional[ConditionBase] = None,
         filter_expression: Optional[ConditionBase] = None,
         limit: Optional[int] = None,
+        scan_reverse: bool = False,
     ) -> list[T]:
         """
         Queries the database based on the given list of criterion
@@ -238,18 +239,23 @@ class DBTable[T: DBItemModel]:
         :param filter_expression: A condition placed on any attributes, only items meeting this
             condition are returned
         :param limit: The maximum number of entries to be returned from the query
+        :param scan_reverse: if true reverse the order that table items are scanned in, this
+            reverses the order of the items received from the query. By default items come
+            in ascending order, so making this true puts them in descending order.
         :raises ConditionValidationError: The key condition is not valid, this usually happens
             when using a condition other than `.eq` on a hash key
         :raises ValidationError: The returned items did not match the provided schema for the table
         :raises ExternalServiceException: Unexpected error occurs in S3
         """
-        kwargs = {}
+        kwargs: dict = {}
         if gsi:
             kwargs["IndexName"] = gsi.name
         if key_condition_expression:
             kwargs["KeyConditionExpression"] = key_condition_expression
         if filter_expression:
             kwargs["FilterExpression"] = filter_expression
+        if scan_reverse is not None:
+            kwargs["ScanIndexForward"] = not scan_reverse
 
         last_eval_key = None
         items: list[dict] = []

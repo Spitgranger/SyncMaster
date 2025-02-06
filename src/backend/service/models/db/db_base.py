@@ -7,33 +7,19 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from datetime import datetime
 
-from pydantic import BaseModel, computed_field
-from pydantic.config import ConfigDict
+from pydantic import computed_field
 
 from ...util import ItemType
+from ..custom_base_model import CustomBaseModel
 
 
-class DBItemModel(BaseModel, ABC):
+class DBItemModel(CustomBaseModel, ABC):
     """
     An abstract model representing a database item that all database items must implement
     """
 
-    model_config = ConfigDict(
-        frozen=True,
-        extra="ignore",
-        loc_by_alias=True,
-        populate_by_name=True,
-        use_enum_values=True,
-    )
-
     last_modified_by: str
     last_modified_time: datetime
-
-    def model_dump(self, *args, **kwargs) -> dict:
-        return super().model_dump(*args, **kwargs, exclude_none=True, by_alias=True, mode="json")
-
-    def model_dump_json(self, *args, **kwargs) -> str:
-        return super().model_dump_json(*args, **kwargs, exclude_none=True, by_alias=True)
 
     @staticmethod
     @abstractmethod

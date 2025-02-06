@@ -2,16 +2,19 @@
 Defines the model for a site visit as represented in the database
 """
 
-from datetime import date, datetime, time
+from datetime import datetime
 from typing import Optional
 
 from pydantic import computed_field
 
 from ...util import ItemType
+from ..api.site_visit import APISiteVisit
 from .db_base import DBItemModel
 
 
 class DBSiteVisit(DBItemModel):
+    """Model representing a site visit in the database"""
+
     user_id: str
     site_id: str
     entry_time: datetime
@@ -31,12 +34,11 @@ class DBSiteVisit(DBItemModel):
     def sk(self) -> str:
         return self.entry_time.isoformat()
 
-    @computed_field
-    @property
-    def gsi_1_pk(self) -> str:
-        return self.item_type().value
-
-    @computed_field
-    @property
-    def gsi_1_sk(self) -> str:
-        return self.exit_time.isoformat()
+    def to_api_model(self) -> APISiteVisit:
+        """The site visit as an API model, without the DB specific attributes"""
+        return APISiteVisit(
+            site_id=self.site_id,
+            user_id=self.user_id,
+            entry_time=self.entry_time,
+            exit_time=self.exit_time,
+        )

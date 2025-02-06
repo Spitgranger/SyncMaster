@@ -53,6 +53,7 @@ def database_with_complete_site_visit(empty_database, db_site_visit_complete):
 
 
 @pytest.fixture()
-def database_with_entry_only_site_visit(empty_database, db_site_visit_only_entry):
-    empty_database.put_item(Item=db_site_visit_only_entry.model_dump())
-    return empty_database, db_site_visit_only_entry
+def database_with_two_site_visits(database_with_complete_site_visit, db_site_visit_only_entry):
+    database, complete_entry = database_with_complete_site_visit
+    database.put_item(Item=db_site_visit_only_entry.model_dump())
+    return database, {complete_entry, db_site_visit_only_entry}

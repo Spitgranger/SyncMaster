@@ -2,6 +2,7 @@
 Custom Exceptions defined with attributes to help with generating responses
 """
 
+from datetime import datetime
 from http import HTTPStatus
 
 
@@ -73,12 +74,28 @@ class ResourceConflict(HTTPError):
         super().__init__(f"Resource [{resource_id}] of type [{resource_type}] already exists")
 
 
-class ExitTimeConflict(ResourceConflict):
+class ExitTimeConflict(HTTPError):
     """
-    Error relating to an exit time already existing for a user's most recent visit
+    Error relating to an exit time already existing for a user's latest visit
     """
+
+    http_code = HTTPStatus.CONFLICT
 
     def __init__(self, site_id: str, user_id: str):
         super().__init__(
-            f"An exit time is already logged at site [{site_id}] for user [{user_id}]'s most recent visit"
+            f"An exit is already logged at site [{site_id}] for user [{user_id}]'s latest visit"
+        )
+
+
+class TimeConsistencyException(HTTPError):
+    """
+    When attempting modifying a database entry, and a more recent request
+    has already performed a modification
+    """
+
+    http_code = HTTPStatus.INTERNAL_SERVER_ERROR
+
+    def __init__(self, key: str, timestamp: datetime):
+        super().__init__(
+            f"Action on [{key}] failed, item changed since request at [{timestamp.isoformat()}]"
         )
