@@ -1,9 +1,11 @@
 from http import HTTPStatus
+from botocore.stub import Stubber
 
 import pytest
 from backend.service.exceptions import (
     BadRequestException,
     ConflictException,
+    ExternalServiceException,
     ResourceNotFound,
     UnauthorizedException,
     ForceChangePasswordException,
@@ -12,6 +14,7 @@ from backend.service.user_authentication.user_authentication import (
     admin_update_user_attributes_handler,
     signin_user_handler,
     signup_user_handler,
+    logout_user_handler,
     admin_create_user_handler,
     admin_get_users_handler,
 )
@@ -122,3 +125,25 @@ def test_signin_wrong_password(cognito_client_with_user):
 def test_signin_does_not_exist(cognito_client, signin_request):
     with pytest.raises(ResourceNotFound):
         signin_user_handler(signin_request, cognito_client)
+
+
+def test_signout_successful(cognito_client_with_user):
+    cognito_client, _, signin_request_location = cognito_client_with_user
+    response = signin_user_handler(signin_request_location, cognito_client)
+    access_token = response.body["AccessToken"]
+    response = logout_user_handler(access_token, cognito_client)
+    assert response.status_code == HTTPStatus.NO_CONTENT.value
+
+
+def test_signout_fail(cognito_client_with_user):
+    cognito_client, _, _ = cognito_client_with_user
+
+    bad_access_token = ""
+    stubber = Stubber(cognito_client._client)
+    stubber.add_client_error(method="global_sign_out", service_error_code="InternalError")
+    with stubber:
+        with pytest.raises(ExternalServiceException) as excinfo:
+            logout_user_handler(bad_access_token, cognito_client)
+    with pytest.raises(BadRequestException) as excinfo:
+        logout_user_handler(bad_access_token, cognito_client)
+    assert "Invalid token" in str(excinfo.value)

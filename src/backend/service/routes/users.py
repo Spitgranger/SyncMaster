@@ -6,7 +6,7 @@ from http import HTTPStatus
 
 from aws_lambda_powertools.event_handler import Response, content_types
 from aws_lambda_powertools.event_handler.api_gateway import Router
-from aws_lambda_powertools.event_handler.openapi.params import Body
+from aws_lambda_powertools.event_handler.openapi.params import Body, Query
 from typing_extensions import Annotated
 
 from ..environment import USER_POOL_CLIENT_ID, USER_POOL_ID
@@ -24,6 +24,7 @@ from ..user_authentication.user_authentication import (
     admin_create_user_handler,
     admin_get_users_handler,
     admin_update_user_attributes_handler,
+    logout_user_handler,
     signin_user_handler,
     signup_user_handler,
 )
@@ -63,6 +64,17 @@ def signin_handler(body: Annotated[SigninRequest, Body()]):
     """
     cognito_client = CognitoClient(USER_POOL_CLIENT_ID)
     return signin_user_handler(body, cognito_client)
+
+
+@router.get("/signout")
+def signout_handler(user_token: Annotated[str, Query()]):
+    """
+    Route to signout a new user
+    :param user_token: Access token of the user to signout
+    :return: dictionary containing http response
+    """
+    cognito_client = CognitoClient(USER_POOL_CLIENT_ID)
+    return logout_user_handler(user_token, cognito_client)
 
 
 @router.post("/update_user")

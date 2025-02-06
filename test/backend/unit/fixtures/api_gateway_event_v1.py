@@ -134,3 +134,9 @@ def post_update_user_request(api_gateway_event):
     body = json.dumps({"email": "test@test.com", "attributes": [{"Name": "name", "Value": "test"}]})
     event, context = api_gateway_event("/users/update_user", "POST", body)
     yield event, context
+
+
+@pytest.fixture()
+def get_signout_user_request(api_gateway_event):
+    event, context = api_gateway_event('/users/update_user?user_token="eyqq81712"', "GET")
+    yield event, context

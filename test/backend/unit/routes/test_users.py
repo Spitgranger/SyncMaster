@@ -53,3 +53,13 @@ def test_update_user(cognito_mock, post_update_user_request):
     # Check the response
     assert response["statusCode"] == 500
     assert response["multiValueHeaders"]["Content-Type"] == ["application/json"]
+
+
+def test_signout_user(cognito_mock, get_signout_user_request):
+    event, context = get_signout_user_request
+
+    response = lambda_handler(event=event, context=context)
+
+    # Check the response
+    assert response["statusCode"] == 500
+    assert response["multiValueHeaders"]["Content-Type"] == ["application/json"]

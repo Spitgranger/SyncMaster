@@ -304,6 +304,29 @@ def signin_user_handler(signin_request: SigninRequest, cognito_client: CognitoCl
                 raise ExternalServiceException from err
 
 
+def logout_user_handler(user_access_token: str, cognito_client: CognitoClient) -> Response:
+    """
+    Invalidates Cognito tokens for the given user
+    :param user_access_token: The body of the HTTP request
+    :param cognito_client: The CognitoClient used to process the operation
+    :return Response containg the result of the cognito operation
+    """
+    try:
+        cognito_client.sign_out(user_access_token)
+
+        return Response(
+            status_code=HTTPStatus.NO_CONTENT.value,
+        )
+    except ClientError as err:
+        logger.error(err)
+        error_code = err.response["Error"]["Code"]
+        match error_code:
+            case "NotAuthorizedException":
+                raise BadRequestException("Invalid token") from err
+            case _:
+                raise ExternalServiceException from err
+
+
 def admin_create_user_handler(
     create_user_request: AdminSignupRequest, cognito_client: AdminCognitoClient
 ) -> Response:
