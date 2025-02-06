@@ -1,4 +1,3 @@
-// pages/jobs.js
 'use client';
 
 import React from 'react';
