@@ -1,19 +1,17 @@
 import boto3
 import pytest
+from backend.service.environment import COGNITO_ACCESS_ROLE
 from backend.service.models.user_authentication.user_request_response import (
-    SigninRequest,
-    SignupRequest,
     AdminSignupRequest,
     GetUsersByAttributeRequest,
+    SigninRequest,
+    SignupRequest,
     UpdateUserAttributeRequest,
 )
 from backend.service.user_authentication.user_authentication import (
-    CognitoClient,
     AdminCognitoClient,
+    CognitoClient,
 )
-
-from backend.service.environment import COGNITO_ACCESS_ROLE
-
 from backend.service.util import create_client_with_role
 from moto import mock_aws
 

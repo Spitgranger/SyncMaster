@@ -7,6 +7,8 @@ from aws_lambda_powertools.event_handler import APIGatewayRestResolver
 from aws_lambda_powertools.logging import correlation_paths
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
+from .routes import site_visits, users
+
 logger = Logger()
 app = APIGatewayRestResolver(enable_validation=True)
 app.include_router(router=site_visits.router, prefix="/site")

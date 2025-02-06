@@ -13,7 +13,7 @@ def api_gateway_event():
         path: str,
         method: str,
         body: str = "",
-        path_params: dict[str, str] = None,
+        path_params: dict[str, str] = {},
         query_params: dict[str, str] = {},
         time: datetime = CURRENT_DATE_TIME,
     ):
@@ -98,9 +98,10 @@ def enter_site_request(api_gateway_event):
     event, context = api_gateway_event(
         path=f"/site/{TEST_SITE_ID}/enter", method="POST", path_params={"site_id": TEST_SITE_ID}
     )
-    
-    
-@pytest.fixture()  
+    yield event, context
+
+
+@pytest.fixture()
 def exit_site_request(api_gateway_event):
     event, context = api_gateway_event(
         path=f"/site/{TEST_SITE_ID}/exit",
@@ -108,9 +109,10 @@ def exit_site_request(api_gateway_event):
         path_params={"site_id": TEST_SITE_ID},
         time=FUTURE_DATE_TIME,
     )
-    
+    yield event, context
 
-@pytest.fixture()  
+
+@pytest.fixture()
 def list_site_visits_request(api_gateway_event):
     event, context = api_gateway_event(
         path=f"/site/visits",
@@ -121,8 +123,9 @@ def list_site_visits_request(api_gateway_event):
             "limit": "2",
         },
     )
-    
-    
+    yield event, context
+
+
 @pytest.fixture()
 def post_signup_request(api_gateway_event):
     body = json.dumps(
