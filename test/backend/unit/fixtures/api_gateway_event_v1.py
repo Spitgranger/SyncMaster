@@ -1,3 +1,4 @@
+import json
 import uuid
 from datetime import datetime
 
@@ -11,6 +12,7 @@ def api_gateway_event():
     def _api_gateway_event(
         path: str,
         method: str,
+        body: str = "",
         path_params: dict[str, str] = None,
         query_params: dict[str, str] = {},
         time: datetime = CURRENT_DATE_TIME,
@@ -70,7 +72,7 @@ def api_gateway_event():
             "requestContext": request_context,
             "pathParameters": path_params,
             "stageVariables": None,
-            "body": "",
+            "body": body,
             "isBase64Encoded": False,
         }
 
@@ -96,10 +98,9 @@ def enter_site_request(api_gateway_event):
     event, context = api_gateway_event(
         path=f"/site/{TEST_SITE_ID}/enter", method="POST", path_params={"site_id": TEST_SITE_ID}
     )
-    yield event, context
-
-
-@pytest.fixture()
+    
+    
+@pytest.fixture()  
 def exit_site_request(api_gateway_event):
     event, context = api_gateway_event(
         path=f"/site/{TEST_SITE_ID}/exit",
@@ -107,10 +108,9 @@ def exit_site_request(api_gateway_event):
         path_params={"site_id": TEST_SITE_ID},
         time=FUTURE_DATE_TIME,
     )
-    yield event, context
+    
 
-
-@pytest.fixture()
+@pytest.fixture()  
 def list_site_visits_request(api_gateway_event):
     event, context = api_gateway_event(
         path=f"/site/visits",
@@ -121,4 +121,61 @@ def list_site_visits_request(api_gateway_event):
             "limit": "2",
         },
     )
+    
+    
+@pytest.fixture()
+def post_signup_request(api_gateway_event):
+    body = json.dumps(
+        {
+            "email": "test@gmail.com",
+            "name": "Test test",
+            "password": "test1234!",
+            "attributes": {"custom:role": "contractor", "custom:company": "testcompany"},
+        }
+    )
+    event, context = api_gateway_event("/users/signup", "POST", body)
+    yield event, context
+
+
+@pytest.fixture()
+def post_signin_request(api_gateway_event):
+    body = json.dumps({"email": "Test@gmail.com", "password": "GougGoug123!"})
+    event, context = api_gateway_event("/users/signin", "POST", body)
+    yield event, context
+
+
+@pytest.fixture()
+def post_create_user_request(api_gateway_event):
+    body = json.dumps(
+        {
+            "email": "test@gmail.com",
+            "password": "test1234!",
+            "attributes": {
+                "custom:role": "contractor",
+                "custom:company": "testcompany",
+                "name": "test",
+            },
+        }
+    )
+    event, context = api_gateway_event("/users/create_user", "POST", body)
+    yield event, context
+
+
+@pytest.fixture()
+def post_get_users_request(api_gateway_event):
+    body = json.dumps({"attributes": {}})
+    event, context = api_gateway_event("/users/get_users", "POST", body)
+    yield event, context
+
+
+@pytest.fixture()
+def post_update_user_request(api_gateway_event):
+    body = json.dumps({"email": "test@test.com", "attributes": [{"Name": "name", "Value": "test"}]})
+    event, context = api_gateway_event("/users/update_user", "POST", body)
+    yield event, context
+
+
+@pytest.fixture()
+def get_signout_user_request(api_gateway_event):
+    event, context = api_gateway_event('/users/update_user?user_token="eyqq81712"', "GET")
     yield event, context

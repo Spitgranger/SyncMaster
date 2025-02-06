@@ -99,3 +99,47 @@ class TimeConsistencyException(HTTPError):
         super().__init__(
             f"Action on [{key}] failed, item changed since request at [{timestamp.isoformat()}]"
         )
+
+
+class BadRequestException(HTTPError):
+    """
+    Error relating to bad or malformed requests
+    """
+
+    http_code = HTTPStatus.BAD_REQUEST
+
+    def __init__(self, msg: str = "Bad request, check request sent"):
+        super().__init__(msg)
+
+
+class ForceChangePasswordException(HTTPError):
+    """
+    Error relating to an expired password
+    """
+
+    http_code = HTTPStatus.FORBIDDEN
+
+    def __init__(self, msg: str = "Password has expired and must be reset"):
+        super().__init__(msg)
+
+
+class UnauthorizedException(HTTPError):
+    """
+    Errors relating to not having correct authorization to access
+    """
+
+    http_code = HTTPStatus.UNAUTHORIZED
+
+    def __init__(self, msg: str = "Unauthorized to access this resource"):
+        super().__init__(msg)
+
+
+class ConflictException(HTTPError):
+    """
+    Errors relating to not having correct authorization to access
+    """
+
+    http_code = HTTPStatus.CONFLICT
+
+    def __init__(self, msg: str = "Conflict exists when making this request"):
+        super().__init__(msg)
