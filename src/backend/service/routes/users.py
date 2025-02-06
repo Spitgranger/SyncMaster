@@ -99,25 +99,3 @@ def get_users_handler(body: Annotated[GetUsersByAttributeRequest, Body()]):
     cognito_client = AdminCognitoClient(USER_POOL_CLIENT_ID, USER_POOL_ID)
 
     return admin_get_users_handler(body, cognito_client)
-
-
-@router.exception_handler(Exception)
-def exception_handler(exception: Exception):
-    """
-    Exception handler for all exceptions generated on invocation of this router
-    :param exception: The exception caught
-    :return: Response containing the correct HTTP code and message of exception
-    """
-    status_code = HTTPStatus.INTERNAL_SERVER_ERROR.value
-    content_type = content_types.APPLICATION_JSON
-    body = {"error": str(exception)}
-    if isinstance(exception, HTTPError):
-        status_code = exception.http_code.value
-        content_type = content_types.APPLICATION_JSON
-        body = {"error": str(exception)}
-
-    return Response(
-        status_code=status_code,
-        content_type=content_type,
-        body=body,
-    )
