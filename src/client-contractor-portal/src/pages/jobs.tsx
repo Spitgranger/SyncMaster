@@ -4,12 +4,12 @@
 import React from 'react';
 import { Container, Box } from '@mui/material';
 import TopNavBar from '@/components/TopNavBar';
-import AddJob from '@/components/AddJob';
+import EndVisit from '@/components/EndVisit';
 import BottomNavBar from '@/components/BottomNavBar';
 
 const JobsPage = () => {
-  const handleAddJob = () => {
-    console.log('Add New Job Clicked');
+  const handleEndVisit = () => {
+    console.log('EndVisit Clicked');
   };
 
   return (
@@ -33,7 +33,7 @@ const JobsPage = () => {
           justifyContent: 'center',
         }}
       >
-        <AddJob onAddJob={handleAddJob} />
+        <EndVisit onEndVisit={handleEndVisit} />
       </Box>
 
       {/* Bottom Navigation Bar */}
