@@ -2,6 +2,7 @@
 Custom Exceptions defined with attributes to help with generating responses
 """
 
+from datetime import datetime
 from http import HTTPStatus
 
 
@@ -62,6 +63,44 @@ class ResourceNotFound(HTTPError):
         super().__init__(f"Resource [{resource_id}] of type [{resource_type}] not found")
 
 
+class ResourceConflict(HTTPError):
+    """
+    Error relating to a conflict in resources
+    """
+
+    http_code = HTTPStatus.CONFLICT
+
+    def __init__(self, resource_type: str, resource_id: str):
+        super().__init__(f"Resource [{resource_id}] of type [{resource_type}] already exists")
+
+
+class ExitTimeConflict(HTTPError):
+    """
+    Error relating to an exit time already existing for a user's latest visit
+    """
+
+    http_code = HTTPStatus.CONFLICT
+
+    def __init__(self, site_id: str, user_id: str):
+        super().__init__(
+            f"An exit is already logged at site [{site_id}] for user [{user_id}]'s latest visit"
+        )
+
+
+class TimeConsistencyException(HTTPError):
+    """
+    When attempting modifying a database entry, and a more recent request
+    has already performed a modification
+    """
+
+    http_code = HTTPStatus.INTERNAL_SERVER_ERROR
+
+    def __init__(self, key: str, timestamp: datetime):
+        super().__init__(
+            f"Action on [{key}] failed, item changed since request at [{timestamp.isoformat()}]"
+        )
+
+
 class BadRequestException(HTTPError):
     """
     Error relating to bad or malformed requests
@@ -93,6 +132,17 @@ class UnauthorizedException(HTTPError):
 
     def __init__(self, msg: str = "Unauthorized to access this resource"):
         super().__init__(msg)
+
+
+class InsufficientUserPermissionException(HTTPError):
+    """
+    Errors relating to not having sufficient permission to perform an action
+    """
+
+    http_code = HTTPStatus.FORBIDDEN
+
+    def __init__(self, role: str, action: str):
+        super().__init__(f"User role [{role}] not permitted to perform action [{action}]")
 
 
 class ConflictException(HTTPError):

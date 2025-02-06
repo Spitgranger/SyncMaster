@@ -1,23 +1,23 @@
 from http import HTTPStatus
-from botocore.stub import Stubber
 
 import pytest
 from backend.service.exceptions import (
     BadRequestException,
     ConflictException,
     ExternalServiceException,
+    ForceChangePasswordException,
     ResourceNotFound,
     UnauthorizedException,
-    ForceChangePasswordException,
 )
 from backend.service.user_authentication.user_authentication import (
-    admin_update_user_attributes_handler,
-    signin_user_handler,
-    signup_user_handler,
-    logout_user_handler,
     admin_create_user_handler,
     admin_get_users_handler,
+    admin_update_user_attributes_handler,
+    logout_user_handler,
+    signin_user_handler,
+    signup_user_handler,
 )
+from botocore.stub import Stubber
 
 
 def test_signup_success(cognito_client, signup_request):

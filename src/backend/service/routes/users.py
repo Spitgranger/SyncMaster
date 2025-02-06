@@ -2,15 +2,11 @@
 Routes to associated with user management and authentication
 """
 
-from http import HTTPStatus
-
-from aws_lambda_powertools.event_handler import Response, content_types
 from aws_lambda_powertools.event_handler.api_gateway import Router
 from aws_lambda_powertools.event_handler.openapi.params import Body, Query
 from typing_extensions import Annotated
 
 from ..environment import USER_POOL_CLIENT_ID, USER_POOL_ID
-from ..exceptions import HTTPError
 from ..models.user_authentication.user_request_response import (
     AdminSignupRequest,
     GetUsersByAttributeRequest,
@@ -99,25 +95,3 @@ def get_users_handler(body: Annotated[GetUsersByAttributeRequest, Body()]):
     cognito_client = AdminCognitoClient(USER_POOL_CLIENT_ID, USER_POOL_ID)
 
     return admin_get_users_handler(body, cognito_client)
-
-
-@router.exception_handler(Exception)
-def exception_handler(exception: Exception):
-    """
-    Exception handler for all exceptions generated on invocation of this router
-    :param exception: The exception caught
-    :return: Response containing the correct HTTP code and message of exception
-    """
-    status_code = HTTPStatus.INTERNAL_SERVER_ERROR.value
-    content_type = content_types.APPLICATION_JSON
-    body = {"error": str(exception)}
-    if isinstance(exception, HTTPError):
-        status_code = exception.http_code.value
-        content_type = content_types.APPLICATION_JSON
-        body = {"error": str(exception)}
-
-    return Response(
-        status_code=status_code,
-        content_type=content_type,
-        body=body,
-    )

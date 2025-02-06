@@ -2,8 +2,9 @@
 Module allowing interaction with a DynamoDB table, for getting, updating, and deleting items
 """
 
+from datetime import datetime
 from enum import Enum, auto
-from typing import Optional, Type, TypedDict
+from typing import Any, Optional, Type, TypedDict
 
 from aws_lambda_powertools.logging import Logger
 from boto3.dynamodb.conditions import ConditionBase
@@ -81,6 +82,7 @@ class DBTable[T: DBItemModel]:
         """
         try:
             response: dict = self._table.get_item(Key=key)
+            print(response)
             if not response.get("Item"):
                 raise ResourceNotFound(
                     resource_type=self.item_schema.item_type().value, resource_id=str(key)
@@ -120,6 +122,78 @@ class DBTable[T: DBItemModel]:
             raise ExternalServiceException("Unknown Error from AWS") from err
         return item
 
+    def update(
+        self,
+        key: KeySchema,
+        update_attributes: dict[str, Any],
+        last_modified_time: datetime,
+        last_modified_by: str,
+        condition_expression: Optional[ConditionBase] = None,
+    ) -> T:
+        """
+        Updates the given item in the db table. Be careful about modifying attributes that
+        other attributes are derived from.
+
+        :param key: The key of the item in the database to modify
+        :param update_attributes: A dictionary where the keys represent the name of the attribute to
+            update, and the values represent the value to update the attribute to. If the value is
+            None, then the attribute is removed.
+        :param last_modified_time: The time to update the last_modified_time to
+        :param last_modified_by: The user to update the last_modified_by to
+        :param condition_expression: A condition that must be met for the update to succeed
+        :return: The full updated item
+        :raises ConditionCheckFailed: The provided condition was not met
+        :raises ExternalServiceException: Unexpected error occurs in AWS
+        :raises ValidationError: The newly updated item did not match the table schema
+        :raises PermissionException: Assumed role does not have permission update an item
+            in the DB, likely due to table being initialized with only read permissions
+        """
+        expression_attribute_values: dict[str, Any] = {
+            ":last_modified_by": last_modified_by,
+            ":last_modified_time": last_modified_time.isoformat(),
+        }
+        set_attributes: list[str] = [
+            "last_modified_by = :last_modified_by",
+            "last_modified_time = :last_modified_time",
+        ]
+        delete_attributes: list[str] = []
+
+        valid_field_aliases = [i.alias for i in self.item_schema.model_fields.values()]
+        for k, v in update_attributes.items():
+            if (k in self.item_schema.model_fields.keys()) or (k in valid_field_aliases):
+                if v is not None:
+                    expression_attribute_values[f":{k}"] = v
+                    set_attributes.append(f"{k} = :{k}")
+                else:
+                    delete_attributes.append(k)
+
+        update_expression = f"SET {", ".join(set_attributes)}"
+        if delete_attributes:
+            update_expression += f" REMOVE {", ".join(delete_attributes)}"
+
+        kwargs = {}
+        if condition_expression:
+            kwargs["ConditionExpression"] = condition_expression
+
+        try:
+            response = self._table.update_item(
+                Key=key,
+                UpdateExpression=update_expression,
+                ExpressionAttributeValues=expression_attribute_values,
+                ReturnValues="ALL_NEW",
+                **kwargs,
+            )
+        except ClientError as err:
+            logger.exception(err)
+            if err.response["Error"]["Code"] == "AccessDeniedException":
+                raise PermissionException(
+                    "Insufficient permissions to perform put on the table"
+                ) from err
+            if err.response["Error"]["Code"] == "ConditionalCheckFailedException":
+                raise ConditionCheckFailed() from err
+            raise ExternalServiceException("Unknown Error from AWS") from err
+        return self.item_schema.model_validate(response["Attributes"])
+
     def delete(self, key: KeySchema, condition_expression: Optional[ConditionBase] = None) -> None:
         """
         Completes an existing multipart upload
@@ -152,6 +226,8 @@ class DBTable[T: DBItemModel]:
         gsi: Optional[GSI] = None,
         key_condition_expression: Optional[ConditionBase] = None,
         filter_expression: Optional[ConditionBase] = None,
+        limit: Optional[int] = None,
+        scan_reverse: bool = False,
     ) -> list[T]:
         """
         Queries the database based on the given list of criterion
@@ -162,18 +238,24 @@ class DBTable[T: DBItemModel]:
             meeting this condition are returned
         :param filter_expression: A condition placed on any attributes, only items meeting this
             condition are returned
+        :param limit: The maximum number of entries to be returned from the query
+        :param scan_reverse: if true reverse the order that table items are scanned in, this
+            reverses the order of the items received from the query. By default items come
+            in ascending order, so making this true puts them in descending order.
         :raises ConditionValidationError: The key condition is not valid, this usually happens
             when using a condition other than `.eq` on a hash key
         :raises ValidationError: The returned items did not match the provided schema for the table
         :raises ExternalServiceException: Unexpected error occurs in S3
         """
-        kwargs = {}
+        kwargs: dict = {}
         if gsi:
             kwargs["IndexName"] = gsi.name
         if key_condition_expression:
             kwargs["KeyConditionExpression"] = key_condition_expression
         if filter_expression:
             kwargs["FilterExpression"] = filter_expression
+        if scan_reverse is not None:
+            kwargs["ScanIndexForward"] = not scan_reverse
 
         last_eval_key = None
         items: list[dict] = []
@@ -182,11 +264,17 @@ class DBTable[T: DBItemModel]:
             while True:
                 if last_eval_key:
                     kwargs["ExclusiveStartKey"] = last_eval_key
+                if limit:
+                    kwargs["Limit"] = limit
+
                 response: dict = self._table.query(**kwargs)
 
                 items.extend(response.get("Items", []))
 
                 if not (last_eval_key := response.get("LastEvaluatedKey")):
+                    break
+
+                if limit and not (limit := limit - response.get("Count", 0)):
                     break
         except ClientError as err:
             if err.response["Error"]["Code"] == "ValidationException":
