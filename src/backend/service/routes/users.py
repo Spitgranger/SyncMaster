@@ -1,5 +1,5 @@
 """
-Temporary route for initial setup
+Routes to associated with user management and authentication
 """
 
 from http import HTTPStatus
@@ -29,16 +29,6 @@ from ..user_authentication.user_authentication import (
 )
 
 router = Router()
-
-
-@router.get("/test")
-def thingy() -> dict:
-    """
-    Dummy route for use in initial project structure setup. Can be removed later.
-
-    :return: dummy dict.
-    """
-    return {"Hello": "World"}
 
 
 @router.post("/signup")
