@@ -2,11 +2,12 @@
 Main lambda handler for all API Gateway events
 """
 
+from http import HTTPStatus
+
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver, Response, content_types
 from aws_lambda_powertools.logging import correlation_paths
 from aws_lambda_powertools.utilities.typing import LambdaContext
-from http import HTTPStatus
 
 from .exceptions import HTTPError
 from .routes import site_visits, users
@@ -25,6 +26,7 @@ def exception_handler(exception: Exception):
     :param exception: The exception caught
     :return: Response containing the correct HTTP code and message of exception
     """
+    logger.exception(exception)
     status_code = HTTPStatus.INTERNAL_SERVER_ERROR.value
     content_type = content_types.APPLICATION_JSON
     body = {"error": str(exception)}

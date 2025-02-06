@@ -22,6 +22,19 @@ def test_list_sites_handler(database_with_two_site_visits, list_site_visits_requ
     assert response["multiValueHeaders"]["Content-Type"] == ["application/json"]
 
 
+def test_list_sites_handler_bad_role(
+    database_with_two_site_visits, list_site_visits_request_bad_role
+):
+    _, set_of_db_entries = list_site_visits_request_bad_role
+
+    response = lambda_handler(
+        event=list_site_visits_request_bad_role[0], context=list_site_visits_request_bad_role[1]
+    )
+
+    assert response["statusCode"] == HTTPStatus.FORBIDDEN
+    assert response["multiValueHeaders"]["Content-Type"] == ["application/json"]
+
+
 def test_exit_site_handler(
     database_with_two_site_visits, exit_site_request, db_site_visit_only_entry
 ):
