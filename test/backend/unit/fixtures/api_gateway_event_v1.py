@@ -94,14 +94,14 @@ def post_signup_request(api_gateway_event):
             "attributes": {"custom:role": "contractor", "custom:company": "testcompany"},
         }
     )
-    event, context = api_gateway_event("/signup", "POST", body)
+    event, context = api_gateway_event("/users/signup", "POST", body)
     yield event, context
 
 
 @pytest.fixture()
 def post_signin_request(api_gateway_event):
     body = json.dumps({"email": "Test@gmail.com", "password": "GougGoug123!"})
-    event, context = api_gateway_event("/signin", "POST", body)
+    event, context = api_gateway_event("/users/signin", "POST", body)
     yield event, context
 
 
@@ -118,19 +118,19 @@ def post_create_user_request(api_gateway_event):
             },
         }
     )
-    event, context = api_gateway_event("/create_user", "POST", body)
+    event, context = api_gateway_event("/users/create_user", "POST", body)
     yield event, context
 
 
 @pytest.fixture()
 def post_get_users_request(api_gateway_event):
     body = json.dumps({"attributes": {}})
-    event, context = api_gateway_event("/get_users", "POST", body)
+    event, context = api_gateway_event("/users/get_users", "POST", body)
     yield event, context
 
 
 @pytest.fixture()
 def post_update_user_request(api_gateway_event):
     body = json.dumps({"email": "test@test.com", "attributes": [{"Name": "name", "Value": "test"}]})
-    event, context = api_gateway_event("/update_user", "POST", body)
+    event, context = api_gateway_event("/users/update_user", "POST", body)
     yield event, context
