@@ -1,5 +1,5 @@
 """
-Temporary route for initial setup
+Routes for site visit APIs
 """
 
 import json
@@ -22,7 +22,7 @@ router = Router()
 
 
 @router.post("/<site_id>/enter")
-def enter_site_handler(site_id: Annotated[str, Path()]) -> Response:
+def enter_site_handler(site_id: Annotated[str, Path()]):
     """
     Adds a users site visit to the database, with their entry time
 
@@ -45,12 +45,12 @@ def enter_site_handler(site_id: Annotated[str, Path()]) -> Response:
             user_id=visit.user_id,
             entry_time=visit.entry_time,
             exit_time=visit.exit_time,
-        ),
+        ).model_dump_json(),
     )
 
 
 @router.patch("/<site_id>/exit")
-def exit_site_handler(site_id: Annotated[str, Path()]) -> Response:
+def exit_site_handler(site_id: Annotated[str, Path()]):
     """
     Adds an exit time to an existing site visit in the database
 
@@ -74,10 +74,10 @@ def exit_site_handler(site_id: Annotated[str, Path()]) -> Response:
 
 @router.get("/visits")
 def list_site_visits_handler(
-    from_time: Annotated[Optional[datetime], Query(default=None)],
-    to_time: Annotated[Optional[datetime], Query(default=None)],
-    limit: Annotated[Optional[int], Query(default=None)],
-) -> Response:
+    from_time: Annotated[Optional[datetime], Query()] = None,
+    to_time: Annotated[Optional[datetime], Query()] = None,
+    limit: Annotated[Optional[int], Query()] = None,
+):
     """
     Lists the site visits in the database, according to the passed parameters
 
@@ -95,7 +95,7 @@ def list_site_visits_handler(
         to_time=to_time,
         limit=limit,
     )
-    response_body = json.dumps([visit.to_api_model().model_dump_json() for visit in visits])
+    response_body = json.dumps([visit.to_api_model().model_dump() for visit in visits])
 
     return Response(
         status_code=HTTPStatus.OK.value,

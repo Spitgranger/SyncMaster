@@ -1,12 +1,20 @@
-import datetime
 import uuid
+from datetime import datetime
 
 import pytest
+
+from ..constants import CURRENT_DATE_TIME, FUTURE_DATE_TIME, PREV_DATE_TIME, TEST_SITE_ID
 
 
 @pytest.fixture()
 def api_gateway_event():
-    def _api_gateway_event(path: str, method: str):
+    def _api_gateway_event(
+        path: str,
+        method: str,
+        path_params: dict[str, str] = None,
+        query_params: dict[str, str] = {},
+        time: datetime = CURRENT_DATE_TIME,
+    ):
         request_id = str(uuid.uuid4())
 
         request_context = {
@@ -44,8 +52,8 @@ def api_gateway_event():
             "path": path,
             "protocol": "HTTP/1.1",
             "requestId": request_id,
-            "requestTime": datetime.datetime.now().timestamp(),
-            "requestTimeEpoch": datetime.datetime.now(),
+            "requestTime": time.timestamp(),
+            "requestTimeEpoch": time,
             "resourceId": None,
             "resourcePath": path,
             "stage": "$default",
@@ -57,10 +65,10 @@ def api_gateway_event():
             "httpMethod": method,
             "headers": {},
             "multiValueHeaders": {},
-            "queryStringParameters": {},
+            "queryStringParameters": query_params,
             "multiValueQueryStringParameters": {},
             "requestContext": request_context,
-            "pathParameters": None,
+            "pathParameters": path_params,
             "stageVariables": None,
             "body": "",
             "isBase64Encoded": False,
@@ -80,4 +88,37 @@ def api_gateway_event():
 @pytest.fixture()
 def get_request(api_gateway_event):
     event, context = api_gateway_event("/test", "GET")
+    yield event, context
+
+
+@pytest.fixture()
+def enter_site_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/site/{TEST_SITE_ID}/enter", method="POST", path_params={"site_id": TEST_SITE_ID}
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def exit_site_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/site/{TEST_SITE_ID}/exit",
+        method="PATCH",
+        path_params={"site_id": TEST_SITE_ID},
+        time=FUTURE_DATE_TIME,
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def list_site_visits_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/site/visits",
+        method="GET",
+        query_params={
+            "from_time": PREV_DATE_TIME.isoformat(),
+            "to_time": FUTURE_DATE_TIME.isoformat(),
+            "limit": "2",
+        },
+    )
     yield event, context
