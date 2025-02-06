@@ -134,6 +134,17 @@ class UnauthorizedException(HTTPError):
         super().__init__(msg)
 
 
+class InsufficientUserPermissionException(HTTPError):
+    """
+    Errors relating to not having sufficient permission to perform an action
+    """
+
+    http_code = HTTPStatus.FORBIDDEN
+
+    def __init__(self, role: str, action: str):
+        super().__init__(f"User role [{role}] not permitted to perform action [{action}]")
+
+
 class ConflictException(HTTPError):
     """
     Errors relating to not having correct authorization to access

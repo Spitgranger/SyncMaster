@@ -4,7 +4,13 @@ from datetime import datetime
 
 import pytest
 
-from ..constants import CURRENT_DATE_TIME, FUTURE_DATE_TIME, PREV_DATE_TIME, TEST_SITE_ID
+from ..constants import (
+    CURRENT_DATE_TIME,
+    FUTURE_DATE_TIME,
+    PREV_DATE_TIME,
+    TEST_SITE_ID,
+    TEST_USER_ID,
+)
 
 
 @pytest.fixture()
@@ -54,8 +60,8 @@ def api_gateway_event():
             "path": path,
             "protocol": "HTTP/1.1",
             "requestId": request_id,
-            "requestTime": time.timestamp(),
-            "requestTimeEpoch": time,
+            "requestTime": time.isoformat(),
+            "requestTimeEpoch": time.timestamp() * 1000,
             "resourceId": None,
             "resourcePath": path,
             "stage": "$default",
@@ -96,7 +102,10 @@ def get_request(api_gateway_event):
 @pytest.fixture()
 def enter_site_request(api_gateway_event):
     event, context = api_gateway_event(
-        path=f"/site/{TEST_SITE_ID}/enter", method="POST", path_params={"site_id": TEST_SITE_ID}
+        path=f"/site/{TEST_SITE_ID}/enter",
+        method="POST",
+        path_params={"site_id": TEST_SITE_ID},
+        query_params={"user_id": TEST_USER_ID},
     )
     yield event, context
 
@@ -107,6 +116,7 @@ def exit_site_request(api_gateway_event):
         path=f"/site/{TEST_SITE_ID}/exit",
         method="PATCH",
         path_params={"site_id": TEST_SITE_ID},
+        query_params={"user_id": TEST_USER_ID},
         time=FUTURE_DATE_TIME,
     )
     yield event, context
@@ -121,7 +131,18 @@ def list_site_visits_request(api_gateway_event):
             "from_time": PREV_DATE_TIME.isoformat(),
             "to_time": FUTURE_DATE_TIME.isoformat(),
             "limit": "2",
+            "user_role": "admin",
         },
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def list_site_visits_request_bad_role(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/site/visits",
+        method="GET",
+        query_params={"user_role": "contractor"},
     )
     yield event, context
 
