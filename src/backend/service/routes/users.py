@@ -2,15 +2,11 @@
 Routes to associated with user management and authentication
 """
 
-from http import HTTPStatus
-
-from aws_lambda_powertools.event_handler import Response, content_types
 from aws_lambda_powertools.event_handler.api_gateway import Router
 from aws_lambda_powertools.event_handler.openapi.params import Body, Query
 from typing_extensions import Annotated
 
 from ..environment import USER_POOL_CLIENT_ID, USER_POOL_ID
-from ..exceptions import HTTPError
 from ..models.user_authentication.user_request_response import (
     AdminSignupRequest,
     GetUsersByAttributeRequest,
