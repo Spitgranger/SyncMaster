@@ -1,8 +1,5 @@
-
-const API_BASE_URL = "";
-
 export async function signupUser(email: string, password: string) {
-  const response = await fetch(`${API_BASE_URL}/signup`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/signup`, {
     method: "POST",
     headers: { 
       "Content-Type": "application/json"
@@ -23,7 +20,7 @@ export async function signinUser(email: string, password: string) {
       // Get user location from the browser
       const location = await getUserLocation();
       console.log(location)
-      const response = await fetch(`${API_BASE_URL}/signin`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -58,7 +55,7 @@ export async function signinUser(email: string, password: string) {
   }
 
 export async function signoutUser(token: string) {
-  const response = await fetch(`${API_BASE_URL}/signout?user_token=${token}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/signout?user_token=${token}`, {
     method: "GET",
     headers: { "Authorization": `Bearer ${token}` },
   });
