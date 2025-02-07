@@ -25,6 +25,12 @@ from ..util import AWSAccessLevel
 
 router = Router()
 
+cors_headers = {
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, GET, PUT, PATCH, DELETE",
+}
+
 
 @router.post("/upload")
 def upload_handler(body: Annotated[APIDocumentUploadRequest, Body()]):
@@ -37,9 +43,9 @@ def upload_handler(body: Annotated[APIDocumentUploadRequest, Body()]):
     item = upload_file(
         document_table,
         body.site_id,
+        body.document_path,
         body.s3_key,
         body.e_tag,
-        body.document_path,
         body.user_id,
         body.requires_ack,
     )
@@ -47,6 +53,7 @@ def upload_handler(body: Annotated[APIDocumentUploadRequest, Body()]):
         status_code=HTTPStatus.CREATED.value,
         content_type=content_types.APPLICATION_JSON,
         body=item.to_api_model,
+        headers=cors_headers,
     )
 
 
@@ -68,6 +75,7 @@ def get_files_handler(site_id: Annotated[str, Path()]):
         status_code=HTTPStatus.OK.value,
         content_type=content_types.APPLICATION_JSON,
         body=response_body,
+        headers=cors_headers,
     )
 
 
@@ -85,6 +93,7 @@ def get_presigned_url_handler(s3_key: Annotated[str, Path()]):
         status_code=HTTPStatus.CREATED.value,
         content_type=content_types.APPLICATION_JSON,
         body={"s3_presigned_url": url},
+        headers=cors_headers,
     )
 
 
@@ -101,4 +110,5 @@ def delete_file_handler(site_id: Annotated[str, Query()], file_path: Annotated[s
     delete_file(document_table, s3_bucket, file_path, site_id)
     return Response(
         status_code=HTTPStatus.NO_CONTENT.value,
+        headers=cors_headers,
     )

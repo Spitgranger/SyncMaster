@@ -17,6 +17,7 @@ from ..exceptions import (
 from ..file_storage.s3_bucket import S3Bucket
 from ..models.api.document import APIDocumentResponse
 from ..models.db.document import DBDocument
+from ..util import ItemType
 
 logger = Logger()
 
@@ -44,10 +45,12 @@ def get_all_files(
     :param bucket: The S3Bucket containing the files
     :param site_id: The site id to get files for
     """
-    key_expression_specific = Key("pk").eq(f"DOCUMENT#{site_id}")
-    key_expression_all = Key("pk").eq("DOCUMENT#ALL")
+    logger.info(site_id)
+    key_expression_specific = Key("pk").eq(f"{ItemType.DOCUMENT.value}#{site_id}")
+    key_expression_all = Key("pk").eq(f"{ItemType.DOCUMENT.value}#ALL")
 
     site_specific_documents = table.query(key_condition_expression=key_expression_specific)
+    logger.info(site_specific_documents)
     site_wide_documents = table.query(key_condition_expression=key_expression_all)
 
     # split for now, not necessary but the response may change in the future for
@@ -56,14 +59,12 @@ def get_all_files(
     returned_site_wide_documents = []
     for document in site_specific_documents:
         presigned_get_url = bucket.create_get_url(document.s3_key, document.s3_e_tag)
-        api_document = document.to_api_model()
-        api_document.s3_presigned_get = presigned_get_url
+        api_document = document.to_api_model(presigned_get_url)
         returned_specific_documents.append(api_document)
 
     for document in site_wide_documents:
         presigned_get_url = bucket.create_get_url(document.s3_key, document.s3_e_tag)
-        api_document = document.to_api_model()
-        api_document.s3_presigned_get = presigned_get_url
+        api_document = document.to_api_model(presigned_get_url)
         returned_site_wide_documents.append(api_document)
 
     return returned_specific_documents + returned_site_wide_documents

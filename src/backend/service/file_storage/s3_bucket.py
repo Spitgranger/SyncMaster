@@ -49,13 +49,7 @@ class S3Bucket:
             # creating presigned URL's is a local operation, so will not get permission
             # errors from S3, instead we try our best to do the permission check here
             raise PermissionException("Creating an upload URL requires write access")
-        return self._client.generate_presigned_url(
-            ClientMethod="put_object",
-            Params={
-                "Bucket": self.name,
-                "Key": key,
-            },
-        )
+        return self._client.generate_presigned_post(Bucket=self.name, Key=key, Fields={})
 
     def create_get_url(self, key: str, e_tag: str) -> str:
         """

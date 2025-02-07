@@ -9,8 +9,8 @@ from aws_lambda_powertools.event_handler import APIGatewayRestResolver, Response
 from aws_lambda_powertools.logging import correlation_paths
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
-from .routes import documents, site_visits, users
 from .exceptions import HTTPError
+from .routes import documents, site_visits, users
 
 logger = Logger()
 app = APIGatewayRestResolver(enable_validation=True)

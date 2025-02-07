@@ -50,7 +50,7 @@ def create_client_with_role(service_name: str, role: str):
     """
     try:
         assumed_role_object: dict = boto3.client("sts").assume_role(
-            RoleArn=role, RoleSessionName="SyncMasterRoleSession", DurationSeconds=16 * 60
+            RoleArn=role, RoleSessionName="SyncMasterRoleSession", DurationSeconds=30 * 60
         )
 
         creds: dict = assumed_role_object["Credentials"]
@@ -83,7 +83,7 @@ def create_resource_with_role(service_name: str, role: str):
     """
     try:
         assumed_role_object: dict = boto3.client("sts").assume_role(
-            RoleArn=role, RoleSessionName="SyncMasterRoleSession", DurationSeconds=16 * 60
+            RoleArn=role, RoleSessionName="SyncMasterRoleSession", DurationSeconds=30 * 60
         )
 
         creds: dict = assumed_role_object["Credentials"]

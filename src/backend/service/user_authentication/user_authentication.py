@@ -31,6 +31,12 @@ from ..util import create_client_with_role
 
 logger = Logger()
 
+cors_headers = {
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, GET, PUT, PATCH, DELETE",
+}
+
 
 class CognitoClient:
     """
@@ -240,6 +246,7 @@ def signup_user_handler(signup_request: SignupRequest, cognito_client: CognitoCl
         return Response(
             status_code=HTTPStatus.CREATED.value,
             content_type=content_types.APPLICATION_JSON,
+            headers=cors_headers,
             body=response_body,
         )
 
@@ -290,6 +297,7 @@ def signin_user_handler(signin_request: SigninRequest, cognito_client: CognitoCl
         return Response(
             status_code=HTTPStatus.OK.value,
             content_type=content_types.APPLICATION_JSON,
+            headers=cors_headers,
             body=response_body,
         )
     except ClientError as err:
@@ -316,6 +324,7 @@ def logout_user_handler(user_access_token: str, cognito_client: CognitoClient) -
 
         return Response(
             status_code=HTTPStatus.NO_CONTENT.value,
+            headers=cors_headers,
         )
     except ClientError as err:
         logger.error(err)
@@ -346,6 +355,7 @@ def admin_create_user_handler(
         return Response(
             status_code=HTTPStatus.CREATED.value,
             content_type=content_types.APPLICATION_JSON,
+            headers=cors_headers,
             body=response_body,
         )
     except ClientError as err:
@@ -401,6 +411,7 @@ def admin_get_users_handler(
         return Response(
             status_code=HTTPStatus.OK.value,
             content_type=content_types.APPLICATION_JSON,
+            headers=cors_headers,
             body=user_array,
         )
 
