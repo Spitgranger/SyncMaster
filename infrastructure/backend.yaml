@@ -27,6 +27,11 @@ Globals:
     Runtime: python3.13
     Architectures:
       - x86_64
+    Environment:
+      Variables:
+        USER_POOL_CLIENT_ID: !Ref UserPoolClient
+        USER_POOL_ID: !Ref UserPool
+        TABLE_NAME: !Ref Database
 
 Resources:
   API:
@@ -57,6 +62,167 @@ Resources:
             Action:
               - sts:AssumeRole
 
+  CognitoAccessPolicy:
+      Type: AWS::IAM::ManagedPolicy
+      Properties:
+        Description: Access to necessary cognito actions
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action:
+                - cognito-idp:AdminCreateUser
+                - cognito-idp:AdminInitiateAuth
+                - cognito-idp:AdminUpdateUserAttributes
+                - cognito-idp:AdminAddUserToGroup
+                - cognito-idp:AdminGetUser
+                - cognito-idp:ListUsers
+              Resource:
+                - !Sub "arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPool}"
+
+
+  DatabaseRead:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Ready Only Access to a DynamoDB Table
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:DescribeTable
+              - dynamodb:BatchGetItem
+              - dynamodb:GetItem
+              - dynamodb:Query
+              - dynamodb:Scan
+            Resource:
+              - !GetAtt Database.Arn
+              - !Sub ${Database.Arn}/index/*
+
+  DatabaseWrite:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Write Access to a DynamoDB Table
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:DescribeTable
+              - dynamodb:BatchWriteItem
+              - dynamodb:DeleteItem
+              - dynamodb:PutItem
+              - dynamodb:UpdateItem
+            Resource:
+              - !GetAtt Database.Arn
+
+  CognitoAccessRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: CognitoLambdaExecutionRole
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+          - !Ref CognitoAccessPolicy
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                AWS: !GetAtt LambdaExecutionRole.Arn
+              Action:
+                - sts:AssumeRole
+
+  DatabaseReadRole:
+    Type: AWS::IAM::Role
+    Properties:
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - !Ref DatabaseRead
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !GetAtt LambdaExecutionRole.Arn
+            Action: sts:AssumeRole
+
+  DatabaseWriteRole:
+    Type: AWS::IAM::Role
+    Properties:
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - !Ref DatabaseRead
+        - !Ref DatabaseWrite
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !GetAtt LambdaExecutionRole.Arn
+            Action: sts:AssumeRole
+
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: SyncMasterUsers
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireUppercase: true
+          RequireLowercase: true
+          RequireNumbers: true
+      AutoVerifiedAttributes:
+        - email
+      Schema:
+        - AttributeDataType: String
+          Name: company
+          Required: false
+        - AttributeDataType: String
+          Name: role
+          Required: false
+
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      AccessTokenValidity: 12
+      ClientName: SyncMasterAppClient
+      IdTokenValidity: 12
+      UserPoolId: !Ref UserPool
+      GenerateSecret: false
+      ExplicitAuthFlows:
+        - ADMIN_NO_SRP_AUTH
+        - USER_PASSWORD_AUTH
+
+  Database:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+        - AttributeName: sk
+          AttributeType: S
+        - AttributeName: last_modified_time
+          AttributeType: S
+        - AttributeName: type
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+        - AttributeName: sk
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: GSI1
+          KeySchema:
+            - AttributeName: type
+              KeyType: HASH
+            - AttributeName: last_modified_time
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      SSESpecification:
+        SSEEnabled: False
+      BillingMode: PAY_PER_REQUEST
+
   ApiFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -73,6 +239,11 @@ Resources:
             Path: /{proxy+} # Send requests on any path to the lambda function
             Method: ANY # Send requests using any http method to the lambda function
             RestApiId: !Ref API
+      Environment:
+        Variables:
+          COGNITO_ACCESS_ROLE: !GetAtt CognitoAccessRole.Arn
+          TABLE_READ_ROLE: !GetAtt DatabaseReadRole.Arn
+          TABLE_WRITE_ROLE: !GetAtt DatabaseWriteRole.Arn
 
 Outputs:
     SyncMasterApi:

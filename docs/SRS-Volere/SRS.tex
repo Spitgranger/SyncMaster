@@ -56,6 +56,8 @@ Management System}
   11/04/2024 & Rafeed Iqbal & Added SR-S1\\
   11/04/2024 & Akshit Gulia & Removed FR-2\\
   11/04/2024 & Akshit Gulia & Removed PR-SL2\\
+  12/27/2024 & Mitchell Hynes & Added Peer Review Issues 135, 136\\
+  01/27/2025 & Mitchell Hynes & Removed Sharepoint from scope, modified requirements\\
   \bottomrule
 \end{tabularx}
 
@@ -249,12 +251,12 @@ To understand the current practices at the City of Hamilton see the
 N/A
 \subsection{Off-the-Shelf Software}
 \begin{enumerate} [{C-OTS}1.]
-  \item The system must integrate with Sharepoint to synchronize documents in
-    Sharepoint with documents in the system.
-  \item The system must integrate with Infor EAM, to show the status of work
-    orders associated with a document.
-  \item The system must integrate with MySDS to show relevent relevant SDS
-    documents to users on a given site.
+  \item \sout{ The system must integrate with Sharepoint to synchronize documents in
+    Sharepoint with documents in the system.} \textcolor{red}{Removing due to technical infeasability.}
+  \item \sout{ The system must integrate with Infor EAM, to show the status of work
+    orders associated with a document.} \textcolor{red}{Removing as this software is not yet implemented and is proprietary.}
+  \item \sout{The system must integrate with MySDS to show relevent relevant SDS
+    documents to users on a given site.} \textcolor{red}{Removing as MySDS is a proprietary system.}
 \end{enumerate}
 
 \subsection{Anticipated Workplace Environment}
@@ -272,9 +274,10 @@ N/A
 
 \subsection{Schedule Constraints}
 \begin{enumerate} [{C-SCH}1.]
-  \item A requirement is to integrate with the Infor EAM system the city intends
+  \item \sout{A requirement is to integrate with the Infor EAM system the city intends
     on using however, this system will not be available until
-    February 2025, so no testing can be done on this system until then.
+    February 2025, so no testing can be done on this system until then.} 
+    \textcolor{red}{Removing as this software is not yet implemented and is proprietary.}
 
   \item The project deadline is April 2, 2025.
 \end{enumerate}
@@ -301,17 +304,22 @@ involved in the Project}
   \item CSE: Confined Space Entry
   \item Dry Well: A room which houses industrial equipment such as pumps
     and valves.
+  \item GPS: Global Positioning System
   \item Hazard Assessment Form: A form outlining potential
     hazards at a location.
   \item Hot Works: Work which produces ignition sources.
     Requires an accompanying hot works permit.
   \item HVAC: Heating, Ventilation, and Air Conditiong.
   \item Infor EAM: An Enterprise Asset Management system.
+  \item Integrity: The assurance that a documents content, format, and structure remain unchanged from its original state.
+  Measured by checking uploaded documents share the same checksum.
+  \item MySDS: An external application which provides safety data sheets.
   \item PMATS: Plant Maintenance and Technical Services.
   \item PO: Purchase Order.
   \item PPE: Personal Protective Equipment.
   \item SCADA: Supervisory Control and Data Acquisition.
   \item SDS: Safety Data Sheets.
+  \item \sout{Sharepoint: A Microsoft platform for collaboration and file storage.}
   \item Wet Well: A portion of a wastewater pumping station which receives
     and temporarily stores wastewater.
 \end{itemize}
@@ -345,6 +353,8 @@ involved in the Project}
     detailed cybersecurity specifications.
   \item The existing entry and exit procedure for stations is not modified
     and our application will coexist with it.
+  \item Existing City procedures will not change during the course of development.
+  \item All external services are operating as expected.
 \end{itemize}
 \section{The Scope of the Work}
 \subsection{The Current Situation}
@@ -610,8 +620,8 @@ N/A.
 \subsection{Formal Definitions}
 \begin{itemize}
   \item Let \(U = \{u_1, u_2, \cdots, u_i\}\) be the set of users in the system.
-  \item Let \(R = \{r_1, r_2, \cdots, r_r\}\) be the set of roles (e.g. manager,
-    contractor, subcontractor).
+  \item Let \(R = \{r_1, r_2, \cdots, r_r\}\) be the set of roles (e.g. admin,
+    contractor, employee).
   \item Let \(A = \{a_1, a_2, \cdots, a_s\}\) be the set of actions (e.g.
     upload, authenticate, sign, view).
   \item Let \(C = \{c_1, c_2, \cdots, c_t\}\) be the set of compliance
@@ -685,16 +695,17 @@ N/A.
       Sharepoint, this means any changes in this system must be
       reflected in the corresponding Sharepoint document, and any
     changes to the document in Sharepoint must be reflected in this system.}
-  \item The system should have different access levels depending on
-    the type of user. Only Admin users should be able to change
+  \item The system should have 3 types of users: Contractor, Employee, and Admin. 
+    Only Admin users can change
     access permissions of other users and have read and write
-    accesses to all documents in the system. Contractors/general
-    users should only have read access to documents and be able to
-    sign documents. See (1) in \textbf{Section 9.2 Formal Expressions}.
+    accesses to all documents in the system. Contractors and Employee
+    users only have read access to documents. Employees have read-only access from the manager portal
+    and can't view contractor logs. Contractor station access and file uploads are logged.
+    See (1) in \textbf{Section 9.2 Formal Expressions}.
   \item The current site, work order number, job details, and entry/exit time of
     contractors should be visible to admin users in the system.
-  \item The system must implement a form of geolocation verification before
-    contractors are able to authenticate and upload documents. See (3) and
+  \item The system should implement a form of geolocation verification before
+    contractors are able to authenticate and upload documents. This must log when a contractor is on site. See (3) and
     (4) in \textbf{Section 9.2 Formal Expressions}.
   \item The system must notify users when a complicance document has expired.
     See (7) in \textbf{Section 9.2 Formal Expressions}.
@@ -706,7 +717,7 @@ N/A.
     completion of required training. See (6) in
     \textbf{Section 9.2 Formal Expressions}.
   \item The system must prevent a user from authenticating or uploading
-    documents if the required training for the specific site is not complete.
+    documents if the required training for the specific site is not complete, unless they are accompanied by an employee.
     See (2) in \textbf{Section 9.2 Formal Expressions}.
 
 \end{enumerate}
@@ -794,11 +805,10 @@ N/A
 \section{Performance Requirements}
 \subsection{Speed and Latency Requirements}
 \begin{enumerate}[{PR-SL}1.]
-  \item Average time for retrieving the documents should not exceed 2 seconds
+  \item Average time for retrieving the documents should not exceed 2 seconds to minimize user frustration
   \item \sout{Synching documents with SharePoint should be completed in
     less than 7 seconds for file sizes up to 15 MB}
-  \item The portal's user interface should be responsive and should
-    react accordingly with the user interactions.
+  \item The portal's user interface should be responsive and process user input within 2 seconds to minimize frustration.
 \end{enumerate}
 \subsection{Safety-Critical Requirements}
 \begin{enumerate}[{PR-SC}1.]
@@ -809,9 +819,10 @@ N/A
 \subsection{Precision or Accuracy Requirements}
 \begin{enumerate}[{PR-PA}1.]
   \item Search queries related to documents or user data should
-    return at least 95\% relevant results
+    return at least 95\% relevant results as it strikes a balance in being confident in results 
+    while allowing a reasonable margin for error
   \item A data integrity of 99.99\% should be maintained to ensure no
-    corruption or data loss during upload or retrieval
+    corruption or data loss during upload or retrieval as data integrity is of high importance to maintain a single source of truth
 \end{enumerate}
 
 \subsection{Robustness or Fault-Tolerance Requirements}
@@ -840,8 +851,8 @@ N/A
 
 \subsection{Longevity Requirements}
 \begin{enumerate}[{PR-LR}1.]
-  \item The system should have a modular design to easily allow the
-    introduction of new features
+  \item \sout{The system should have a scalable design to easily allow the
+    introduction of new features} \textcolor{red}{Removing as it's a constraint.}
 \end{enumerate}
 
 \newpage{}
@@ -868,8 +879,9 @@ N/A
       no longer required by the stakeholders due to city policy and
       security concerns. The requirement for related functionality is
     covered by SR-IR2.}
-  \item Application should be open for integration with upcoming Work
-    Order tracking system in the city's Enterprise Asset Management software.
+  \item \sout{Application should be open for integration with upcoming Work
+    Order tracking system in the city's Enterprise Asset Management software.}\\
+    \textcolor{red}{Work order system does not exist, removing requirement from scope.}
 \end{enumerate}
 \subsection{Productization Requirements}
 N/A
@@ -886,17 +898,19 @@ N/A
 \section{Maintainability and Support Requirements}
 \subsection{Maintenance Requirements}
 \begin{enumerate} [{MS-MTN}1.]
-  \item A deployment of the system should take no more than 30 minutes (not
-    including testing, and building time).
-  \item The build time of the system should be no longer than 10 minutes (not
-    including testing time).
-  \item All automated tests should be able to run in under 10 minutes
+  \item \sout{A deployment of the system should take no more than 30 minutes (not
+    including testing, and building time).}
+  \item \sout{The build time of the system should be no longer than 10 minutes (not
+    including testing time).}
+  \item \sout{All automated tests should be able to run in under 10 minutes.}
   \item The system should have rigourous unit testing, line coverage should be
     $\ge$ 95\%, branch coverage should be $\ge$ 90\%.
   \item All core functionalities of the system (i.e. Functional Requirements),
-    should have both automated end-to-end and unit testing corresponding to them
+    should have automated end-to-end testing.
   \item The project must be able to be maintained by its users, as original
     developers will not be maintaining it after April 2, 2025.
+  \item All core functionalities of the system (i.e. Functional Requirements),
+    should have automated unit testing.
 \end{enumerate}
 \subsection{Supportability Requirements}
 \begin{enumerate} [{MS-SUP}1.]
@@ -923,7 +937,7 @@ N/A
 \subsection{Access Requirements}
 \begin{enumerate} [{SR-AR}1.]
   \item Only authorized contractors and employees should be able to access the
-    portal for completing work on site.
+    portal for completing work on site. A visitor account will exist for authorized contractors without an account.
   \item Only users with managerial level access should be able to get data on
     contractors and employees.
   \item Only users with administrative access should be able to make changes to
@@ -935,8 +949,8 @@ N/A
 \begin{enumerate} [{SR-IR}1.]
   \item The application should not allow the addition, removal or modification
     of files by users without proper access and authentication.
-  \item The documents displayed should match the appropriate version available
-    on SharePoint and/or MySDS.
+  \item \sout{The documents displayed should match the appropriate version available
+    on SharePoint and/or MySDS.}
   \item The application should minimize the amount of bad or incomplete data
     inputted through the portal.
 \end{enumerate}
@@ -991,6 +1005,91 @@ N/A
     DWQMS (Drinking Water Quality Management System).
 \end{enumerate}
 
+\section{Requirements Traceability Matrix}
+
+\begin{tabular}{|p{3cm}|p{3cm}|p{8cm}|}
+\hline
+\textbf{Requirement} & \textbf{Dependencies} & \textbf{Dependents}\\
+\hline
+FR1 & & PR-CR1, PR-CR2, PR-PA2, MS-MTN5, MS-MTN7, MS-SUP1\\
+FR3 & & PR-SC2, MS-MTN5, MS-MTN7\\
+FR4 & &MS-MTN5, MS-MTN7 \\
+FR5 & & MS-MTN5, MS-MTN7\\
+FR6 & & MS-MTN5, MS-MTN7\\
+FR7 & & MS-MTN5, MS-MTN7\\
+FR8 & & MS-MTN5, MS-MTN7\\
+FR9 & & MS-MTN5, MS-MTN7\\
+LF-AP1 & & \\
+LF-ST1 & & \\
+UH-EU1 & & \\
+UH-EU2 & & \\
+UH-LR1 & & \\
+UH-LR2 & & \\
+UH-UP1 & & \\
+UH-UP2 & & \\
+UH-AS1 & & \\
+PR-Sl1 & & \\
+PR-SL3 & & \\
+PR-SC1 & & \\
+PR-SC2 & FR-3& \\
+PR-PA1 & & \\
+PR-PA2 & FR1& \\
+PR-RFT1& & \\
+PR-RFT2& & \\
+PR-CR1& FR1& \\
+PR-CR2& FR1& \\
+PR-SE1& & \\
+PR-SE2& & \\
+PR-LR1& & \\
+OE-PE1& & \\
+OE-WE1& & \\
+OE-WE2& & \\
+OE-IAS3& & \\
+OE-REl1& & \\
+OE-REL2& & \\
+OE-REL3& & \\
+OE-REL4& & \\
+\hline
+\end{tabular}
+
+\begin{tabular}{|p{3cm}|p{3cm}|p{8cm}|}
+\hline
+\textbf{Requirement} & \textbf{Dependencies} & \textbf{Dependents}\\
+\hline
+MS-MTN1& & \\
+MS-MTN2& & \\
+MS-MTN3& & \\
+MS-MTN4& & \\
+MS-MTN5& FR1, FR2, FR3, FR4, FR5, FR6, FR7, FR8, FR9& \\
+MS-MTN6& & \\
+MS-MTN7& FR1, FR2, FR3, FR4, FR5, FR6, FR7, FR8, FR9& \\
+MS-SUP1& FR1, FR2, FR3, FR4, FR5, FR6, FR7, FR8, FR9& \\
+MS-SUP2& & \\
+MS-SUP3& & \\
+MS-SUP4& & \\
+MS-APD1& & \\
+MS-ADP2& & \\
+MS-ADP3& & \\
+SR-AR1& & \\
+SR-AR2& & \\
+SR-AR3& & \\
+SR-AR4& & \\
+SR-IR1& & \\
+SR-IR2& & \\
+SR-IR3& & \\
+SR-PR1& & \\
+SR-PR2& & \\
+SR-AU1& & \\
+SR-S1& & \\
+CR-CR1& & \\
+CR-L1& & \\
+CR-L2& & \\
+CR-S1& & \\
+\hline
+\end{tabular}
+\\
+\\
+Table outlining all the requirements, their dependencies, and their dependents.
 \section{Open Issues}
 \begin{enumerate}
   \item The authentication methods for new users must meet security
@@ -1000,14 +1099,16 @@ N/A
     the city's resources must be at a certain standard to be
     deployed. The feasibility of reaching the required standards has
     yet to be determined.
-  \item The feasibility of integrating the application with the City
+  \item \sout{The feasibility of integrating the application with the City
     of Hamilton's current systems (e.g., MySDS, SharePoint) has yet
     to be determined. We require documentation and testing to assess
-    compatibility.
-  \item The feasibility of integration with upcoming systems, such as
+    compatibility.} \textcolor{red}{The SyncMaster Application will not directly connect to these existing
+    City systems due to their proprietary nature and security concerns.}
+  \item \sout{The feasibility of integration with upcoming systems, such as
     the work order tracking system in Infor EAM and security
     solutions, has yet to be determined. We require further
-    information and documentation from the City.
+    information and documentation from the City.} \textcolor{red}{The SyncMaster application will not directly tie into the InforEAM system
+    system as it is not yet deployed, is proprietary, and is outside of the core scope for this project.}
 \end{enumerate}
 
 \section{Off-the-Shelf Solutions}
@@ -1020,10 +1121,10 @@ but existing solutions do not provide this capability. They also want to be
 able to verify that people were at a given site, when completing work, which
 again there isn't a ready made product to do.
 \subsection{Reusable Components}
-We can use Sharepoint as file storage, since the city wants Sharepoint and this
+\sout{We can use Sharepoint as file storage, since the city wants Sharepoint and this
 system to be in sync, and storing the files in two seperate locations and then
 syncing them will introduce a lot of overhead. Instead, all files can just be
-stored on Sharepoint.
+stored on Sharepoint.} \textcolor{red}{The City's internal Sharepoint cannot be used as external actors are not permitted access.}
 \subsection{Products That Can Be Copied}
 N/A
 
@@ -1085,14 +1186,16 @@ requirements will be changed accordingly.
   \item Work on documentation and deliverables.
   \item Get feedback from stakeholders, TAs, and the professor and implement
     suggested changes.
+  \item Work on the initial prototype emphasizing the functional requirements and prepare a meeting in January
+to demonstrate to the stakeholder for feedback.
 \end{enumerate}
 
 \subsection{Planning of the Development Phases}
 \begin{enumerate}
   \item \textit{Proof of Concept}: Will start development after
     October 9th, 2024. Aim to complete by November 4th.
-  \item \textit{Rev. 0}: Aim to complete by February 1st, 2024.
-  \item \textit{Rev. 1}: Aim to complete by March 30th, 2024.
+  \item \textit{Rev. 0}: Aim to complete by February 6, 2024. The priority for this revision will be to implement FR1, FR3, and FR5.
+  \item \textit{Rev. 1}: Aim to complete by March 30th, 2024. This revision will include the remaining functional requirements.
   \item \textit{Future revisions}: TBD
 \end{enumerate}
 
@@ -1126,8 +1229,8 @@ project until its completion.\\
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
   \toprule {\textbf{Item}} & {\textbf{Cost}} & {\textbf{Description}}\\
   \midrule
-  Cloud Services   & \$ TBD     & Amazon Web Services (AWS) \\
-  Domain Name      & \$ TBD     & TBD           \\
+  Cloud Services   & \$ 10     & Estimated Amazon Web Services (AWS) fees for 2 months of deployment\\
+  Domain Name      & \$ 20     & Estimated cost of registering a top level domain for SyncMaster           \\
   \bottomrule
 \end{tabularx}
 
@@ -1168,6 +1271,15 @@ moment. This may change as the project evolves in the future.
   \item Use modular design that supports future integration with
     upcoming systems. Use dummy APIs to test the functionality.
 \end{enumerate}
+
+\section{References}
+This Requirements Specification was adapted from the Volere template available at the following links. 
+We acknowledge that this document uses material from the Volere Requirements
+Specification Template, copyright © 1995 – 2012 the Atlantic Systems Guild Limited.
+\begin{itemize}
+\item \href{https://www.cs.uic.edu/~i440/VolereMaterials/templateArchive16/c%20Volere%20template16.pdf}{Volere Template}
+\item \href{https://www.volere.org/templates/volere-requirements-specification-template/}{Volere Website}
+\end{itemize}
 
 \newpage{}
 \section*{Appendix --- Symbolic Parameters}
