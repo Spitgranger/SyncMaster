@@ -1,5 +1,5 @@
 export async function signupUser(email: string, password: string) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/signup`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/signup`, {
     method: "POST",
     headers: { 
       "Content-Type": "application/json"
@@ -21,7 +21,7 @@ export async function resetPassword(email: string, password: string, newPassword
       const location = await getUserLocation();
       console.log("User Location:", location);
   
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/reset-password`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -48,7 +48,7 @@ export async function signinUser(email: string, password: string) {
       const location = await getUserLocation();
       console.log(location);
   
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/signin`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, location }),
@@ -79,7 +79,7 @@ export async function signinUser(email: string, password: string) {
   }
 
 export async function signoutUser(token: string) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/signout?user_token=${token}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/signout?user_token=${token}`, {
     method: "GET",
     headers: { "Authorization": `Bearer ${token}` },
   });
