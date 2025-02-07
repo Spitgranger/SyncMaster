@@ -9,7 +9,7 @@ dependencies = [
     "boto3==1.35.90",
     "botocore==1.35.90",
     "cachetools==5.5.1",
-    "pydantic==2.10.4",
+    "pydantic[email]==2.10.4",
 ]
 
 [dependency-groups]
@@ -18,6 +18,7 @@ dev = [
     "cfn-lint==1.22.2",
     "coverage==7.6.10",
     "coverage-threshold==0.5.0",
+    "joserfc>=1.0.2",
     "moto==5.0.25",
     "mypy==1.14.1",
     "pylint==3.3.3",
@@ -44,9 +45,11 @@ env = [
     "DOCUMENT_STORAGE_BUCKET_NAME=test_document_bucket",
     "DOCUMENT_STORAGE_BUCKET_READ_ROLE=arn:aws:iam::123456789012:role/document_s3_read_role",
     "DOCUMENT_STORAGE_BUCKET_WRITE_ROLE=arn:aws:iam::123456789012:role/document_s3_write_role",
+    "USER_POOL_CLIENT_ID=aeffa230awe24",
     "TABLE_NAME=test_table",
     "TABLE_READ_ROLE=arn:aws:iam::123456789012:role/table_read_role",
-    "TABLE_WRITE_ROLE=arn:aws:iam::123456789012:role/table_write_role"
+    "TABLE_WRITE_ROLE=arn:aws:iam::123456789012:role/table_write_role",
+    "COGNITO_ACCESS_ROLE=arn:aws:iam::123456789012:role/cognito_access_role"
 ]
 
 [tool.coverage.run]
@@ -72,6 +75,7 @@ select = ["I"]
 [tool.pylint.'MAIN']
 load-plugins="pylint.extensions.docparams"
 accept-no-param-doc="no"
+disable=["too-many-locals", "too-many-positional-arguments", "too-many-arguments"]
 
 [tool.pylint.'DOCSTRING']
 default-docstring-type="sphinx"
@@ -85,3 +89,9 @@ module = [
     "botocore.*",
 ]
 ignore_missing_imports = true
+
+[tool.pyright]
+executionEnvironments = [{ root = "src/backend" }]
+typeCheckingMode = "standard"
+venv = ".venv"
+venvPath = "."
