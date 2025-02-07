@@ -15,6 +15,20 @@ export async function signupUser(email: string, password: string) {
   return response.json();
 }
 
+export async function resetPassword(email: string, password: string, newPassword: string) {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/reset-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password, new_password: newPassword }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to reset password");
+  }
+
+  return response.json();
+}
+
 export async function signinUser(email: string, password: string) {
     try {
       // Get user location from the browser
