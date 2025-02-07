@@ -1,4 +1,5 @@
 import FilePathBreadCrumbComponent from '@/components/FilePathBreadCrumbComponent'
+import FileUploaderComponent from '@/components/FileUploaderComponent'
 import DashboardLayout from '@/components/layouts/DashboardLayout'
 import { DocumentTreeContextProvider, DocumentTreeDispatchContext, DocumentTreeStateContext } from '@/contexts/DocumentTreeContext'
 import { useRouter } from 'next/router'
@@ -72,7 +73,7 @@ const ejfakle = () => {
           }
         </>
       )}
-
+      <FileUploaderComponent />
     </>
   )
 }
