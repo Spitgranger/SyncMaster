@@ -21,7 +21,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ email }) => {
 
     try {
       await resetPassword(email, password, newPassword);
-      window.location.href = "/dashboard"; // Redirect after success
+      window.location.href = "/acknowledgement"; // Redirect after success
     } catch (err) {
       setError('Failed to reset password. Please try again.');
     }

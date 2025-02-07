@@ -36,7 +36,7 @@ const SignInForm = () => {
         }
 
         // ✅ Redirect after login
-        window.location.href = "/dashboard";
+        window.location.href = "/acknowledgement";
       } else {
         console.log("Invalid email or password.");
       }
