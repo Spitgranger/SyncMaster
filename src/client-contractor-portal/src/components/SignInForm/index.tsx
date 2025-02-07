@@ -19,7 +19,7 @@ const EmailPasswordForm = () => {
       if (data.AccessToken) {
         localStorage.setItem('accessToken', data.AccessToken);
         console.log('Login successful', data);
-        window.location.href = "/dashboard"; // Redirect to a protected page
+        window.location.href = "/dashboard"; // Redirect after login
       } else {
         setError("Invalid email or password.");
       }
