@@ -60,7 +60,7 @@ class S3Bucket:
         :return: The get object presigned url
         """
         return self._client.generate_presigned_url(
-            ClientMethod="get_object", Params={"Bucket": self.name, "Key": key, "IfMatch": e_tag}
+            ClientMethod="get_object", Params={"Bucket": self.name, "Key": key}
         )
 
     def delete(self, key: str, e_tag: str) -> None:
@@ -77,7 +77,7 @@ class S3Bucket:
             initialized with only read permissions
         """
         try:
-            self._client.delete_object(Bucket=self.name, Key=key, IfMatch=e_tag)
+            self._client.delete_object(Bucket=self.name, Key=key)
         except ClientError as err:
             logger.exception(err)
             if err.response["Error"]["Code"] == "AccessDenied":

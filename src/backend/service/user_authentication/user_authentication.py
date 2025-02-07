@@ -384,6 +384,7 @@ def admin_update_user_attributes_handler(
 
         return Response(
             status_code=HTTPStatus.NO_CONTENT.value,
+            headers=cors_headers,
         )
 
     except ClientError as err:

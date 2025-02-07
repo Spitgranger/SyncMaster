@@ -116,6 +116,62 @@ Resources:
             Resource:
               - !GetAtt Database.Arn
 
+  BucketWritePolicy:
+      Type: AWS::IAM::ManagedPolicy
+      Properties:
+        Description: Write access to bucket
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action:
+                - s3:PutObject
+                - s3:DeleteObject
+              Resource:
+                - !Sub arn:aws:s3:::${Bucket}/*
+
+  BucketReadPolicy:
+      Type: AWS::IAM::ManagedPolicy
+      Properties:
+        Description: Read access to bucket
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action:
+                - s3:GetObject
+              Resource:
+                - !Sub arn:aws:s3:::${Bucket}/*
+
+  S3ReadRole:
+    Type: AWS::IAM::Role
+    Properties:
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - !Ref BucketReadPolicy
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !GetAtt LambdaExecutionRole.Arn
+            Action: sts:AssumeRole
+
+  S3WriteRole:
+    Type: AWS::IAM::Role
+    Properties:
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - !Ref BucketReadPolicy
+        - !Ref BucketWritePolicy
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !GetAtt LambdaExecutionRole.Arn
+            Action: sts:AssumeRole
+
   CognitoAccessRole:
       Type: AWS::IAM::Role
       Properties:
@@ -223,6 +279,25 @@ Resources:
         SSEEnabled: False
       BillingMode: PAY_PER_REQUEST
 
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: syncmaster-document-bucket
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - 'GET'
+              - 'POST'
+            AllowedOrigins:
+              - '*'
+            ExposedHeaders:
+              - Date
+            Id: myCORSRuleId1
+            MaxAge: 3600
+ 
+
   ApiFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -244,6 +319,9 @@ Resources:
           COGNITO_ACCESS_ROLE: !GetAtt CognitoAccessRole.Arn
           TABLE_READ_ROLE: !GetAtt DatabaseReadRole.Arn
           TABLE_WRITE_ROLE: !GetAtt DatabaseWriteRole.Arn
+          DOCUMENT_STORAGE_BUCKET_READ_ROLE: !GetAtt S3ReadRole.Arn
+          DOCUMENT_STORAGE_BUCKET_WRITE_ROLE: !GetAtt S3WriteRole.Arn
+          DOCUMENT_STORAGE_BUCKET_NAME: !Ref Bucket
 
 Outputs:
     SyncMasterApi:

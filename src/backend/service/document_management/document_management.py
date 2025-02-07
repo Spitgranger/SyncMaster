@@ -47,27 +47,27 @@ def get_all_files(
     """
     logger.info(site_id)
     key_expression_specific = Key("pk").eq(f"{ItemType.DOCUMENT.value}#{site_id}")
-    key_expression_all = Key("pk").eq(f"{ItemType.DOCUMENT.value}#ALL")
+    # key_expression_all = Key("pk").eq(f"{ItemType.DOCUMENT.value}#ALL")
 
     site_specific_documents = table.query(key_condition_expression=key_expression_specific)
     logger.info(site_specific_documents)
-    site_wide_documents = table.query(key_condition_expression=key_expression_all)
+    # site_wide_documents = table.query(key_condition_expression=key_expression_all)
 
     # split for now, not necessary but the response may change in the future for
     # flexibility
     returned_specific_documents = []
-    returned_site_wide_documents = []
+    # returned_site_wide_documents = []
     for document in site_specific_documents:
         presigned_get_url = bucket.create_get_url(document.s3_key, document.s3_e_tag)
         api_document = document.to_api_model(presigned_get_url)
         returned_specific_documents.append(api_document)
 
-    for document in site_wide_documents:
-        presigned_get_url = bucket.create_get_url(document.s3_key, document.s3_e_tag)
-        api_document = document.to_api_model(presigned_get_url)
-        returned_site_wide_documents.append(api_document)
+    #    for document in site_wide_documents:
+    #        presigned_get_url = bucket.create_get_url(document.s3_key, document.s3_e_tag)
+    #        api_document = document.to_api_model(presigned_get_url)
+    #        returned_site_wide_documents.append(api_document)
 
-    return returned_specific_documents + returned_site_wide_documents
+    return returned_specific_documents  # + returned_site_wide_documents
 
 
 def upload_file(

@@ -8,6 +8,7 @@ import boto3
 from aws_lambda_powertools.logging import Logger
 from botocore.exceptions import ClientError
 from cachetools.func import ttl_cache
+from botocore.config import Config
 
 from .exceptions import ExternalServiceException, PermissionException
 
@@ -60,6 +61,7 @@ def create_client_with_role(service_name: str, role: str):
             aws_access_key_id=creds["AccessKeyId"],
             aws_secret_access_key=creds["SecretAccessKey"],
             aws_session_token=creds["SessionToken"],
+            config=Config(signature_version="s3v4", region_name="us-east-2"),
         )
     except ClientError as err:
         logger.exception(err)
