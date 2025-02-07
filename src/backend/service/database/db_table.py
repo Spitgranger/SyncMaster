@@ -167,9 +167,9 @@ class DBTable[T: DBItemModel]:
                 else:
                     delete_attributes.append(k)
 
-        update_expression = f"SET {", ".join(set_attributes)}"
+        update_expression = f"SET {', '.join(set_attributes)}"
         if delete_attributes:
-            update_expression += f" REMOVE {", ".join(delete_attributes)}"
+            update_expression += f" REMOVE {', '.join(delete_attributes)}"
 
         kwargs = {}
         if condition_expression:
@@ -268,6 +268,7 @@ class DBTable[T: DBItemModel]:
                     kwargs["Limit"] = limit
 
                 response: dict = self._table.query(**kwargs)
+                logger.info(response)
 
                 items.extend(response.get("Items", []))
 
