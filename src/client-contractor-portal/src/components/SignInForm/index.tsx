@@ -2,36 +2,43 @@ import React, { useState } from 'react';
 import { Container, Typography, TextField, Button, IconButton, InputAdornment, Box } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { signinUser } from '@/services/authService';
 
 const EmailPasswordForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Email:', email);
-    console.log('Password:', password);
-  };
+    setError(null);
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
+    try {
+      const data = await signinUser(email, password);
+      if (data.AccessToken) {
+        localStorage.setItem('accessToken', data.AccessToken);
+        console.log('Login successful', data);
+        window.location.href = "/dashboard"; // Redirect to a protected page
+      } else {
+        setError("Invalid email or password.");
+      }
+    } catch (err) {
+      setError("Login failed. Please check your credentials.");
+    }
   };
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 8, px: 2 }}> {/* 16px margin on sides */}
-      {/* Header */}
+    <Container maxWidth="sm" sx={{ mt: 8, px: 2 }}>
       <Typography variant="h5" fontWeight="bold" textAlign="center" gutterBottom>
         Identification Information
       </Typography>
-
-      {/* Instruction Text */}
       <Typography variant="body1" color="text.secondary" textAlign="center" gutterBottom>
         Please enter your email and password below
       </Typography>
 
-      {/* Form */}
+      {error && <Typography color="error" textAlign="center">{error}</Typography>}
+
       <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
         <TextField
           fullWidth
@@ -39,7 +46,7 @@ const EmailPasswordForm = () => {
           variant="filled"
           type="email"
           value={email}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
           sx={{ mb: 3, backgroundColor: '#f5f5f5' }}
         />
 
@@ -49,16 +56,12 @@ const EmailPasswordForm = () => {
           variant="filled"
           type={showPassword ? 'text' : 'password'}
           value={password}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
           sx={{ mb: 4, backgroundColor: '#f5f5f5' }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                >
+                <IconButton onClick={() => setShowPassword(!showPassword)}>
                   {showPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
@@ -66,13 +69,7 @@ const EmailPasswordForm = () => {
           }}
         />
 
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          fullWidth
-          sx={{ py: 1.5 }}
-        >
+        <Button type="submit" variant="contained" color="primary" fullWidth sx={{ py: 1.5 }}>
           CONTINUE
         </Button>
       </Box>
