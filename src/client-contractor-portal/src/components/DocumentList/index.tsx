@@ -4,9 +4,11 @@ import FolderIcon from '@mui/icons-material/Folder';
 import DescriptionIcon from '@mui/icons-material/Description';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import { getFiles } from '@/services/documentService';
 
 interface File {
   name: string;
+  url: string;
 }
 
 interface Folder {
@@ -14,26 +16,36 @@ interface Folder {
   files: File[];
 }
 
-interface DocumentListProps {
-  fetchDocuments: () => Promise<Folder[]>;
-}
-
-const DocumentList: React.FC<DocumentListProps> = ({ fetchDocuments }) => {
+const DocumentList: React.FC = () => {
   const [documents, setDocuments] = useState<Folder[]>([]);
   const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const loadDocuments = async () => {
       try {
-        const docs = await fetchDocuments();
-        setDocuments(docs);
+        const files = await getFiles();
+        const groupedFiles: Record<string, File[]> = {};
+
+        files.forEach((file: any) => {
+          const folderName = file.document_path.split('/').slice(-2, -1)[0] || 'General';
+          if (!groupedFiles[folderName]) {
+            groupedFiles[folderName] = [];
+          }
+          groupedFiles[folderName].push({
+            name: file.document_path.split('/').pop(),
+            url: file.s3_presigned_get,
+          });
+        });
+
+        const formattedDocuments = Object.entries(groupedFiles).map(([name, files]) => ({ name, files }));
+        setDocuments(formattedDocuments);
       } catch (error) {
         console.error('Failed to load documents', error);
       }
     };
 
     loadDocuments();
-  }, [fetchDocuments]);
+  }, []);
 
   const handleToggleFolder = (folderName: string) => {
     setOpenFolders((prev) => ({
@@ -61,7 +73,7 @@ const DocumentList: React.FC<DocumentListProps> = ({ fetchDocuments }) => {
               <Collapse in={openFolders[folder.name]} timeout="auto" unmountOnExit>
                 <List disablePadding>
                   {folder.files.map((file, fileIndex) => (
-                    <ListItemButton key={fileIndex} sx={{ pl: 4 }}>
+                    <ListItemButton key={fileIndex} sx={{ pl: 4 }} component="a" href={file.url} target="_blank">
                       <ListItemIcon>
                         <DescriptionIcon />
                       </ListItemIcon>
