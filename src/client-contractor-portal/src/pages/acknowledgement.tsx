@@ -29,7 +29,7 @@ const AcknowledgementPage = () => {
     try {
       const response = await enterSite(userId);
       console.log("Entered site successfully:", response);
-      router.push("/dashboard");
+      router.push("/jobs");
     } catch (err) {
       console.error("Failed to enter site:", err);
     }

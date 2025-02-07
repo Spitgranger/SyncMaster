@@ -3,7 +3,11 @@ import { Button, Typography, Container } from "@mui/material";
 import { useRouter } from "next/router";
 import { exitSite } from "@/services/siteService"; 
 
-const EndVisit: React.FC = () => {
+interface EndVisitProps {
+  onEndVisit?: () => void;
+}
+
+const EndVisit: React.FC<EndVisitProps> = ({ onEndVisit }) => {
   const router = useRouter();
 
   const handleEndVisit = async () => {
@@ -19,12 +23,17 @@ const EndVisit: React.FC = () => {
       await exitSite(userId);
       console.log("Exited site successfully");
 
-      
+      // Clear user-related data
       localStorage.removeItem("userId");
       localStorage.removeItem("accessToken");
 
-      
+      // Navigate back to home
       router.push("/");
+
+      // Call the optional onEndVisit callback if provided
+      if (onEndVisit) {
+        onEndVisit();
+      }
     } catch (err) {
       console.error("Failed to exit site:", err);
     }
