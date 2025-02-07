@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://mjspvpszgg.execute-api.us-east-2.amazonaws.com/dev";
+const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 interface SiteVisit {
   site_id: string;
