@@ -3,12 +3,14 @@ import { Container, Typography, TextField, Button, IconButton, InputAdornment, B
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { signinUser } from '@/services/authService';
+import ResetPasswordForm from '@/components/ResetPasswordForm';
 
-const EmailPasswordForm = () => {
+const SignInForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showResetForm, setShowResetForm] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -18,15 +20,22 @@ const EmailPasswordForm = () => {
       const data = await signinUser(email, password);
       if (data.AccessToken) {
         localStorage.setItem('accessToken', data.AccessToken);
-        console.log('Login successful', data);
         window.location.href = "/dashboard"; // Redirect after login
       } else {
         setError("Invalid email or password.");
       }
-    } catch (err) {
-      setError("Login failed. Please check your credentials.");
+    } catch (err: any) {
+      if (err.response?.status === 403) {
+        setShowResetForm(true);
+      } else {
+        setError("Login failed. Please check your credentials.");
+      }
     }
   };
+
+  if (showResetForm) {
+    return <ResetPasswordForm email={email} />;
+  }
 
   return (
     <Container maxWidth="sm" sx={{ mt: 8, px: 2 }}>
@@ -77,4 +86,4 @@ const EmailPasswordForm = () => {
   );
 };
 
-export default EmailPasswordForm;
+export default SignInForm;
