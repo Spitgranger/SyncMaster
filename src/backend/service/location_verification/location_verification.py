@@ -1,3 +1,7 @@
+"""
+Module for verifying a user's location
+"""
+
 from math import asin, cos, radians, sin, sqrt
 
 TARGET_LATITUDE = 43.2588581564085
@@ -9,7 +13,10 @@ def haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     """
     Calculate the great circle distance between two points on Earth in meters.
 
-    :param lat1, lon1, lat2, lon2: coordinates for two locations
+    :param lat1: latitude for location 1
+    :param lon1: longitude for location 1
+    :param lat2: latititude for location 2
+    :param lon2: longitude for location 2
     :return: the distance between two locations in meters
     """
     lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
@@ -25,7 +32,8 @@ def verify_location(latitude: float, longitude: float, accuracy: float) -> bool:
     """
     Verify if provided coordinates are within a certain radius of the target point.
 
-    :param latitude, longitude: coordinates for user location
+    :param latitude: latitude of user location
+    :param longitude: longitude of user location
     :param accuracy: accuracy of user location in meters
     :return: boolean for if a location is within range of the desired site
     """

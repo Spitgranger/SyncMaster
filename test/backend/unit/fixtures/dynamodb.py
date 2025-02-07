@@ -8,7 +8,7 @@ TABLE_SPEC = dict(
     AttributeDefinitions=[
         {"AttributeName": "pk", "AttributeType": "S"},
         {"AttributeName": "sk", "AttributeType": "S"},
-        {"AttributeName": "gsi_1_pk", "AttributeType": "S"},
+        {"AttributeName": "type", "AttributeType": "S"},
         {"AttributeName": "last_modified_time", "AttributeType": "S"},
     ],
     KeySchema=[
@@ -19,7 +19,7 @@ TABLE_SPEC = dict(
         {
             "IndexName": "GSI1",
             "KeySchema": [
-                {"AttributeName": "gsi_1_pk", "KeyType": "HASH"},
+                {"AttributeName": "type", "KeyType": "HASH"},
                 {"AttributeName": "last_modified_time", "KeyType": "RANGE"},
             ],
             "Projection": {"ProjectionType": "ALL"},
@@ -41,6 +41,19 @@ def empty_database():
 
 
 @pytest.fixture()
-def database_with_item(empty_database, db_document):
+def database_with_document(empty_database, db_document):
     empty_database.put_item(Item=db_document.model_dump())
     return empty_database, db_document
+
+
+@pytest.fixture()
+def database_with_complete_site_visit(empty_database, db_site_visit_complete):
+    empty_database.put_item(Item=db_site_visit_complete.model_dump())
+    return empty_database, db_site_visit_complete
+
+
+@pytest.fixture()
+def database_with_two_site_visits(database_with_complete_site_visit, db_site_visit_only_entry):
+    database, complete_entry = database_with_complete_site_visit
+    database.put_item(Item=db_site_visit_only_entry.model_dump())
+    return database, {complete_entry, db_site_visit_only_entry}
