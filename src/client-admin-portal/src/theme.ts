@@ -11,6 +11,10 @@ const theme = createTheme({
     typography: {
         fontFamily: roboto.style.fontFamily,
     },
+    zIndex: {
+        appBar: 1200,
+        drawer: 1100
+    }
 });
 
 export default theme;

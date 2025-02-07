@@ -5,9 +5,21 @@ import { AppCacheProvider } from '@mui/material-nextjs/v15-pagesRouter';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '@/theme';
+import { NextPage } from 'next';
 
-export default function MyApp(props: AppProps) {
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: React.ReactElement) => React.ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+export default function MyApp(props: AppPropsWithLayout) {
   const { Component, pageProps } = props;
+  const getLayout = Component.getLayout ?? ((page) => page)
+  const layout = getLayout(<Component {...pageProps} />)
+
   return (
     <AppCacheProvider {...props}>
       <Head>
@@ -16,7 +28,7 @@ export default function MyApp(props: AppProps) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <Component {...pageProps} />
+        {layout}
       </ThemeProvider>
     </AppCacheProvider>
   );
