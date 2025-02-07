@@ -2,7 +2,6 @@ import React from 'react';
 import { AppBar, Toolbar, IconButton, Typography, Box } from '@mui/material';
 import Image from 'next/image';
 import hamiltonLogo from "../../../public/hamiltonCityLogo.svg";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useRouter } from 'next/router';
 
 const TopNavBar = () => {
@@ -24,10 +23,6 @@ const TopNavBar = () => {
           </Typography>
         </Box>
 
-        {/* Profile Button */}
-        <IconButton onClick={() => router.push('/profile')}>
-          <AccountCircleIcon fontSize="large" />
-        </IconButton>
       </Toolbar>
     </AppBar>
   );
