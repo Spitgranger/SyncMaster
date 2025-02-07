@@ -1,6 +1,7 @@
 // components/ManageUsersTable.tsx
 import React, { useState, useEffect } from 'react';
 import { Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
+import { useRouter } from 'next/router';
 import { getUsers } from '@/services/userService';
 
 interface User {
@@ -13,6 +14,7 @@ interface User {
 
 const ManageUsersTable: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -45,7 +47,7 @@ const ManageUsersTable: React.FC = () => {
       <Typography variant="h5" fontWeight="bold" textAlign="left" gutterBottom>
         Manage Users
       </Typography>
-      <Button variant="contained" color="primary" sx={{ mb: 2 }}>
+      <Button variant="contained" color="primary" sx={{ mb: 2 }} onClick={() => router.push('/dashboard/adduser')}>
         + ADD NEW USER
       </Button>
       <TableContainer component={Paper}>
