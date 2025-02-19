@@ -1,8 +1,4 @@
-import json
-from http import HTTPStatus
-
 from backend.service.handler import lambda_handler
-from backend.service.user_authentication.user_authentication import CognitoClient
 
 
 def test_signup(cognito_mock, post_signup_request):
