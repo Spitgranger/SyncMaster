@@ -9,7 +9,6 @@ from .db_base import DBItemModel
 
 
 class DBDocument(DBItemModel):
-    """Model representing a document in the database"""
 
     document_path: str
     s3_bucket: str
