@@ -2,7 +2,7 @@ name: backend-checks
 on:
   pull_request:
     types: [opened, reopened, synchronize]
-    paths: ["**backend/**", "pyproject.toml", "uv.lock", ".python-version"]
+    paths: ["**backend**", "pyproject.toml", "uv.lock", ".python-version"]
 jobs:
   backend-checks:
     runs-on: ubuntu-latest
