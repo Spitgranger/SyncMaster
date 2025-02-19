@@ -17,7 +17,7 @@ logger = Logger()
 app = APIGatewayRestResolver(enable_validation=True)
 app.include_router(router=site_visits.router, prefix="/protected/site")
 app.include_router(router=users.router, prefix="/protected/users")
-app.include_router(router=auth.router, prefix="/unprotected/users")
+app.include_router(router=auth.router, prefix="/unprotected/auth")
 
 
 @app.exception_handler(Exception)
