@@ -5,6 +5,7 @@ Defines the model for a document as represented in the database
 from pydantic import computed_field
 
 from ...util import ItemType
+from ..api.document import APIDocumentResponse
 from .db_base import DBItemModel
 
 
@@ -31,3 +32,16 @@ class DBDocument(DBItemModel):
     @property
     def sk(self) -> str:
         return self.document_path
+
+    def to_api_model(self, s3_link: str) -> APIDocumentResponse:
+        """
+        The Document as an API model, without the DB specific attributes
+        :param s3_link: The s3 presigned url
+        """
+        return APIDocumentResponse(
+            site_id=self.site_id,
+            document_path=self.document_path,
+            requires_ack=self.requires_ack,
+            last_modified=self.last_modified_time,
+            s3_presigned_get=s3_link,
+        )
