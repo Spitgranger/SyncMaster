@@ -9,7 +9,6 @@ from .db_base import DBItemModel
 
 
 class DBDocument(DBItemModel):
-
     document_path: str
     s3_bucket: str
     s3_key: str
