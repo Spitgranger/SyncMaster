@@ -20,7 +20,6 @@ from ...user_authentication.user_authentication import (
     admin_get_users_handler,
     admin_update_user_attributes_handler,
     logout_user_handler,
-    signin_user_handler,
     signup_user_handler,
 )
 
