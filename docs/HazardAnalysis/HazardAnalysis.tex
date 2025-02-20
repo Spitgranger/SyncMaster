@@ -105,8 +105,8 @@ are responsible for implementing the functionality which makes the hazards ident
   \item Logging and Monitoring Module: This module is responsible for generating
     and monitoring the logs related to system usage, document changes, and
     user presence verification activities.
-  \item Notification Module: This module is responsible for sending alerts to
-    admins about important events such as document updates or user presence
+  \item Notification Module: This module is responsible for flagging to
+    admin users about important events such as expiring documents, user training, or user presence
     verification issues.
   \item Database: The database stores all documents, user information, presence
     verification data, and logs.
@@ -266,13 +266,13 @@ are responsible for implementing the functionality which makes the hazards ident
       & a. User does not understand feedback from the application interface
       \newline b. User does not agree to sign the document & Application detects
       unsuccessful acknowledgement state & a. System notifies user &
-      FR7 & H6-1 \\
+      FR7 SR-AR1 & H6-1 \\
       \cline{2-8}
       & Device loses power and interrupts the acknowledgement & Acknowledgement
       is not received by the system &
       a. Loss of power disconnects users from the application & Server side
       detects user disconnection & a. Save the application state and return
-      user to previous state when they reconnect & FR7 & H6-2 \\
+      user to previous state when they reconnect & FR7 SR-AR1 & H6-2 \\
       \hline
     \end{tabular}
   }

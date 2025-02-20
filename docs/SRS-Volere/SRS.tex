@@ -40,12 +40,12 @@ Management System}
 
 ~\newpage
 
-\pagenumbering{roman}
+\pagenumbering{arabic}
 
 \tableofcontents
 
 ~\newpage
-
+\pagenumbering{roman}
 \section*{Revision History}
 
 \begin{tabularx}{\textwidth}{p{3cm}p{3cm}X}
@@ -60,7 +60,7 @@ Management System}
   01/27/2025 & Mitchell Hynes & Removed Sharepoint from scope, modified requirements\\
   \bottomrule
 \end{tabularx}
-
+\pagenumbering{arabic}
 ~\\
 
 ~\newpage
@@ -695,6 +695,7 @@ N/A.
       Sharepoint, this means any changes in this system must be
       reflected in the corresponding Sharepoint document, and any
     changes to the document in Sharepoint must be reflected in this system.}
+    \textcolor{red}{Removing as external access to City network is not possible.}
   \item The system should have 3 types of users: Contractor, Employee, and Admin. 
     Only Admin users can change
     access permissions of other users and have read and write
@@ -808,6 +809,7 @@ N/A
   \item Average time for retrieving the documents should not exceed 2 seconds to minimize user frustration
   \item \sout{Synching documents with SharePoint should be completed in
     less than 7 seconds for file sizes up to 15 MB}
+    \textcolor{red}{Removing as access to City network is not possible.}
   \item The portal's user interface should be responsive and process user input within 2 seconds to minimize frustration.
 \end{enumerate}
 \subsection{Safety-Critical Requirements}
