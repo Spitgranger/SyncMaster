@@ -200,6 +200,9 @@ Resources:
         - AttributeDataType: String
           Name: role
           Required: false
+        - AttributeDataType: DateTime
+          Name: train_date
+          Required: false
 
   UserPoolClient:
     Type: AWS::Cognito::UserPoolClient
