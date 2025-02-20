@@ -937,13 +937,12 @@ N/A
 \subsection{Access Requirements}
 \begin{enumerate} [{SR-AR}1.]
   \item Only authorized contractors and employees should be able to access the
-    portal for completing work on site. A visitor account will exist for authorized contractors without an account.
-  \item Only users with managerial level access should be able to get data on
-    contractors and employees.
-  \item Only users with administrative access should be able to make changes to
-    site settings.
-  \item The upload and changing of certain file classes will be tied to
-    different access levels.
+    portal for completing work on site. \sout{A visitor account will exist for authorized contractors without an account.} 
+    \textcolor{red}{Removing visitor account requirement to ensure only authorized contractors can access.}
+  \item Only admin users are able to view data on contractor and employee users.
+  \item Only admin users are able to make changes to site settings.
+  \item Only admin users are able to upload documents to the contractor portal which will be viewed by contractors. Contractor users
+  are able to upload at most 10 documents for each of their site visits which can be viewed in the site logs by admin users.
 \end{enumerate}
 \subsection{Integrity Requirements}
 \begin{enumerate} [{SR-IR}1.]
@@ -1202,11 +1201,12 @@ to demonstrate to the stakeholder for feedback.
 \section{Migration to the New Product}
 \subsection{Requirements for Migration to the New Product}
 \begin{enumerate} [{MI-NP}1.]
-  \item The system must be compatible with existing user roles in Active
+  \item \sout{The system must be compatible with existing user roles in Active
     Directory.\\
     \textbf{Rationale}: Compatibility with existing business rules is needed
     to ensure migration can be completed in a short period of time without
-    having to defined new roles.
+    having to defined new roles.}
+    \textcolor{red}{Removing requirement. SyncMaster Application will be standalone and not integrate into any existing systems.}
 \end{enumerate}
 
 \subsection{Data That Has to be Modified or Translated for the New System}
