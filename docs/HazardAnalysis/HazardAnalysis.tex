@@ -115,8 +115,9 @@ are responsible for implementing the functionality which makes the hazards ident
 \subsection{System Boundaries}
 \begin{itemize}
   \item User Authentication: The authentication of users will be handled through
-    a third-party provider. The application will only interface with this
-    provider.
+    the third party provider Amazon Cognito. The application will only interface with this
+    provider. This trusted provider has established user authentication processes which mitigates the security risks
+    and complexity of attempting to implement our own authentication system.
   \item System Infrastructure: This application will be cloud-based and the
     underlying infrastructure including computation, storage, and network
     resources will be maintained by a cloud service provider.
