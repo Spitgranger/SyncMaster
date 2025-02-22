@@ -45,8 +45,28 @@ Resources:
         AllowOrigin: "'*'"
         AllowHeaders: "'Content-Type,Authorization,X-Amz-Date'"
         MaxAge: 600
+      Auth:
+        Authorizers:
+          CognitoAuth:
+            UserPoolArn: !GetAtt UserPool.Arn
 
   LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Sid: AllowLambdaServiceToAssumeRole
+            Principal:
+              Service:
+                - !Sub 'lambda.${AWS::URLSuffix}'
+            Action:
+              - sts:AssumeRole
+
+  UnprotectedLambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties:
       ManagedPolicyArns:
@@ -236,6 +256,9 @@ Resources:
         - AttributeDataType: String
           Name: role
           Required: false
+        - AttributeDataType: DateTime
+          Name: train_date
+          Required: false
 
   UserPoolClient:
     Type: AWS::Cognito::UserPoolClient
@@ -297,23 +320,37 @@ Resources:
             Id: myCORSRuleId1
             MaxAge: 3600
  
+  UnprotectedApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: service.handler.lambda_handler
+      Role: !GetAtt 'UnprotectedLambdaExecutionRole.Arn'
+      CodeUri: ../src/backend
+      Description: API handler for functions that do not require auth
+      Events:
+        AnyApiEvent:
+          Type: Api
+          Properties:
+            Path: /unprotected/{proxy+} # Send requests on any path to the lambda function
+            Method: ANY # Send requests using any http method to the lambda function
+            RestApiId: !Ref API
 
-  ApiFunction:
+  ProtectedApiFunction:
     Type: AWS::Serverless::Function
     Properties:
       Handler: service.handler.lambda_handler
       Role: !GetAtt 'LambdaExecutionRole.Arn'
       CodeUri: ../src/backend
-      Description: API handler function
+      Description: API handler for functions that require auth
       Events:
         AnyApiEvent:
           Type: Api
           Properties:
-            # NOTE: this is a catch-all rule to simplify rev0 development.
-            # explicit routes and methods are recommended once we move to Rev1
-            Path: /{proxy+} # Send requests on any path to the lambda function
+            Path: /protected/{proxy+} # Send requests on any path to the lambda function
             Method: ANY # Send requests using any http method to the lambda function
             RestApiId: !Ref API
+            Auth:
+              Authorizer: CognitoAuth
       Environment:
         Variables:
           COGNITO_ACCESS_ROLE: !GetAtt CognitoAccessRole.Arn

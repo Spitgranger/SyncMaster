@@ -94,15 +94,9 @@ def api_gateway_event():
 
 
 @pytest.fixture()
-def get_request(api_gateway_event):
-    event, context = api_gateway_event("/test", "GET")
-    yield event, context
-
-
-@pytest.fixture()
 def enter_site_request(api_gateway_event):
     event, context = api_gateway_event(
-        path=f"/site/{TEST_SITE_ID}/enter",
+        path=f"/protected/site/{TEST_SITE_ID}/enter",
         method="POST",
         path_params={"site_id": TEST_SITE_ID},
         query_params={"user_id": TEST_USER_ID},
@@ -113,7 +107,7 @@ def enter_site_request(api_gateway_event):
 @pytest.fixture()
 def exit_site_request(api_gateway_event):
     event, context = api_gateway_event(
-        path=f"/site/{TEST_SITE_ID}/exit",
+        path=f"/protected/site/{TEST_SITE_ID}/exit",
         method="PATCH",
         path_params={"site_id": TEST_SITE_ID},
         query_params={"user_id": TEST_USER_ID},
@@ -125,7 +119,7 @@ def exit_site_request(api_gateway_event):
 @pytest.fixture()
 def list_site_visits_request(api_gateway_event):
     event, context = api_gateway_event(
-        path=f"/site/visits",
+        path=f"/protected/site/visits",
         method="GET",
         query_params={
             "from_time": PREV_DATE_TIME.isoformat(),
@@ -140,7 +134,7 @@ def list_site_visits_request(api_gateway_event):
 @pytest.fixture()
 def list_site_visits_request_bad_role(api_gateway_event):
     event, context = api_gateway_event(
-        path=f"/site/visits",
+        path=f"/protected/site/visits",
         method="GET",
         query_params={"user_role": "contractor"},
     )
@@ -157,14 +151,14 @@ def post_signup_request(api_gateway_event):
             "attributes": {"custom:role": "contractor", "custom:company": "testcompany"},
         }
     )
-    event, context = api_gateway_event("/users/signup", "POST", body)
+    event, context = api_gateway_event("/protected/users/signup", "POST", body)
     yield event, context
 
 
 @pytest.fixture()
 def post_signin_request(api_gateway_event):
     body = json.dumps({"email": "Test@gmail.com", "password": "GougGoug123!"})
-    event, context = api_gateway_event("/users/signin", "POST", body)
+    event, context = api_gateway_event("/unprotected/auth/signin", "POST", body)
     yield event, context
 
 
@@ -181,25 +175,25 @@ def post_create_user_request(api_gateway_event):
             },
         }
     )
-    event, context = api_gateway_event("/users/create_user", "POST", body)
+    event, context = api_gateway_event("/protected/users/create_user", "POST", body)
     yield event, context
 
 
 @pytest.fixture()
 def post_get_users_request(api_gateway_event):
     body = json.dumps({"attributes": {}})
-    event, context = api_gateway_event("/users/get_users", "POST", body)
+    event, context = api_gateway_event("/protected/users/get_users", "POST", body)
     yield event, context
 
 
 @pytest.fixture()
 def post_update_user_request(api_gateway_event):
     body = json.dumps({"email": "test@test.com", "attributes": [{"Name": "name", "Value": "test"}]})
-    event, context = api_gateway_event("/users/update_user", "POST", body)
+    event, context = api_gateway_event("/protected/users/update_user", "POST", body)
     yield event, context
 
 
 @pytest.fixture()
 def get_signout_user_request(api_gateway_event):
-    event, context = api_gateway_event('/users/update_user?user_token="eyqq81712"', "GET")
+    event, context = api_gateway_event('/protected/users/update_user?user_token="eyqq81712"', "GET")
     yield event, context
