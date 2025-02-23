@@ -131,13 +131,7 @@ def test_list_site_entries_paginated(database_with_two_site_visits):
     assert len(visits) == 1
     assert last_eval is not None
 
-    visits, last_eval = list_site_visits(
-        table=table,
-        limit=1,
-        start_key=last_eval
-    )
+    visits, last_eval = list_site_visits(table=table, limit=1, start_key=last_eval)
 
     assert len(visits) == 1
     assert last_eval is None
-
-

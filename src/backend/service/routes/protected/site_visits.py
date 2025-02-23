@@ -84,7 +84,7 @@ def list_site_visits_handler(
     to_time: Annotated[Optional[datetime], Query()] = None,
     limit: Annotated[Optional[int], Query()] = None,
     start_key: Annotated[Optional[str], Query()] = None,
-):
+) -> Response[APIListSiteVisitResponse]:
     """
     Lists the site visits in the database, according to the passed parameters
 

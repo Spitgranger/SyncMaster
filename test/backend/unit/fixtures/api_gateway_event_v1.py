@@ -22,6 +22,7 @@ def api_gateway_event():
         path_params: dict[str, str] = {},
         query_params: dict[str, str] = {},
         time: datetime = CURRENT_DATE_TIME,
+        user_role: str = "contractor",
     ):
         request_id = str(uuid.uuid4())
 
@@ -41,7 +42,7 @@ def api_gateway_event():
                     "token_use": "id",
                     "auth_time": 1738377493,
                     "exp": 1738420693,
-                    "custom:role": "user",
+                    "custom:role": user_role,
                     "iat": 1738377493,
                     "jti": "555555aa-5aa5-5555-a555-a5aaa5a555a5",
                     "email": "Test@gmail.com",
@@ -144,8 +145,21 @@ def list_site_visits_request(api_gateway_event):
             "from_time": PREV_DATE_TIME.isoformat(),
             "to_time": FUTURE_DATE_TIME.isoformat(),
             "limit": "2",
-            "user_role": "admin",
         },
+        user_role="admin",
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def list_site_visits_request_paginated(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/site/visits",
+        method="GET",
+        query_params={
+            "limit": "1",
+        },
+        user_role="admin",
     )
     yield event, context
 
@@ -153,9 +167,7 @@ def list_site_visits_request(api_gateway_event):
 @pytest.fixture()
 def list_site_visits_request_bad_role(api_gateway_event):
     event, context = api_gateway_event(
-        path=f"/protected/site/visits",
-        method="GET",
-        query_params={"user_role": "contractor"},
+        path=f"/protected/site/visits", method="GET", user_role="contractor"
     )
     yield event, context
 

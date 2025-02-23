@@ -20,7 +20,17 @@ class CustomBaseModel(BaseModel):
     )
 
     def model_dump(self, *args, **kwargs) -> dict:
-        return super().model_dump(*args, **kwargs, exclude_none=True, by_alias=True, mode="json")
+        if not kwargs.get("exclude_none"):
+            kwargs["exclude_none"] = True
+        if not kwargs.get("by_alias"):
+            kwargs["by_alias"] = True
+        if not kwargs.get("mode"):
+            kwargs["mode"] = "json"
+        return super().model_dump(*args, **kwargs)
 
     def model_dump_json(self, *args, **kwargs) -> str:
-        return super().model_dump_json(*args, **kwargs, exclude_none=True, by_alias=True)
+        if not kwargs.get("exclude_none"):
+            kwargs["exclude_none"] = True
+        if not kwargs.get("by_alias"):
+            kwargs["by_alias"] = True
+        return super().model_dump_json(*args, **kwargs)
