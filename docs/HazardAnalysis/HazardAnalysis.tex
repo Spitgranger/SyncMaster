@@ -42,6 +42,7 @@
     \midrule
     10/25/2024 & Whole Team & Rev0 Hazard Analysis\\
     11/04/2024 & Rafeed Iqbal & Changed ``SFR1'' to ``SR-S1''\\
+    02/20/2024 & Mitchell Hynes & added peer feedback \#195\\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -74,13 +75,24 @@ establish mitigation strategies. This analysis will also determine
 the parties responsible
 for each of the aforementioned points. Some of the losses that
 may be incurred as a result of hazards are, but are not limited to:
-financial loss, data loss, loss of trust, regulatory violations, and
+financial loss, data loss, regulatory violations, and
 operational interruption. These losses stemming from hazards must be mitigated
 to ensure that the system operates securely, and in compliance with relevant
-regulations.
+regulations.\\
+
+
+Financial loss would be possible if the User Presence Verification Module stops functioning. This provides a record
+of contractors actually being on site, allowing for a history that can be audited to ensure invoices for work are accurate.
+Data loss is possible if the database goes down. Information that the contractor uploads about their visit may be lost.
+There is an increased risk of regulatory violations outlined in the Software Requirements Specification 17 - Compliance Requirements.
+This system is a tool to effectively distribute documentation concerning station access to contractors. If they lose this access, there
+is an increased risk they do not follow the correct entry/exit procedure for stations.
+Operational interruption could occur if contractors are unable to view documentation automatically through the system, and
+would instead use a slower manual process over email with a facilities manager to view documentation.
 
 \section{System Components and Boundaries}
-
+The scope of the Hazard Analysis covers the components and boundaries identified in this section. These system components
+are responsible for implementing the functionality which makes the hazards identified in section 2 possible.
 \subsection{System Components}
 \begin{itemize}
   \item Document Management Module: This module is responsible for handling the
@@ -93,8 +105,8 @@ regulations.
   \item Logging and Monitoring Module: This module is responsible for generating
     and monitoring the logs related to system usage, document changes, and
     user presence verification activities.
-  \item Notification Module: This module is responsible for sending alerts to
-    admins about important events such as document updates or user presence
+  \item Notification Module: This module is responsible for flagging to
+    admin users about important events such as expiring documents, user training, or user presence
     verification issues.
   \item Database: The database stores all documents, user information, presence
     verification data, and logs.
@@ -103,8 +115,9 @@ regulations.
 \subsection{System Boundaries}
 \begin{itemize}
   \item User Authentication: The authentication of users will be handled through
-    a third-party provider. The application will only interface with this
-    provider.
+    the third party provider Amazon Cognito. The application will only interface with this
+    provider. This trusted provider has established user authentication processes which mitigates the security risks
+    and complexity of attempting to implement our own authentication system.
   \item System Infrastructure: This application will be cloud-based and the
     underlying infrastructure including computation, storage, and network
     resources will be maintained by a cloud service provider.
@@ -253,13 +266,13 @@ regulations.
       & a. User does not understand feedback from the application interface
       \newline b. User does not agree to sign the document & Application detects
       unsuccessful acknowledgement state & a. System notifies user &
-      FR7 & H6-1 \\
+      FR7 SR-AR1 & H6-1 \\
       \cline{2-8}
       & Device loses power and interrupts the acknowledgement & Acknowledgement
       is not received by the system &
       a. Loss of power disconnects users from the application & Server side
       detects user disconnection & a. Save the application state and return
-      user to previous state when they reconnect & FR7 & H6-2 \\
+      user to previous state when they reconnect & FR7 SR-AR1 & H6-2 \\
       \hline
     \end{tabular}
   }
@@ -284,7 +297,8 @@ regulations.
 All existing and new safety requirements will be implemented within
 the timeline of this project. All documented safety requirements are
 essential to the stakeholders, and must be implemented before the
-application can be deployed for use.
+application can be deployed for use. The date to fully implement the requirements outlined in the FMEA table in section 5
+and identified in section 6 is March 24, 2025.
 
 \newpage{}
 
