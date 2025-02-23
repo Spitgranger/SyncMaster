@@ -19,8 +19,13 @@ class CustomBaseModel(BaseModel):
         use_enum_values=True,
     )
 
-    def model_dump(self, *args, **kwargs) -> dict:
-        return super().model_dump(*args, **kwargs, exclude_none=True, by_alias=True, mode="json")
+    def model_dump(self, *args, exclude_none=True, by_alias=True, mode="json", **kwargs) -> dict:
+        kwargs["exclude_none"] = exclude_none
+        kwargs["by_alias"] = by_alias
+        kwargs["mode"] = mode
+        return super().model_dump(*args, **kwargs)
 
-    def model_dump_json(self, *args, **kwargs) -> str:
-        return super().model_dump_json(*args, **kwargs, exclude_none=True, by_alias=True)
+    def model_dump_json(self, *args, exclude_none=True, by_alias=True, **kwargs) -> str:
+        kwargs["exclude_none"] = exclude_none
+        kwargs["by_alias"] = by_alias
+        return super().model_dump_json(*args, **kwargs)

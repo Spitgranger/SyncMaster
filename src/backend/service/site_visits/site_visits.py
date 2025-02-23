@@ -77,7 +77,7 @@ def add_exit_time(
     """
     pk = f"{ItemType.SITE_VISIT.value}#{site_id}#{user_id}"
     key_condition = Key("pk").eq(f"{ItemType.SITE_VISIT.value}#{site_id}#{user_id}")
-    items = table.query(key_condition_expression=key_condition, limit=1, scan_reverse=True)
+    items, _ = table.query(key_condition_expression=key_condition, limit=1, scan_reverse=True)
 
     if not items:
         logger.info(f"No visit found for user [{user_id}] at site [{site_id}]")
@@ -109,7 +109,8 @@ def list_site_visits(
     from_time: Optional[datetime] = None,
     to_time: Optional[datetime] = None,
     limit: Optional[int] = None,
-) -> list[DBSiteVisit]:
+    start_key: Optional[dict] = None,
+) -> tuple[list[DBSiteVisit], Optional[dict]]:
     """
     Updates a site visit in the database with its exit time
 
@@ -119,6 +120,7 @@ def list_site_visits(
     :param to_time: All items found in the query must have been last modified before
         this time
     :param limit: Maximum number of visits to retrieve from the database
+    :param start_key: The key to start getting new visits from
     :return: The list of site visits matching the criteria
     :raises ExternalServiceException: An unexpected error occurs in AWS
     """
@@ -133,4 +135,5 @@ def list_site_visits(
         key_condition_expression=key_expression,
         limit=limit,
         scan_reverse=True,
+        start_key=start_key,
     )

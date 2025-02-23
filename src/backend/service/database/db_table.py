@@ -105,7 +105,7 @@ class DBTable[T: DBItemModel]:
         :raises PermissionException: Assumed role does not have permission to make an put and item
             into the DB, likely due to table being initialized with only read permissions
         """
-        kwargs = {"Item": item.model_dump()}
+        kwargs: dict = {"Item": item.model_dump()}
         if condition_expression:
             kwargs["ConditionExpression"] = condition_expression
 
@@ -206,7 +206,7 @@ class DBTable[T: DBItemModel]:
         :raises PermissionException: Assumed role does not have permission delete an item,
             likely due to the table being initialized with only read permissions
         """
-        kwargs = {"Key": key}
+        kwargs: dict = {"Key": key}
         if condition_expression:
             kwargs["ConditionExpression"] = condition_expression
 
@@ -228,7 +228,8 @@ class DBTable[T: DBItemModel]:
         filter_expression: Optional[ConditionBase] = None,
         limit: Optional[int] = None,
         scan_reverse: bool = False,
-    ) -> list[T]:
+        start_key: Optional[dict] = None,
+    ) -> tuple[list[T], Optional[dict]]:
         """
         Queries the database based on the given list of criterion
 
@@ -242,6 +243,8 @@ class DBTable[T: DBItemModel]:
         :param scan_reverse: if true reverse the order that table items are scanned in, this
             reverses the order of the items received from the query. By default items come
             in ascending order, so making this true puts them in descending order.
+        :param start_key: The key to start after, received from a previous query
+        :return: The list of items matching the requested query and the last evaluated key
         :raises ConditionValidationError: The key condition is not valid, this usually happens
             when using a condition other than `.eq` on a hash key
         :raises ValidationError: The returned items did not match the provided schema for the table
@@ -256,6 +259,8 @@ class DBTable[T: DBItemModel]:
             kwargs["FilterExpression"] = filter_expression
         if scan_reverse is not None:
             kwargs["ScanIndexForward"] = not scan_reverse
+        if start_key:
+            kwargs["ExclusiveStartKey"] = start_key
 
         last_eval_key = None
         items: list[dict] = []
@@ -280,4 +285,4 @@ class DBTable[T: DBItemModel]:
             if err.response["Error"]["Code"] == "ValidationException":
                 raise ConditionValidationError() from err
             raise ExternalServiceException("Unknown Error from AWS") from err
-        return [self.item_schema.model_validate(item) for item in items]
+        return [self.item_schema.model_validate(item) for item in items], last_eval_key

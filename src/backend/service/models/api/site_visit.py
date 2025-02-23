@@ -15,3 +15,10 @@ class APISiteVisit(CustomBaseModel):
     user_id: str
     entry_time: datetime
     exit_time: Optional[datetime] = None
+
+
+class APIListSiteVisitResponse(CustomBaseModel):
+    """A list of site visit as represented in the get site visits API"""
+
+    visits: list[APISiteVisit]
+    last_key: Optional[str] = None
