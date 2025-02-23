@@ -33,6 +33,7 @@ class ItemType(Enum):
 
     DOCUMENT = "document"
     SITE_VISIT = "site_visit"
+    SITE = "site"
 
 
 @ttl_cache(maxsize=16, ttl=15 * 60)
