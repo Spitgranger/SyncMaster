@@ -10,6 +10,9 @@ from ..custom_base_model import CustomBaseModel
 class APIDocumentResponse(CustomBaseModel):
     """A Document as represented in the API"""
 
+    document_id: str
+    document_name: str
+    document_type: str
     site_id: str
     document_path: str
     s3_presigned_get: str = ""
@@ -19,7 +22,6 @@ class APIDocumentResponse(CustomBaseModel):
 
 class APIDocumentUploadRequest(CustomBaseModel):
     """A Document upload request from API"""
-
     site_id: str
     document_path: str
     s3_key: str
