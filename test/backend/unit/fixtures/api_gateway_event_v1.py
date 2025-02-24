@@ -119,7 +119,6 @@ def enter_site_request(api_gateway_event):
         path=f"/protected/site/{TEST_SITE_ID}/enter",
         method="POST",
         path_params={"site_id": TEST_SITE_ID},
-        query_params={"user_id": TEST_USER_ID},
     )
     yield event, context
 
@@ -130,7 +129,6 @@ def exit_site_request(api_gateway_event):
         path=f"/protected/site/{TEST_SITE_ID}/exit",
         method="PATCH",
         path_params={"site_id": TEST_SITE_ID},
-        query_params={"user_id": TEST_USER_ID},
         time=FUTURE_DATE_TIME,
     )
     yield event, context

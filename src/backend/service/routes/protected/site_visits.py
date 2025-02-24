@@ -24,11 +24,10 @@ router = Router()
 
 
 @router.post("/<site_id>/enter")
-def enter_site_handler(site_id: Annotated[str, Path()], user_id: Annotated[str, Query()]):
+def enter_site_handler(site_id: Annotated[str, Path()]):
     """
     Adds a users site visit to the database, with their entry time
 
-    :param user_id: Temporary param for determining user's id
     :param site_id: The site id that the user is entering
     :return: The details of the added site visit
     """
@@ -36,7 +35,8 @@ def enter_site_handler(site_id: Annotated[str, Path()], user_id: Annotated[str, 
         router.current_event["requestContext"]["requestTimeEpoch"] / 1000, tz=timezone.utc
     )
 
-    # Get user id from token here once possible
+    # Getting user id from claims
+    user_id = router.current_event["requestContext"]["authorizer"]["claims"]["sub"]
 
     table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBSiteVisit)
     visit = create_site_entry(table=table, site_id=site_id, user_id=user_id, timestamp=request_time)
@@ -54,11 +54,10 @@ def enter_site_handler(site_id: Annotated[str, Path()], user_id: Annotated[str, 
 
 
 @router.patch("/<site_id>/exit")
-def exit_site_handler(site_id: Annotated[str, Path()], user_id: Annotated[str, Query()]):
+def exit_site_handler(site_id: Annotated[str, Path()]):
     """
     Adds an exit time to an existing site visit in the database
 
-    :param user_id: Temporary param for determining user's id
     :param site_id: The site id that the user is exiting
     :return: The details of the updated site visit
     """
@@ -66,7 +65,8 @@ def exit_site_handler(site_id: Annotated[str, Path()], user_id: Annotated[str, Q
         router.current_event["requestContext"]["requestTimeEpoch"] / 1000, tz=timezone.utc
     )
 
-    # Get user id from token once possible
+    # Getting user id from claims
+    user_id = router.current_event["requestContext"]["authorizer"]["claims"]["sub"]
 
     table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBSiteVisit)
     visit = add_exit_time(table=table, site_id=site_id, user_id=user_id, timestamp=request_time)
