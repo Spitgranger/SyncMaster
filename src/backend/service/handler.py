@@ -28,7 +28,7 @@ def exception_handler(exception: Exception):
     :param exception: The exception caught
     :return: Response containing the correct HTTP code and message of exception
     """
-    logger.exception(exception)
+    logger.error(exception)
     status_code = HTTPStatus.INTERNAL_SERVER_ERROR.value
     content_type = content_types.APPLICATION_JSON
     body = {"error": str(exception)}

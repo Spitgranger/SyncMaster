@@ -3,7 +3,7 @@ from http import HTTPStatus
 
 from backend.service.database.db_table import DBTable, KeySchema
 from backend.service.handler import lambda_handler
-from backend.service.models.api.site_visit import APISiteVisit
+from backend.service.models.api.site_visit import APIListSiteVisitResponse, APISiteVisit
 from backend.service.models.db.site_visit import DBSiteVisit
 from backend.service.util import AWSAccessLevel
 
@@ -16,9 +16,42 @@ def test_list_sites_handler(database_with_two_site_visits, list_site_visits_requ
     )
 
     assert response["statusCode"] == HTTPStatus.OK
-    assert set(APISiteVisit.model_validate(visit) for visit in json.loads(response["body"])) == {
+    assert set(APIListSiteVisitResponse.model_validate_json(response["body"]).visits) == {
         visit.to_api_model() for visit in set_of_db_entries
     }
+    assert response["multiValueHeaders"]["Content-Type"] == ["application/json"]
+
+
+def test_list_sites_handler_paginated(
+    database_with_two_site_visits, list_site_visits_request_paginated, api_gateway_event
+):
+    _, set_of_db_entries = database_with_two_site_visits
+
+    response = lambda_handler(
+        event=list_site_visits_request_paginated[0], context=list_site_visits_request_paginated[1]
+    )
+
+    assert response["statusCode"] == HTTPStatus.OK
+    response_body = APIListSiteVisitResponse.model_validate_json(response["body"])
+    assert len(response_body.visits) == 1
+    assert response_body.visits[0] in [visit.to_api_model() for visit in set_of_db_entries]
+    assert response_body.last_key is not None
+    assert response["multiValueHeaders"]["Content-Type"] == ["application/json"]
+
+    new_event = api_gateway_event(
+        path=f"/protected/site/visits",
+        method="GET",
+        query_params={"limit": "1", "start_key": response_body.last_key},
+        user_role="admin",
+    )
+
+    response = lambda_handler(event=new_event[0], context=new_event[1])
+
+    assert response["statusCode"] == HTTPStatus.OK
+    response_body = APIListSiteVisitResponse.model_validate_json(response["body"])
+    assert len(response_body.visits) == 1
+    assert response_body.visits[0] in [visit.to_api_model() for visit in set_of_db_entries]
+    assert response_body.last_key is None
     assert response["multiValueHeaders"]["Content-Type"] == ["application/json"]
 
 
