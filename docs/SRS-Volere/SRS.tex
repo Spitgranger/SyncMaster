@@ -824,21 +824,23 @@ N/A
   \item Search queries related to documents or user data should
     return at least 95\% relevant results as it strikes a balance in being confident in results 
     while allowing a reasonable margin for error
-  \item A data integrity of 99.99\% should be maintained to ensure no
-    corruption or data loss during upload or retrieval as data integrity is of high importance to maintain a single source of truth
+  \item \sout{A data integrity of 99.99\% should be maintained to ensure no
+    corruption or data loss during upload or retrieval as data integrity is of high importance to maintain a single source of truth}\\
+    \textcolor{red}{Removing requirement on assumption cloud service provider will ensure integrity of its services}.
 \end{enumerate}
 
 \subsection{Robustness or Fault-Tolerance Requirements}
 \begin{enumerate}[{PR-RFT}1.]
   \item The system should handle unexpected inputs and events without crashing
-  \item The system should be able to detect and alert on any
-    anomalies or potential failures
+  \item \sout{The system should be able to detect and alert on any
+    anomalies or potential failures}
 \end{enumerate}
 
 \subsection{Capacity Requirements}
 \begin{enumerate}[{PR-CR}1.]
-  \item The system should be able to support peak data transfer rate
-    of 1 Gbps for document uploads and downloads
+  \item \sout{The system should be able to support peak data transfer rate
+    of 1 Gbps for document uploads and downloads}\\
+    \textcolor{red}{Removing as this is dependent on the internet speed of the user and outside of our control}.
   \item The system should be able to support individual file sizes up to 1GB
 \end{enumerate}
 
@@ -848,8 +850,9 @@ N/A
     categories. For example, document category A can have 5 documents
     and sub document category B under it. (which in turn has
     sub-categories of documents under it).
-  \item The system should be able to distribute traffic evenly and
-    avoid single points of failures
+  \item \sout{The system should be able to distribute traffic evenly and
+    avoid single points of failures}\\
+    \textcolor{red}{Removing as this will be handled by external cloud provider}.
 \end{enumerate}
 
 \subsection{Longevity Requirements}
@@ -879,8 +882,7 @@ N/A
     Sheets from MySDS.}\\
     \textcolor{red}{Direct integration with SharePoint and MySDS is
       no longer required by the stakeholders due to city policy and
-      security concerns. The requirement for related functionality is
-    covered by SR-IR2.}
+      security concerns.}
   \item \sout{Application should be open for integration with upcoming Work
     Order tracking system in the city's Enterprise Asset Management software.}\\
     \textcolor{red}{Work order system does not exist, removing requirement from scope.}
@@ -951,15 +953,17 @@ N/A
   \item The application should not allow the addition, removal or modification
     of files by users without proper access and authentication.
   \item \sout{The documents displayed should match the appropriate version available
-    on SharePoint and/or MySDS.}
+    on SharePoint and/or MySDS.}\\
+    \textcolor{red}{Removing as not the responsibility of the development team}.
   \item The application should minimize the amount of bad or incomplete data
     inputted through the portal.
 \end{enumerate}
 \subsection{Privacy Requirements}
 \begin{enumerate} [{SR-PR}1.]
   \item Data transmission will be encrypted.
-  \item The application should protect private information in accordance with
-    any and all government privacy laws and policies.
+  \item \sout{The application should protect private information in accordance with
+    any and all government privacy laws and policies.}\\
+    \textcolor{red}{Removing as verifying legal requirements is beyond the scope and skills of a small student software engineering team}.
 \end{enumerate}
 \subsection{Audit Requirements}
 \begin{enumerate} [{SR-AU}1.]
@@ -988,22 +992,24 @@ N/A
 \section{Compliance Requirements}
 \subsection{Legal Requirements}
 \begin{enumerate}[{CR-L}1.]
-  \item The application is to strictly abide by all regulations governing
+  \item \sout{The application is to strictly abide by all regulations governing
     the treatment of water and wastewater. This includes, but is not limited
     to the \textit{Safe Drinking Water Act} (SDWA), 2002, the
     \textit{Ontario Water Resources Act} (OWRA), the
-    \textit{Environmental Protection Act} and the \textit{Clean Water Act}.\\
-  \item The application is to process any sensitive information per the
+    \textit{Environmental Protection Act} and the \textit{Clean Water Act}}.\\
+  \item \sout{The application is to process any sensitive information per the
     \textit{Personal Information and Protection and Electronic
     Documents Act} and
-    the \textit{Freedom of Information and Protection of Privacy Act}.
+    the \textit{Freedom of Information and Protection of Privacy Act}}.\\
+    \textcolor{red}{Removing as verifying legal requirements is beyond the scope and skills of a student software engineering team}.
 \end{enumerate}
 \subsection{Standards Compliance Requirements}
 \begin{enumerate}[{CR-S}1.]
-  \item Documentation which must be stored on the City's BCOS
+  \item \sout{Documentation which must be stored on the City's BCOS
     system are to be stored on the application in a manner which can
     transfer the data. Our application will align with the City's
-    DWQMS (Drinking Water Quality Management System).
+    DWQMS (Drinking Water Quality Management System).}\\
+    \textcolor{red}{Removing as application will not be connecting to any existing City platforms}.
 \end{enumerate}
 
 \section{Requirements Traceability Matrix}
@@ -1012,7 +1018,7 @@ N/A
 \hline
 \textbf{Requirement} & \textbf{Dependencies} & \textbf{Dependents}\\
 \hline
-FR1 & & PR-CR1, PR-CR2, PR-PA2, MS-MTN5, MS-MTN7, MS-SUP1\\
+FR1 & & PR-CR2, MS-MTN5, MS-MTN7, MS-SUP1\\
 FR3 & & PR-SC2, MS-MTN5, MS-MTN7\\
 FR4 & &MS-MTN5, MS-MTN7 \\
 FR5 & & MS-MTN5, MS-MTN7\\
@@ -1034,18 +1040,12 @@ PR-SL3 & & \\
 PR-SC1 & & \\
 PR-SC2 & FR-3& \\
 PR-PA1 & & \\
-PR-PA2 & FR1& \\
 PR-RFT1& & \\
-PR-RFT2& & \\
-PR-CR1& FR1& \\
 PR-CR2& FR1& \\
 PR-SE1& & \\
-PR-SE2& & \\
-PR-LR1& & \\
 OE-PE1& & \\
 OE-WE1& & \\
 OE-WE2& & \\
-OE-IAS3& & \\
 OE-REl1& & \\
 OE-REL2& & \\
 OE-REL3& & \\
@@ -1057,9 +1057,6 @@ OE-REL4& & \\
 \hline
 \textbf{Requirement} & \textbf{Dependencies} & \textbf{Dependents}\\
 \hline
-MS-MTN1& & \\
-MS-MTN2& & \\
-MS-MTN3& & \\
 MS-MTN4& & \\
 MS-MTN5& FR1, FR2, FR3, FR4, FR5, FR6, FR7, FR8, FR9& \\
 MS-MTN6& & \\
@@ -1076,16 +1073,11 @@ SR-AR2& & \\
 SR-AR3& & \\
 SR-AR4& & \\
 SR-IR1& & \\
-SR-IR2& & \\
 SR-IR3& & \\
 SR-PR1& & \\
-SR-PR2& & \\
 SR-AU1& & \\
 SR-S1& & \\
 CR-CR1& & \\
-CR-L1& & \\
-CR-L2& & \\
-CR-S1& & \\
 \hline
 \end{tabular}
 \\
