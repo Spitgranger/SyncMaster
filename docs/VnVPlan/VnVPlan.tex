@@ -37,6 +37,7 @@
   \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
   \midrule
   11/4/24 & 1.0 & Initial Draft of VnV Plan for Rev0\\
+  03/04/25 & 1.1 & Modifications to Plan for Rev1\\
   \bottomrule
 \end{tabularx}
 
@@ -77,20 +78,18 @@ functions of the application are:
 
 \begin{itemize}
   \item Document Management: The application will have a document
-    hosting functionality, allowing access based document management.
-    It will also be able to retrieve and display the appropriate file
-    depending on the situation, and allow the user to sign it if applicable.
-  \item Work Order Portal: The application will have a portal
-    accessible to those coming on site to complete contract work or
-    work orders. The portal will allow users to verify they have
-    completed the necessary health and safety trainings and are aware
-    of any hazards they may face. The portal will also collect
-    information from the user regarding the work being done, as well
-    as show them relevant documentation.
+    hosting functionality, enabling effetive document management and a single source of truth.
+    It will allow contractors and employees to view all relevant station documentation.
+    It allows contractor users to acknowledge they have read required documents.
+  \item Site Visits: The application will have a portal
+    accessible to contractors attending site to complete work. The portal will allow users to acknowledge they have
+    completed the necessary health and safety training and are aware
+    of any hazards. The portal will also collect
+    information from the user regarding the purpose of their site visit and allow the contractor to view
+    the station documents.
   \item Displaying and Exporting Data: Data is collected through the
-    portal, including additional data such as tracking the arrival
-    and departure of contractors, the starting and completion time of
-    work, and any documentation submitted by users. This data is
+    portal including arrival time of contractors, the time they sign out,
+    and any files uploaded during their visit. This data is
     available to be viewed and exported by users with the correct
     level of access.
   \item Permission Based Access: Users registered on the system will
@@ -98,8 +97,8 @@ functions of the application are:
     to their account type.
   \item Geolocation Verification: The application will be able to
     verify if a user is at the appropriate site using GPS.
-  \item Notifications: The application will be able to notify users
-    when certain events take place, errors occur, or misuse is detected.
+  \item Notifications: The application will be able to indicate to admin users
+    when documents or and contractor annual Health and Safety Training is expired.
 \end{itemize}
 
 \subsection{Objectives}
