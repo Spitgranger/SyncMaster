@@ -582,7 +582,7 @@ Below are tests for the nonfunctional requirements.
 
     Initial State: System is functional with test accounts made for users. Users
     are between $\hypertarget{min_age}{MIN\_AGE}$ and
-    $\hypertarget{min_age}{MIN\_AGE}$ age limits. No prior instructions or
+    $\hypertarget{max_age}{MAX\_AGE}$ age limits. No prior instructions or
     training are provided.
 
     Input/Condition: User who has no prior experience using the system attempts
@@ -696,20 +696,17 @@ Below are tests for the nonfunctional requirements.
     are between $\hypertarget{min_age}{MIN\_AGE}$ and
     $\hypertarget{min_age}{MIN\_AGE}$ age limits.
 
-    Input: User performs an action that puts the system into an error state
-    (e.g. deleting a document that they don't have permission to modify).
+    Input: User navigates through the system as either a contractor or admin user.
 
     Output: User has performed the actions and the system has informed the user
     of the error. User actions the feedback given and understands the potential
     resolution paths.
 
     How test will be performed: The test will be performed by a user from our
-    stakeholder. The user will be instructed to perform an action that will put
-    the system in an error state. They will then perform the appropriate action
-    after receiving the feedback from the system. The user will then be asked if
-    they understood the error and if they were able to figure the possible
-    solutions. If the user reports that they have a clear understanding, the
-    test is successful.
+    stakeholder. The user will be instructed to freely explore the menus in the portal and see if an error is encountered.
+    If an error is encountered, The user will then be asked if they understood the error
+    and if they were able to understand possible solutions.
+    If no errors are encountered, the test is successful.
 
 \end{enumerate}
 
@@ -730,7 +727,7 @@ Below are tests for the nonfunctional requirements.
 
     How test will be performed: The test will be performed by a user from our
     stakeholder. They will be guided through all screens for every type of role
-    (General/Contractor, Manager, Admin). They will then be asked if the design
+    (contractor, ddmin, employee). They will then be asked if the design
     of the user interface aligns with accessibility features that they have
     seen in other applications used by the city. If the user reports that the
     accessibility features seen are similar to other applications that
@@ -751,23 +748,18 @@ Below are tests for the nonfunctional requirements.
     Initial State: The system is in an operational state, with all
     components running
 
-    Input/Condition: User logs in, and views all available screens of
-    the user interface
+    Input/Condition: User logs in as any possible user and views all available screens of
+    the user interface.
 
     Output/Result: The user has seen all available screens of the
-    user interface and finds that most of the colours used by the
-    application match a similar colour palette to existing
-    applications used by the city of Hamilton.
+    user interface and feels that most of the colours used by the
+    application are aesthetically pleasing and pleasant.
 
-    How test will be performed: The test will be performed by getting
-    one user who works at the city of Hamilton for each type of role
-    (General/Contractor, Manager, Admin). Then a member the
+    How test will be performed: The test will be performed by
+    a user acting as each of the user roles (contractor, admin, employee). A member of the
     development team will guide them to all available screens for their role and
-    ask them to evaluate how many colours that were seen are were
-    similar to ones used in other applications used by the city of
-    Hamilton and how many were not similar. If the number of colours
-    that are similar is larger than the number that are not, then the
-    test is successful, otherwise it is failed.
+    ask them to evaluate how aesthetically pleasing the colour palette is.
+    If they report the colour palette is pleasing then the test is successful, otherwise it is failed.
 
   \item{TC-LF-2\\}
 
@@ -784,23 +776,21 @@ Below are tests for the nonfunctional requirements.
     sizes and understand the interface regardless of screen size
 
     How test will be performed: One user for each type of role
-    (General/Contractor, Manager, Admin), will be go through the core
-    functionalities important for their roles and ensure that all
+    (contractor, admin, employee) will ensure that 
     functionalities work as expected across screen sizes, browsers,
     and operating systems. The tests should be performed using
     Windows 10, IOS, and Android, which are the supported operating
     systems for this application. The browsers used should be
     Microsoft Edge and Google Chrome. Testing should include a mobile
-    device, a desktop, and a tablet to ensure accommodation of
-    different screen sizes and of different types of devices.
+    device and a desktop to ensure accommodation for
+    different screen sizes and device types.
 
-    The core functionalities for a contractor/general user will be
-    signing into the system, viewing a document, signing a document,
-    and logging out. The core functionalities of a manager will be
-    uploading a document, viewing document update history, and seeing
-    the status of a contractor/general user under them. The core
-    functionalities of an admin will be creating users, deleting
-    users, and assigning roles to users.
+    The core functionalities for a contractor user will be
+    signing into the system, viewing a document, acknowledging a document,
+    and logging out. The core functionalities of an admin will be
+    uploading a document, viewing document expiry status, viewing site visit logs, creating users, deleting users,
+     and assigning roles to users. The core
+    functionalities of an employee user will be viewing documents.
 
 \end{enumerate}
 
@@ -849,37 +839,34 @@ Below are tests for the nonfunctional requirements.
     Initial State: The system is running and ready to upload and retrieve
     documents.
 
-    Input/Condition: Upload and retrieve a document
+    Input/Condition: User uploads and downloads a document
 
-    Output/Result: The document should be verified for its integrity by checking
-    for any modifications/corruption.
+    Output/Result: The downloaded document should look identical to the document which was uploaded
 
-    How test will be performed: Manually upload and retrieve a document. Then,
-    verify its integrity.
+    How test will be performed: User manually uploads and then downloads a document. If the downloaded document looks
+    identical to the uploaded document, then the test is successful.
 
   \item {TC-PR-4\\}
 
     Type: Manual
 
-    Initial State: The system has different user roles configured (Admin and
-    Contractor/General user)
+    Initial State: The system has different user roles configured (contractor, admin, employee)
 
     Input/Condition: Attempt to access documents with different user roles.
 
     Output/Result: Document access should be restricted based on user roles.
-    Admin users should have the ability to read and write docuements while
-    contractor/general users should have the abilty to only read and sign
-    docuements.
+    Admin users should have the ability to read and write documents while
+    contractor and employee users should only have the abilty to read documents.
 
-    How test will be performed: Manually log in with different user roles and
-    attempt to access docuements. Verify that access is correctly restricted.
+    How test will be performed: Manually log in with each user role and
+    attempt to access documents. Verify that access is correctly restricted.
 
 \end{enumerate}
 
 \paragraph{Precision or Accuracy Requirements}
 \begin{enumerate}
 
-  \item {TC-PR-5\\}
+  \item \sout{{TC-PR-5\\}
 
     Type: Manual
 
@@ -892,21 +879,23 @@ Below are tests for the nonfunctional requirements.
     search query
 
     How test will be performed: Manually perform search queries and evaluate the
-    relevance of the results
+    relevance of the results} \\
+    \textcolor{red}{Search queries will no longer be a feature of the application}.
 
-  \item {TC-PR-6\\}
+  \item \sout{{TC-PR-6\\}
 
     Type: Manual
 
-    Initial State: The system is running and ready for docuement upload and
+    Initial State: The system is running and ready for document upload and
     retrieval
 
-    Input/Condition: Upload and retrieve docuements
+    Input/Condition: Upload and retrieve documents
 
     Output/Result: No corruption or data loss in 99.99\% of the cases
 
     How test will be performed: Manually upload and retrieve docuements. Then,
-    verify their integrity.
+    verify their integrity.}\\
+    \textcolor{red}{Removing due to assumption cloud services are fully functional and secure}.
 
 \end{enumerate}
 
@@ -923,10 +912,10 @@ Below are tests for the nonfunctional requirements.
 
     Output/Result: The system should handle them without crashing
 
-    How test will be performed: Manually input unexpected data and observe the
-    system's response.
+    How test will be performed: Manually input unexpected data (such as files named with special characters) and observe the
+    system's response. The test passes if the system does not crash.
 
-  \item {TC-PR-8\\}
+  \item \sout{{TC-PR-8\\}
 
     Type: Manual
 
@@ -937,14 +926,15 @@ Below are tests for the nonfunctional requirements.
     Output/Result: The system should detect and alert on these issues
 
     How test will be performed: Manually introduce anomalies and verify the
-    system's detection and alert mechanism.
+    system's detection and alert mechanism.}\\
+    \textcolor{red}{Removing as corresponding requirement no longer exists.}
 
 \end{enumerate}
 
 \paragraph{Capacity Requirements}
 \begin{enumerate}
 
-  \item {TC-PR-9\\}
+  \item \sout{{TC-PR-9\\}
 
     Type: Manual
 
@@ -956,7 +946,8 @@ Below are tests for the nonfunctional requirements.
     Gbps.
 
     How test will be performed: Manually upload and download documents and
-    measure the data transfer rate.
+    measure the data transfer rate.}\\
+    \textcolor{red}{Removing as this is dependent on the internet speed of the user which we can not control}.
 
   \item {TC-PR-10\\}
 
@@ -989,7 +980,7 @@ Below are tests for the nonfunctional requirements.
     How test will be performed: Manually create nested document categories and
     verify their functionality.
 
-  \item {TC-PR-12\\}
+  \item \sout{{TC-PR-12\\}
 
     Type: Automatic
 
@@ -1002,14 +993,15 @@ Below are tests for the nonfunctional requirements.
 
     How test will be performed: Simulate high-traffic using a script to generate
     users and perform the task of uploading a document. Verify the system's load
-    balancing capabilities.
+    balancing capabilities.}\\
+    \textcolor{red}{Removing due to elimination of corresponding requirement}.
 
 \end{enumerate}
 
 \paragraph{Scalability or Extensibility Requirements}
 \begin{enumerate}
 
-  \item {TC-PR-13}
+  \item \sout{{TC-PR-13}
     Type: Automatic
 
     Initial State: The system is running
@@ -1024,7 +1016,8 @@ Below are tests for the nonfunctional requirements.
     How test will be performed: Add code for the new feature and
     measure the ease
     of introduction of the feature on a scale of 1-10. Verify that the ease of
-    introduction is greater or equal to 8.
+    introduction is greater or equal to 8.}\\
+    \textcolor{red}{Removing due to elimination of corresponding requirement}.
 \end{enumerate}
 
 \subsubsection{Maintainability and Support Requirements}
@@ -1033,7 +1026,7 @@ Below are tests for the nonfunctional requirements.
 
 \begin{enumerate}
 
-  \item{TC-MS-1\\}
+  \item \sout{{TC-MS-1\\}
 
     Type: Manual
 
@@ -1052,9 +1045,10 @@ Below are tests for the nonfunctional requirements.
     into the development environment, and waiting for it to complete.
     Once completed, the unit testing and building time will be subtracted
     from the total runtime of the workflow run, to determine the
-    deployment time, this should be under 30 minutes to be considered a success.
+    deployment time, this should be under 30 minutes to be considered a success.}\\
+    \textcolor{red}{Removing due to elimination of corresponding requirement}.
 
-  \item{TC-MS-2\\}
+  \item \sout{{TC-MS-2\\}
 
     Type: Manual
 
@@ -1071,9 +1065,10 @@ Below are tests for the nonfunctional requirements.
     into the development environment, and waiting for it to complete.
     Once completed, the unit testing and deployment time will be subtracted
     from the total runtime of the workflow run, to determine the
-    build time, this should be under 10 minutes to be considered a success.
+    build time, this should be under 10 minutes to be considered a success.}\\
+    \textcolor{red}{Removing due to elimination of corresponding requirement}.
 
-  \item{TC-MS-3\\}
+  \item \sout{{TC-MS-3\\}
 
     Type: Manual
 
@@ -1089,7 +1084,8 @@ Below are tests for the nonfunctional requirements.
     How test will be performed: The test will be performed by
     triggering a GitHub actions workflow run to perform all automated
     tests, and checking that once this run is completed, the total
-    runtime is under 10 minutes.
+    runtime is under 10 minutes.}
+    \textcolor{red}{Removing due to elimination of corresponding requirement}.
 
   \item{TC-MS-4\\}
 
@@ -1118,15 +1114,14 @@ Below are tests for the nonfunctional requirements.
 
     Input/Condition: The GitHub repository for the project is checked
     to ensure that all functional requirements listed in the SRS have
-    a unit and end-to-end test cases corresponding to them.
+    a unit test corresponding to them.
 
-    Output/Result: All functional requirements found in the SRS have a unit
-    and end-to-end test cases corresponding to them
+    Output/Result: All functional requirements found in the SRS have a 
+    unit test corresponding to them
 
     How test will be performed: The test will be performed by
     checking the Traceability Matrices in this document, to make sure
-    that there exists a unit and end-to-end test case for all
-    functional requirements.
+    that there exists a unit test for all functional requirements.
 
   \item{TC-MS-6\\}
 
@@ -1225,7 +1220,7 @@ Below are tests for the nonfunctional requirements.
 
 \begin{enumerate}
 
-  \item{TC-L-1\\}
+  \item \sout{{TC-L-1\\}
 
     Type: Manual
 
@@ -1245,9 +1240,10 @@ Below are tests for the nonfunctional requirements.
     authentication process,
     the entry/exit procedure will be used as a checklist to ensure it
     is followed
-    and the legislation specified in CR-L1 is not violated.
+    and the legislation specified in CR-L1 is not violated.}
+    \textcolor{red}{Removing as corresponding requirement has been eliminated}.
 
-  \item{TC-L-2\\}
+  \item \sout{{TC-L-2\\}
 
     Type: Manual
 
@@ -1271,9 +1267,10 @@ Below are tests for the nonfunctional requirements.
     the admin user, the facilities manager, and a second contractor profile.
     The test is successful when the email address of the contractor is only
     visible in the profile of that contractor, the facilities manager,
-    and the admin user.
+    and the admin user.}\\
+    \textcolor{red}{Removing as corresponding requirement has been eliminated}.
 
-  \item{TC-L-3\\}
+  \item \sout{{TC-L-3\\}
 
     Type: Manual
 
@@ -1288,7 +1285,8 @@ Below are tests for the nonfunctional requirements.
     How the test will be performed: The facilities manager signs into the system
     and downloads a compliance document. The test is successful if this
     document is confirmed by the City it is in a form that is able to be
-    uploaded to the BCOS system.
+    uploaded to the BCOS system.}\\
+    \textcolor{red}{Removing as corresponding requirement has been eliminated}.
 
 \end{enumerate}
 
@@ -1328,19 +1326,13 @@ Below are tests for the nonfunctional requirements.
 
     Type: Manual
 
-    Initial State: Device connected to City of Hamilton network
+    Initial State: Device connected to internet.
 
-    Input/Condition: Attempt to connect to the application using
-    the network.
+    Input/Condition: Attempt to connect to the application.
 
-    Output/Result: The device successfully connects to and is able to
-    use the application.
+    Output/Result: The device is successfully able to connect to the application.
 
-    How test will be performed: A user on site at the City of
-    Hamilton, Water Division will connect to the network available to
-    employees and contractors and then attempt to connect to and use
-    the application. The test is successful if the application can be
-    connected to using the city's network.
+    How test will be performed: The test is successful if a user is able to connect to the application through the internet.
 
   \item{TC-OE-2\\}
 
@@ -1366,7 +1358,7 @@ Below are tests for the nonfunctional requirements.
 
 \begin{enumerate}
 
-  \item{TC-OE-3\\}
+  \item \sout{{TC-OE-3\\}
 
     Type: Manual
 
@@ -1382,7 +1374,8 @@ Below are tests for the nonfunctional requirements.
     order information given a work order number. Will test if the
     functionality in the branch is able to fill in the fields with
     data from the API, indicating it is viable to add this
-    integration in the future.
+    integration in the future.}\\
+    \textcolor{red}{Removing due to elimination of corresponding requirement}.
 
 \end{enumerate}
 
@@ -1455,7 +1448,7 @@ Below are tests for the nonfunctional requirements.
 
 \begin{enumerate}
 
-  \item{TC-SS-3\\}
+  \item \sout{{TC-SS-3\\}
 
     Type: Manual
 
@@ -1468,7 +1461,8 @@ Below are tests for the nonfunctional requirements.
 
     How test will be performed: Files will be checked against their
     current versions. Users with appropriate permissions should have
-    the ability to update the files if outdated.
+    the ability to update the files if outdated.}
+    \textcolor{red}{Removing due to elimination of corresponding requirement}.
 
   \item{TC-SS-4\\}
 
@@ -1518,7 +1512,7 @@ Below are tests for the nonfunctional requirements.
 
 \begin{enumerate}
 
-  \item{TC-SS-6\\}
+  \item \sout{{TC-SS-6\\}
 
     Type: Manual
 
@@ -1540,7 +1534,8 @@ Below are tests for the nonfunctional requirements.
     Perform a manual inspection of the application's source code,
     configuration settings, and security protocols to ensure they
     meet the required standards. Test relevant features to confirm
-    that they adhere to the compliance checklist.
+    that they adhere to the compliance checklist.}
+    \textcolor{red}{Removing due to elimination of corresponding requirement}.
 
 \end{enumerate}
 
@@ -1556,11 +1551,9 @@ Below are tests for the nonfunctional requirements.
 
     Input/Condition: A security vulnerability or weakness is discovered.
 
-    Output/Result: The vulnerability or weakness is patched withing
-    seven days of discovery.
+    Output/Result: Pull requests created by Dependabot are merged within a week.
 
-    How test will be performed: Inspection of wether patch has
-    resolved the weakness within the deadline
+    How test will be performed: Inspection of whether pull requests created by Dependabot are merged within a week.
 
 \end{enumerate}
 
@@ -1572,16 +1565,15 @@ Below are tests for the nonfunctional requirements.
 
     Type: Manual
 
-    Initial State: Unsigned document and contractor user account
+    Initial State: Unacknowledged documents during site visit and a contractor user account
     exists in application
 
-    Input/Condition: Contractor user declines signature, attempts to
-    sign but does not complete action, or ignores document.
+    Input/Condition: Contractor user declines acknowledgement, attempts to
+    acknowledge but does not complete action, or ignores acknowledgement.
 
-    Output/Result: Fail-safes trigger, noting the bad data and
-    informing the facilities manager.
+    Output/Result: Visit logs identify the failure to complete acknowledgement.
 
-    How test will be performed: Attempt to submit without signature
+    How test will be performed: Attempt to complete a visit without acknowledgements
     and check how the application handles the action.
 
 \end{enumerate}
