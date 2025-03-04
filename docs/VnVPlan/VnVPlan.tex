@@ -2,6 +2,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{amsmath}
 \usepackage{hyperref}
 \hypersetup{
   colorlinks,
@@ -200,7 +201,7 @@ the members and their roles are given in the table below.
   \end{tabular}
   \caption{Testing Team}
 \end{table}
-
+\newpage
 \subsection{SRS Verification Plan}
 
 To verify the SRS document, we will use the following methods:
@@ -242,7 +243,12 @@ with our TA.
 
 % \wss{Create a checklists?}
 
-N/A
+To verify the design, we will use the following methods:
+\begin{enumerate}
+\item Ensure that each module specified in section 8 of \href{https://github.com/Spitgranger/SyncMaster/blob/main/docs/Design/SoftArchitecture/MG.pdf}{MG.pdf}
+satisfies its corresponding requirement outlined in the table. This will be completed as a check in our team meeting on Mar 6, 2025.
+\item Ensure all outstanding GitHub issues connected to the Design are addressed and closed.
+\end{enumerate}
 
 \subsection{Verification and Validation Plan Verification Plan}
 
@@ -581,8 +587,7 @@ Below are tests for the nonfunctional requirements.
     Type: Dynamic, Manual
 
     Initial State: System is functional with test accounts made for users. Users
-    are between $\hypertarget{min_age}{MIN\_AGE}$ and
-    $\hypertarget{max_age}{MAX\_AGE}$ age limits. No prior instructions or
+    are between MIN\_AGE and MAX\_AGE age limits. No prior instructions or
     training are provided.
 
     Input/Condition: User who has no prior experience using the system attempts
@@ -603,8 +608,7 @@ Below are tests for the nonfunctional requirements.
     Type: Dynamic, Manual
 
     Initial State: System is functional with test accounts made for users. Users
-    are between $\hypertarget{min_age}{MIN\_AGE}$ and
-    $\hypertarget{min_age}{MIN\_AGE}$ age limits.
+    are between MIN\_AGE and MAX\_AGE age limits.
 
     Input: Users logs in, and performs an action classified as irreversible
     (e.g. deletion).
@@ -628,8 +632,7 @@ Below are tests for the nonfunctional requirements.
     Type: Dynamic, Manual
 
     Initial State: System is functional with test accounts made for users. Users
-    are between $\hypertarget{min_age}{MIN\_AGE}$ and
-    $\hypertarget{min_age}{MIN\_AGE}$ age limits.
+    are between MIN\_AGE and MAX\_AGE age limits.
 
     Input: User logs in, and uses a feature that they have not used
     before (e.g. viewing documents)
@@ -650,8 +653,7 @@ Below are tests for the nonfunctional requirements.
     Type: Dynamic, Manual
 
     Initial State: System onboarding documents are avaliable. Users
-    are between $\hypertarget{min_age}{MIN\_AGE}$ and
-    $\hypertarget{min_age}{MIN\_AGE}$ age limits.
+    are between MIN\_AGE and MAX\_AGE age limits.
 
     Input: User views the system onboarding documents.
 
@@ -673,8 +675,7 @@ Below are tests for the nonfunctional requirements.
     Type: Dynamic, Manual
 
     Initial State: System is functional with test accounts made for users. Users
-    are between $\hypertarget{min_age}{MIN\_AGE}$ and
-    $\hypertarget{min_age}{MIN\_AGE}$ age limits.
+    are between MIN\_AGE and MAX\_AGE age limits.
 
     Input: User logs in, and views all available screens of the user interface.
 
@@ -693,8 +694,7 @@ Below are tests for the nonfunctional requirements.
     Type: Dynamic, Manual
 
     Initial State: System is functional with test accounts made for users. Users
-    are between $\hypertarget{min_age}{MIN\_AGE}$ and
-    $\hypertarget{min_age}{MIN\_AGE}$ age limits.
+    are between MIN\_AGE and MAX\_AGE age limits.
 
     Input: User navigates through the system as either a contractor or admin user.
 
@@ -717,8 +717,7 @@ Below are tests for the nonfunctional requirements.
     Type: Dynamic, Manual
 
     Initial State: System is functional with test accounts made for users. Users
-    are between $\hypertarget{min_age}{MIN\_AGE}$ and
-    $\hypertarget{min_age}{MIN\_AGE}$ age limits.
+    are between MIN\_AGE and MAX\_AGE age limits.
 
     Input: User logs in, and views all available screens of the user interface.
 
@@ -1805,9 +1804,12 @@ This section will be filled out once the design document is completed.
 \section{Appendix}
 
 \subsection{Symbolic Parameters}
+The following symbolic parameters are used:
 
-$\hypertarget{min_age}{MIN\_AGE}$ = 18\\
-$\hypertarget{min_age}{MAX\_AGE}$ = 70\\
+\begin{align*}
+ \text{MIN\_AGE} &= 18\\
+ \text{MAX\_AGE} &= 70\\
+\end{align*}
 
 \subsection{Usability Survey Questions}
 \begin{enumerate}
