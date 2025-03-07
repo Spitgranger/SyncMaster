@@ -40,12 +40,12 @@ Management System}
 
 ~\newpage
 
-\pagenumbering{roman}
+\pagenumbering{arabic}
 
 \tableofcontents
 
 ~\newpage
-
+\pagenumbering{roman}
 \section*{Revision History}
 
 \begin{tabularx}{\textwidth}{p{3cm}p{3cm}X}
@@ -58,9 +58,10 @@ Management System}
   11/04/2024 & Akshit Gulia & Removed PR-SL2\\
   12/27/2024 & Mitchell Hynes & Added Peer Review Issues 135, 136\\
   01/27/2025 & Mitchell Hynes & Removed Sharepoint from scope, modified requirements\\
+  03/04/2025 & Mitchell Hynes & Updated OE-PE1\\
   \bottomrule
 \end{tabularx}
-
+\pagenumbering{arabic}
 ~\\
 
 ~\newpage
@@ -695,6 +696,7 @@ N/A.
       Sharepoint, this means any changes in this system must be
       reflected in the corresponding Sharepoint document, and any
     changes to the document in Sharepoint must be reflected in this system.}
+    \textcolor{red}{Removing as external access to City network is not possible.}
   \item The system should have 3 types of users: Contractor, Employee, and Admin. 
     Only Admin users can change
     access permissions of other users and have read and write
@@ -808,6 +810,7 @@ N/A
   \item Average time for retrieving the documents should not exceed 2 seconds to minimize user frustration
   \item \sout{Synching documents with SharePoint should be completed in
     less than 7 seconds for file sizes up to 15 MB}
+    \textcolor{red}{Removing as access to City network is not possible.}
   \item The portal's user interface should be responsive and process user input within 2 seconds to minimize frustration.
 \end{enumerate}
 \subsection{Safety-Critical Requirements}
@@ -821,21 +824,23 @@ N/A
   \item Search queries related to documents or user data should
     return at least 95\% relevant results as it strikes a balance in being confident in results 
     while allowing a reasonable margin for error
-  \item A data integrity of 99.99\% should be maintained to ensure no
-    corruption or data loss during upload or retrieval as data integrity is of high importance to maintain a single source of truth
+  \item \sout{A data integrity of 99.99\% should be maintained to ensure no
+    corruption or data loss during upload or retrieval as data integrity is of high importance to maintain a single source of truth}\\
+    \textcolor{red}{Removing requirement on assumption cloud service provider will ensure integrity of its services}.
 \end{enumerate}
 
 \subsection{Robustness or Fault-Tolerance Requirements}
 \begin{enumerate}[{PR-RFT}1.]
   \item The system should handle unexpected inputs and events without crashing
-  \item The system should be able to detect and alert on any
-    anomalies or potential failures
+  \item \sout{The system should be able to detect and alert on any
+    anomalies or potential failures}
 \end{enumerate}
 
 \subsection{Capacity Requirements}
 \begin{enumerate}[{PR-CR}1.]
-  \item The system should be able to support peak data transfer rate
-    of 1 Gbps for document uploads and downloads
+  \item \sout{The system should be able to support peak data transfer rate
+    of 1 Gbps for document uploads and downloads}\\
+    \textcolor{red}{Removing as this is dependent on the internet speed of the user and outside of our control}.
   \item The system should be able to support individual file sizes up to 1GB
 \end{enumerate}
 
@@ -845,8 +850,9 @@ N/A
     categories. For example, document category A can have 5 documents
     and sub document category B under it. (which in turn has
     sub-categories of documents under it).
-  \item The system should be able to distribute traffic evenly and
-    avoid single points of failures
+  \item \sout{The system should be able to distribute traffic evenly and
+    avoid single points of failures}\\
+    \textcolor{red}{Removing as this will be handled by external cloud provider}.
 \end{enumerate}
 
 \subsection{Longevity Requirements}
@@ -859,8 +865,7 @@ N/A
 \section{Operational and Environmental Requirements}
 \subsection{Expected Physical Environment}
 \begin{enumerate} [{OE-PE}1.]
-  \item Application should be functional in City of Hamilton, Water
-    Division sites and offices.
+  \item Application should be functional anywhere with internet access.
 \end{enumerate}
 \subsection{Wider Environment Requirements}
 \begin{enumerate} [{OE-WE}1.]
@@ -877,8 +882,7 @@ N/A
     Sheets from MySDS.}\\
     \textcolor{red}{Direct integration with SharePoint and MySDS is
       no longer required by the stakeholders due to city policy and
-      security concerns. The requirement for related functionality is
-    covered by SR-IR2.}
+      security concerns.}
   \item \sout{Application should be open for integration with upcoming Work
     Order tracking system in the city's Enterprise Asset Management software.}\\
     \textcolor{red}{Work order system does not exist, removing requirement from scope.}
@@ -937,28 +941,29 @@ N/A
 \subsection{Access Requirements}
 \begin{enumerate} [{SR-AR}1.]
   \item Only authorized contractors and employees should be able to access the
-    portal for completing work on site. A visitor account will exist for authorized contractors without an account.
-  \item Only users with managerial level access should be able to get data on
-    contractors and employees.
-  \item Only users with administrative access should be able to make changes to
-    site settings.
-  \item The upload and changing of certain file classes will be tied to
-    different access levels.
+    portal for completing work on site. \sout{A visitor account will exist for authorized contractors without an account.} 
+    \textcolor{red}{Removing visitor account requirement to ensure only authorized contractors can access.}
+  \item Only admin users are able to view data on contractor and employee users.
+  \item Only admin users are able to make changes to site settings.
+  \item Only admin users are able to upload documents to the contractor portal which will be viewed by contractors. Contractor users
+  are able to upload at most 10 documents for each of their site visits which can be viewed in the site logs by admin users.
 \end{enumerate}
 \subsection{Integrity Requirements}
 \begin{enumerate} [{SR-IR}1.]
   \item The application should not allow the addition, removal or modification
     of files by users without proper access and authentication.
   \item \sout{The documents displayed should match the appropriate version available
-    on SharePoint and/or MySDS.}
+    on SharePoint and/or MySDS.}\\
+    \textcolor{red}{Removing as not the responsibility of the development team}.
   \item The application should minimize the amount of bad or incomplete data
     inputted through the portal.
 \end{enumerate}
 \subsection{Privacy Requirements}
 \begin{enumerate} [{SR-PR}1.]
   \item Data transmission will be encrypted.
-  \item The application should protect private information in accordance with
-    any and all government privacy laws and policies.
+  \item \sout{The application should protect private information in accordance with
+    any and all government privacy laws and policies.}\\
+    \textcolor{red}{Removing as verifying legal requirements is beyond the scope and skills of a small student software engineering team}.
 \end{enumerate}
 \subsection{Audit Requirements}
 \begin{enumerate} [{SR-AU}1.]
@@ -987,22 +992,24 @@ N/A
 \section{Compliance Requirements}
 \subsection{Legal Requirements}
 \begin{enumerate}[{CR-L}1.]
-  \item The application is to strictly abide by all regulations governing
+  \item \sout{The application is to strictly abide by all regulations governing
     the treatment of water and wastewater. This includes, but is not limited
     to the \textit{Safe Drinking Water Act} (SDWA), 2002, the
     \textit{Ontario Water Resources Act} (OWRA), the
-    \textit{Environmental Protection Act} and the \textit{Clean Water Act}.\\
-  \item The application is to process any sensitive information per the
+    \textit{Environmental Protection Act} and the \textit{Clean Water Act}}.\\
+  \item \sout{The application is to process any sensitive information per the
     \textit{Personal Information and Protection and Electronic
     Documents Act} and
-    the \textit{Freedom of Information and Protection of Privacy Act}.
+    the \textit{Freedom of Information and Protection of Privacy Act}}.\\
+    \textcolor{red}{Removing as verifying legal requirements is beyond the scope and skills of a student software engineering team}.
 \end{enumerate}
 \subsection{Standards Compliance Requirements}
 \begin{enumerate}[{CR-S}1.]
-  \item Documentation which must be stored on the City's BCOS
+  \item \sout{Documentation which must be stored on the City's BCOS
     system are to be stored on the application in a manner which can
     transfer the data. Our application will align with the City's
-    DWQMS (Drinking Water Quality Management System).
+    DWQMS (Drinking Water Quality Management System).}\\
+    \textcolor{red}{Removing as application will not be connecting to any existing City platforms}.
 \end{enumerate}
 
 \section{Requirements Traceability Matrix}
@@ -1011,7 +1018,7 @@ N/A
 \hline
 \textbf{Requirement} & \textbf{Dependencies} & \textbf{Dependents}\\
 \hline
-FR1 & & PR-CR1, PR-CR2, PR-PA2, MS-MTN5, MS-MTN7, MS-SUP1\\
+FR1 & & PR-CR2, MS-MTN5, MS-MTN7, MS-SUP1\\
 FR3 & & PR-SC2, MS-MTN5, MS-MTN7\\
 FR4 & &MS-MTN5, MS-MTN7 \\
 FR5 & & MS-MTN5, MS-MTN7\\
@@ -1033,18 +1040,12 @@ PR-SL3 & & \\
 PR-SC1 & & \\
 PR-SC2 & FR-3& \\
 PR-PA1 & & \\
-PR-PA2 & FR1& \\
 PR-RFT1& & \\
-PR-RFT2& & \\
-PR-CR1& FR1& \\
 PR-CR2& FR1& \\
 PR-SE1& & \\
-PR-SE2& & \\
-PR-LR1& & \\
 OE-PE1& & \\
 OE-WE1& & \\
 OE-WE2& & \\
-OE-IAS3& & \\
 OE-REl1& & \\
 OE-REL2& & \\
 OE-REL3& & \\
@@ -1056,9 +1057,6 @@ OE-REL4& & \\
 \hline
 \textbf{Requirement} & \textbf{Dependencies} & \textbf{Dependents}\\
 \hline
-MS-MTN1& & \\
-MS-MTN2& & \\
-MS-MTN3& & \\
 MS-MTN4& & \\
 MS-MTN5& FR1, FR2, FR3, FR4, FR5, FR6, FR7, FR8, FR9& \\
 MS-MTN6& & \\
@@ -1075,16 +1073,11 @@ SR-AR2& & \\
 SR-AR3& & \\
 SR-AR4& & \\
 SR-IR1& & \\
-SR-IR2& & \\
 SR-IR3& & \\
 SR-PR1& & \\
-SR-PR2& & \\
 SR-AU1& & \\
 SR-S1& & \\
 CR-CR1& & \\
-CR-L1& & \\
-CR-L2& & \\
-CR-S1& & \\
 \hline
 \end{tabular}
 \\
@@ -1202,20 +1195,23 @@ to demonstrate to the stakeholder for feedback.
 \section{Migration to the New Product}
 \subsection{Requirements for Migration to the New Product}
 \begin{enumerate} [{MI-NP}1.]
-  \item The system must be compatible with existing user roles in Active
+  \item \sout{The system must be compatible with existing user roles in Active
     Directory.\\
     \textbf{Rationale}: Compatibility with existing business rules is needed
     to ensure migration can be completed in a short period of time without
-    having to defined new roles.
+    having to defined new roles.}
+    \textcolor{red}{Removing requirement. SyncMaster Application will be standalone and not integrate into any existing systems.}
 \end{enumerate}
 
 \subsection{Data That Has to be Modified or Translated for the New System}
 \begin{enumerate} [{MI-TR}1.]
-  \item Information stored on paper must be digitized for consumption for the
+  \item \sout{Information stored on paper must be digitized for consumption for the
     system.\\
     \textbf{Rationale}: Some content that the system is to consume has not yet
     been digitized. It will have to be digitized before the system is able to
-    use it.
+    use it.}
+    \textcolor{red}{Removing requirement. This would be the responsibility of the stakeholder to decide if it is necessary as
+    an end user of the system and is not a responsibility of the development team.}
 \end{enumerate}
 
 \newpage{}

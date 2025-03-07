@@ -263,7 +263,7 @@ def test_query_items(database_with_document):
 
     table = DBTable(access=AWSAccessLevel.READ, item_schema=DBDocument)
 
-    items = table.query(key_condition_expression=Key("pk").eq(document.pk), limit=1)
+    items, _ = table.query(key_condition_expression=Key("pk").eq(document.pk), limit=1)
     assert len(items) == 1
     assert items[0] == document
 
@@ -273,7 +273,9 @@ def test_query_items_with_gsi(database_with_document):
 
     table = DBTable(access=AWSAccessLevel.READ, item_schema=DBDocument)
 
-    items = table.query(gsi=GSI.GSI1, key_condition_expression=Key("type").eq(document.type.value))
+    items, _ = table.query(
+        gsi=GSI.GSI1, key_condition_expression=Key("type").eq(document.type.value)
+    )
     assert len(items) == 1
     assert items[0] == document
 
@@ -281,7 +283,7 @@ def test_query_items_with_gsi(database_with_document):
 def test_query_items_in_reverse(database_with_two_site_visits):
     table = DBTable(access=AWSAccessLevel.READ, item_schema=DBSiteVisit)
 
-    items = table.query(
+    items, _ = table.query(
         key_condition_expression=Key("pk").eq(
             f"{ItemType.SITE_VISIT.value}#{TEST_SITE_ID}#{TEST_USER_ID}"
         ),
@@ -291,12 +293,35 @@ def test_query_items_in_reverse(database_with_two_site_visits):
     assert items[0].entry_time > items[1].entry_time
 
 
+def test_query_items_paginated(database_with_two_site_visits):
+    table = DBTable(access=AWSAccessLevel.READ, item_schema=DBSiteVisit)
+
+    items, last_eval = table.query(
+        key_condition_expression=Key("pk").eq(
+            f"{ItemType.SITE_VISIT.value}#{TEST_SITE_ID}#{TEST_USER_ID}"
+        ),
+        limit=1,
+    )
+    assert len(items) == 1
+    assert last_eval is not None
+
+    items, last_eval = table.query(
+        key_condition_expression=Key("pk").eq(
+            f"{ItemType.SITE_VISIT.value}#{TEST_SITE_ID}#{TEST_USER_ID}"
+        ),
+        limit=1,
+        start_key=last_eval,
+    )
+    assert len(items) == 1
+    assert last_eval == None
+
+
 def test_query_items_with_filter(database_with_document):
     base_resource, document = database_with_document
 
     table = DBTable(access=AWSAccessLevel.READ, item_schema=DBDocument)
 
-    items = table.query(
+    items, _ = table.query(
         key_condition_expression=Key("pk").eq(document.pk),
         filter_expression=Attr("last_modified_by").eq("does-not-exist"),
     )
