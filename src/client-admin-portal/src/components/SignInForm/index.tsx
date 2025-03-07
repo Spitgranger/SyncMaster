@@ -47,7 +47,7 @@ const SignInForm = () => {
             localStorage.setItem("accessToken", result.AccessToken);
             localStorage.setItem("IdToken", result.IdToken);
             console.log("Signed in successfully", result);
-            router.push('/dashboard');
+            router.push('/dashboard/sitewide');
         } catch (error) {
             console.error("Sign in failed", error);
         }
