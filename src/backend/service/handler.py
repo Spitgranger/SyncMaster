@@ -10,12 +10,14 @@ from aws_lambda_powertools.logging import correlation_paths
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
 from .exceptions import HTTPError
-from .routes import site_visits, users
+from .routes.protected import site_visits, users
+from .routes.unprotected import auth
 
 logger = Logger()
 app = APIGatewayRestResolver(enable_validation=True)
-app.include_router(router=site_visits.router, prefix="/site")
-app.include_router(router=users.router, prefix="/users")
+app.include_router(router=site_visits.router, prefix="/protected/site")
+app.include_router(router=users.router, prefix="/protected/users")
+app.include_router(router=auth.router, prefix="/unprotected/auth")
 
 
 @app.exception_handler(Exception)
@@ -26,7 +28,7 @@ def exception_handler(exception: Exception):
     :param exception: The exception caught
     :return: Response containing the correct HTTP code and message of exception
     """
-    logger.exception(exception)
+    logger.error(exception)
     status_code = HTTPStatus.INTERNAL_SERVER_ERROR.value
     content_type = content_types.APPLICATION_JSON
     body = {"error": str(exception)}

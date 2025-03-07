@@ -18,7 +18,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Image from 'next/image';
 import hamiltonLogo from "../../../public/hamiltonCityLogo.svg";
-import { Apartment, Settings } from '@mui/icons-material';
+import { Settings, Business } from '@mui/icons-material';
 import { AiOutlineGlobal } from 'react-icons/ai';
 import SpecificIcon from '../Icons/SpecificIcon';
 import UserIcon from '../Icons/UserIcon';
@@ -34,7 +34,6 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
 }>(({ theme }) => ({
   flexGrow: 1,
-  // padding: theme.spacing(3),
   padding: `${theme.spacing(3)} 0`,
   transition: theme.transitions.create('margin', {
     easing: theme.transitions.easing.sharp,
@@ -90,7 +89,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
   justifyContent: 'flex-end',
 }));
@@ -124,17 +122,14 @@ export default function DashboardLayout({ children }: Props) {
               aria-label="open drawer"
               onClick={handleDrawerOpen}
               edge="start"
-              sx={[
-                {
-                  mr: 2,
-                },
-              ]}
+              sx={{
+                mr: 2,
+              }}
             >
               <MenuIcon />
             </IconButton>
             <Grid container spacing={1} width={"168px"} display={"flex"} flexDirection={"row"}>
               <Image src={hamiltonLogo} width={44.71} height={38} alt='Hamilton Logo' />
-
 
               <Typography width={115} variant="body1" lineHeight={1.2} fontWeight={700} >
                 Hamilton Waterworks
@@ -180,8 +175,7 @@ export default function DashboardLayout({ children }: Props) {
           <Divider />
           <Typography pt={1} px={2} variant='subtitle1' color="textSecondary">Organization</Typography>
           <List>
-
-            {[{ text: 'Manage Sites', icon: <Apartment sx={{ color: "black" }} />, route: "/dashboard/managesites" }, { text: 'Manage Users', icon: <UserIcon />, route: "/dashboard/manageusers" }, { text: 'Settings', icon: <Settings sx={{ color: "black" }} />, route: "/dashboard/settings" }].map((link: SidebarLink) => (
+            {[{ text: 'Site Visits', icon: <Business sx={{ color: "black" }} />, route: "/dashboard/sitevisits" }, { text: 'Manage Users', icon: <UserIcon />, route: "/dashboard/manageusers" }, { text: 'Settings', icon: <Settings sx={{ color: "black" }} />, route: "/dashboard/settings" }].map((link: SidebarLink) => (
               <ListItem key={link.text} disablePadding>
                 <ListItemButton onClick={() => { router.push(link.route) }} selected={router.pathname.startsWith(link.route)}>
                   <ListItemIcon>

@@ -22,13 +22,33 @@ def api_gateway_event():
         path_params: dict[str, str] = {},
         query_params: dict[str, str] = {},
         time: datetime = CURRENT_DATE_TIME,
+        user_role: str = "contractor",
     ):
         request_id = str(uuid.uuid4())
 
         request_context = {
             "accountId": "123456789012",
             "apiId": "id",
-            "authorizer": {"claims": None, "scopes": None},
+            "authorizer": {
+                "claims": {
+                    "sub": TEST_USER_ID,
+                    "email_verified": False,
+                    "iss": "https://cognito-idp.us-east-2.amazonaws.com/us-east-2_AAAAAAAA",
+                    "cognito:username": "Test@gmail.com",
+                    "custom:company": "testcompany",
+                    "origin_jti": "555555aa-5aa5-5555-a555-a5aaa5a555a5",
+                    "aud": "55aaaa5a5a555aa5aa5a5aaa5a",
+                    "event_id": "555555aa-5aa5-5555-a555-a5aaa5a555a5",
+                    "token_use": "id",
+                    "auth_time": 1738377493,
+                    "exp": 1738420693,
+                    "custom:role": user_role,
+                    "iat": 1738377493,
+                    "jti": "555555aa-5aa5-5555-a555-a5aaa5a555a5",
+                    "email": "Test@gmail.com",
+                },
+                "scopes": None,
+            },
             "domainName": "id.execute-api.us-east-1.amazonaws.com",
             "domainPrefix": "id",
             "extendedRequestId": "request-id",
@@ -94,18 +114,11 @@ def api_gateway_event():
 
 
 @pytest.fixture()
-def get_request(api_gateway_event):
-    event, context = api_gateway_event("/test", "GET")
-    yield event, context
-
-
-@pytest.fixture()
 def enter_site_request(api_gateway_event):
     event, context = api_gateway_event(
-        path=f"/site/{TEST_SITE_ID}/enter",
+        path=f"/protected/site/{TEST_SITE_ID}/enter",
         method="POST",
         path_params={"site_id": TEST_SITE_ID},
-        query_params={"user_id": TEST_USER_ID},
     )
     yield event, context
 
@@ -113,10 +126,9 @@ def enter_site_request(api_gateway_event):
 @pytest.fixture()
 def exit_site_request(api_gateway_event):
     event, context = api_gateway_event(
-        path=f"/site/{TEST_SITE_ID}/exit",
+        path=f"/protected/site/{TEST_SITE_ID}/exit",
         method="PATCH",
         path_params={"site_id": TEST_SITE_ID},
-        query_params={"user_id": TEST_USER_ID},
         time=FUTURE_DATE_TIME,
     )
     yield event, context
@@ -125,14 +137,27 @@ def exit_site_request(api_gateway_event):
 @pytest.fixture()
 def list_site_visits_request(api_gateway_event):
     event, context = api_gateway_event(
-        path=f"/site/visits",
+        path=f"/protected/site/visits",
         method="GET",
         query_params={
             "from_time": PREV_DATE_TIME.isoformat(),
             "to_time": FUTURE_DATE_TIME.isoformat(),
             "limit": "2",
-            "user_role": "admin",
         },
+        user_role="admin",
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def list_site_visits_request_paginated(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/site/visits",
+        method="GET",
+        query_params={
+            "limit": "1",
+        },
+        user_role="admin",
     )
     yield event, context
 
@@ -140,9 +165,7 @@ def list_site_visits_request(api_gateway_event):
 @pytest.fixture()
 def list_site_visits_request_bad_role(api_gateway_event):
     event, context = api_gateway_event(
-        path=f"/site/visits",
-        method="GET",
-        query_params={"user_role": "contractor"},
+        path=f"/protected/site/visits", method="GET", user_role="contractor"
     )
     yield event, context
 
@@ -157,14 +180,14 @@ def post_signup_request(api_gateway_event):
             "attributes": {"custom:role": "contractor", "custom:company": "testcompany"},
         }
     )
-    event, context = api_gateway_event("/users/signup", "POST", body)
+    event, context = api_gateway_event("/protected/users/signup", "POST", body)
     yield event, context
 
 
 @pytest.fixture()
 def post_signin_request(api_gateway_event):
     body = json.dumps({"email": "Test@gmail.com", "password": "GougGoug123!"})
-    event, context = api_gateway_event("/users/signin", "POST", body)
+    event, context = api_gateway_event("/unprotected/auth/signin", "POST", body)
     yield event, context
 
 
@@ -181,25 +204,25 @@ def post_create_user_request(api_gateway_event):
             },
         }
     )
-    event, context = api_gateway_event("/users/create_user", "POST", body)
+    event, context = api_gateway_event("/protected/users/create_user", "POST", body)
     yield event, context
 
 
 @pytest.fixture()
 def post_get_users_request(api_gateway_event):
     body = json.dumps({"attributes": {}})
-    event, context = api_gateway_event("/users/get_users", "POST", body)
+    event, context = api_gateway_event("/protected/users/get_users", "POST", body)
     yield event, context
 
 
 @pytest.fixture()
 def post_update_user_request(api_gateway_event):
     body = json.dumps({"email": "test@test.com", "attributes": [{"Name": "name", "Value": "test"}]})
-    event, context = api_gateway_event("/users/update_user", "POST", body)
+    event, context = api_gateway_event("/protected/users/update_user", "POST", body)
     yield event, context
 
 
 @pytest.fixture()
 def get_signout_user_request(api_gateway_event):
-    event, context = api_gateway_event('/users/update_user?user_token="eyqq81712"', "GET")
+    event, context = api_gateway_event('/protected/users/update_user?user_token="eyqq81712"', "GET")
     yield event, context
