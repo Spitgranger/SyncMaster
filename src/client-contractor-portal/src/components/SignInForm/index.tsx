@@ -23,6 +23,7 @@ const SignInForm = () => {
 
         // ✅ Store Access Token
         localStorage.setItem("accessToken", data.AccessToken);
+        localStorage.setItem("IdToken", data.IdToken);
 
         // ✅ Decode and store User ID from IdToken
         if (data.IdToken) {

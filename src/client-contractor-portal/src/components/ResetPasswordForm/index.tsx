@@ -19,8 +19,14 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ email }) => {
     e.preventDefault();
     setError(null);
 
+    const IdToken = localStorage.getItem("IdToken"); 
+    if (!IdToken) {
+      console.error("User ID not found in localStorage!");
+      return;
+    }
+
     try {
-      await resetPassword(email, password, newPassword);
+      await resetPassword(email, password, newPassword, IdToken);
       window.location.href = "/acknowledgement"; // Redirect after success
     } catch (err) {
       setError('Failed to reset password. Please try again.');

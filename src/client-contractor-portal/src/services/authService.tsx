@@ -1,7 +1,8 @@
-export async function signupUser(email: string, password: string) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/signup`, {
+export async function signupUser(email: string, password: string, IdToken: string) {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/protected/users/signup`, {
     method: "POST",
     headers: { 
+      "Authorization": `${IdToken}`,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({ email, password }),
@@ -15,15 +16,18 @@ export async function signupUser(email: string, password: string) {
   return response.json();
 }
 
-export async function resetPassword(email: string, password: string, newPassword: string) {
+export async function resetPassword(email: string, password: string, newPassword: string, IdToken: string) {
     try {
       // ✅ Get user location before making the request
       const location = await getUserLocation();
       console.log("User Location:", location);
   
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/reset-password`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/protected/users/reset-password`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Authorization": `${IdToken}`,
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({
           email,
           password,
@@ -48,7 +52,7 @@ export async function signinUser(email: string, password: string) {
       const location = await getUserLocation();
       console.log(location);
   
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/signin`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/unprotected/auth/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, location }),

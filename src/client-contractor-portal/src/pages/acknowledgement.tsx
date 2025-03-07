@@ -26,8 +26,14 @@ const AcknowledgementPage = () => {
       return;
     }
 
+    const IdToken = localStorage.getItem("IdToken"); 
+    if (!IdToken) {
+      console.error("User ID not found in localStorage!");
+      return;
+    }
+
     try {
-      const response = await enterSite(userId);
+      const response = await enterSite(userId, IdToken);
       console.log("Entered site successfully:", response);
       router.push("/jobs");
     } catch (err) {
