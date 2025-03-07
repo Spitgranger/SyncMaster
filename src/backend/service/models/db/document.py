@@ -17,7 +17,7 @@ class DBDocument(DBItemModel):
     document_name: str # Will be name of file, including extensions (e.g. "test.pdf")
     document_type: str # Either "file" or "folder"
     document_id: str # Unique identifier to the file or folder
-    document_expiry: Optional[datetime]
+    document_expiry: Optional[datetime] = None
     
     # Folder structure property
     parent_folder_id: str # The parent folder of the file. Root or folder name
@@ -57,4 +57,6 @@ class DBDocument(DBItemModel):
             requires_ack=self.requires_ack,
             last_modified=self.last_modified_time,
             s3_presigned_get=s3_link,
+            document_expiry=self.document_expiry,
+            parent_folder_id=self.parent_folder_id,
         )

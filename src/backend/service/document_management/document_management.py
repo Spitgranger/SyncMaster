@@ -148,6 +148,7 @@ def delete(
                 # recursively delete subfolders
                 delete(table, s3_bucket, site_id, document.document_id,
                        item.document_id)
-        for item in items:
-            table.delete({"pk": item.pk, "sk": item.sk})
-
+            else:
+                s3_bucket.delete(key=item.s3_key, e_tag=item.s3_e_tag)
+                table.delete({"pk": item.pk, "sk": item.sk})
+        table.delete({"pk": document.pk, "sk": document.sk})
