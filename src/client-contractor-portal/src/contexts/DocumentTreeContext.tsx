@@ -155,10 +155,10 @@ const DocumentTreeContextProvider = ({ children }: any) => {
       let siteWideFiles = {};
 
       try {
-        const sitespecific = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/documents/HC057/get_files`);
+        const sitespecific = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/documents/HC057/get_files`);
         siteFiles = convertToState(await sitespecific.json());
 
-        const siteWideData = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/documents/ALL/get_files`);
+        const siteWideData = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/documents/ALL/get_files`);
         siteWideFiles = convertToState(await siteWideData.json());
 
         const updatedState = {

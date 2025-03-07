@@ -87,7 +87,7 @@ const ejfakle = () => {
         throw new Error("Error while deleting the document");
       }
     
-      const data = await deleteResponse.json();
+      // const data = await deleteResponse.json();
       console.log(data);
     } catch (error) {
       console.error("Error:", error);
