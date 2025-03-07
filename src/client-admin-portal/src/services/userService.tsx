@@ -22,7 +22,7 @@ export async function createUser(email: string, role: "admin" | "contractor" | "
 
 // Sign In User
 export async function signInUser(email: string, password: string, newPassword?: string, location?: [number, number]) {
-  const response = await fetch(`${API_BASE_URL}/users/signin`, {
+  const response = await fetch(`${API_BASE_URL}/unprotected/auth/signin`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password, new_password: newPassword, location }),
