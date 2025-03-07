@@ -11,7 +11,7 @@ from ...database.db_table import DBTable
 from ...exceptions import InsufficientUserPermissionException
 from ...models.api.site import APIListSitesResponse, APISite, APISitePartial
 from ...models.db.site import DBSite
-from ...site_management.site_management import create_site, update_site
+from ...site_management.site_management import create_site, delete_site, update_site
 from ...util import AWSAccessLevel, decode_db_key, encode_db_key
 
 router = Router()
@@ -107,4 +107,31 @@ def update_site_handler(
             latitude=new_site.latitude,
             acceptable_range=new_site.acceptable_range,
         ),
+    )
+
+
+@router.delete("/<site_id>")
+def delete_site_handler(site_id: Annotated[str, Path()]) -> Response:
+    """
+    Delete a site
+
+    :param site_id: The ID of the site that should be deleted
+    """
+    request_time = datetime.fromtimestamp(
+        router.current_event["requestContext"]["requestTimeEpoch"] / 1000, tz=timezone.utc
+    )
+
+    # Getting role from user claims
+    role = router.current_event["requestContext"]["authorizer"]["claims"]["custom:role"]
+
+    # Role check to ensure admin
+    if role != "admin":
+        raise InsufficientUserPermissionException(role=role, action="list site visits")
+
+    table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBSite)
+    delete_site(table=table, site_id=site_id, timestamp=request_time)
+
+    return Response(
+        status_code=HTTPStatus.NO_CONTENT.value,
+        content_type=content_types.APPLICATION_JSON,
     )
