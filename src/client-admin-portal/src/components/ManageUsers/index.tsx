@@ -19,7 +19,7 @@ const ManageUsersTable: React.FC = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       // Retrieve the IdToken from localStorage.
-      const idToken = localStorage.getItem('idToken');
+      const idToken = localStorage.getItem('IdToken');
       if (!idToken) {
         console.error("Authentication token not found. Please sign in.");
         // Optionally, you can redirect the user to the sign-in page here.

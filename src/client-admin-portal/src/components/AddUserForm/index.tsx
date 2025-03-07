@@ -15,7 +15,7 @@ const AddUserForm: React.FC = () => {
 
   useEffect(() => {
     // Since this is a client component, localStorage is available.
-    const token = localStorage.getItem('idToken');
+    const token = localStorage.getItem('IdToken');
     setIdToken(token);
   }, []);
 

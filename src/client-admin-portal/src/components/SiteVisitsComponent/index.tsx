@@ -15,7 +15,7 @@ const SiteVisitsTable: React.FC = () => {
   useEffect(() => {
     const fetchSiteVisits = async () => {
       try {
-        const idToken = localStorage.getItem('idToken');
+        const idToken = localStorage.getItem('IdToken');
         if (!idToken) {
           console.error('Authentication token not found. Please sign in.');
           return;
