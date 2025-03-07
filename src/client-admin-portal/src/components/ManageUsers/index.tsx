@@ -18,8 +18,17 @@ const ManageUsersTable: React.FC = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
+      // Retrieve the IdToken from localStorage.
+      const idToken = localStorage.getItem('idToken');
+      if (!idToken) {
+        console.error("Authentication token not found. Please sign in.");
+        // Optionally, you can redirect the user to the sign-in page here.
+        return;
+      }
+      
       try {
-        const fetchedUsers = await getUsers({}); // Fetch all users
+        // Pass an empty attributes object and the idToken to getUsers.
+        const fetchedUsers = await getUsers({}, idToken);
         const formattedUsers = fetchedUsers.map((user: any) => {
           const attributes = user.Attributes.reduce((acc: any, attr: any) => {
             acc[attr.Name] = attr.Value;

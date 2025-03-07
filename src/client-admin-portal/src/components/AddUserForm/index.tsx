@@ -1,5 +1,4 @@
-// components/AddUserForm.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, TextField, Button, Typography, MenuItem, Select, FormControl, InputLabel, Box } from '@mui/material';
 import { createUser } from '@/services/userService';
 import { useRouter } from 'next/router';
@@ -11,7 +10,14 @@ const AddUserForm: React.FC = () => {
   const [role, setRole] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+  const [idToken, setIdToken] = useState<string | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    // Since this is a client component, localStorage is available.
+    const token = localStorage.getItem('idToken');
+    setIdToken(token);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -23,11 +29,17 @@ const AddUserForm: React.FC = () => {
       return;
     }
 
+    if (!idToken) {
+      setError('Authentication token not found. Please sign in again.');
+      return;
+    }
+
     try {
-      await createUser(email, role as 'admin' | 'contractor' | 'employee', company, name);
+      // Pass the IdToken as required by the API
+      await createUser(email, role as 'admin' | 'contractor' | 'employee', company, name, idToken);
       setSuccess(true);
       setTimeout(() => router.push('/dashboard/manageusers'), 2000); // Redirect after success
-    } catch (err) {
+    } catch (err: any) {
       setError('Failed to create user. Please try again.');
     }
   };
@@ -42,7 +54,11 @@ const AddUserForm: React.FC = () => {
       </Typography>
 
       {error && <Typography color="error" textAlign="center">{error}</Typography>}
-      {success && <Typography color="success.main" textAlign="center">User created successfully! Redirecting...</Typography>}
+      {success && (
+        <Typography color="success.main" textAlign="center">
+          User created successfully! Redirecting...
+        </Typography>
+      )}
 
       <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
         <TextField
