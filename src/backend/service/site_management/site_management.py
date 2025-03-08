@@ -147,7 +147,11 @@ def get_site(table: DBTable[DBSite], site_id: str) -> DBSite:
     return table.get(key=key)
 
 
-def list_sites(table: DBTable[DBSite], limit: int) -> tuple[list[DBSite], Optional[dict]]:
+def list_sites(
+    table: DBTable[DBSite],
+    limit: Optional[int] = None,
+    start_key: Optional[dict] = None,
+) -> tuple[list[DBSite], Optional[dict]]:
     """
     Get a list of all sites from the database
 
@@ -162,4 +166,5 @@ def list_sites(table: DBTable[DBSite], limit: int) -> tuple[list[DBSite], Option
         key_condition_expression=key_expression,
         limit=limit,
         scan_reverse=True,
+        start_key=start_key,
     )
