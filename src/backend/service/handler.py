@@ -10,14 +10,20 @@ from aws_lambda_powertools.logging import correlation_paths
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
 from .exceptions import HTTPError
-from .routes.protected import site_visits, users
+from .routes.protected import documents, site_visits, users
 from .routes.unprotected import auth
 
 logger = Logger()
 app = APIGatewayRestResolver(enable_validation=True)
 app.include_router(router=site_visits.router, prefix="/protected/site")
 app.include_router(router=users.router, prefix="/protected/users")
+app.include_router(router=documents.router, prefix="/protected/documents")
 app.include_router(router=auth.router, prefix="/unprotected/auth")
+cors_headers = {
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, GET, PUT, PATCH, DELETE",
+}
 
 
 @app.exception_handler(Exception)
@@ -38,9 +44,7 @@ def exception_handler(exception: Exception):
         body = {"error": str(exception)}
 
     return Response(
-        status_code=status_code,
-        content_type=content_type,
-        body=body,
+        status_code=status_code, content_type=content_type, body=body, headers=cors_headers
     )
 
 
