@@ -1,21 +1,15 @@
 from typing import Optional
 
-from pydantic import field_validator
+from pydantic import Field
 
 from ..custom_base_model import CustomBaseModel
 
 
 class APISite(CustomBaseModel):
-    site_id: str
+    site_id: str = Field(..., min_length=5, max_length=5)
     longitude: float
     latitude: float
     acceptable_range: float
-
-    @field_validator("site_id")
-    def validate_site_id(cls, value):
-        if value == "ALL":
-            raise ValueError("Site ID cannot be 'ALL'")
-        return value
 
 
 class APISitePartial(CustomBaseModel):
