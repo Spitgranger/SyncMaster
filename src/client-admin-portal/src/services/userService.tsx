@@ -1,10 +1,13 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 // Create User
-export async function createUser(email: string, role: "admin" | "contractor" | "employee", company: string, name: string) {
-  const response = await fetch(`${API_BASE_URL}/users/create_user`, {
+export async function createUser(email: string, role: "admin" | "contractor" | "employee", company: string, name: string, IdToken: string) {
+  const response = await fetch(`${API_BASE_URL}/protected/users/create_user`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { 
+      "Authorization": `${IdToken}`,
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({
       email,
       attributes: {
@@ -22,7 +25,7 @@ export async function createUser(email: string, role: "admin" | "contractor" | "
 
 // Sign In User
 export async function signInUser(email: string, password: string, newPassword?: string, location?: [number, number]) {
-  const response = await fetch(`${API_BASE_URL}/users/signin`, {
+  const response = await fetch(`${API_BASE_URL}/unprotected/auth/signin`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password, new_password: newPassword, location }),
@@ -34,10 +37,13 @@ export async function signInUser(email: string, password: string, newPassword?: 
 }
 
 // Get Users
-export async function getUsers(attributes: Record<string, string>) {
-  const response = await fetch(`${API_BASE_URL}/users/get_users`, {
+export async function getUsers(attributes: Record<string, string>, IdToken: string) {
+  const response = await fetch(`${API_BASE_URL}/protected/users/get_users`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { 
+      "Authorization": `${IdToken}`,
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({ attributes }),
   });
   if (!response.ok) {
@@ -48,10 +54,13 @@ export async function getUsers(attributes: Record<string, string>) {
 }
 
 // Sign Out User
-export async function signOutUser(userToken: string) {
-  const response = await fetch(`${API_BASE_URL}/users/signout?user_token=${userToken}`, {
+export async function signOutUser(userToken: string, IdToken: string) {
+  const response = await fetch(`${API_BASE_URL}/protected/users/signout?user_token=${userToken}`, {
     method: "GET",
-    headers: { "Content-Type": "application/json" },
+    headers: { 
+      "Authorization": `${IdToken}`,
+      "Content-Type": "application/json"
+    },
   });
   if (!response.ok) {
     throw new Error("Failed to sign out");
@@ -60,10 +69,13 @@ export async function signOutUser(userToken: string) {
 }
 
 // Update User Attributes
-export async function updateUser(email: string, attributes: { Name: string; Value: string }[]) {
-  const response = await fetch(`${API_BASE_URL}/users/update_user`, {
+export async function updateUser(email: string, attributes: { Name: string; Value: string }[], IdToken: string) {
+  const response = await fetch(`${API_BASE_URL}/protected/users/update_user`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { 
+      "Authorization": `${IdToken}`,
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({ attributes: { email, attributes } }),
   });
   if (!response.ok) {

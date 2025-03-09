@@ -5,6 +5,8 @@ import { Button, IconButton, InputAdornment, TextField, Typography } from '@mui/
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Link from 'next/link';
+import { signInUser } from '@/services/userService';
+import { useRouter } from 'next/navigation';
 
 const SignInForm = () => {
     const [email, setEmail] = useState("")
@@ -12,6 +14,8 @@ const SignInForm = () => {
 
     const [password, setPassword] = useState("")
     const [showPassword, setShowPassword] = useState(false);
+
+    const router = useRouter();
 
     const handleEmailChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
         setEmail(e.target.value);
@@ -36,13 +40,26 @@ const SignInForm = () => {
         event.preventDefault();
     };
 
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        try {
+            const result = await signInUser(email, password);
+            localStorage.setItem("accessToken", result.AccessToken);
+            localStorage.setItem("IdToken", result.IdToken);
+            console.log("Signed in successfully", result);
+            router.push('/dashboard/sitewide');
+        } catch (error) {
+            console.error("Sign in failed", error);
+        }
+    }
+
     return (
         <Grid container boxShadow={16} direction={"column"} sx={{
             width: "100%",
             maxWidth: "552px",
             px: "24px"
         }}>
-            <form onSubmit={() => { }}>
+            <form onSubmit={handleSubmit}>
                 <Grid size={12} py={2}>
                     <Typography variant='h5'>Sign In</Typography>
                 </Grid>
@@ -72,13 +89,9 @@ const SignInForm = () => {
                         slotProps={{
                             input: {
                                 endAdornment: (
-                                    <InputAdornment
-                                        position='end'
-                                    >
+                                    <InputAdornment position='end'>
                                         <IconButton
-                                            aria-label={
-                                                showPassword ? 'hide the password' : 'display the password'
-                                            }
+                                            aria-label={showPassword ? 'hide the password' : 'display the password'}
                                             onClick={handleClickShowPassword}
                                             onMouseDown={handleMouseDownPassword}
                                             onMouseUp={handleMouseUpPassword}
@@ -91,13 +104,17 @@ const SignInForm = () => {
                         }}
                     />
                     <Grid display={"flex"} justifyContent={"flex-end"}>
-                        <Link style={{ textAlign: 'right', color: "#1976d2" }} href={'/forgot-password'}><Typography variant='body1'>Forgot Password?</Typography></Link>
+                        <Link style={{ textAlign: 'right', color: "#1976d2" }} href={'/forgot-password'}>
+                            <Typography variant='body1'>Forgot Password?</Typography>
+                        </Link>
                     </Grid>
 
-                    <Button size='large' variant='contained'>Sign In</Button>
+                    <Button type="submit" size='large' variant='contained'>Sign In</Button>
 
                     <Grid display={"flex"} justifyContent={"center"}>
-                        <Link style={{ textAlign: 'center', color: "#1976d2" }} href={'/sign-up'}><Typography variant='body1'>Sign Up</Typography></Link>
+                        <Link style={{ textAlign: 'center', color: "#1976d2" }} href={'/sign-up'}>
+                            <Typography variant='body1'>Sign Up</Typography>
+                        </Link>
                     </Grid>
                 </Grid>
             </form>

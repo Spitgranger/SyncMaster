@@ -14,9 +14,9 @@ interface GetSiteVisitsParams {
   limit?: number;
 }
 
-export async function getSiteVisits(params: GetSiteVisitsParams): Promise<SiteVisit[]> {
+export async function getSiteVisits(params: GetSiteVisitsParams, IdToken: string): Promise<SiteVisit[]> {
   try {
-    const url = new URL(`${API_BASE_URL}/site/visits`);
+    const url = new URL(`${API_BASE_URL}/protected/site/visits`);
     
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined) {
@@ -26,8 +26,9 @@ export async function getSiteVisits(params: GetSiteVisitsParams): Promise<SiteVi
 
     const response = await fetch(url.toString(), {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
+      headers: { 
+        "Authorization": `${IdToken}`,
+        "Content-Type": "application/json"
       },
     });
 

@@ -19,8 +19,14 @@ const EndVisit: React.FC<EndVisitProps> = ({ onEndVisit }) => {
       return;
     }
 
+    const IdToken = localStorage.getItem("IdToken"); 
+    if (!IdToken) {
+      console.error("User ID not found in localStorage!");
+      return;
+    }
+
     try {
-      await exitSite(userId);
+      await exitSite(userId, IdToken);
       console.log("Exited site successfully");
 
       // Clear user-related data

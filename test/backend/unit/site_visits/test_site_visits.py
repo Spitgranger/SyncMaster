@@ -87,7 +87,7 @@ def test_list_site_entries(database_with_two_site_visits):
     _, set_of_visits = database_with_two_site_visits
     table = DBTable(access=AWSAccessLevel.READ, item_schema=DBSiteVisit)
 
-    visits = list_site_visits(
+    visits, _ = list_site_visits(
         table=table,
         from_time=PREV_DATE_TIME,
         to_time=FUTURE_DATE_TIME,
@@ -101,7 +101,7 @@ def test_list_site_entries(database_with_two_site_visits):
 def test_list_site_entries_to_early_time(database_with_two_site_visits):
     table = DBTable(access=AWSAccessLevel.READ, item_schema=DBSiteVisit)
 
-    visits = list_site_visits(
+    visits, _ = list_site_visits(
         table=table,
         to_time=PREV_DATE_TIME,
     )
@@ -112,9 +112,26 @@ def test_list_site_entries_to_early_time(database_with_two_site_visits):
 def test_list_site_entries_from_future_time(database_with_two_site_visits):
     table = DBTable(access=AWSAccessLevel.READ, item_schema=DBSiteVisit)
 
-    visits = list_site_visits(
+    visits, _ = list_site_visits(
         table=table,
         from_time=FUTURE_DATE_TIME,
     )
 
     assert len(visits) == 0
+
+
+def test_list_site_entries_paginated(database_with_two_site_visits):
+    table = DBTable(access=AWSAccessLevel.READ, item_schema=DBSiteVisit)
+
+    visits, last_eval = list_site_visits(
+        table=table,
+        limit=1,
+    )
+
+    assert len(visits) == 1
+    assert last_eval is not None
+
+    visits, last_eval = list_site_visits(table=table, limit=1, start_key=last_eval)
+
+    assert len(visits) == 1
+    assert last_eval is None

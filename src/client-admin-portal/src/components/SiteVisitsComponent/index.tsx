@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { getSiteVisits } from '@/services/getSiteVisits';
@@ -16,7 +15,12 @@ const SiteVisitsTable: React.FC = () => {
   useEffect(() => {
     const fetchSiteVisits = async () => {
       try {
-        const visits = await getSiteVisits({ user_role: "admin" });
+        const idToken = localStorage.getItem('IdToken');
+        if (!idToken) {
+          console.error('Authentication token not found. Please sign in.');
+          return;
+        }
+        const visits = await getSiteVisits({ user_role: "admin" }, idToken);
         setSiteVisits(visits);
       } catch (error) {
         console.error("Failed to fetch site visits", error);
