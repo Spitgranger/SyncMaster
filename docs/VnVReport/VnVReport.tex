@@ -107,6 +107,226 @@ This section will not be appropriate for every project.
 
 \section{Unit Testing}
 
+Note: Unit tests all use \href{https://pypi.org/project/moto/}{moto}
+to mock AWS services.
+
+\subsection{Database Interaction Module Unit Tests}
+
+\begin{longtable}{|m{2cm}|m{10cm}|m{1.4cm}|}
+  \hline
+  \textbf{Test. ID} & \textbf{Description} & \textbf{Result} \\ \hline
+  UT-DB-1 & Use the DBTable.put method to create an item, and check
+  that it exists in the database afterwards & Pass\\ \hline
+  UT-DB-2 & Use the DBTable.put method with a failing precondition,
+  and check that a ConditionCheckFailed is raised, and the item is
+  not created & Pass\\ \hline
+  UT-DB-3 & Use the DBTable.put method with a permission error from
+  AWS, and check that a PermissionException is raised, and the item
+  is not created & Pass\\ \hline
+  UT-DB-4 & Use the DBTable.put method with an arbitrary error from
+  AWS, and check that a ExternalServiceException is raised, and the
+  item is not created & Pass\\ \hline
+  UT-DB-5 & Use the DBTable.get method to get a pre-existing item &
+  Pass\\ \hline
+  UT-DB-6 & Use the DBTable.get method to get an item which does not
+  exist, and check that a ResourceNotFound is raised & Pass\\ \hline
+  UT-DB-7 & Use the DBTable.get method with an arbitrary error from
+  AWS, and check that a ExternalServiceException is raised & Pass\\ \hline
+  UT-DB-8 & Use the DBTable.delete method on a pre-existing item, and
+  check that the item is no longer in the database & Pass\\ \hline
+  UT-DB-9 & Use the DBTable.delete method with a failing
+  precondition, and check that a ConditionCheckFailed is raised, and
+  the item is not deleted & Pass\\ \hline
+  UT-DB-10 & Use the DBTable.delete method with a permission error
+  from AWS, and check that a PermissionException is raised, and the
+  item is not deleted & Pass\\ \hline
+  UT-DB-11 & Use the DBTable.delete method with an arbitrary error
+  from AWS, and check that a ExternalServiceException is raised, and
+  the item is not deleted & Pass\\ \hline
+  UT-DB-12 & Use the DBTable.update method to update an item adding
+  new attributes, and modifying existing ones, and check that these
+  changes are reflected in the database & Pass\\ \hline
+  UT-DB-13 & Use the DBTable.update method to update an item removing
+  some attributes and check that these changes are reflected in the
+  database & Pass\\ \hline
+  UT-DB-14 & Use the DBTable.update method with a failing
+  precondition, and check that a ConditionCheckFailed is raised, and
+  the item is not updated & Pass\\ \hline
+  UT-DB-15 & Use the DBTable.update method with a permission error
+  from AWS, and check that a PermissionException is raised, and the
+  item is not updated & Pass\\ \hline
+  UT-DB-16 & Use the DBTable.update method with an arbitrary error
+  from AWS, and check that a ExternalServiceException is raised, and
+  the item is not updated & Pass\\ \hline
+  UT-DB-17 & Use the DBTable.query method, and ensure the returned
+  items all match the query criterion & Pass\\ \hline
+  UT-DB-18 & Use the DBTable.query method, under a different GSI, and
+  ensure the returned items all match the query criterion & Pass\\ \hline
+  UT-DB-19 & Use the DBTable.query method, with a reversed query
+  direction, and ensure the returned items all match the query
+  criterion & Pass\\ \hline
+  UT-DB-20 & Use the DBTable.query method, with using the start\_key
+  of an existing db item, to determine where to start the query from,
+  and ensure the returned items all match the query criterion & Pass\\ \hline
+  UT-DB-21 & Use the DBTable.query method, using a filter expression
+  alongside a key condition, and ensure the returned items all match
+  the query criterion & Pass\\ \hline
+  UT-DB-22 & Use the DBTable.query method, with an invalid key
+  condition, and ensure that a ConditionValidationError is raised &
+  Pass\\ \hline
+  UT-DB-23 & Use the DBTable.query method with an arbitrary error
+  from AWS, and check that a ExternalServiceException is raised & Pass\\ \hline
+  \caption{Unit Test Cases for Database Interaction Module}
+\end{longtable}
+
+\subsection{File Storage Interaction Module Unit Tests}
+
+\begin{longtable}{|m{2cm}|m{10cm}|m{1.4cm}|}
+  \hline
+  \textbf{Test. ID} & \textbf{Description} & \textbf{Result} \\ \hline
+  UT-FS-1 & Use the S3Bucket.create\_upload\_url method to create an
+  upload url, upload some content to the url, and check that the
+  content exists in the S3 bucket & Pass\\ \hline
+  UT-FS-2 & Use the S3Bucket.create\_upload\_url method with a
+  S3Bucket object that does not have write permissions, and check
+  that a PermissionException gets raised & Pass\\ \hline
+  UT-FS-3 & Use the S3Bucket.create\_get\_url method for a
+  pre-existing file in S3, and check that the file content can be
+  accessed through the url, and check that a PermissionException gets
+  raised & Pass\\ \hline
+  UT-FS-4 & Use the S3Bucket.delete method on a pre-existing file in
+  S3, and check that the file no longer exists & Pass\\ \hline
+  UT-FS-5 & Use the S3Bucket.delete method on a pre-existing file in
+  S3, with an ETag mismatch, and check that a ResourceNotFound is
+  raised & Pass\\ \hline
+  UT-FS-6 & Use the S3Bucket.delete method with a permission error,
+  and check that a PermissionException is raised & Pass\\ \hline
+  UT-FS-7 & Use the S3Bucket.delete method with an arbitrary error
+  from AWS, and check that a ExternalServiceException is raised & Pass\\ \hline
+  \caption{Unit Test Cases for File Storage Interaction Module}
+\end{longtable}
+
+\subsection{Location Verification Module Unit Tests}
+
+\begin{longtable}{|m{2cm}|m{10cm}|m{1.4cm}|}
+  \hline
+  \textbf{Test. ID} & \textbf{Description} & \textbf{Result} \\ \hline
+  UT-LV-1 & Use the verify\_location method to verify a coordinate
+  within a defined radius, and ensure the return value is True & Pass\\ \hline
+  UT-LV-2 & Use the verify\_location method to verify a coordinate
+  outside a defined radius, and ensure the return value is False & Pass\\ \hline
+  UT-LV-3 & Use the verify\_location method to verify a coordinate
+  just on the boundary of a defined radius, and ensure the return
+  value is True & Pass\\ \hline
+  \caption{Unit Test Cases for Location Verification Module}
+\end{longtable}
+
+\subsection{User Authentication Module Unit Tests}
+
+\begin{longtable}{|m{2cm}|m{10cm}|m{1.4cm}|}
+  \hline
+  \textbf{Test. ID} & \textbf{Description} & \textbf{Result} \\ \hline
+  UT-UA-1 & Attempt to authenticate with a pre-existing user, and
+  ensure that a token is successfully generated & Pass\\ \hline
+  UT-UA-2 & Attempt to authenticate with an invalid location, and
+  ensure that an UnauthorizedException is raised & Pass\\ \hline
+  UT-UA-3 & Attempt to authenticate with an initial one-time
+  password, and ensure that an ForceChangePasswordException is raised
+  & Pass\\ \hline
+  UT-UA-4 & Attempt to authenticate with the wrong password, and
+  ensure that an UnauthorizedException is raised & Pass\\ \hline
+  UT-UA-5 & Attempt to authenticate with a user that does not exist,
+  and ensure that a ResourceNotFound is raised & Pass\\ \hline
+  UT-UA-6 & Attempt to authenticate with an arbitrary error from AWS,
+  and ensure that a ExternalServiceException is raised & Pass\\ \hline
+  UT-UA-7 & Attempt to signout a user, with a valid access token, and
+  ensure that the token is successfully invalidated & Pass\\ \hline
+  UT-UA-8 & Attempt to signout a user, with an invalid access token,
+  and ensure that a BadRequestException is raised & Pass\\ \hline
+  UT-UA-9 & Attempt to signout a user, with an arbitrary error from
+  AWS, and ensure that a ExternalServiceException is raised & Pass\\ \hline
+  \caption{Unit Test Cases for User Authentication Module}
+\end{longtable}
+
+\subsection{User Management Module Unit Tests}
+
+\begin{longtable}{|m{2cm}|m{10cm}|m{1.4cm}|}
+  \hline
+  \textbf{Test. ID} & \textbf{Description} & \textbf{Result} \\ \hline
+  UT-UM-1 & Create an admin, employee, and contractor account, using
+  admin credentials & Pass\\ \hline
+  UT-UM-2 & Create a user, using admin credentials, where there is
+  already another user using the same email, and check that a
+  ConflictException is raised & Pass\\ \hline
+  UT-UM-3 & Create a user, using employee and contractor credentials,
+  and ensure an UnauthorizedException is raised & Pass\\ \hline
+  UT-UM-4 & Create a user, with an arbitrary error occuring from AWS,
+  and check that an ExternalServiceException is raised & Pass\\ \hline
+  UT-UM-5 & Get the details of an existing user, using admin and
+  employee credentials & Pass\\ \hline
+  UT-UM-6 & Get the details of a user that does not exist, using
+  admin and employee credentials, and ensure a ResourceNotFound is
+  raised & Pass\\ \hline
+  UT-UM-7 & Use contractor credentials to get the details of their
+  own user & Pass\\ \hline
+  UT-UM-8 & Use contractor credentials to get the details of another
+  user, and ensure an UnauthorizedException is raised & Pass\\ \hline
+  UT-UM-9 & Get the details of a user, with an arbitrary error
+  occuring from AWS, and check that an ExternalServiceException is
+  raised & Pass\\ \hline
+  UT-UM-10 & Update a user, using admin credentials & Pass\\ \hline
+  UT-UM-11 & Update a user, using admin credentials, where the user
+  to update does not exist, and check that a ResourceNotFound is
+  raised & Pass\\ \hline
+  UT-UM-12 & Update a user, using employee and contractor
+  credentials, and ensure an UnauthorizedException is raised & Pass\\ \hline
+  UT-UM-13 & Update a user, with an arbitrary error occuring from
+  AWS, and check that an ExternalServiceException is raised & Pass\\ \hline
+  UT-UM-14 & Delete a user, using admin credentials & Pass\\ \hline
+  UT-UM-15 & Delete a user, using admin credentials, where the user
+  to delete does not exist, and check that a ResourceNotFound is
+  raised & Pass\\ \hline
+  UT-UM-16 & Delete a user, using employee and contractor
+  credentials, and ensure an UnauthorizedException is raised & Pass\\ \hline
+  UT-UM-17 & Delete a user, with an arbitrary error occuring from
+  AWS, and check that an ExternalServiceException is raised & Pass\\ \hline
+  \caption{Unit Test Cases for User Management Module}
+\end{longtable}
+
+\subsection{Logging Module Unit Tests}
+
+\begin{longtable}{|m{2cm}|m{10cm}|m{1.4cm}|}
+  \hline
+  \textbf{Test. ID} & \textbf{Description} & \textbf{Result} \\ \hline
+  UT-LG-1 & Create a site visit log, and ensure it gets added to the
+  database & Pass\\ \hline
+  UT-LG-2 & Create a site visit log, with the same site id, user id,
+  and entry time as an existing log, and ensure a ResourceConflict is
+  raised & Pass\\ \hline
+  UT-LG-3 & Add an exit time to an existing log with no logged exit
+  time, and ensure the change is reflected in the database & Pass\\ \hline
+  UT-LG-4 & Add an exit time to an existing log with no logged exit
+  time, but an entry time prior to the exit time we are attempting to
+  add, and ensure a TimeConsistencyException is raised & Pass\\ \hline
+  UT-LG-5 & Add an exit time to an existing log with a logged exit
+  time, and ensure an ExitTimeConflict is raised & Pass\\ \hline
+  UT-LG-6 & Add an exit time, where there are no existing logs for
+  the user at the given site, and ensure an ResourceNotFound is
+  raised & Pass\\ \hline
+  UT-LG-7 & Get a list of all site visit logs, using admin and
+  employee credentials & Pass\\ \hline
+  UT-LG-8 & Get a list of all site visit logs, using contractor
+  credentials, and ensure that an UnauthorizedException is raised &
+  Pass\\ \hline
+  UT-LG-9 & Get a list of all site visit logs using filters to only
+  include logs modified between two given dates, and ensure that logs
+  are correctly filtered & Pass\\ \hline
+  UT-LG-10 & Get a list of all site visit logs using a databse
+  start\_key to start the listing from a certain log, and ensure that
+  logs start from the correct location & Pass\\ \hline
+  \caption{Unit Test Cases for Logging Module}
+\end{longtable}
+
 \section{Changes Due to Testing}
 
 \wss{This section should highlight how feedback from the users and from
