@@ -32,6 +32,7 @@ cors_headers = {
     "Access-Control-Allow-Methods": "POST, GET, PUT, PATCH, DELETE",
 }
 
+
 @router.post("/upload")
 def upload_handler(body: Annotated[APIDocumentUploadRequest, Body()]):
     """
@@ -70,6 +71,7 @@ def get_files_handler(site_id: Annotated[str, Path()], folder: Annotated[str, Pa
     """
     Route to get files for a specific site
     :param site_id: The site id to get documents for
+    :param folder: The parent folder id to get files for
     :return: dictionary containing http response
     """
     s3_bucket = S3Bucket(DOCUMENT_STORAGE_BUCKET_NAME, AWSAccessLevel.READ)
@@ -106,11 +108,16 @@ def get_presigned_url_handler(s3_key: Annotated[str, Path()]):
 
 
 @router.delete("/delete")
-def delete_file_handler(site_id: Annotated[str, Query()], parent_folder_id: Annotated[str, Query()],document_id: Annotated[str, Query()]):
+def delete_file_handler(
+    site_id: Annotated[str, Query()],
+    parent_folder_id: Annotated[str, Query()],
+    document_id: Annotated[str, Query()],
+):
     """
     Route to get files for a specific site
     :param site_id: The site containg the file to be deleted
-    :param file_path: The path to the file to be deleted
+    :param parent_folder_id: The parent folder which contains this document
+    :param document_id: The unique identifier of the document to be deleted
     :return: dictionary containing http response
     """
     s3_bucket = S3Bucket(DOCUMENT_STORAGE_BUCKET_NAME, AWSAccessLevel.WRITE)

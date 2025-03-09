@@ -2,11 +2,12 @@
 Defines the model for a document as represented in the database
 """
 
-from pydantic import computed_field
 from datetime import datetime
 from typing import Optional
 
-from ...util import ItemType
+from pydantic import computed_field
+
+from ...util import FileType, ItemType
 from ..api.document import APIDocumentResponse
 from .db_base import DBItemModel
 
@@ -14,13 +15,13 @@ from .db_base import DBItemModel
 class DBDocument(DBItemModel):
     """Model representing a document in the database"""
 
-    document_name: str # Will be name of file, including extensions (e.g. "test.pdf")
-    document_type: str # Either "file" or "folder"
-    document_id: str # Unique identifier to the file or folder
+    document_name: str  # Will be name of file, including extensions (e.g. "test.pdf")
+    document_type: FileType  # Either "file" or "folder"
+    document_id: str  # Unique identifier to the file or folder
     document_expiry: Optional[datetime] = None
-    
+
     # Folder structure property
-    parent_folder_id: str # The parent folder of the file. Root or folder name
+    parent_folder_id: str  # The parent folder of the file. Root or folder name
 
     document_path: str
     s3_bucket: str

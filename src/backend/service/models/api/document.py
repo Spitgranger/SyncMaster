@@ -5,6 +5,7 @@ Module containg models to be used with the API
 from datetime import datetime
 from typing import Optional
 
+from ...util import FileType
 from ..custom_base_model import CustomBaseModel
 
 
@@ -13,7 +14,7 @@ class APIDocumentResponse(CustomBaseModel):
 
     document_id: str
     document_name: str
-    document_type: str
+    document_type: FileType
     parent_folder_id: str
     site_id: str
     document_path: str
@@ -25,9 +26,10 @@ class APIDocumentResponse(CustomBaseModel):
 
 class APIDocumentUploadRequest(CustomBaseModel):
     """A Document upload request from API"""
+
     site_id: str
     document_name: str
-    document_type: str
+    document_type: FileType
     parent_folder_id: str
     document_path: str
     s3_key: str

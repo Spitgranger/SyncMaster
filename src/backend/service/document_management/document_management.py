@@ -18,12 +18,12 @@ from ..exceptions import (
 from ..file_storage.s3_bucket import S3Bucket
 from ..models.api.document import APIDocumentResponse
 from ..models.db.document import DBDocument
-from ..util import ItemType
+from ..util import FileType, ItemType
 
 logger = Logger()
 
 
-def get_presigned_url(s3_key: str, bucket: S3Bucket) -> str:
+def get_presigned_url(s3_key: str, bucket: S3Bucket) -> dict:
     """
     Function to get create a presigned upload url for a given s3 key
     :param bucket: The S3Bucket containing the files
@@ -38,8 +38,7 @@ def get_presigned_url(s3_key: str, bucket: S3Bucket) -> str:
 
 
 def get_all_files(
-    table: DBTable[DBDocument], bucket: S3Bucket, site_id: str,
-    parent_folder_id: str
+    table: DBTable[DBDocument], bucket: S3Bucket, site_id: str, parent_folder_id: str
 ) -> List[APIDocumentResponse]:
     """
     Function to get all documents for a given site, contains both files and
@@ -50,7 +49,9 @@ def get_all_files(
     :param parent_folder_id: folder to get documents for
     """
     logger.info(site_id)
-    key_expression_specific = Key("pk").eq(f"{ItemType.DOCUMENT.value}#{site_id}#{parent_folder_id}")
+    key_expression_specific = Key("pk").eq(
+        f"{ItemType.DOCUMENT.value}#{site_id}#{parent_folder_id}"
+    )
 
     site_specific_documents = table.query(key_condition_expression=key_expression_specific)
     logger.info(site_specific_documents)
@@ -60,7 +61,7 @@ def get_all_files(
     returned_documents = []
     # returned_site_wide_documents = []
     for document in site_specific_documents:
-        presigned_get_url = bucket.create_get_url(document.s3_key, document.s3_e_tag)
+        presigned_get_url = bucket.create_get_url(document.s3_key)
         api_document = document.to_api_model(presigned_get_url)
         returned_documents.append(api_document)
 
@@ -70,7 +71,7 @@ def get_all_files(
 def upload_file(
     table: DBTable[DBDocument],
     document_name: str,
-    document_type: str,
+    document_type: FileType,
     parent_folder_id: str,
     site_id: str,
     document_path: str,
@@ -79,7 +80,7 @@ def upload_file(
     user_id: str,
     requires_ack: bool,
     timestamp: datetime,
-    document_expiry: Optional[datetime] = None
+    document_expiry: Optional[datetime] = None,
 ) -> DBDocument:
     """
     Function upload a file to the virtual filesystem, given that is doesn't
@@ -87,12 +88,17 @@ def upload_file(
     between folder and file. The distinction will be a property in the document
     itself
     :param table: The DB table object to use for this operation
+    :param document_name: The canonical name of the file.
+    :param document_type: The type of the file
+    :param parent_folder_id: The DB table object to use for this operation
     :param site_id: The site id to upload to
     :param document_path: The absolute path to the file, for this site
     :param s3_key: The key of the file in s3
     :param e_tag: The e_tag of the file in s3
     :param user_id: The user who performed this operation
     :param requires_ack: Does this file require ack
+    :param timestamp: The time that this operation was performed
+    :param document_expiry: An optional parameter indicating that this document has an expiry
     """
     # Save metadata in DynamoDB
     document = DBDocument(
@@ -122,7 +128,11 @@ def upload_file(
 
 
 def delete(
-    table: DBTable[DBDocument], s3_bucket: S3Bucket, site_id: str, parent_folder_id: str, document_id: str
+    table: DBTable[DBDocument],
+    s3_bucket: S3Bucket,
+    site_id: str,
+    parent_folder_id: str,
+    document_id: str,
 ) -> None:
     """
     Function to delete a document from the virtual file system. If the provided
@@ -131,10 +141,13 @@ def delete(
     deleting the folder itself
     :param table: The DB table object to use for this operation
     :param s3_bucket: The S3Bucket containing this file
-    :param file_path: The file path of the file to delete
     :param site_id: The site id to delete from
+    :param parent_folder_id: The parent folder that contains the file to be deleted
+    :param document_id: The document id to be deleted
     """
-    document = table.get({"pk": f"{ItemType.DOCUMENT.value}#{site_id}#{parent_folder_id}", "sk": f"{document_id}"})
+    document = table.get(
+        {"pk": f"{ItemType.DOCUMENT.value}#{site_id}#{parent_folder_id}", "sk": f"{document_id}"}
+    )
     # If the document is a file, delete it
     if document.document_type == "file":
         s3_bucket.delete(key=document.s3_key, e_tag=document.s3_e_tag)
@@ -146,8 +159,7 @@ def delete(
         for item in items:
             if item.document_type == "folder":
                 # recursively delete subfolders
-                delete(table, s3_bucket, site_id, document.document_id,
-                       item.document_id)
+                delete(table, s3_bucket, site_id, document.document_id, item.document_id)
             else:
                 s3_bucket.delete(key=item.s3_key, e_tag=item.s3_e_tag)
                 table.delete({"pk": item.pk, "sk": item.sk})

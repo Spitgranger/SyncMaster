@@ -36,7 +36,7 @@ class S3Bucket:
 
         self._client = create_client_with_role(service_name="s3", role=role_to_assume)
 
-    def create_upload_url(self, key: str) -> str:
+    def create_upload_url(self, key: str) -> dict:
         """
         Creates a presigned upload url for the specified S3 key
 
@@ -51,12 +51,11 @@ class S3Bucket:
             raise PermissionException("Creating an upload URL requires write access")
         return self._client.generate_presigned_post(Bucket=self.name, Key=key, Fields={})
 
-    def create_get_url(self, key: str, e_tag: str) -> str:
+    def create_get_url(self, key: str) -> str:
         """
         Creates a presigned get url to get an object from S3
 
         :param key: The key of the object to get from S3
-        :param e_tag: The e_tag to match when getting the object
         :return: The get object presigned url
         """
         return self._client.generate_presigned_url(

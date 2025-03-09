@@ -10,7 +10,7 @@ from aws_lambda_powertools.logging import correlation_paths
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
 from .exceptions import HTTPError
-from .routes.protected import site_visits, users, documents
+from .routes.protected import documents, site_visits, users
 from .routes.unprotected import auth
 
 logger = Logger()

@@ -6,9 +6,9 @@ from enum import Enum
 
 import boto3
 from aws_lambda_powertools.logging import Logger
+from botocore.config import Config
 from botocore.exceptions import ClientError
 from cachetools.func import ttl_cache
-from botocore.config import Config
 
 from .exceptions import ExternalServiceException, PermissionException
 
@@ -34,6 +34,15 @@ class ItemType(Enum):
 
     DOCUMENT = "document"
     SITE_VISIT = "site_visit"
+
+
+class FileType(Enum):
+    """
+    Enum of the different types of documents stored in the system
+    """
+
+    FILE = "file"
+    FOLDER = "folder"
 
 
 @ttl_cache(maxsize=16, ttl=15 * 60)
