@@ -10,6 +10,7 @@
   linkcolor=red,
   urlcolor=blue
 }
+\usepackage{longtable}
 \usepackage[round]{natbib}
 
 \input{../Comments}
@@ -72,6 +73,31 @@ This document ...
 \subsection{Usability}
 
 \subsection{Performance}
+
+\subsection{Maintainability and Support}
+
+\begin{longtable}{|m{2cm}|m{1cm}|m{6cm}|m{3cm}|}
+  \hline
+  \textbf{Test. ID} & \textbf{Input} & \textbf{Expected Output} &
+  \textbf{Result} \\
+  \hline
+  TC-MS-4 & - & There is 95\% line coverage and 90\% branch coverage
+  on our code & Pass, this is being checked in GitHub actions\\ \hline
+  TC-MS-5 & - & All functional requirements have a corresponding unit
+  test & Pass\\ \hline
+  TC-MS-6 & - & Contribution guidelines and maintainer documentation
+  of system approved by the City of Hamilton & Fail, not yet approved\\ \hline
+  TC-MS-7 & - & User manual exists and has been approved by the City
+  of Hamilton & Fail, not yet created\\ \hline
+  TC-MS-8 & - & OAS3 compliant documentation has been provided for
+  all API's & Fail, not yet created\\ \hline
+  TC-MS-9 & - & Internal abstractions (classes and functions) in the
+  system have documentation associated with them & Pass, linter
+  checks this\\ \hline
+  TC-MS-10 & - & Documentation for deployment of the system exists &
+  Fail, not yet created\\ \hline
+  \caption{Maintainability and Support Test Cases}
+\end{longtable}
 
 \subsection{etc.}
 
