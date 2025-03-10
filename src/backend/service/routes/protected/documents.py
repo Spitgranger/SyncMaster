@@ -11,8 +11,6 @@ from aws_lambda_powertools.event_handler.api_gateway import Router
 from aws_lambda_powertools.event_handler.openapi.params import Body, Path, Query
 from typing_extensions import Annotated
 
-from ...exceptions import InsufficientUserPermissionException
-
 from ...database.db_table import DBTable
 from ...document_management.document_management import (
     delete,
@@ -21,6 +19,7 @@ from ...document_management.document_management import (
     upload_file,
 )
 from ...environment import DOCUMENT_STORAGE_BUCKET_NAME
+from ...exceptions import InsufficientUserPermissionException
 from ...file_storage.s3_bucket import S3Bucket
 from ...models.api.document import APIDocumentUploadRequest
 from ...models.db.document import DBDocument

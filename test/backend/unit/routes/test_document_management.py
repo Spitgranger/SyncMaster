@@ -47,6 +47,11 @@ def test_delete_files_handler(database_with_document, s3_bucket_with_item, delet
     response = lambda_handler(event=delete_files_request[0], context=delete_files_request[1])
     assert response["statusCode"] == HTTPStatus.NO_CONTENT
 
-def test_delete_files_with_bad_role_handler(database_with_document, s3_bucket_with_item, delete_files_bad_role_request):
-    response = lambda_handler(event=delete_files_bad_role_request[0], context=delete_files_bad_role_request[1])
+
+def test_delete_files_with_bad_role_handler(
+    database_with_document, s3_bucket_with_item, delete_files_bad_role_request
+):
+    response = lambda_handler(
+        event=delete_files_bad_role_request[0], context=delete_files_bad_role_request[1]
+    )
     assert response["statusCode"] == HTTPStatus.FORBIDDEN

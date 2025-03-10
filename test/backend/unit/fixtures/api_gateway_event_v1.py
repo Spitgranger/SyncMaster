@@ -288,6 +288,7 @@ def delete_files_request(api_gateway_event):
     )
     yield event, context
 
+
 @pytest.fixture()
 def delete_files_bad_role_request(api_gateway_event):
     event, context = api_gateway_event(
