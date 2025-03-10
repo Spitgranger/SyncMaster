@@ -327,6 +327,33 @@ to mock AWS services.
   \caption{Unit Test Cases for Logging Module}
 \end{longtable}
 
+\subsection{Document Management Module Unit Tests}
+
+\begin{longtable}{|m{2cm}|m{10cm}|m{1.4cm}|}
+  \hline
+  \textbf{Test. ID} & \textbf{Description} & \textbf{Result} \\ \hline
+  UT-DM1 & Create a document, and ensure it gets added to the
+  database with the correct information & Pass\\ \hline
+  UT-DM2 & Create a document with the name parent folder and document names as
+  an existing document and check that a ResourceConflict is raised &
+  Pass\\ \hline
+  UT-DM3 & Get a single document for a particular site id and parent
+  folder & Pass\\ \hline
+  UT-DM4 & Get a list of documents including both files and folders for a
+  particular site id and parent folder & Pass\\ \hline
+  UT-DM5 & Get a list of documents for a site id and folder that has no
+  documents and ensure that an empty list is returned & Pass\\ \hline
+  UT-DM6 & Generate a presigned url that is used to upload a binary file to
+  Amazon S3 give a particular S3 key & Pass\\ \hline
+  UT-DM7 & Delete an existing file for a given site id and parent folder given
+  that the file exists & Pass\\ \hline
+  UT-DM8 & Delete a document of type folder that has with documents
+  inside for a given site id
+  and parent folder and ensure that both the folder and its contents are
+  recursively deleted & Pass\\ \hline
+  \caption{Unit Test Cases for Logging Module}
+\end{longtable}
+
 \section{Changes Due to Testing}
 
 \wss{This section should highlight how feedback from the users and from
@@ -343,12 +370,12 @@ N/A, the only automated testing we have is the unit tests.
   \hline
   \textbf{Req. ID} & \textbf{Test ID's} \\
   \hline
-  FR1 & TC-FR1, TC-FR2\\ \hline
+  FR1 & TC-FR1, TC-FR2, UT-DM1\\ \hline
   FR3 & TC-FR3, UT-UM3\\ \hline
   FR4 & TC-FR4, UT-LG7\\ \hline
   FR5 & TC-FR5, UT-UA2\\ \hline
-  FR6 & TC-FR6\\ \hline
-  FR7 & TC-FR8\\ \hline
+  FR6 & TC-FR6, UT-DM1\\ \hline
+  FR7 & TC-FR8, UT-DM4, UT-DM6\\ \hline
   FR8 & TC-FR7\\ \hline
   FR9 & TC-FR9\\ \hline
   LF-AP1 & TC-LF-1 \\ \hline
@@ -414,6 +441,7 @@ covers the given module
   Location Verification & UT-LV*\\ \hline
   User Management & UT-UM*\\ \hline
   User Authentication & UT-AU*\\ \hline
+  Document Management & UT-DM*\\ \hline
   \caption{Module to Test Case Traceability Matrix}
 \end{longtable}
 
