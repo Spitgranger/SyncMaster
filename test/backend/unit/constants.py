@@ -6,6 +6,9 @@ TEST_USER_ID = "b15b955a-0ffc-4890-9025-49f37bab09f9"
 TEST_SITE_ID = "HC059"
 TEST_DOCUMENT_PATH = "some/file.txt"
 TEST_DOCUMENT_PATH_ALT = "some/file2.txt"
+TEST_SITE_LONGITUDE = 1
+TEST_SITE_LATITUDE = 1
+TEST_SITE_RANGE = 100
 PREV_DATE_TIME = datetime(
     year=2022, month=1, day=21, hour=11, minute=46, second=12, microsecond=34, tzinfo=timezone.utc
 )
