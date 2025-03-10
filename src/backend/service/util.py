@@ -6,6 +6,7 @@ from enum import Enum
 
 import boto3
 from aws_lambda_powertools.logging import Logger
+from botocore.config import Config
 from botocore.exceptions import ClientError
 from cachetools.func import ttl_cache
 
@@ -35,6 +36,15 @@ class ItemType(Enum):
     SITE_VISIT = "site_visit"
 
 
+class FileType(Enum):
+    """
+    Enum of the different types of documents stored in the system
+    """
+
+    FILE = "file"
+    FOLDER = "folder"
+
+
 @ttl_cache(maxsize=16, ttl=15 * 60)
 def create_client_with_role(service_name: str, role: str):
     """
@@ -50,7 +60,7 @@ def create_client_with_role(service_name: str, role: str):
     """
     try:
         assumed_role_object: dict = boto3.client("sts").assume_role(
-            RoleArn=role, RoleSessionName="SyncMasterRoleSession", DurationSeconds=16 * 60
+            RoleArn=role, RoleSessionName="SyncMasterRoleSession", DurationSeconds=30 * 60
         )
 
         creds: dict = assumed_role_object["Credentials"]
@@ -60,6 +70,7 @@ def create_client_with_role(service_name: str, role: str):
             aws_access_key_id=creds["AccessKeyId"],
             aws_secret_access_key=creds["SecretAccessKey"],
             aws_session_token=creds["SessionToken"],
+            config=Config(signature_version="s3v4", region_name="us-east-2"),
         )
     except ClientError as err:
         logger.exception(err)
@@ -83,7 +94,7 @@ def create_resource_with_role(service_name: str, role: str):
     """
     try:
         assumed_role_object: dict = boto3.client("sts").assume_role(
-            RoleArn=role, RoleSessionName="SyncMasterRoleSession", DurationSeconds=16 * 60
+            RoleArn=role, RoleSessionName="SyncMasterRoleSession", DurationSeconds=30 * 60
         )
 
         creds: dict = assumed_role_object["Credentials"]

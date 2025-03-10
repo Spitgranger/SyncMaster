@@ -8,6 +8,9 @@ from ..constants import (
     CURRENT_DATE_TIME,
     FUTURE_DATE_TIME,
     PREV_DATE_TIME,
+    TEST_DOCUMENT_ID,
+    TEST_PARENT_FOLDER_ID,
+    TEST_S3_FILE_KEY,
     TEST_SITE_ID,
     TEST_USER_ID,
 )
@@ -225,4 +228,77 @@ def post_update_user_request(api_gateway_event):
 @pytest.fixture()
 def get_signout_user_request(api_gateway_event):
     event, context = api_gateway_event('/protected/users/update_user?user_token="eyqq81712"', "GET")
+    yield event, context
+
+
+@pytest.fixture()
+def get_presigned_url_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/documents/get_presigned_url/{TEST_S3_FILE_KEY}",
+        method="GET",
+        path_params={"s3_key": TEST_S3_FILE_KEY},
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def upload_document_request(api_gateway_event, db_document):
+    event, context = api_gateway_event(
+        path="/protected/documents/upload",
+        method="POST",
+        body=json.dumps(
+            {
+                "document_name": db_document.document_name,
+                "document_type": db_document.document_type,
+                "parent_folder_id": db_document.parent_folder_id,
+                "site_id": db_document.site_id,
+                "document_path": db_document.document_path,
+                "s3_key": db_document.s3_key,
+                "e_tag": db_document.s3_e_tag,
+                "user_id": db_document.last_modified_by,
+                "requires_ack": db_document.requires_ack,
+                "document_expiry": db_document.document_expiry,
+            }
+        ),
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def get_files_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/documents/{TEST_SITE_ID}/{TEST_PARENT_FOLDER_ID}/get_files",
+        method="GET",
+        path_params={"site_id": TEST_S3_FILE_KEY, "folder": TEST_PARENT_FOLDER_ID},
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def delete_files_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/documents/delete",
+        method="DELETE",
+        query_params={
+            "document_id": TEST_DOCUMENT_ID,
+            "parent_folder_id": TEST_PARENT_FOLDER_ID,
+            "site_id": TEST_SITE_ID,
+        },
+        user_role="admin",
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def delete_files_bad_role_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/documents/delete",
+        method="DELETE",
+        query_params={
+            "document_id": TEST_DOCUMENT_ID,
+            "parent_folder_id": TEST_PARENT_FOLDER_ID,
+            "site_id": TEST_SITE_ID,
+        },
+        user_role="contractor",
+    )
     yield event, context

@@ -22,6 +22,12 @@ from ...util import AWSAccessLevel
 
 router = Router()
 
+cors_headers = {
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, GET, PUT, PATCH, DELETE",
+}
+
 
 @router.post("/<site_id>/enter")
 def enter_site_handler(site_id: Annotated[str, Path()]):
@@ -50,6 +56,7 @@ def enter_site_handler(site_id: Annotated[str, Path()]):
             entry_time=visit.entry_time,
             exit_time=visit.exit_time,
         ).model_dump_json(),
+        headers=cors_headers,
     )
 
 
@@ -75,6 +82,7 @@ def exit_site_handler(site_id: Annotated[str, Path()]):
         status_code=HTTPStatus.OK.value,
         content_type=content_types.APPLICATION_JSON,
         body=visit.to_api_model().model_dump_json(),
+        headers=cors_headers,
     )
 
 
@@ -129,4 +137,5 @@ def list_site_visits_handler(
         status_code=HTTPStatus.OK.value,
         content_type=content_types.APPLICATION_JSON,
         body=response_body,
+        headers=cors_headers,
     )
