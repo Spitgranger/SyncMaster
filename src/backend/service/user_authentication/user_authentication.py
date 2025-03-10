@@ -387,8 +387,6 @@ def admin_update_user_attributes_handler(
         match error_code:
             case "UserNotFoundException":
                 raise ResourceNotFound("user", "username") from err
-            case _:
-                raise ExternalServiceException from err
 
 
 def admin_get_users_handler(
@@ -400,16 +398,11 @@ def admin_get_users_handler(
     :param cognito_client: The AdminCognitoClient used to process the operation
     :return Response containg the result of the cognito operation
     """
-    try:
-        user_array = cognito_client.get_users_by_attribute(get_users_request.attributes)
+    user_array = cognito_client.get_users_by_attribute(get_users_request.attributes)
 
-        return Response(
-            status_code=HTTPStatus.OK.value,
-            content_type=content_types.APPLICATION_JSON,
-            headers=cors_headers,
-            body=user_array,
-        )
-
-    except ClientError as err:
-        logger.error(err)
-        raise ExternalServiceException(str(err)) from err
+    return Response(
+        status_code=HTTPStatus.OK.value,
+        content_type=content_types.APPLICATION_JSON,
+        headers=cors_headers,
+        body=user_array,
+    )

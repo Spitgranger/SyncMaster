@@ -60,7 +60,9 @@ def get_all_files(
     returned_documents = []
     # returned_site_wide_documents = []
     for document in site_specific_documents:
-        presigned_get_url = bucket.create_get_url(document.s3_key)
+        presigned_get_url = None
+        if document.document_type == FileType.FILE.value:
+            presigned_get_url = bucket.create_get_url(document.s3_key)
         api_document = document.to_api_model(presigned_get_url)
         returned_documents.append(api_document)
 

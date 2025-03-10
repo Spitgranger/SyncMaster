@@ -110,6 +110,20 @@ def test_get_all_files(database_with_document, s3_bucket_with_item):
     assert files[0].document_path == TEST_DOCUMENT_PATH
 
 
+def test_get_all_multiple_files(database_with_documents_and_folders, s3_bucket_with_item):
+    client, metadata = s3_bucket_with_item
+
+    # Initialize bucket wrapper
+    bucket = S3Bucket(bucket_name=DOCUMENT_STORAGE_BUCKET_NAME, access=AWSAccessLevel.WRITE)
+    table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBDocument)
+    files = get_all_files(
+        table=table, bucket=bucket, site_id=TEST_SITE_ID, parent_folder_id=TEST_PARENT_FOLDER_ID
+    )
+    assert len(files) == 2
+    assert files[0].document_name == TEST_DOCUMENT_NAME
+    assert files[0].document_path == TEST_DOCUMENT_PATH
+
+
 def test_get_all_files_empty(empty_database, empty_s3_bucket):
     client = empty_s3_bucket
 

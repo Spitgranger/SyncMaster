@@ -23,7 +23,7 @@ from ...exceptions import InsufficientUserPermissionException
 from ...file_storage.s3_bucket import S3Bucket
 from ...models.api.document import APIDocumentUploadRequest
 from ...models.db.document import DBDocument
-from ...util import AWSAccessLevel, create_http_response
+from ...util import AWSAccessLevel, cors_headers, create_http_response
 
 router = Router()
 
@@ -79,6 +79,7 @@ def get_files_handler(site_id: Annotated[str, Path()], folder: Annotated[str, Pa
         status_code=HTTPStatus.OK.value,
         content_type=content_types.APPLICATION_JSON,
         body=response_body,
+        headers=cors_headers,
     )
 
 
@@ -93,7 +94,7 @@ def get_presigned_url_handler(s3_key: Annotated[str, Path()]):
     url = get_presigned_url(s3_key, s3_bucket)
 
     return create_http_response(
-        status_code=HTTPStatus.OK.value,
+        status_code=HTTPStatus.CREATED.value,
         content_type=content_types.APPLICATION_JSON,
         body=json.dumps({"s3_presigned_url": url}),
     )

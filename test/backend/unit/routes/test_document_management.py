@@ -8,7 +8,7 @@ from backend.service.models.api.document import APIDocumentResponse
 from ..constants import TEST_DOCUMENT_ID, TEST_PARENT_FOLDER_ID
 
 
-def test_list_sites_handler(s3_bucket_with_item, get_presigned_url_request):
+def test_get_presigned_url_handler(s3_bucket_with_item, get_presigned_url_request):
     response = lambda_handler(
         event=get_presigned_url_request[0], context=get_presigned_url_request[1]
     )
