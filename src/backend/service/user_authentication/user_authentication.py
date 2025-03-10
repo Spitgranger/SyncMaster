@@ -27,15 +27,9 @@ from ..models.user_authentication.user_request_response import (
     SignupRequest,
     UpdateUserAttributeRequest,
 )
-from ..util import create_client_with_role
+from ..util import cors_headers, create_client_with_role
 
 logger = Logger()
-
-cors_headers = {
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "POST, GET, PUT, PATCH, DELETE",
-}
 
 
 class CognitoClient:

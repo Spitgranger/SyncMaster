@@ -18,15 +18,9 @@ from ...exceptions import InsufficientUserPermissionException
 from ...models.api.site_visit import APIListSiteVisitResponse, APISiteVisit
 from ...models.db.site_visit import DBSiteVisit
 from ...site_visits.site_visits import add_exit_time, create_site_entry, list_site_visits
-from ...util import AWSAccessLevel
+from ...util import AWSAccessLevel, cors_headers
 
 router = Router()
-
-cors_headers = {
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "POST, GET, PUT, PATCH, DELETE",
-}
 
 
 @router.post("/<site_id>/enter")

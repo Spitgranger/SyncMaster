@@ -6,7 +6,7 @@ import json
 from datetime import datetime, timezone
 from http import HTTPStatus
 
-from aws_lambda_powertools.event_handler import Response, content_types
+from aws_lambda_powertools.event_handler import content_types
 from aws_lambda_powertools.event_handler.api_gateway import Router
 from aws_lambda_powertools.event_handler.openapi.params import Body, Path, Query
 from typing_extensions import Annotated
@@ -23,15 +23,9 @@ from ...exceptions import InsufficientUserPermissionException
 from ...file_storage.s3_bucket import S3Bucket
 from ...models.api.document import APIDocumentUploadRequest
 from ...models.db.document import DBDocument
-from ...util import AWSAccessLevel
+from ...util import AWSAccessLevel, create_http_response
 
 router = Router()
-
-cors_headers = {
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "POST, GET, PUT, PATCH, DELETE",
-}
 
 
 @router.post("/upload")
@@ -59,11 +53,10 @@ def upload_handler(body: Annotated[APIDocumentUploadRequest, Body()]):
         request_time,
         body.document_expiry,
     )
-    return Response(
+    return create_http_response(
         status_code=HTTPStatus.CREATED.value,
         content_type=content_types.APPLICATION_JSON,
-        body=item.to_api_model,
-        headers=cors_headers,
+        body=item.to_api_model().model_dump_json(),
     )
 
 
@@ -82,11 +75,10 @@ def get_files_handler(site_id: Annotated[str, Path()], folder: Annotated[str, Pa
 
     response_body = json.dumps([file.model_dump() for file in files])
 
-    return Response(
+    return create_http_response(
         status_code=HTTPStatus.OK.value,
         content_type=content_types.APPLICATION_JSON,
         body=response_body,
-        headers=cors_headers,
     )
 
 
@@ -100,11 +92,10 @@ def get_presigned_url_handler(s3_key: Annotated[str, Path()]):
     s3_bucket = S3Bucket(DOCUMENT_STORAGE_BUCKET_NAME, AWSAccessLevel.WRITE)
     url = get_presigned_url(s3_key, s3_bucket)
 
-    return Response(
-        status_code=HTTPStatus.CREATED.value,
+    return create_http_response(
+        status_code=HTTPStatus.OK.value,
         content_type=content_types.APPLICATION_JSON,
-        body={"s3_presigned_url": url},
-        headers=cors_headers,
+        body=json.dumps({"s3_presigned_url": url}),
     )
 
 
@@ -131,7 +122,6 @@ def delete_file_handler(
     s3_bucket = S3Bucket(DOCUMENT_STORAGE_BUCKET_NAME, AWSAccessLevel.WRITE)
     document_table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBDocument)
     delete(document_table, s3_bucket, site_id, parent_folder_id, document_id)
-    return Response(
+    return create_http_response(
         status_code=HTTPStatus.NO_CONTENT.value,
-        headers=cors_headers,
     )

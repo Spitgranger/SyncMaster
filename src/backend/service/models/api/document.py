@@ -18,7 +18,7 @@ class APIDocumentResponse(CustomBaseModel):
     parent_folder_id: str
     site_id: str
     document_path: str
-    s3_presigned_get: str = ""
+    s3_presigned_get: Optional[str] = None
     requires_ack: bool
     last_modified: datetime
     document_expiry: Optional[datetime] = None

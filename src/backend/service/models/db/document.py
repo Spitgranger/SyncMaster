@@ -48,7 +48,7 @@ class DBDocument(DBItemModel):
         """
         return self.document_id
 
-    def to_api_model(self, s3_link: str) -> APIDocumentResponse:
+    def to_api_model(self, s3_link: Optional[str] = None) -> APIDocumentResponse:
         """
         The Document as an API model, without the DB specific attributes
         :param s3_link: The s3 presigned url
