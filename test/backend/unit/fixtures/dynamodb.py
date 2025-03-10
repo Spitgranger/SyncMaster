@@ -47,6 +47,27 @@ def database_with_document(empty_database, db_document):
 
 
 @pytest.fixture()
+def database_with_documents_and_folders(
+    empty_database,
+    db_document,
+    db_document_folder,
+    db_document_folder_in_folder,
+    db_document_file_in_folder,
+):
+    empty_database.put_item(Item=db_document.model_dump())
+    empty_database.put_item(Item=db_document_folder.model_dump())
+    empty_database.put_item(Item=db_document_folder_in_folder.model_dump())
+    empty_database.put_item(Item=db_document_file_in_folder.model_dump())
+    return (
+        empty_database,
+        db_document,
+        db_document_folder,
+        db_document_folder_in_folder,
+        db_document_file_in_folder,
+    )
+
+
+@pytest.fixture()
 def database_with_complete_site_visit(empty_database, db_site_visit_complete):
     empty_database.put_item(Item=db_site_visit_complete.model_dump())
     return empty_database, db_site_visit_complete

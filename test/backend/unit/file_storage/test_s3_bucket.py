@@ -1,6 +1,6 @@
+import io
 from http import HTTPStatus
 
-import io
 import pytest
 import requests
 from backend.service.environment import DOCUMENT_STORAGE_BUCKET_NAME

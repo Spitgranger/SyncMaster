@@ -42,6 +42,10 @@ class DBDocument(DBItemModel):
     @computed_field
     @property
     def sk(self) -> str:
+        """
+        SK is the document_id, this is done to prevent ambiguities in the case
+        that both the document has nested documents of the same name
+        """
         return self.document_id
 
     def to_api_model(self, s3_link: str) -> APIDocumentResponse:

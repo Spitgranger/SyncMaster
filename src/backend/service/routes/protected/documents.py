@@ -1,5 +1,5 @@
 """
-Routes to associated with user management and authentication
+Routes to associated with document management
 """
 
 import json
@@ -10,6 +10,8 @@ from aws_lambda_powertools.event_handler import Response, content_types
 from aws_lambda_powertools.event_handler.api_gateway import Router
 from aws_lambda_powertools.event_handler.openapi.params import Body, Path, Query
 from typing_extensions import Annotated
+
+from ...exceptions import InsufficientUserPermissionException
 
 from ...database.db_table import DBTable
 from ...document_management.document_management import (
@@ -120,6 +122,13 @@ def delete_file_handler(
     :param document_id: The unique identifier of the document to be deleted
     :return: dictionary containing http response
     """
+    # Getting role from user claims
+    role = router.current_event["requestContext"]["authorizer"]["claims"]["custom:role"]
+
+    # Role check to ensure admin for document deletion
+    if role != "admin":
+        raise InsufficientUserPermissionException(role=role, action="delete documents")
+
     s3_bucket = S3Bucket(DOCUMENT_STORAGE_BUCKET_NAME, AWSAccessLevel.WRITE)
     document_table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBDocument)
     delete(document_table, s3_bucket, site_id, parent_folder_id, document_id)
