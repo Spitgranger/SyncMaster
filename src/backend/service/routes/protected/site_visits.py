@@ -82,7 +82,7 @@ def exit_site_handler(site_id: Annotated[str, Path()]):
 def list_site_visits_handler(
     from_time: Annotated[Optional[datetime], Query()] = None,
     to_time: Annotated[Optional[datetime], Query()] = None,
-    limit: Annotated[Optional[int], Query()] = None,
+    limit: Annotated[Optional[int], Query(le=100)] = None,
     start_key: Annotated[Optional[str], Query()] = None,
 ) -> Response[APIListSiteVisitResponse]:
     """

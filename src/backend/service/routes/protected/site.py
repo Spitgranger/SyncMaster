@@ -74,7 +74,8 @@ def create_site_handler(site: Annotated[APISite, Body()]) -> Response[APISite]:
 
 @router.patch("/<site_id>")
 def update_site_handler(
-    site_id: Annotated[str, Path()], site_update_attrs: Annotated[APISitePartial, Body()]
+    site_id: Annotated[str, Path(min_length=5, max_length=5)],
+    site_update_attrs: Annotated[APISitePartial, Body()],
 ) -> Response[APISite]:
     """
     Updates the details of a site existing in the database
@@ -121,7 +122,9 @@ def update_site_handler(
 
 
 @router.get("/<site_id>")
-def get_site_handler(site_id: Annotated[str, Path()]) -> Response[APISite]:
+def get_site_handler(
+    site_id: Annotated[str, Path(min_length=5, max_length=5)],
+) -> Response[APISite]:
     """
     Get the details of a site
 
@@ -151,7 +154,7 @@ def get_site_handler(site_id: Annotated[str, Path()]) -> Response[APISite]:
 
 
 @router.delete("/<site_id>")
-def delete_site_handler(site_id: Annotated[str, Path()]) -> Response:
+def delete_site_handler(site_id: Annotated[str, Path(min_length=5, max_length=5)]) -> Response:
     """
     Delete a site
 
@@ -179,7 +182,7 @@ def delete_site_handler(site_id: Annotated[str, Path()]) -> Response:
 
 @router.get("/")
 def list_sites_handler(
-    limit: Annotated[Optional[int], Query()] = None,
+    limit: Annotated[Optional[int], Query(le=100)] = None,
     start_key: Annotated[Optional[str], Query()] = None,
 ) -> Response[APIListSitesResponse]:
     """
