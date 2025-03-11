@@ -144,7 +144,7 @@ def encode_db_key(key: dict) -> str:
     key_bytes = json.dumps(key).encode("utf-8")
     return base64.urlsafe_b64encode(key_bytes).decode("utf-8")
 
-  
+
 def create_http_response(
     status_code: int,
     content_type: Optional[str] = None,
