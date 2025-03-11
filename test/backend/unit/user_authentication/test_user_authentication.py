@@ -90,7 +90,7 @@ def test_signup_bad_password(cognito_client, signup_request_bad_password):
     assert "Password does not meet organization policy requirements" in str(excinfo.value)
 
 
-def test_signin_success(cognito_client_with_user):
+def test_signin_success(cognito_client_with_user, database_with_site):
     cognito_client, _, signin_request_location = cognito_client_with_user
     response = signin_user_handler(signin_request_location, cognito_client)
     assert response.status_code == HTTPStatus.OK.value
@@ -98,7 +98,7 @@ def test_signin_success(cognito_client_with_user):
     assert "IdToken" in response.body
 
 
-def test_signin_fail_location(cognito_client_with_user):
+def test_signin_fail_location(cognito_client_with_user, database_with_site):
     cognito_client, signin_request, _ = cognito_client_with_user
     with pytest.raises(UnauthorizedException) as excinfo:
         signin_user_handler(signin_request, cognito_client)
@@ -106,7 +106,7 @@ def test_signin_fail_location(cognito_client_with_user):
 
 
 def test_signin_password_challenge(
-    cognito_client_admin, cognito_client, create_user_request, signin_request
+    cognito_client_admin, cognito_client, create_user_request, signin_request, database_with_site
 ):
     cognito_client_admin.admin_create_user(create_user_request.email, [], "TestTest123!")
     with pytest.raises(ForceChangePasswordException) as excinfo:
@@ -114,7 +114,7 @@ def test_signin_password_challenge(
     assert "Password has expired and must be reset" in str(excinfo.value)
 
 
-def test_signin_wrong_password(cognito_client_with_user):
+def test_signin_wrong_password(cognito_client_with_user, database_with_site):
     cognito_client, signin_request, _ = cognito_client_with_user
     signin_request.password = "test12341!"
     with pytest.raises(UnauthorizedException) as excinfo:
@@ -122,12 +122,12 @@ def test_signin_wrong_password(cognito_client_with_user):
     assert "Incorrect Credentials" in str(excinfo.value)
 
 
-def test_signin_does_not_exist(cognito_client, signin_request):
+def test_signin_does_not_exist(cognito_client, signin_request, database_with_site):
     with pytest.raises(ResourceNotFound):
         signin_user_handler(signin_request, cognito_client)
 
 
-def test_signout_successful(cognito_client_with_user):
+def test_signout_successful(cognito_client_with_user, database_with_site):
     cognito_client, _, signin_request_location = cognito_client_with_user
     response = signin_user_handler(signin_request_location, cognito_client)
     access_token = response.body["AccessToken"]
@@ -135,7 +135,7 @@ def test_signout_successful(cognito_client_with_user):
     assert response.status_code == HTTPStatus.NO_CONTENT.value
 
 
-def test_signout_fail(cognito_client_with_user):
+def test_signout_fail(cognito_client_with_user, database_with_site):
     cognito_client, _, _ = cognito_client_with_user
 
     bad_access_token = ""

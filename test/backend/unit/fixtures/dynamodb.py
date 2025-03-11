@@ -78,3 +78,16 @@ def database_with_two_site_visits(database_with_complete_site_visit, db_site_vis
     database, complete_entry = database_with_complete_site_visit
     database.put_item(Item=db_site_visit_only_entry.model_dump())
     return database, {complete_entry, db_site_visit_only_entry}
+
+
+@pytest.fixture()
+def database_with_site(empty_database, db_site):
+    empty_database.put_item(Item=db_site.model_dump())
+    return empty_database, db_site
+
+
+@pytest.fixture()
+def database_with_two_sites(database_with_site, db_site_new):
+    database, complete_entry = database_with_site
+    database.put_item(Item=db_site_new.model_dump())
+    return empty_database, {complete_entry, db_site_new}
