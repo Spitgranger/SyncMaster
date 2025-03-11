@@ -16,7 +16,7 @@ from ...exceptions import InsufficientUserPermissionException
 from ...models.api.site_visit import APIListSiteVisitResponse, APISiteVisit
 from ...models.db.site_visit import DBSiteVisit
 from ...site_visits.site_visits import add_exit_time, create_site_entry, list_site_visits
-from ...util import AWSAccessLevel, decode_db_key, encode_db_key
+from ...util import CORS_HEADERS, AWSAccessLevel, decode_db_key, encode_db_key
 
 router = Router()
 
@@ -48,6 +48,7 @@ def enter_site_handler(site_id: Annotated[str, Path()]):
             entry_time=visit.entry_time,
             exit_time=visit.exit_time,
         ).model_dump_json(),
+        headers=CORS_HEADERS,
     )
 
 
@@ -73,6 +74,7 @@ def exit_site_handler(site_id: Annotated[str, Path()]):
         status_code=HTTPStatus.OK.value,
         content_type=content_types.APPLICATION_JSON,
         body=visit.to_api_model().model_dump_json(),
+        headers=CORS_HEADERS,
     )
 
 
@@ -121,4 +123,5 @@ def list_site_visits_handler(
         status_code=HTTPStatus.OK.value,
         content_type=content_types.APPLICATION_JSON,
         body=response_body,
+        headers=CORS_HEADERS,
     )
