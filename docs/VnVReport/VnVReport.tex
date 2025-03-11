@@ -263,6 +263,39 @@ Usability Study further before it will be submitted in the Extras folder.
 
 \subsection{Performance}
 
+\begin{longtable}{|m{2cm}|m{5cm}|m{4cm}|m{4cm}|}
+  \hline
+  \textbf{Test. ID} & \textbf{Input} & \textbf{Expected Output} &
+  \textbf{Result} \\
+  \hline
+  TC-PR-1 & User tries to retrieve a document & Average time for
+  retrieving the documents should not exceed 2
+  seconds & Pass, this is checked by
+  manually loading 15 documents and taking the average of the times taken
+  to retrieve them\\ \hline
+  TC-PR-2 & User clicks on a UI element & Process user
+  input within 2 seconds to minimize frustration. & Pass, this is checked by
+  manually clicking on all UI elements and then measuring the time taken to
+  see a response\\ \hline
+  TC-PR-3 & Upload/Download a document & Document should be verified for
+  integrity during upload and retrieval & Pass\\ \hline
+  TC-PR-4 & Unauthorized user tries to access a document &
+  Unauthorized user should not be allowed to access the document &
+  Pass, this is verified by trying to upload/download a document
+  without a valid access token or role\\ \hline
+  TC-PR-5 & Search query for documents or user data & Search Resuls
+  should be 95\% relevant to the input query & Pass\\ \hline
+  TC-PR-7 & An unexpected input/event & System should handle the
+  unexpected input/event gracefully and should not crash & Pass\\ \hline
+  TC-PR-10 & Manually upload files of sizes 25MB, 50MB, 100MB, 250MB,
+  500MB 1GB, and 2GB  & System should accept individual file sizes
+  upto 1GB & Pass \\ \hline
+  TC-PR-11 & Manually create nested documents/files & System should
+  allow documents/folders to be nested &
+  Pass\\ \hline
+  \caption{Performance Test Cases}
+\end{longtable}
+
 \subsection{Maintainability and Support}
 
 \begin{longtable}{|m{2cm}|m{1cm}|m{6cm}|m{3cm}|}
@@ -678,17 +711,17 @@ N/A, the only automated testing we have is the unit tests.
 Note: * indicates that any test prefixed with the test case ID,
 covers the given module
 
-\begin{longtable}{|l|l|}
+\begin{longtable}{|m{5cm}|m{9cm}|}
   \hline
   \textbf{Module} & \textbf{Test ID's} \\
   \hline
   Database Interaction & UT-DB* TC-FR-1 TC-FR-2 TC-FR-8 TC-FR-7 TC-FR-6\\ \hline
   Logging & UT-LG* TC-FR-5\\ \hline
-  File Storage & UT-FS* TC-FR-1 TC-FR-2\\ \hline
+  File Storage & UT-FS* TC-FR-1 TC-FR-2 TC-PR-10 TC-PR-11\\ \hline
   Location Verification & UT-LV* TC-FR-5 TC-FR-8\\ \hline
-  User Management & UT-UM* TC-FR-4 TC-FR-7 TC-SS-1 TC-SS-4\\ \hline
-  User Authentication & UT-AU* TC-FR-9\\ \hline
-  Document Management & UT-DM* TC-FR-1 TC-FR-2 TC-FR-3 TC-FR-7 TC-SS-2\\ \hline
+  User Management & UT-UM* TC-FR-4 TC-FR-7 TC-SS-1 TC-SS-4 TC-PR-5\\ \hline
+  User Authentication & UT-AU* TC-FR-9 TC-PR-4\\ \hline
+  Document Management & UT-DM* TC-FR-1 TC-FR-2 TC-FR-3 TC-FR-7 TC-SS-2 TC-PR-1 TC-PR-3 TC-PR-5\\ \hline
   \caption{Module to Test Case Traceability Matrix}
 \end{longtable}
 
