@@ -289,6 +289,38 @@ Usability Study further before it will be submitted in the Extras folder.
   \caption{Maintainability and Support Test Cases}
 \end{longtable}
 
+\subsection{Safety and Security}
+
+\begin{longtable}{|m{1.75cm}|m{7cm}|m{3.25cm}|}
+  \hline
+  \textbf{Test. ID} & \textbf{Description} &
+  \textbf{Result} \\
+  \hline
+  TC-SS-1 & Acounts created on the application
+  for each available level of access. Using each account, the use of each
+  feature of the application was attempted. Wether an action was
+  possible or noted and compared to the permissions of the
+  account. & Pass\\ \hline
+  TC-SS-2 & Accounts be created on the applica-
+  tion for each available level of access. Using each account, the creation,
+  deletion and modification of of files with varying permission require-
+  ments attempted. Wether an action was possible or
+  not noted and compared to the permissions of the account. & Pass \\ \hline
+  TC-SS-4 & Attempted to submit data fields filled in
+  with a set of entries which vary between incomplete, impossible, and
+  malicious and checked how the application handled the inputs. User
+  login fields and user creation fields tested. & Pass\\ \hline
+  TC-SS-5 & The application client has so far been tested using local
+  hosting. & Fail, not yet hosted\\ \hline
+  TC-SS-7 & Pull requests created by Dependabot are merged within
+  a week. & Fail, not yet integrated with Dependabot\\ \hline
+  TC-SS-8 & Check notification creation when contractor user declines
+  acknowledgement, attempts to acknowledge but does not complete
+  action, or ignores acknowledge-
+  ment. & Fail, notification module not yet implemented\\ \hline
+  \caption{Safety and Security Test Cases}
+\end{longtable}
+
 \subsection{etc.}
 
 \section{Comparison to Existing Implementation}
@@ -654,9 +686,9 @@ covers the given module
   Logging & UT-LG* TC-FR-5\\ \hline
   File Storage & UT-FS* TC-FR-1 TC-FR-2\\ \hline
   Location Verification & UT-LV* TC-FR-5 TC-FR-8\\ \hline
-  User Management & UT-UM* TC-FR-4 TC-FR-7\\ \hline
+  User Management & UT-UM* TC-FR-4 TC-FR-7 TC-SS-1 TC-SS-4\\ \hline
   User Authentication & UT-AU* TC-FR-9\\ \hline
-  Document Management & UT-DM* TC-FR-1 TC-FR-2 TC-FR-3 TC-FR-7\\ \hline
+  Document Management & UT-DM* TC-FR-1 TC-FR-2 TC-FR-3 TC-FR-7 TC-SS-2\\ \hline
   \caption{Module to Test Case Traceability Matrix}
 \end{longtable}
 
