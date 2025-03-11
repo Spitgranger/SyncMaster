@@ -27,7 +27,7 @@ from ..models.user_authentication.user_request_response import (
     SignupRequest,
     UpdateUserAttributeRequest,
 )
-from ..util import create_client_with_role
+from ..util import CORS_HEADERS, create_client_with_role
 
 logger = Logger()
 
@@ -240,6 +240,7 @@ def signup_user_handler(signup_request: SignupRequest, cognito_client: CognitoCl
         return Response(
             status_code=HTTPStatus.CREATED.value,
             content_type=content_types.APPLICATION_JSON,
+            headers=CORS_HEADERS,
             body=response_body,
         )
 
@@ -290,6 +291,7 @@ def signin_user_handler(signin_request: SigninRequest, cognito_client: CognitoCl
         return Response(
             status_code=HTTPStatus.OK.value,
             content_type=content_types.APPLICATION_JSON,
+            headers=CORS_HEADERS,
             body=response_body,
         )
     except ClientError as err:
@@ -316,6 +318,7 @@ def logout_user_handler(user_access_token: str, cognito_client: CognitoClient) -
 
         return Response(
             status_code=HTTPStatus.NO_CONTENT.value,
+            headers=CORS_HEADERS,
         )
     except ClientError as err:
         logger.error(err)
@@ -346,6 +349,7 @@ def admin_create_user_handler(
         return Response(
             status_code=HTTPStatus.CREATED.value,
             content_type=content_types.APPLICATION_JSON,
+            headers=CORS_HEADERS,
             body=response_body,
         )
     except ClientError as err:
@@ -374,6 +378,7 @@ def admin_update_user_attributes_handler(
 
         return Response(
             status_code=HTTPStatus.NO_CONTENT.value,
+            headers=CORS_HEADERS,
         )
 
     except ClientError as err:
@@ -401,6 +406,7 @@ def admin_get_users_handler(
         return Response(
             status_code=HTTPStatus.OK.value,
             content_type=content_types.APPLICATION_JSON,
+            headers=CORS_HEADERS,
             body=user_array,
         )
 

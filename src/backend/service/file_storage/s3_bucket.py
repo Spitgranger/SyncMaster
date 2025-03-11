@@ -36,12 +36,12 @@ class S3Bucket:
 
         self._client = create_client_with_role(service_name="s3", role=role_to_assume)
 
-    def create_upload_url(self, key: str) -> str:
+    def create_upload_url(self, key: str) -> dict:
         """
         Creates a presigned upload url for the specified S3 key
 
         :param key: The S3 key to create the upload url for
-        :return: The presigned upload url
+        :return: The presigned upload url, given as a dictionary with the URL and attributes
         :raises PermissionException: Assumed role does not have permission to create an
             upload url, due to bucket being initialized with only read permissions
         """
@@ -49,24 +49,17 @@ class S3Bucket:
             # creating presigned URL's is a local operation, so will not get permission
             # errors from S3, instead we try our best to do the permission check here
             raise PermissionException("Creating an upload URL requires write access")
-        return self._client.generate_presigned_url(
-            ClientMethod="put_object",
-            Params={
-                "Bucket": self.name,
-                "Key": key,
-            },
-        )
+        return self._client.generate_presigned_post(Bucket=self.name, Key=key, Fields={})
 
-    def create_get_url(self, key: str, e_tag: str) -> str:
+    def create_get_url(self, key: str) -> str:
         """
         Creates a presigned get url to get an object from S3
 
         :param key: The key of the object to get from S3
-        :param e_tag: The e_tag to match when getting the object
         :return: The get object presigned url
         """
         return self._client.generate_presigned_url(
-            ClientMethod="get_object", Params={"Bucket": self.name, "Key": key, "IfMatch": e_tag}
+            ClientMethod="get_object", Params={"Bucket": self.name, "Key": key}
         )
 
     def delete(self, key: str, e_tag: str) -> None:
@@ -83,7 +76,7 @@ class S3Bucket:
             initialized with only read permissions
         """
         try:
-            self._client.delete_object(Bucket=self.name, Key=key, IfMatch=e_tag)
+            self._client.delete_object(Bucket=self.name, Key=key)
         except ClientError as err:
             logger.exception(err)
             if err.response["Error"]["Code"] == "AccessDenied":

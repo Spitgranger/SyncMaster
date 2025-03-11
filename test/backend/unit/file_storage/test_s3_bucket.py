@@ -1,3 +1,4 @@
+import io
 from http import HTTPStatus
 
 import pytest
@@ -26,11 +27,12 @@ def test_upload_file(empty_s3_bucket):
     url = bucket.create_upload_url(key=TEST_S3_FILE_KEY)
 
     # Upload to the url
-    http_response = requests.put(url=url, data=TEST_S3_FILE_CONTENT)
-    assert http_response.status_code == HTTPStatus.OK.value
-    e_tag = http_response.headers["ETag"]
+    f = io.StringIO(TEST_S3_FILE_CONTENT)
+    files = {"file": (TEST_S3_FILE_CONTENT, f)}
+    http_response = requests.post(url["url"], data=url["fields"], files=files)
+    assert http_response.status_code == HTTPStatus.NO_CONTENT.value
 
-    obj = client.get_object(Bucket=bucket.name, Key=TEST_S3_FILE_KEY, IfMatch=e_tag)
+    obj = client.get_object(Bucket=bucket.name, Key=TEST_S3_FILE_KEY)
     assert obj["Body"].read() == bytes(TEST_S3_FILE_CONTENT, encoding="utf-8")
 
 
@@ -53,7 +55,7 @@ def test_get_object_url(s3_bucket_with_item):
     bucket = S3Bucket(bucket_name=DOCUMENT_STORAGE_BUCKET_NAME, access=AWSAccessLevel.READ)
 
     # Create get url
-    url = bucket.create_get_url(key=TEST_S3_FILE_KEY, e_tag=e_tag)
+    url = bucket.create_get_url(key=TEST_S3_FILE_KEY)
 
     # Get content from URL
     http_response = requests.get(url=url)
