@@ -40,7 +40,8 @@
 
 \section{Symbols, Abbreviations and Acronyms}
 
-Refer to \textit{Section 4: Naming Conventions and Terminology} of the Software Requirements Specification document
+Refer to \textit{Section 4: Naming Conventions and Terminology} of
+the Software Requirements Specification document
 \href{https://github.com/Spitgranger/SyncMaster/blob/main/docs/SRS-Volere/SRS.pdf}{SRS.pdf}.
 
 \newpage
@@ -62,108 +63,163 @@ This document ...
 \section{Nonfunctional Requirements Evaluation}
 
 \subsection{Usability}
-Usability testing was conducted on the application prototype to validate humanity, look and feel, operational, and cultural requirements.
-Two users were given the following scenarios for the usability test, to simulate a typical use of the system:\\
+Usability testing was conducted on the application prototype to
+validate humanity, look and feel, operational, and cultural requirements.
+Two users were given the following scenarios for the usability test,
+to simulate a typical use of the system:\\
 \\
 \textbf{Phase 1: Testing the contractor portal}
 \\\\
 You are a contractor hired by the City of Hamilton to perform work at a station.
-You arrive and scan the QR code at the station to authenticate your presence and explain the work you will perform.
-We will ask you to perform a variety of tasks to assess their discoverability and usability.
-We welcome you explaining your thought process as you navigate through the screens. 
+You arrive and scan the QR code at the station to authenticate your
+presence and explain the work you will perform.
+We will ask you to perform a variety of tasks to assess their
+discoverability and usability.
+We welcome you explaining your thought process as you navigate
+through the screens.
 \begin{itemize}
-\item You have scanned the QR code. Please follow the initial steps for the health and safety acknowledgements. Did the experience of viewing the acknowledgements screen feel easy and intuitive? Did you encounter any errors?
-After the acknowledgements, are you able to find the station documents?
-\item Are you able to find and fill out the instructions for the purpose of your visit?
+  \item You have scanned the QR code. Please follow the initial steps
+    for the health and safety acknowledgements. Did the experience of
+    viewing the acknowledgements screen feel easy and intuitive? Did
+    you encounter any errors?
+    After the acknowledgements, are you able to find the station documents?
+  \item Are you able to find and fill out the instructions for the
+    purpose of your visit?
 \end{itemize}
 \textbf{Phase 2: Testing the admin portal}
 \\\\
 You are a Facility Manager who has an account with admin permissions.
-You sign into the application and would like to perform some routine tasks during the day.
+You sign into the application and would like to perform some routine
+tasks during the day.
 \begin{itemize}
-\item You would like to navigate to the station documents and add a site specific document for station HC057. Please attempt to do so. Were you frustrated trying to find where this was located?
-\item Please locate the site wide documents which would be displayed for all stations.
-\item Please locate and view the site visit logs.
+  \item You would like to navigate to the station documents and add a
+    site specific document for station HC057. Please attempt to do
+    so. Were you frustrated trying to find where this was located?
+  \item Please locate the site wide documents which would be
+    displayed for all stations.
+  \item Please locate and view the site visit logs.
 \end{itemize}
-2 Users were then directed to fill out the Usability Survey identified in the VnV Plan.\\
-User 1: Man between the ages of 60 - 65, no prior experience with the system. User is comfortable using a smartphone and laptop.\\
-User 2: Woman between ages of 60 - 65, no prior experience with the system. User is comfortable using a smartphone and laptop.
+2 Users were then directed to fill out the Usability Survey
+identified in the VnV Plan.\\
+User 1: Man between the ages of 60 - 65, no prior experience with the
+system. User is comfortable using a smartphone and laptop.\\
+User 2: Woman between ages of 60 - 65, no prior experience with the
+system. User is comfortable using a smartphone and laptop.
 Through these actions, the following results were observed:\\
 \begin{longtable}{|m{2cm}|m{1.5cm}|m{9cm}|}
   \hline
   \textbf{Test. ID}  & \textbf{User} & \textbf{Result} \\
   \hline
-  TC-EU-1 & User 1& User successfully understood the distinction between the contractor and admin user. User experienced minor
-  confusion what should be entered in the work order field, due to no real work order in scenario. User succesfully navigated core features of contractor
+  TC-EU-1 & User 1& User successfully understood the distinction
+  between the contractor and admin user. User experienced minor
+  confusion what should be entered in the work order field, due to no
+  real work order in scenario. User succesfully navigated core
+  features of contractor
   and admin portal without issue. Test passed.\\
   \hline
-  TC-EU-1 & User 2& User successfully navigated to contractor portal. Minor difficulties understanding distinction of site wide and
-  site and site specific documentation on the admin portal, emphasizing the emportance of user documentation in requirement MS-SUP-1.
-  Confusion did not hinder accessing all features of admin portal. Test passed.\\
-  \hline
-  TC-EU-2 & User 1& As an admin user, the tester was able to add a site wide document but did not receive a warning before deleting file
-  thus identifying a bug in the system to be patched for rev1. Test failed.\\
-  \hline
-  TC-EU-2 & User 2& As an admin user, the tester was able to add a site wide document but did not receive a warning before deleting file
-  thus identifying a bug in the system to be patched for rev1, same as issue identified for User 1. Test failed.\\
-  \hline
-  TC-LR-1 & User 1& User successfully discovered the documentation page. Did not have issues with selecting documents and
-  rated their confidence as an 8. Test passed. \\
-  \hline
-  TC-LR-1& User 2& User successfully discovered the documentation page. Experienced minor confusion that documents are downloaded
-  and not viewed in the application, but successfully opened the document. User gave their confidence a rating of 7. Test passed.\\
-  \hline
-  TC-LR-2 & User 1 & \textit{No onboarding documentation yet, user documentation to be taught on Mar 14} \\
-  \hline
-  TC-LR-2 & User 2 & \textit{No onboarding documentation yet, user documentation to be taught on Mar 14}\\
-  \hline
-  TC-UP-1 & User 1& User did not report anything offensive or political through all pages of the system. Test passed.\\
-  \hline
-  TC-UP-1 & User 2& User did not report anything offensive or political through all pages of the system. Test passed.\\
-  \hline
-  TC-UP-2 & User 1& User did not encounter any system errors during use. Test passed.\\
-  \hline
-  TC-UP-2 & User 2& User did not encounter any system errors during use. Test passed.\\
-  \hline
-  TC-AS-1 & User 1& The user reported that accessibility of the application felt similar to the City of Hamilton's main website
-  when asked to compare the two. They rated their accessibility features to be comparable with a rating of 9 out of 10. Test passed.\\
-  \hline
-  TC-AS-1 & User 2& The user reported that the accessibility of the application felt similar to the City of Hamilton's main
-  website when asked to compare the two. They rated the accessibility features of the application to be comparable with a rating
-  of 8 out of 10. Test passed.\\
-  \hline
-  TC-LF-1 & User 1& User reported that the colour palette of the application did not cause them any issues and it was quite simple.
-  They appreciated that the main colours are white and blue and that the application did not have many distractions. Rated as a 10 out of 10.
+  TC-EU-1 & User 2& User successfully navigated to contractor portal.
+  Minor difficulties understanding distinction of site wide and
+  site and site specific documentation on the admin portal,
+  emphasizing the emportance of user documentation in requirement MS-SUP-1.
+  Confusion did not hinder accessing all features of admin portal.
   Test passed.\\
   \hline
-  TC-LF-1 & User 2& User reported that the colour palette of the application did not cause them any issues.
-  Reported that some of the text on the Admin site visit logs was small and would be difficult to read without their glasses.
+  TC-EU-2 & User 1& As an admin user, the tester was able to add a
+  site wide document but did not receive a warning before deleting file
+  thus identifying a bug in the system to be patched for rev1. Test failed.\\
+  \hline
+  TC-EU-2 & User 2& As an admin user, the tester was able to add a
+  site wide document but did not receive a warning before deleting file
+  thus identifying a bug in the system to be patched for rev1, same
+  as issue identified for User 1. Test failed.\\
+  \hline
+  TC-LR-1 & User 1& User successfully discovered the documentation
+  page. Did not have issues with selecting documents and
+  rated their confidence as an 8. Test passed. \\
+  \hline
+  TC-LR-1& User 2& User successfully discovered the documentation
+  page. Experienced minor confusion that documents are downloaded
+  and not viewed in the application, but successfully opened the
+  document. User gave their confidence a rating of 7. Test passed.\\
+  \hline
+  TC-LR-2 & User 1 & \textit{No onboarding documentation yet, user
+  documentation to be taught on Mar 14} \\
+  \hline
+  TC-LR-2 & User 2 & \textit{No onboarding documentation yet, user
+  documentation to be taught on Mar 14}\\
+  \hline
+  TC-UP-1 & User 1& User did not report anything offensive or
+  political through all pages of the system. Test passed.\\
+  \hline
+  TC-UP-1 & User 2& User did not report anything offensive or
+  political through all pages of the system. Test passed.\\
+  \hline
+  TC-UP-2 & User 1& User did not encounter any system errors during
+  use. Test passed.\\
+  \hline
+  TC-UP-2 & User 2& User did not encounter any system errors during
+  use. Test passed.\\
+  \hline
+  TC-AS-1 & User 1& The user reported that accessibility of the
+  application felt similar to the City of Hamilton's main website
+  when asked to compare the two. They rated their accessibility
+  features to be comparable with a rating of 9 out of 10. Test passed.\\
+  \hline
+  TC-AS-1 & User 2& The user reported that the accessibility of the
+  application felt similar to the City of Hamilton's main
+  website when asked to compare the two. They rated the accessibility
+  features of the application to be comparable with a rating
+  of 8 out of 10. Test passed.\\
+  \hline
+  TC-LF-1 & User 1& User reported that the colour palette of the
+  application did not cause them any issues and it was quite simple.
+  They appreciated that the main colours are white and blue and that
+  the application did not have many distractions. Rated as a 10 out of 10.
+  Test passed.\\
+  \hline
+  TC-LF-1 & User 2& User reported that the colour palette of the
+  application did not cause them any issues.
+  Reported that some of the text on the Admin site visit logs was
+  small and would be difficult to read without their glasses.
   Rated as an 8 out of 10 overall. Test passed.\\
   \hline
-  TC-LF-2 & User 1& User was able to repeat the actions asked of them at the beginning of this section on an iPhone 8 and Samsung Galaxy A13
-  for the contractor portal. User was able to use a Google Chrome and Microsoft Edge Browser on a Windows 10 operating system. Test passed.\\
+  TC-LF-2 & User 1& User was able to repeat the actions asked of them
+  at the beginning of this section on an iPhone 8 and Samsung Galaxy A13
+  for the contractor portal. User was able to use a Google Chrome and
+  Microsoft Edge Browser on a Windows 10 operating system. Test passed.\\
   \hline
-  TC-LF-2 & User 2& User was able to repeat the actions asked of them at the beginning of this section on an iPhone 13 and Samsung Galaxy A13
-  for the contractor portal. User was able to use a Google Chrome and Microsoft Edge Browser on a Windows 10 operating system. Test passed.\\
+  TC-LF-2 & User 2& User was able to repeat the actions asked of them
+  at the beginning of this section on an iPhone 13 and Samsung Galaxy A13
+  for the contractor portal. User was able to use a Google Chrome and
+  Microsoft Edge Browser on a Windows 10 operating system. Test passed.\\
   \hline
-  TC-CR-1 & User 1& User did not feel the application violated any of the corporate pillars. Test passed.\\
+  TC-CR-1 & User 1& User did not feel the application violated any of
+  the corporate pillars. Test passed.\\
   \hline
-  TC-CR-1 & User 2& User did not feel the application violated any of the corporate pillars. Test passed.\\
+  TC-CR-1 & User 2& User did not feel the application violated any of
+  the corporate pillars. Test passed.\\
   \hline
-  TC-OE-1 & User 1 & User was able to access the application from their homes without issue. Test passed.\\
+  TC-OE-1 & User 1 & User was able to access the application from
+  their homes without issue. Test passed.\\
   \hline
-  TC-OE-1 & User 2& User was able to access the application from their homes without issue. Test passed.\\
+  TC-OE-1 & User 2& User was able to access the application from
+  their homes without issue. Test passed.\\
   \hline
-  TC-OE-2 & User 1& User was successfully able to navigate the menus freely and reported a similar experience on both iOS
+  TC-OE-2 & User 1& User was successfully able to navigate the menus
+  freely and reported a similar experience on both iOS
   and Android operating systems. Test passed.\\
   \hline
-  TC-OE-2 & User 2& User reported feeling a similar experience across applications. Noted they preferred the experience on
-  iPhone over Android because they are more familiar with the iOS interface than an Android interface. Test passed.\\
+  TC-OE-2 & User 2& User reported feeling a similar experience across
+  applications. Noted they preferred the experience on
+  iPhone over Android because they are more familiar with the iOS
+  interface than an Android interface. Test passed.\\
   \hline
   \caption{Usability Test Cases}
 \end{longtable}
-Most of the usability tests were successful, a promising sign for the rev1 prototype. These initial tests did reveal some overlap in test cases
-and missing survey questions which will be used to refine the Usability Study further before it will be submitted in the Extras folder.
+Most of the usability tests were successful, a promising sign for the
+rev1 prototype. These initial tests did reveal some overlap in test cases
+and missing survey questions which will be used to refine the
+Usability Study further before it will be submitted in the Extras folder.
 
 \subsection{Performance}
 
@@ -177,7 +233,8 @@ and missing survey questions which will be used to refine the Usability Study fu
   TC-MS-4 & - & There is 95\% line coverage and 90\% branch coverage
   on our code & Pass, this is being checked in GitHub actions\\ \hline
   TC-MS-5 & - & All functional requirements have a corresponding unit
-  test & Pass\\ \hline
+  test & Fail, FR8 and FR9 are missing unit tests as they are not
+  currently implemented\\ \hline
   TC-MS-6 & - & Contribution guidelines and maintainer documentation
   of system approved by the City of Hamilton & Fail, not yet approved\\ \hline
   TC-MS-7 & - & User manual exists and has been approved by the City
