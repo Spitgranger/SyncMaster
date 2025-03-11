@@ -1,5 +1,5 @@
 \documentclass[12pt, titlepage]{article}
-
+\usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
@@ -449,11 +449,27 @@ to mock AWS services.
 
 \section{Changes Due to Testing}
 
-\wss{This section should highlight how feedback from the users and from
-  the supervisor (when one exists) shaped the final product.  In particular
-  the feedback from the Rev 0 demo to the supervisor (or to potential users)
-should be highlighted.}
+The scope of the project has evolved since the original version of the requirements were written.
+In meetings with the City where we demonstrated each revision of the prototype, new requirements emerged which were not conceived
+of in the original drafts. One example was the discussion surrounding a visitor account. When imagining use cases, it was discovered
+that a likely scenario that would emerge would be new contractors that need access to the portal but are not yet registered in the 
+system. In the interest of ensuring work can still be completed, it was planned to have a visitor account that would enable contractors
+to access the system without any administrative overhead to create their account first. However, after creating a design, the team and
+the stakeholder realized this would allow any member of the public who scans a station QR code full access into the contractor portal and
+not merely legitimate contractors. This then led to the removal of this requirement. The scenarios are outlined in the following flow charts.
+\newpage
 
+Prioritizing ease of access to the application with a visitor account:\\
+\\
+\\
+\includegraphics[scale=0.7]{ease_of_access.png}
+\newpage
+Prioritizing security of the application by requiring a contractor account first be verified:\\
+\\
+\\
+\\
+\includegraphics[scale=0.7]{trusted_access.png}
+\newpage
 \section{Automated Testing}
 N/A, the only automated testing we have is the unit tests.
 
@@ -555,11 +571,25 @@ graduate attribute of Reflection.
 \input{../Reflection.tex}
 
 \begin{enumerate}
-  \item What went well while writing this deliverable?
+  \item What went well while writing this deliverable?\\
+  \\
+  Our team did a reasonable job at allocating work based on everyones different skill sets. Team members with more experience in
+  developing backend tools were responsible for the testing on those technologies, whereas team members more familiar with the frontend
+  and business logic worked on testing those functionalities.
   \item What pain points did you experience during this deliverable, and how
-    did you resolve them?
+    did you resolve them?\\
+  \\
+  One pain point we experienced was some complications fully implementing some of the more complex requirements and API integrations.
+  This made it more difficult to test some aspects of the project and gave a tighter time frame. To resolve this, we used the Github
+  issues to track progress on various components of the application and maintained regular communication to ensure we could
+  be as prepared as possible for team meetings, meetings with the school, and meetings with the stakeholder.
   \item Which parts of this document stemmed from speaking to your client(s) or
-    a proxy (e.g. your peers)? Which ones were not, and why?
+    a proxy (e.g. your peers)? Which ones were not, and why?\\
+    \\
+    The parts of the document in sections 3 and 4 (functional and non-functional requirements) generally stemmed from conversation
+    with our stakeholder. Those parts of the document are directly intended to ensure that the requirements gathered throughout the project
+    are satisfied. Our stakeholder is relying on our knowledge for the actual implementation, so the specific unit tests and other technical
+    decisions regarding the modules themselves were a decision made by our team.
   \item In what ways was the Verification and Validation (VnV) Plan different
     from the activities that were actually conducted for VnV?  If there were
     differences, what changes required the modification in the plan?  Why did
@@ -569,7 +599,13 @@ graduate attribute of Reflection.
     able to clearly
     predict a feasible amount of effort and the right tasks needed to build the
     evidence that demonstrates the required quality?  (It is expected that most
-    teams will have had to deviate from their original VnV Plan.)
+    teams will have had to deviate from their original VnV Plan.)\\
+    \\
+    There were some changes to the number of tests performed, these are reflected in the VnV Plan with strikeouts and red text
+    to make clear which changes were made to the original plan. In general, for industry projects such as these,
+    there is always going to be some unanticipated requirements or challenges not originally envisioned until you get into the depths
+    of an implementation which then requires you to reevaluate either the requirements or your initial design. This was an expected
+    challenge and we did our best to minimize the occurences, and in general there were not an enormous number of deviations.
 \end{enumerate}
 
 \end{document}
