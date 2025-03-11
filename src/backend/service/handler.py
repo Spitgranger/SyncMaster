@@ -12,7 +12,7 @@ from aws_lambda_powertools.utilities.typing import LambdaContext
 from .exceptions import HTTPError
 from .routes.protected import documents, site_visits, users
 from .routes.unprotected import auth
-from .util import cors_headers
+from .util import CORS_HEADERS
 
 logger = Logger()
 app = APIGatewayRestResolver(enable_validation=True)
@@ -40,7 +40,7 @@ def exception_handler(exception: Exception):
         body = {"error": str(exception)}
 
     return Response(
-        status_code=status_code, content_type=content_type, body=body, headers=cors_headers
+        status_code=status_code, content_type=content_type, body=body, headers=CORS_HEADERS
     )
 
 

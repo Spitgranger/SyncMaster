@@ -27,6 +27,7 @@ def get_presigned_url(s3_key: str, bucket: S3Bucket) -> dict:
     Function to get create a presigned upload url for a given s3 key
     :param bucket: The S3Bucket containing the files
     :param s3_key: the s3 key to use when identifying this file
+    :return: The presigned upload url, encoded as a dictionary
     """
     # To keep it simple for the demo use the name of the file for the key
     # name in s3, won't work in future since you could have multiple folders
@@ -46,6 +47,7 @@ def get_all_files(
     :param bucket: The S3Bucket containing the files
     :param site_id: The site id to get files for
     :param parent_folder_id: folder to get documents for
+    :return: A list of documents in the given folder
     """
     logger.info(site_id)
     key_expression_specific = Key("pk").eq(
@@ -100,6 +102,7 @@ def upload_file(
     :param requires_ack: Does this file require ack
     :param timestamp: The time that this operation was performed
     :param document_expiry: An optional parameter indicating that this document has an expiry
+    :return: The document object that was uploaded, including the document id
     :raises ResourceConflict: If a document in the same folder already exists with the same filename
     """
     # Save metadata in DynamoDB

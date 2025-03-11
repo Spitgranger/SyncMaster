@@ -41,7 +41,7 @@ class S3Bucket:
         Creates a presigned upload url for the specified S3 key
 
         :param key: The S3 key to create the upload url for
-        :return: The presigned upload url
+        :return: The presigned upload url, given as a dictionary with the URL and attributes
         :raises PermissionException: Assumed role does not have permission to create an
             upload url, due to bucket being initialized with only read permissions
         """

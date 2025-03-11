@@ -16,7 +16,7 @@ from .exceptions import ExternalServiceException, PermissionException
 
 logger = Logger()
 
-cors_headers = {
+CORS_HEADERS = {
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "POST, GET, PUT, PATCH, DELETE",
@@ -135,7 +135,7 @@ def create_http_response(
     :return: The Response object to be returned to the API Gateway
     """
     if headers is None:
-        headers = cors_headers
+        headers = CORS_HEADERS
     return Response(
         status_code=status_code,
         content_type=content_type,
