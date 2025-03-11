@@ -1,3 +1,7 @@
+"""
+Routes for site management APIs
+"""
+
 from datetime import datetime, timezone
 from http import HTTPStatus
 from typing import Optional

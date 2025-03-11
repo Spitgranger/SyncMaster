@@ -1,3 +1,9 @@
+"""
+Defines structure of a site in the DB
+"""
+
+from decimal import Decimal
+
 from pydantic import computed_field
 
 from ...util import ItemType
@@ -6,10 +12,12 @@ from .db_base import DBItemModel
 
 
 class DBSite(DBItemModel):
+    """Model representing a site in the database"""
+
     site_id: str
-    longitude: float
-    latitude: float
-    acceptable_range: float
+    longitude: Decimal
+    latitude: Decimal
+    acceptable_range: Decimal
 
     @staticmethod
     def item_type() -> ItemType:

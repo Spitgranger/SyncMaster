@@ -1,4 +1,9 @@
+"""
+Manages the creation, updating, deletion and retrieval of site visits
+"""
+
 from datetime import datetime
+from decimal import Decimal
 from typing import Optional
 
 from aws_lambda_powertools.logging import Logger
@@ -15,9 +20,9 @@ logger = Logger()
 def create_site(
     table: DBTable[DBSite],
     site_id: str,
-    longitude: float,
-    latitude: float,
-    acceptable_range: float,
+    longitude: Decimal,
+    latitude: Decimal,
+    acceptable_range: Decimal,
     timestamp: datetime,
     user_id: str,
 ) -> DBSite:
@@ -60,9 +65,9 @@ def update_site(
     timestamp: datetime,
     user_id: str,
     site_id: str,
-    longitude: Optional[float] = None,
-    latitude: Optional[float] = None,
-    acceptable_range: Optional[float] = None,
+    longitude: Optional[Decimal] = None,
+    latitude: Optional[Decimal] = None,
+    acceptable_range: Optional[Decimal] = None,
 ) -> DBSite:
     """
     Update an existing site with the given parameters
@@ -122,7 +127,7 @@ def delete_site(table: DBTable[DBSite], site_id: str, timestamp: datetime) -> No
     key = KeySchema(pk=DBSite.item_type().value, sk=site_id)
     condition = (
         Attr("pk").exists()
-        & Attr("sk").exists
+        & Attr("sk").exists()
         & Attr("last_modified_time").lt(timestamp.isoformat())
     )
 
@@ -157,6 +162,7 @@ def list_sites(
 
     :param table: The table to use when getting the sites
     :param limit: The maximum number of sites to get
+    :param start_key: The database key to start querying from
     :return: The list of all sites within the given limit, and the last evaluated key
     :raises ExternalServiceException: An unexpected error occurs in AWS
     """
