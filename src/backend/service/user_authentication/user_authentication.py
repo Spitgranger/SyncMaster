@@ -279,7 +279,7 @@ def signin_user_handler(signin_request: SigninRequest, cognito_client: CognitoCl
             if attr["Name"] == "custom:role" and attr["Value"] == "contractor":
                 if signin_request.location is None:
                     raise UnauthorizedException("Location not provided for contractor")
-                elif signin_request.site_id is None:
+                if signin_request.site_id is None:
                     raise UnauthorizedException("Site not provided for contractor")
                 if not verify_location(
                     signin_request.location[0],

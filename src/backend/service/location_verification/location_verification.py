@@ -36,6 +36,7 @@ def verify_location(latitude: float, longitude: float, accuracy: float, site_id:
     :param latitude: latitude of user location
     :param longitude: longitude of user location
     :param accuracy: accuracy of user location in meters
+    :param site_id: the site to verify the user's location against
     :return: boolean for if a location is within range of the desired site
     """
     site = get_site(table=DBTable(access=AWSAccessLevel.READ, item_schema=DBSite), site_id=site_id)
