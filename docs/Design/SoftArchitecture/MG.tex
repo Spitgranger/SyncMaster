@@ -2,6 +2,7 @@
 
 \usepackage{fullpage}
 \usepackage[round]{natbib}
+\usepackage[normalem]{ulem}
 \usepackage{multirow}
 \usepackage{booktabs}
 \usepackage{tabularx}
@@ -46,8 +47,8 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
   \toprule {\bf Date} & {\bf Version} & {\bf Notes} \\
   \midrule
-  January 17, 2024              & 1.0           & Initial version of Module
-  Guide      \\
+  January 17, 2024 & 1.0 & Initial version of Module Guide \\
+  March 10, 2024 & 1.1 & Remove Job Management Module, now that more information is tracked in Logging Module \\
   \bottomrule
 \end{tabularx}
 
@@ -233,7 +234,7 @@ actually be implemented.
   \item [\refstepcounter{mnum} \mthemnum \label{mUM}:] User Management Module
   \item [\refstepcounter{mnum} \mthemnum \label{mDM}:] Document
     Management Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mJM}:] Job Management Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mJM}:] \sout{Job Management Module}
   \item [\refstepcounter{mnum} \mthemnum \label{mAI}:] API Integration Module
   \item [\refstepcounter{mnum} \mthemnum \label{mDI}:] Database
     Interaction Module
@@ -265,7 +266,7 @@ actually be implemented.
     & Analytics and Reporting Module  \\
     & User Management Module          \\
     & Document Management Module      \\
-    & Job Management Module           \\
+    & \sout{Job Management Module}           \\
     \midrule
 
     \multirow{3}{0.3\textwidth}{Behaviour-Hiding Modules}  & {API
@@ -418,7 +419,7 @@ to be implemented.
 \subsubsection{Audit and Compliance Module (\mref{mAC})}
 
 \begin{description}
-  \item[Secrets:] Data obtained from the Job Management and Logging Module.
+  \item[Secrets:] Data obtained from the Logging Module.
   \item[Services:] Allows admin users users to retrieve data regarding
     contractors in the frontend
   \item[Implemented By:] \progname
@@ -442,16 +443,16 @@ to be implemented.
 \begin{description}
   \item[Secrets:] A file.
   \item[Services:] Allows an admin user to upload a document relevant
-    to a specific site and/or job for contractors to see as the come on site.
+    to a specific site for contractors to see as the come on site.
   \item[Implemented By:] \progname
 \end{description}
 
-\subsubsection{Job Management Module (\mref{mJM})}
+\subsubsection{\sout{Job Management Module (\mref{mJM})}}
 \begin{description}
-  \item[Secrets:] A job identifier, job details, and status.
-  \item[Services:] Allows contractor to fill in information relevant
-    to the job they are completing.
-  \item[Implemented By:] \progname
+  \item[Secrets:] \sout{A job identifier, job details, and status.}
+  \item[Services:] \sout{Allows contractor to fill in information relevant
+    to the job they are completing.}
+  \item[Implemented By:] \sout{\progname}
 \end{description}
 
 \section{Traceability Matrix} \label{SecTM}
@@ -589,7 +590,7 @@ Issues \href{https://github.com/Spitgranger/SyncMaster/issues}{here}.
     \hline
     M7: Document Management Module    & Richard Fan & January 31st, 2025 \\
     \hline
-    M8: Job Management Module         & Mitchell Hynes & January 31st, 2025 \\
+    \sout{M8: Job Management Module}        & \sout{Mitchell Hynes} & \sout{January 31st, 2025} \\
     \hline
     M9: API Integration Module        & Richard Fan & January 24th, 2025 \\
     \hline
