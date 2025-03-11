@@ -46,6 +46,7 @@
   \textbf{symbol} & \textbf{description}\\
   \midrule
   T & Test\\
+  UI & User Interface\\
   \bottomrule
 \end{tabular}\\
 
@@ -67,6 +68,46 @@ tables if needed}
 This document ...
 
 \section{Functional Requirements Evaluation}
+
+\begin{longtable}{|m{1cm}|m{3cm}|m{5cm}|m{3cm}|}
+  \hline
+  \textbf{Test. ID} & \textbf{Input} & \textbf{Expected Output} &
+  \textbf{Result} \\
+  \hline
+  TC-FR-1 & User uses UI to upload a file into the system & The file is
+  present in the system with the correct details. & Pass, the file is
+  present in the system with the correct metadata\\ \hline
+  TC-FR-2 & User downloads file using the UI & The file is successfully
+  downloaded locally to the device & Pass, all file extensions mentioned in the
+  VnV plan check are successfully downloaded\\ \hline
+  TC-FR-3 & Contractor user uploads document & Upload fails and document is not
+  uploaded to the system & Pass, upload is prevented for a contractor
+  user\\ \hline
+  TC-FR-4 & Admin user uses UI to lookup a user with a specific id & The
+  revelent details for the user are displayed & Pass, all details for
+  the given user are displayed\\ \hline
+  TC-FR-5 & User attempts to authenticate when they are not in an allowed
+  location & Authentication is blocked and user is not allowed access to the
+  system & Pass, user was shown a message saying that they are not in the
+  allowed location\\ \hline
+  TC-FR-6 & Admin user navigates to main portal when a document
+  approaching expiry is present in the system & A notification is displayed
+  indicating the expiry of this document&
+  Fail, functionality is not fully implemented\\ \hline
+  TC-FR-7 & Admin user navigates to main portal when users with
+  expired training exist & A message indicating there are users with
+  expired trainings is displayed&
+  Fail, functionality is not fully implemented\\ \hline
+  TC-FR-8 & User authenticates into the system and acknowledges
+  document & The acknowledgement is stored in the system with the
+  required information &
+  Fail, functionality not fully implemented\\ \hline
+  TC-FR-9 & Contractor without the required training attempts to
+  authenticate & The system prevents authentication and displays a
+  message telling the user to contact their facilities manager &
+  Fail, functionality not fully implemented\\ \hline
+  \caption{Functional Requirement Test Cases}
+\end{longtable}
 
 \section{Nonfunctional Requirements Evaluation}
 
@@ -351,7 +392,7 @@ to mock AWS services.
   inside for a given site id
   and parent folder and ensure that both the folder and its contents are
   recursively deleted & Pass\\ \hline
-  \caption{Unit Test Cases for Logging Module}
+  \caption{Unit Test for Document Management Module}
 \end{longtable}
 
 \section{Changes Due to Testing}
