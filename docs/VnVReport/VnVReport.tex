@@ -89,7 +89,7 @@ You sign into the application and would like to perform some routine tasks durin
 User 1: Man between the ages of 60 - 65, no prior experience with the system. User is comfortable using a smartphone and laptop.\\
 User 2: Woman between ages of 60 - 65, no prior experience with the system. User is comfortable using a smartphone and laptop.
 Through these actions, the following results were observed:\\
-\begin{longtable}{|m{2cm}|m{1.5cm}|m{6cm}|}
+\begin{longtable}{|m{2cm}|m{1.5cm}|m{9cm}|}
   \hline
   \textbf{Test. ID}  & \textbf{User} & \textbf{Result} \\
   \hline
@@ -97,62 +97,73 @@ Through these actions, the following results were observed:\\
   confusion what should be entered in the work order field, due to no real work order in scenario. User succesfully navigated core features of contractor
   and admin portal without issue. Test Passed.\\
   \hline
-  TC-EU-2 & User 1& User successfully navigated contractor portal. Minor difficulties understanding distinction of site wide and
+  TC-EU-1 & User 2& User successfully navigated to contractor portal. Minor difficulties understanding distinction of site wide and
   site and site specific documentation on the admin portal, emphasizing the emportance of user documentation in requirement MS-SUP-1.
   Confusion did not hinder accessing all features of admin portal. Test passed.\\
   \hline
-  TC-EU-2 & User 2& As an admin user, the tester was able to add a site wide document but did not receive a warning before deleting file
-  thus identifying a bug in the system to be patched for rev1.\\
+  TC-EU-2 & User 1& As an admin user, the tester was able to add a site wide document but did not receive a warning before deleting file
+  thus identifying a bug in the system to be patched for rev1. Test Failed.\\
   \hline
-  TC-LR-1 & User 1& As an admin user, the tester was able to add a site wide document but did not receive a warning before deleting file
-  thus identifying a bug in the system to be patched for rev1.\\
+  TC-EU-2 & User 2& As an admin user, the tester was able to add a site wide document but did not receive a warning before deleting file
+  thus identifying a bug in the system to be patched for rev1, same as issue identified for User 1. Test Failed.\\
+  \hline
+  TC-LR-1 & User 1& User successfully discovered the documentation page. Did not have issues with selecting documents and
+  rated their confidence as an 8. Test passed. \\
   \hline
   TC-LR-1& User 2& User successfully discovered the documentation page. Experienced minor confusion that documents are downloaded
-  and not viewed in the application, but successfully opened the document. User gave their confidence a rating of 7.\\
+  and not viewed in the application, but successfully opened the document. User gave their confidence a rating of 7. Test passed.\\
   \hline
-  TC-LR-1 & User 1& \\
+  TC-LR-2 & User 1 & \textit{No onboarding documentation yet, user documentation to be taught on Mar 14} \\
   \hline
-  TC-LR-2 & User 2& \\
+  TC-LR-2 & User 2 & \textit{No onboarding documentation yet, user documentation to be taught on Mar 14}\\
   \hline
-  TC-UP-1 & User 1&\\
+  TC-UP-1 & User 1& User did not report anything offensive or political through all pages of the system. Test Passed.\\
   \hline
-  TC-UP-1 & User 2&\\
+  TC-UP-1 & User 2& User did not report anything offensive or political through all pages of the system. Test Passed.\\
   \hline
-  TC-UP-2 & User 1&\\
+  TC-UP-2 & User 1& User did not encounter any system errors during use. Test Passed.\\
   \hline
-  TC-UP-2 & User 2&\\
+  TC-UP-2 & User 2& User did not encounter any system errors during use. Test Passed.\\
   \hline
-  TC-AS-1 & User 1&\\
+  TC-AS-1 & User 1& The user reported that accessibility of the application felt similar to the City of Hamilton's main website
+  when asked to compare the two. They rated their accessibility features to be comparable with a rating of 9 out of 10.\\
   \hline
-  TC-AS-2 & User 2&\\
+  TC-AS-1 & User 2& The user reported that the accessibility of the application felt similar to the City of Hamilton's main
+  website when asked to compare the two. They rated the accessibility features of the application to be comparable with a rating
+  of 8 out of 10.\\
   \hline
-  TC-LF-1 & User 1&\\
+  TC-LF-1 & User 1& User reported that the colour palette of the application did not cause them any issues and it was quite simple.
+  They appreciated that the main colours are white and blue and that the application did not have many distractions. Rated as a 10 out of 10.\\
   \hline
-  TC-LF-1 & User 2&\\
+  TC-LF-1 & User 2& User reported that the colour palette of the application did not cause them any issues.
+  Reported that some of the text on the Admin site visit logs was small and would be difficult to read without their glasses.
+  Rated as an 8 out of 10 overall. \\
   \hline
-  TC-LF-2 & User 1&\\
+  TC-LF-2 & User 1& User was able to repeat the actions asked of them at the beginning of this section on an iPhone 8 and Samsung Galaxy A13
+  for the contractor portal. User was able to use a Google Chrome and Microsoft Edge Browser on a Windows 10 operating system. Test passed.\\
   \hline
-  TC-LF-2 & User 2&\\
+  TC-LF-2 & User 2& User was able to repeat the actions asked of them at the beginning of this section on an iPhone 13 and Samsung Galaxy A13
+  for the contractor portal. User was able to use a Google Chrome and Microsoft Edge Browser on a Windows 10 operating system. Test passed.\\
   \hline
-  TC-CR-1 & User 1&\\
+  TC-CR-1 & User 1& User did not feel the application violated any of the corporate pillars.\\
   \hline
-  TC-CR-1 & User 2&\\
+  TC-CR-1 & User 2& User did not feel the application violated any of the corporate pillars.\\
   \hline
-  TC-CR-2 & User 1&\\
+  TC-OE-1 & User 1 & User was able to access the application from their homes without issue. Test passed.\\
   \hline
-  TC-CR-2 & User 2&\\
+  TC-OE-1 & User 2& User was able to access the application from their homes without issue. Test passed.\\
   \hline
-  TC-OE-1 & User 1 &\\
+  TC-OE-2 & User 1& User was successfully able to navigate the menus freely and reported a similar experience on both iOS
+  and Android operating systems.\\
   \hline
-  TC-OE-1 & User 2&\\
+  TC-OE-2 & User 2& User reported feeling a similar experience across applications. Noted they preferred the experience on
+  iPhone over Android because they are more familiar with the iOS interface than an Android interface.\\
   \hline
-  TC-OE-2 & User 1&\\
-  \hline
-  TC-OE-2 & User 2&\\
-  \hline
-
+\\
   \caption{Usability Test Cases}
 \end{longtable}
+Most of the usability tests were successful, a promising sign for the rev1 prototype. These initial tests did reveal some overlap in test cases
+and missing survey questions which will be used to refine the Usability Study further before it will be submitted in the Extras folder.
 
 \subsection{Performance}
 
