@@ -1811,6 +1811,174 @@ All modules except the Routing Module, Function Compute Module, and Analytics an
 
     How test will be performed: Unit test with mocked AWS services using moto
 
+  \item{UT-DB12\\}
+
+    Type: Functional, Automatic
+
+    Initial State: Database has an item in it
+
+    Input: Update method is called to update the existing item, adding new attributes, and modifying existing ones
+
+    Output: The requested attributes of the item to update are updated
+
+    Test Case Derivation: If the update method is called you would epect the requested changes to show up in the database
+
+    How test will be performed: Unit test with mocked AWS services using moto
+
+  \item{UT-DB13\\}
+
+    Type: Functional, Automatic
+
+    Initial State: Database has an item in it
+
+    Input: Update method is called to update the existing item, removing existing attributes
+
+    Output: The requested attributes to remove from the item are removed
+
+    Test Case Derivation: If the update method is called you would expect the requested changes to show up in the database
+
+    How test will be performed: Unit test with mocked AWS services using moto
+  
+  \item{UT-DB14\\}
+
+    Type: Functional, Automatic
+
+    Initial State: Database has an item in it
+
+    Input: Update method is called with a failing precondition
+
+    Output: The requested changes are not made, and an error is raised reflecting the condition failure
+
+    Test Case Derivation: If the precondition provided to the function is not met, then you would expect it to fail, and not update
+
+    How test will be performed: Unit test with mocked AWS services using moto
+
+  \item{UT-DB15\\}
+
+    Type: Functional, Automatic
+
+    Initial State: Database has an item in it
+
+    Input: Update method is called by a caller without write permissions
+
+    Output: The requested changes are not made, and an error is raised reflecting the permission error
+
+    Test Case Derivation: Without sufficient permissions a caller should not be able to perform an update
+
+    How test will be performed: Unit test with mocked AWS services using moto
+
+  \item{UT-DB16\\}
+
+    Type: Functional, Automatic
+
+    Initial State: Database has an item in it
+
+    Input: Update method is called, but an unknown error occurs in AWS
+
+    Output: The requested changes are not made, and an error is raised reflecting the external error
+
+    Test Case Derivation: When AWS fails, no changes should be made, and an error should be raised to callers can handle it appropriately
+
+    How test will be performed: Unit test with mocked AWS services using moto
+
+  \item{UT-DB17\\}
+
+    Type: Functional, Automatic
+
+    Initial State: Database has multiple items in it, some are documents, and some are site visits
+
+    Input: Query method is called, requesting only documents
+
+    Output: A list of all documents are recieved, and no site visits are in the list
+
+    Test Case Derivation: When calling query, it is expected that output is filtered based on parameters that were passed
+
+    How test will be performed: Unit test with mocked AWS services using moto
+
+  \item{UT-DB18\\}
+
+    Type: Functional, Automatic
+
+    Initial State: Database has multiple items in it, some are documents, and some are site visits
+
+    Input: Query method is called, requesting only documents
+
+    Output: A list of all documents are recieved, and no site visits are in the list
+
+    Test Case Derivation: When calling query, it is expected that output is filtered based on parameters that were passed
+
+    How test will be performed: Unit test with mocked AWS services using moto
+
+  \item{UT-DB19\\}
+
+    Type: Functional, Automatic
+
+    Initial State: Database has multiple items in it, some are documents, and some are site visits
+
+    Input: Query method is called, requesting only documents, but with the reverse flag on
+
+    Output: A list of all documents are recieved, and no site visits are in the list, and the list is the reverse of the output for UT-DB19
+
+    Test Case Derivation: When calling query, it is expected that output is filtered based on parameters that were passed, and if the reverse parameter is used, the list should be on the opposite order.
+
+    How test will be performed: Unit test with mocked AWS services using moto
+
+  \item{UT-DB20\\}
+
+    Type: Functional, Automatic
+
+    Initial State: Database has multiple items in it, all documents
+
+    Input: Query method is called, requesting documents, with a start key provided
+
+    Output: A list of all document that appear after the given start\_key in the database
+
+    Test Case Derivation: If a start key is provided, only database entries that appear after the start key in the database should be returned by the queries
+
+    How test will be performed: Unit test with mocked AWS services using moto
+
+  \item{UT-DB21\\}
+
+    Type: Functional, Automatic
+
+    Initial State: Database has multiple items in it, all documents
+
+    Input: Query method is called, requesting documents, with a filter for documents that require acknowledgement
+
+    Output: A list of all document that require acknowledgement
+
+    Test Case Derivation: Queries in DynamoDB have two types of filter conditions, ones on the keys, and ones on the non-key attributes. Conditions on key attributes are more efficient and quick then ones on non-key attributes. This test is just making sure that conditions on non-key attributes also work (even if they are still inefficient).
+
+    How test will be performed: Unit test with mocked AWS services using moto
+
+  \item{UT-DB22\\}
+
+    Type: Functional, Automatic
+
+    Initial State: Database has multiple items in it, all documents
+
+    Input: Query method is called, using a non-equivalence key condition on a partition key
+
+    Output: A error is raised reflecting the fact that this is an invalid condition
+
+    Test Case Derivation: In DynamoDB, partition keys can only be queried using an exact equivalence condition, not with a greater then, less than, starts with, etc. So this is testing that we can catch that and raise an appropriate error.
+
+    How test will be performed: Unit test with mocked AWS services using moto
+
+  \item{UT-DB23\\}
+
+    Type: Functional, Automatic
+
+    Initial State: Database has multiple items in it, all documents
+
+    Input: Query method is called, but an unknown error occurs from AWS
+
+    Output: A error is raised reflecting the external error
+
+    Test Case Derivation: Ensures that an appropriate error is raised on unexpected issues in AWS,
+
+    How test will be performed: Unit test with mocked AWS services using moto
+
 \end{enumerate}
 
 \subsection{Tests for Nonfunctional Requirements}
