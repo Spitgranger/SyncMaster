@@ -1,5 +1,5 @@
 \documentclass[12pt, titlepage]{article}
-
+\usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
@@ -59,6 +59,46 @@ the Software Requirements Specification document
 This document ...
 
 \section{Functional Requirements Evaluation}
+
+\begin{longtable}{|m{1cm}|m{3cm}|m{5cm}|m{3cm}|}
+  \hline
+  \textbf{Test. ID} & \textbf{Input} & \textbf{Expected Output} &
+  \textbf{Result} \\
+  \hline
+  TC-FR-1 & User uses UI to upload a file into the system & The file is
+  present in the system with the correct details. & Pass, the file is
+  present in the system with the correct metadata\\ \hline
+  TC-FR-2 & User downloads file using the UI & The file is successfully
+  downloaded locally to the device & Pass, all file extensions mentioned in the
+  VnV plan check are successfully downloaded\\ \hline
+  TC-FR-3 & Contractor user uploads document & Upload fails and document is not
+  uploaded to the system & Pass, upload is prevented for a contractor
+  user\\ \hline
+  TC-FR-4 & Admin user uses UI to lookup a user with a specific id & The
+  revelent details for the user are displayed & Pass, all details for
+  the given user are displayed\\ \hline
+  TC-FR-5 & User attempts to authenticate when they are not in an allowed
+  location & Authentication is blocked and user is not allowed access to the
+  system & Pass, user was shown a message saying that they are not in the
+  allowed location\\ \hline
+  TC-FR-6 & Admin user navigates to main portal when a document
+  approaching expiry is present in the system & A notification is displayed
+  indicating the expiry of this document&
+  Fail, functionality is not fully implemented\\ \hline
+  TC-FR-7 & Admin user navigates to main portal when users with
+  expired training exist & A message indicating there are users with
+  expired trainings is displayed&
+  Fail, functionality is not fully implemented\\ \hline
+  TC-FR-8 & User authenticates into the system and acknowledges
+  document & The acknowledgement is stored in the system with the
+  required information &
+  Fail, functionality not fully implemented\\ \hline
+  TC-FR-9 & Contractor without the required training attempts to
+  authenticate & The system prevents authentication and displays a
+  message telling the user to contact their facilities manager &
+  Fail, functionality not fully implemented\\ \hline
+  \caption{Functional Requirement Test Cases}
+\end{longtable}
 
 \section{Nonfunctional Requirements Evaluation}
 
@@ -266,7 +306,8 @@ Usability Study further before it will be submitted in the Extras folder.
   TC-MS-4 & - & There is 95\% line coverage and 90\% branch coverage
   on our code & Pass, this is being checked in GitHub actions\\ \hline
   TC-MS-5 & - & All functional requirements have a corresponding unit
-  test & Pass\\ \hline
+  test & Fail, FR8 and FR9 are missing unit tests as they are not
+  currently implemented\\ \hline
   TC-MS-6 & - & Contribution guidelines and maintainer documentation
   of system approved by the City of Hamilton & Fail, not yet approved\\ \hline
   TC-MS-7 & - & User manual exists and has been approved by the City
@@ -279,6 +320,38 @@ Usability Study further before it will be submitted in the Extras folder.
   TC-MS-10 & - & Documentation for deployment of the system exists &
   Fail, not yet created\\ \hline
   \caption{Maintainability and Support Test Cases}
+\end{longtable}
+
+\subsection{Safety and Security}
+
+\begin{longtable}{|m{1.75cm}|m{7cm}|m{3.25cm}|}
+  \hline
+  \textbf{Test. ID} & \textbf{Description} &
+  \textbf{Result} \\
+  \hline
+  TC-SS-1 & Acounts created on the application
+  for each available level of access. Using each account, the use of each
+  feature of the application was attempted. Wether an action was
+  possible or noted and compared to the permissions of the
+  account. & Pass\\ \hline
+  TC-SS-2 & Accounts be created on the applica-
+  tion for each available level of access. Using each account, the creation,
+  deletion and modification of of files with varying permission require-
+  ments attempted. Wether an action was possible or
+  not noted and compared to the permissions of the account. & Pass \\ \hline
+  TC-SS-4 & Attempted to submit data fields filled in
+  with a set of entries which vary between incomplete, impossible, and
+  malicious and checked how the application handled the inputs. User
+  login fields and user creation fields tested. & Pass\\ \hline
+  TC-SS-5 & The application client has so far been tested using local
+  hosting. & Fail, not yet hosted\\ \hline
+  TC-SS-7 & Pull requests created by Dependabot are merged within
+  a week. & Fail, not yet integrated with Dependabot\\ \hline
+  TC-SS-8 & Check notification creation when contractor user declines
+  acknowledgement, attempts to acknowledge but does not complete
+  action, or ignores acknowledge-
+  ment. & Fail, notification module not yet implemented\\ \hline
+  \caption{Safety and Security Test Cases}
 \end{longtable}
 
 \subsection{etc.}
@@ -533,16 +606,41 @@ to mock AWS services.
   inside for a given site id
   and parent folder and ensure that both the folder and its contents are
   recursively deleted & Pass\\ \hline
-  \caption{Unit Test Cases for Logging Module}
+  \caption{Unit Test for Document Management Module}
 \end{longtable}
 
 \section{Changes Due to Testing}
 
-\wss{This section should highlight how feedback from the users and from
-  the supervisor (when one exists) shaped the final product.  In particular
-  the feedback from the Rev 0 demo to the supervisor (or to potential users)
-should be highlighted.}
+The scope of the project has evolved since the original version of
+the requirements were written.
+In meetings with the City where we demonstrated each revision of the
+prototype, new requirements emerged which were not conceived
+of in the original drafts. One example was the discussion surrounding
+a visitor account. When imagining use cases, it was discovered
+that a likely scenario that would emerge would be new contractors
+that need access to the portal but are not yet registered in the
+system. In the interest of ensuring work can still be completed, it
+was planned to have a visitor account that would enable contractors
+to access the system without any administrative overhead to create
+their account first. However, after creating a design, the team and
+the stakeholder realized this would allow any member of the public
+who scans a station QR code full access into the contractor portal and
+not merely legitimate contractors. This then led to the removal of
+this requirement. The scenarios are outlined in the following flow charts.
+\newpage
 
+Prioritizing ease of access to the application with a visitor account:\\
+\\
+\\
+\includegraphics[scale=0.7]{ease_of_access.png}
+\newpage
+Prioritizing security of the application by requiring a contractor
+account first be verified:\\
+\\
+\\
+\\
+\includegraphics[scale=0.7]{trusted_access.png}
+\newpage
 \section{Automated Testing}
 N/A, the only automated testing we have is the unit tests.
 
@@ -617,13 +715,13 @@ covers the given module
   \hline
   \textbf{Module} & \textbf{Test ID's} \\
   \hline
-  Database Interaction & UT-DB*\\ \hline
-  Logging & UT-LG*\\ \hline
-  File Storage & UT-FS*, TC-PR-10, TC-PR-11\\ \hline
-  Location Verification & UT-LV*\\ \hline
-  User Management & UT-UM*, TC-PR-5\\ \hline
-  User Authentication & UT-AU*, TC-PR-4\\ \hline
-  Document Management & UT-DM*, TC-PR-1, TC-PR-3, TC-PR-5\\ \hline
+  Database Interaction & UT-DB* TC-FR-1 TC-FR-2 TC-FR-8 TC-FR-7 TC-FR-6\\ \hline
+  Logging & UT-LG* TC-FR-5\\ \hline
+  File Storage & UT-FS* TC-FR-1 TC-FR-2, TC-PR-10, TC-PR-11\\ \hline
+  Location Verification & UT-LV* TC-FR-5 TC-FR-8\\ \hline
+  User Management & UT-UM* TC-FR-4 TC-FR-7 TC-SS-1 TC-SS-4 TC-PR-5\\ \hline
+  User Authentication & UT-AU* TC-FR-9 TC-PR-4\\ \hline
+  Document Management & UT-DM* TC-FR-1 TC-FR-2 TC-FR-3 TC-FR-7 TC-SS-2 TC-PR-1 TC-PR-3 TC-PR-5\\ \hline
   \caption{Module to Test Case Traceability Matrix}
 \end{longtable}
 
@@ -644,11 +742,34 @@ graduate attribute of Reflection.
 \input{../Reflection.tex}
 
 \begin{enumerate}
-  \item What went well while writing this deliverable?
+  \item What went well while writing this deliverable?\\
+    \\
+    Our team did a reasonable job at allocating work based on
+    everyones different skill sets. Team members with more experience in
+    developing backend tools were responsible for the testing on
+    those technologies, whereas team members more familiar with the frontend
+    and business logic worked on testing those functionalities.
   \item What pain points did you experience during this deliverable, and how
-    did you resolve them?
+    did you resolve them?\\
+    \\
+    One pain point we experienced was some complications fully
+    implementing some of the more complex requirements and API integrations.
+    This made it more difficult to test some aspects of the project
+    and gave a tighter time frame. To resolve this, we used the Github
+    issues to track progress on various components of the application
+    and maintained regular communication to ensure we could
+    be as prepared as possible for team meetings, meetings with the
+    school, and meetings with the stakeholder.
   \item Which parts of this document stemmed from speaking to your client(s) or
-    a proxy (e.g. your peers)? Which ones were not, and why?
+    a proxy (e.g. your peers)? Which ones were not, and why?\\
+    \\
+    The parts of the document in sections 3 and 4 (functional and
+    non-functional requirements) generally stemmed from conversation
+    with our stakeholder. Those parts of the document are directly
+    intended to ensure that the requirements gathered throughout the project
+    are satisfied. Our stakeholder is relying on our knowledge for
+    the actual implementation, so the specific unit tests and other technical
+    decisions regarding the modules themselves were a decision made by our team.
   \item In what ways was the Verification and Validation (VnV) Plan different
     from the activities that were actually conducted for VnV?  If there were
     differences, what changes required the modification in the plan?  Why did
@@ -658,7 +779,18 @@ graduate attribute of Reflection.
     able to clearly
     predict a feasible amount of effort and the right tasks needed to build the
     evidence that demonstrates the required quality?  (It is expected that most
-    teams will have had to deviate from their original VnV Plan.)
+    teams will have had to deviate from their original VnV Plan.)\\
+    \\
+    There were some changes to the number of tests performed, these
+    are reflected in the VnV Plan with strikeouts and red text
+    to make clear which changes were made to the original plan. In
+    general, for industry projects such as these,
+    there is always going to be some unanticipated requirements or
+    challenges not originally envisioned until you get into the depths
+    of an implementation which then requires you to reevaluate either
+    the requirements or your initial design. This was an expected
+    challenge and we did our best to minimize the occurences, and in
+    general there were not an enormous number of deviations.
 \end{enumerate}
 
 \end{document}
