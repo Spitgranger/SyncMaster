@@ -15,6 +15,8 @@ from backend.service.user_authentication.user_authentication import (
 from backend.service.util import create_client_with_role
 from moto import mock_aws
 
+from ..constants import TEST_SITE_ID
+
 
 @pytest.fixture
 def cognito_mock():
@@ -149,6 +151,9 @@ def cognito_client_with_user(cognito_mock):
         cognito_client,
         SigninRequest(email=email, password=password),
         SigninRequest(
-            email=email, password=password, location=[43.2588581564085, -79.92097591189501]
+            email=email,
+            password=password,
+            location=[43.2588581564085, -79.92097591189501],
+            site_id=TEST_SITE_ID,
         ),
     )

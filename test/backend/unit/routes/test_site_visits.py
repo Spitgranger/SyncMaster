@@ -1,4 +1,3 @@
-import json
 from http import HTTPStatus
 
 from backend.service.database.db_table import DBTable, KeySchema
@@ -8,7 +7,7 @@ from backend.service.models.db.site_visit import DBSiteVisit
 from backend.service.util import AWSAccessLevel
 
 
-def test_list_sites_handler(database_with_two_site_visits, list_site_visits_request):
+def test_list_site_visits_handler(database_with_two_site_visits, list_site_visits_request):
     _, set_of_db_entries = database_with_two_site_visits
 
     response = lambda_handler(
@@ -22,7 +21,7 @@ def test_list_sites_handler(database_with_two_site_visits, list_site_visits_requ
     assert response["multiValueHeaders"]["Content-Type"] == ["application/json"]
 
 
-def test_list_sites_handler_paginated(
+def test_list_sites_visits_handler_paginated(
     database_with_two_site_visits, list_site_visits_request_paginated, api_gateway_event
 ):
     _, set_of_db_entries = database_with_two_site_visits
@@ -55,7 +54,7 @@ def test_list_sites_handler_paginated(
     assert response["multiValueHeaders"]["Content-Type"] == ["application/json"]
 
 
-def test_list_sites_handler_bad_role(
+def test_list_site_visits_handler_bad_role(
     database_with_two_site_visits, list_site_visits_request_bad_role
 ):
     _, set_of_db_entries = list_site_visits_request_bad_role
