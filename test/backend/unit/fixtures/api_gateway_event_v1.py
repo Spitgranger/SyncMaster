@@ -15,7 +15,9 @@ from ..constants import (
     TEST_SITE_LATITUDE,
     TEST_SITE_LATITUDE_ALT,
     TEST_SITE_LONGITUDE,
+    TEST_SITE_LONGITUDE_ALT,
     TEST_SITE_RANGE,
+    TEST_SITE_RANGE_ALT,
     TEST_USER_ID,
 )
 
@@ -354,7 +356,8 @@ def update_site_request(api_gateway_event):
         path_params={"site_id": TEST_SITE_ID},
         body=json.dumps(
             {
-                "latitude": str(TEST_SITE_LATITUDE_ALT),
+                "longitude": str(TEST_SITE_LONGITUDE_ALT),
+                "acceptable_range": str(TEST_SITE_RANGE_ALT),
             }
         ),
     )
@@ -371,7 +374,8 @@ def update_site_request_bad_role(api_gateway_event):
         path_params={"site_id": TEST_SITE_ID},
         body=json.dumps(
             {
-                "latitude": str(TEST_SITE_LATITUDE_ALT),
+                "longitude": str(TEST_SITE_LONGITUDE_ALT),
+                "acceptable_range": str(TEST_SITE_RANGE_ALT),
             }
         ),
     )
