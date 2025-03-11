@@ -31,8 +31,8 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
   \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
   \midrule
-  Date 1 & 1.0 & Notes\\
-  Date 2 & 1.1 & Notes\\
+  2025/03/10 & 1.0 & Initial Revision of VnV Report\\
+
   \bottomrule
 \end{tabularx}
 
@@ -55,8 +55,6 @@ the Software Requirements Specification document
 \newpage
 
 \pagenumbering{arabic}
-
-This document ...
 
 \section{Functional Requirements Evaluation}
 
@@ -629,17 +627,16 @@ not merely legitimate contractors. This then led to the removal of
 this requirement. The scenarios are outlined in the following flow charts.
 \newpage
 
-Prioritizing ease of access to the application with a visitor account:\\
-\\
-\\
+\begin{figure}[h!]
 \includegraphics[scale=0.7]{ease_of_access.png}
+\caption{Prioritizing ease of access to the application with a visitor account}
+\end{figure}
 \newpage
-Prioritizing security of the application by requiring a contractor
-account first be verified:\\
-\\
-\\
-\\
+\begin{figure}[h!]
 \includegraphics[scale=0.7]{trusted_access.png}
+\caption{Prioritizing security of the application
+by requiring a contractor account first be verified}
+\end{figure}
 \newpage
 \section{Automated Testing}
 N/A, the only automated testing we have is the unit tests.
@@ -716,12 +713,12 @@ covers the given module
   \textbf{Module} & \textbf{Test ID's} \\
   \hline
   Database Interaction & UT-DB* TC-FR-1 TC-FR-2 TC-FR-8 TC-FR-7 TC-FR-6\\ \hline
-  Logging & UT-LG* TC-FR-5\\ \hline
+  Logging & UT-LG* TC-FR-5 TC-EU1 TC-EU2\\ \hline
   File Storage & UT-FS* TC-FR-1 TC-FR-2 TC-PR-10 TC-PR-11\\ \hline
   Location Verification & UT-LV* TC-FR-5 TC-FR-8\\ \hline
-  User Management & UT-UM* TC-FR-4 TC-FR-7 TC-SS-1 TC-SS-4 TC-PR-5\\ \hline
-  User Authentication & UT-AU* TC-FR-9 TC-PR-4\\ \hline
-  Document Management & UT-DM* TC-FR-1 TC-FR-2 TC-FR-3 TC-FR-7 TC-SS-2 TC-PR-1 TC-PR-3 TC-PR-5\\ \hline
+  User Management & UT-UM* TC-FR-4 TC-FR-7 TC-SS-1 TC-SS-4 TC-PR-5 TC-LR1 TC-LR2 TC-OE1 TC-OE2 \\ \hline
+  User Authentication & UT-AU* TC-FR-9 TC-PR-4 TC-AS1 TC-LF1 TC-LF2 TC-CR1\\ \hline
+  Document Management & UT-DM* TC-FR-1 TC-FR-2 TC-FR-3 TC-FR-7 TC-SS-2 TC-PR-1 TC-PR-3 TC-PR-5 TC-UP1 TC-UP2\\ \hline
   \caption{Module to Test Case Traceability Matrix}
 \end{longtable}
 
