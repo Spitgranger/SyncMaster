@@ -11,11 +11,13 @@ from boto3.dynamodb.conditions import Attr, Key
 from ..database.db_table import GSI, DBTable, KeySchema
 from ..exceptions import (
     ConditionCheckFailed,
-    ExitTimeConflict,
+    LimitExceeded,
     ResourceConflict,
     ResourceNotFound,
     TimeConsistencyException,
 )
+from ..file_storage.s3_bucket import S3Bucket
+from ..models.api.site_visit import EditableSiteVisitDetails
 from ..models.db.site_visit import DBSiteVisit
 from ..util import ItemType
 
@@ -23,7 +25,13 @@ logger = Logger()
 
 
 def create_site_entry(
-    table: DBTable[DBSiteVisit], site_id: str, user_id: str, timestamp: datetime
+    table: DBTable[DBSiteVisit],
+    site_id: str,
+    user_id: str,
+    loc_tracking: bool,
+    ack_status: bool,
+    timestamp: datetime,
+    on_site: Optional[bool] = None,
 ) -> DBSiteVisit:
     """
     Creates a site visit in the database for an initial entry
@@ -43,6 +51,9 @@ def create_site_entry(
         entry_time=timestamp,
         site_id=site_id,
         user_id=user_id,
+        loc_tracking=loc_tracking,
+        ack_status=ack_status,
+        on_site=on_site,
     )
 
     condition = Attr("pk").not_exists() & Attr("sk").not_exists()
@@ -56,8 +67,13 @@ def create_site_entry(
         ) from err
 
 
-def add_exit_time(
-    table: DBTable[DBSiteVisit], site_id: str, user_id: str, timestamp: datetime
+def update_visit_details(
+    table: DBTable[DBSiteVisit],
+    site_id: str,
+    user_id: str,
+    entry_time: datetime,
+    timestamp: datetime,
+    updated_details: EditableSiteVisitDetails,
 ) -> DBSiteVisit:
     """
     Updates a site visit in the database with its exit time
@@ -65,31 +81,68 @@ def add_exit_time(
     :param table: The DBTable object to use to access the database. Requires write access
     :param site_id: The identifier of the site being visited
     :param user_id: The identifier of the user visiting the site
+    :param entry_time: The entry time of the site visit entry
     :param timestamp: The time at which the request for the site exit came in
+    :param updated_details: Contains the editable site visit details to be updated
     :return: The representation of the site visit in the database
     :raises ResourceNotFound: The user has never visited this site before
-    :raises ExitTimeConflict: The user's most recent site entry for this site already
-        has an exit time
     :raises TimeConsistencyException: In the time since this update was requested, a new
         update has been made to the entry. Not sure whether to proceed with update
     :raises ExternalServiceException: An unexpected error occurs in AWS
     :raises PermissionException: The given table does not have write permissions
     """
-    pk = f"{ItemType.SITE_VISIT.value}#{site_id}#{user_id}"
-    key_condition = Key("pk").eq(f"{ItemType.SITE_VISIT.value}#{site_id}#{user_id}")
-    items, _ = table.query(key_condition_expression=key_condition, limit=1, scan_reverse=True)
+    key = KeySchema(
+        pk=f"{ItemType.SITE_VISIT.value}#{site_id}#{user_id}", sk=entry_time.isoformat()
+    )
 
-    if not items:
-        logger.info(f"No visit found for user [{user_id}] at site [{site_id}]")
-        raise ResourceNotFound(resource_type=ItemType.SITE_VISIT.value, resource_id=pk)
+    # Extract fields explicitly set attributes the model, this avoids updating an attribute
+    # to None, if it was not explicitly set to None
+    update_attrs = {
+        f: getattr(updated_details, f)
+        for f in updated_details.model_fields_set
+        if getattr(updated_details, f, None) is not None
+    }
 
-    if items[0].exit_time:
-        logger.info(
-            f"Most recent entry for user [{user_id}] at site [{site_id}] already has a logged exit"
+    try:
+        return table.update(
+            key=key,
+            update_attributes=update_attrs,
+            last_modified_by=user_id,
+            last_modified_time=timestamp,
+            condition_expression=Attr("pk").exists()
+            & Attr("sk").exists()
+            & Attr("last_modified_time").lt(timestamp.isoformat()),
         )
-        raise ExitTimeConflict(site_id=site_id, user_id=user_id)
+    except ConditionCheckFailed as err:
+        logger.exception(err)
+        raise TimeConsistencyException(key=str(key), timestamp=timestamp) from err
 
-    key = KeySchema(pk=items[0].pk, sk=items[0].sk)
+
+def add_exit_time(
+    table: DBTable[DBSiteVisit],
+    site_id: str,
+    user_id: str,
+    entry_time: datetime,
+    timestamp: datetime,
+) -> DBSiteVisit:
+    """
+    Updates a site visit in the database with its exit time
+
+    :param table: The DBTable object to use to access the database. Requires write access
+    :param site_id: The identifier of the site being visited
+    :param user_id: The identifier of the user visiting the site
+    :param entry_time: The entry time of the site visit entry
+    :param timestamp: The time at which the request for the site exit came in
+    :return: The representation of the site visit in the database
+    :raises ResourceNotFound: The user has never visited this site before
+    :raises TimeConsistencyException: In the time since this update was requested, a new
+        update has been made to the entry. Not sure whether to proceed with update
+    :raises ExternalServiceException: An unexpected error occurs in AWS
+    :raises PermissionException: The given table does not have write permissions
+    """
+    key = KeySchema(
+        pk=f"{ItemType.SITE_VISIT.value}#{site_id}#{user_id}", sk=entry_time.isoformat()
+    )
 
     try:
         return table.update(
@@ -97,11 +150,15 @@ def add_exit_time(
             update_attributes={"exit_time": timestamp.isoformat()},
             last_modified_by=user_id,
             last_modified_time=timestamp,
-            condition_expression=Attr("last_modified_time").lt(timestamp.isoformat()),
+            condition_expression=Attr("pk").exists()
+            & Attr("sk").exists()
+            & Attr("last_modified_time").lt(timestamp.isoformat()),
         )
     except ConditionCheckFailed as err:
         logger.exception(err)
-        raise TimeConsistencyException(key=str(key), timestamp=timestamp) from err
+        raise ResourceNotFound(
+            resource_type=ItemType.SITE_VISIT.value, resource_id=str(key)
+        ) from err
 
 
 def list_site_visits(
@@ -137,3 +194,112 @@ def list_site_visits(
         scan_reverse=True,
         start_key=start_key,
     )
+
+
+def create_file_attachment(
+    table: DBTable[DBSiteVisit],
+    site_id: str,
+    user_id: str,
+    entry_time: datetime,
+    timestamp: datetime,
+    name: str,
+    s3_key: str,
+) -> DBSiteVisit:
+    """
+    Adds a file attachment to the database
+
+    :param table: The DBTable object to use to access the database. Requires write access
+    :param site_id: The identifier of the site being visited
+    :param user_id: The identifier of the user visiting the site
+    :param entry_time: The entry time of the site visit entry
+    :param timestamp: The time at which the request for the site exit came in
+    :param name: The display name of the attachment
+    :param s3_key: The s3_key that the attachment has been uploaded to
+    :return: The representation of the attachment in the database
+    :raises ResourceConflict: An attachment with the same name exists for the visit
+    :raises ExternalServiceException: An unexpected error occurs in AWS
+    :raises PermissionException: The given table does not have write permissions
+    """
+    pk = f"{ItemType.SITE_VISIT.value}#{site_id}#{user_id}"
+    sk = entry_time.isoformat()
+    key = KeySchema(pk=pk, sk=sk)
+
+    existing_item = table.get(key=key)
+
+    if name in existing_item.attachments:
+        logger.info(f"Attachment [{name}] already exists for visit [{str(key)}]")
+        raise ResourceConflict(resource_type="file_attachment", resource_id=name)
+
+    # Using high-level condition expressions does not allow for using
+    # expression attribute names (seemingly, but I don't see it documented),
+    # so I can't check the name exists here, which is why it is done earlier
+    condition = (
+        Attr("pk").exists()
+        & Attr("sk").exists()
+        & (Attr("attachments").not_exists() | Attr("attachments").size().lt(10))
+        & Attr("last_modified_time").lt(timestamp.isoformat())
+    )
+
+    try:
+        return table.update(
+            key=key,
+            update_attributes={"attachments.#key": s3_key},
+            expression_attribute_names={
+                "#key": name,
+            },
+            last_modified_time=timestamp,
+            last_modified_by=user_id,
+            condition_expression=condition,
+        )
+    except ConditionCheckFailed as err:
+        logger.exception(err)
+        raise LimitExceeded(resource_type="file_attachment", limit=10) from err
+
+
+def delete_file_attachment(
+    table: DBTable[DBSiteVisit],
+    site_id: str,
+    user_id: str,
+    entry_time: datetime,
+    timestamp: datetime,
+    name: str,
+) -> DBSiteVisit:
+    """
+    Adds a file attachment to the database
+
+    :param table: The DBTable object to use to access the database. Requires write access
+    :param site_id: The identifier of the site being visited
+    :param user_id: The identifier of the user visiting the site
+    :param entry_time: The entry time of the site visit entry
+    :param timestamp: The time at which the request for the site exit came in
+    :param name: The display name of the attachment
+    :param s3_key: The s3_key that the attachment has been uploaded to
+    :return: The representation of the attachment in the database
+    :raises ResourceConflict: An attachment with the same name exists for the visit
+    :raises ExternalServiceException: An unexpected error occurs in AWS
+    :raises PermissionException: The given table does not have write permissions
+    """
+    pk = f"{ItemType.SITE_VISIT.value}#{site_id}#{user_id}"
+    sk = entry_time.isoformat()
+    key = KeySchema(pk=pk, sk=sk)
+
+    condition = (
+        Attr("pk").exists()
+        & Attr("sk").exists()
+        & Attr("last_modified_time").lt(timestamp.isoformat())
+    )
+
+    try:
+        return table.update(
+            key=key,
+            update_attributes={"attachments.#key": None},
+            expression_attribute_names={
+                "#key": name,
+            },
+            last_modified_time=timestamp,
+            last_modified_by=user_id,
+            condition_expression=condition,
+        )
+    except ConditionCheckFailed as err:
+        logger.exception(err)
+        raise TimeConsistencyException(key=str(key), timestamp=timestamp)

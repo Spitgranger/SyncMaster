@@ -129,6 +129,7 @@ class DBTable[T: DBItemModel]:
         last_modified_time: datetime,
         last_modified_by: str,
         condition_expression: Optional[ConditionBase] = None,
+        expression_attribute_names: Optional[dict[str, str]] = None,
     ) -> T:
         """
         Updates the given item in the db table. Be careful about modifying attributes that
@@ -158,14 +159,16 @@ class DBTable[T: DBItemModel]:
         ]
         delete_attributes: list[str] = []
 
-        valid_field_aliases = [i.alias for i in self.item_schema.model_fields.values()]
+        if not expression_attribute_names:
+            expression_attribute_names = {}
+
         for k, v in update_attributes.items():
-            if (k in self.item_schema.model_fields.keys()) or (k in valid_field_aliases):
-                if v is not None:
-                    expression_attribute_values[f":{k}"] = v
-                    set_attributes.append(f"{k} = :{k}")
-                else:
-                    delete_attributes.append(k)
+            if v is not None:
+                expression_attribute = k.replace(".", "_").replace("#", "_")
+                expression_attribute_values[f":{expression_attribute}"] = v
+                set_attributes.append(f"{k} = :{expression_attribute}")
+            else:
+                delete_attributes.append(k)
 
         update_expression = f"SET {', '.join(set_attributes)}"
         if delete_attributes:
@@ -180,6 +183,7 @@ class DBTable[T: DBItemModel]:
                 Key=key,
                 UpdateExpression=update_expression,
                 ExpressionAttributeValues=expression_attribute_values,
+                ExpressionAttributeNames=expression_attribute_names,
                 ReturnValues="ALL_NEW",
                 **kwargs,
             )
@@ -194,24 +198,27 @@ class DBTable[T: DBItemModel]:
             raise ExternalServiceException("Unknown Error from AWS") from err
         return self.item_schema.model_validate(response["Attributes"])
 
-    def delete(self, key: KeySchema, condition_expression: Optional[ConditionBase] = None) -> None:
+    def delete(
+        self, key: KeySchema, condition_expression: Optional[ConditionBase] = None
+    ) -> Optional[T]:
         """
-        Completes an existing multipart upload
+        Deletes a specified item from the database
 
         :param key: The key of the item to delete in the database
         :param condition_expression: The condition that must be met before the item can be
             deleted from the table
+        :return: The deleted item, if the item specified for deletion existed
         :raises ConditionCheckFailed: The provided condition was not met
         :raises ExternalServiceException: Unexpected error occurs in AWS
         :raises PermissionException: Assumed role does not have permission delete an item,
             likely due to the table being initialized with only read permissions
         """
-        kwargs: dict = {"Key": key}
+        kwargs: dict = {"Key": key, "ReturnValues": "ALL_OLD"}
         if condition_expression:
             kwargs["ConditionExpression"] = condition_expression
 
         try:
-            self._table.delete_item(**kwargs)
+            response = self._table.delete_item(**kwargs)
         except ClientError as err:
             if err.response["Error"]["Code"] == "AccessDeniedException":
                 raise PermissionException(
@@ -220,6 +227,8 @@ class DBTable[T: DBItemModel]:
             if err.response["Error"]["Code"] == "ConditionalCheckFailedException":
                 raise ConditionCheckFailed() from err
             raise ExternalServiceException("Unknown Error from AWS") from err
+        if response.get("Attributes"):
+            self.item_schema.model_validate(response["Attributes"])
 
     def query(
         self,

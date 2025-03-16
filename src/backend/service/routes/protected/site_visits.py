@@ -10,21 +10,33 @@ from typing import Optional
 
 from aws_lambda_powertools.event_handler import Response, content_types
 from aws_lambda_powertools.event_handler.api_gateway import Router
-from aws_lambda_powertools.event_handler.openapi.params import Path, Query
+from aws_lambda_powertools.event_handler.openapi.params import Body, Path, Query
 from typing_extensions import Annotated
 
 from ...database.db_table import DBTable
 from ...exceptions import InsufficientUserPermissionException
-from ...models.api.site_visit import APIListSiteVisitResponse, APISiteVisit
+from ...models.api.site_visit import (
+    APIEnterSiteRequest,
+    APIListSiteVisitResponse,
+    APISiteVisit,
+    EditableSiteVisitDetails,
+)
 from ...models.db.site_visit import DBSiteVisit
-from ...site_visits.site_visits import add_exit_time, create_site_entry, list_site_visits
+from ...site_visits.site_visits import (
+    add_exit_time,
+    create_site_entry,
+    list_site_visits,
+    update_visit_details,
+)
 from ...util import CORS_HEADERS, AWSAccessLevel
 
 router = Router()
 
 
 @router.post("/<site_id>/enter")
-def enter_site_handler(site_id: Annotated[str, Path()]):
+def enter_site_handler(
+    site_id: Annotated[str, Path()], visit_details: Annotated[APIEnterSiteRequest, Body()]
+):
     """
     Adds a users site visit to the database, with their entry time
 
@@ -39,27 +51,35 @@ def enter_site_handler(site_id: Annotated[str, Path()]):
     user_id = router.current_event["requestContext"]["authorizer"]["claims"]["sub"]
 
     table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBSiteVisit)
-    visit = create_site_entry(table=table, site_id=site_id, user_id=user_id, timestamp=request_time)
+    visit = create_site_entry(
+        table=table,
+        site_id=site_id,
+        user_id=user_id,
+        loc_tracking=visit_details.allowed_tracking,
+        ack_status=visit_details.ack_status,
+        timestamp=request_time,
+        on_site=visit_details.on_site,
+    )
 
     return Response(
         status_code=HTTPStatus.CREATED.value,
         content_type=content_types.APPLICATION_JSON,
-        body=APISiteVisit(
-            site_id=visit.site_id,
-            user_id=visit.user_id,
-            entry_time=visit.entry_time,
-            exit_time=visit.exit_time,
-        ).model_dump_json(),
+        body=visit.to_api_model().model_dump_json(),
         headers=CORS_HEADERS,
     )
 
 
-@router.patch("/<site_id>/exit")
-def exit_site_handler(site_id: Annotated[str, Path()]):
+@router.patch("/<site_id>/visit/<entry_time>")
+def edit_visit_details_handler(
+    site_id: Annotated[str, Path()],
+    entry_time: Annotated[datetime, Path()],
+    visit_details: Annotated[EditableSiteVisitDetails, Body()],
+):
     """
-    Adds an exit time to an existing site visit in the database
+    Adds additional details to an existing site visit in the database
 
     :param site_id: The site id that the user is exiting
+    :param entry_time: The entry time of the visit to add the details to
     :return: The details of the updated site visit
     """
     request_time = datetime.fromtimestamp(
@@ -70,7 +90,43 @@ def exit_site_handler(site_id: Annotated[str, Path()]):
     user_id = router.current_event["requestContext"]["authorizer"]["claims"]["sub"]
 
     table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBSiteVisit)
-    visit = add_exit_time(table=table, site_id=site_id, user_id=user_id, timestamp=request_time)
+    visit = update_visit_details(
+        table=table,
+        site_id=site_id,
+        user_id=user_id,
+        entry_time=entry_time,
+        timestamp=request_time,
+        updated_details=visit_details,
+    )
+
+    return Response(
+        status_code=HTTPStatus.OK.value,
+        content_type=content_types.APPLICATION_JSON,
+        body=visit.to_api_model().model_dump_json(),
+        headers=CORS_HEADERS,
+    )
+
+
+@router.patch("/<site_id>/exit/<entry_time>")
+def exit_site_handler(site_id: Annotated[str, Path()], entry_time: Annotated[datetime, Path()]):
+    """
+    Adds an exit time to an existing site visit in the database
+
+    :param site_id: The site id that the user is exiting
+    :param entry_time: The entry time of the visit to add the exit time to
+    :return: The details of the updated site visit
+    """
+    request_time = datetime.fromtimestamp(
+        router.current_event["requestContext"]["requestTimeEpoch"] / 1000, tz=timezone.utc
+    )
+
+    # Getting user id from claims
+    user_id = router.current_event["requestContext"]["authorizer"]["claims"]["sub"]
+
+    table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBSiteVisit)
+    visit = add_exit_time(
+        table=table, site_id=site_id, user_id=user_id, entry_time=entry_time, timestamp=request_time
+    )
 
     return Response(
         status_code=HTTPStatus.OK.value,

@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 
+TEST_ATTACHMENT_NAME = "hello.txt"
 TEST_S3_FILE_KEY = "hello.txt"
 TEST_S3_FILE_CONTENT = "Hello World"
 TEST_USER_ID = "b15b955a-0ffc-4890-9025-49f37bab09f9"

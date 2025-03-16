@@ -5,19 +5,11 @@ Defines the model for a site visit as represented in the database
 from datetime import datetime
 from typing import Optional
 
-from pydantic import computed_field, Field
+from pydantic import Field, computed_field
 
 from ...util import ItemType
 from ..api.site_visit import APISiteVisit
 from .db_base import DBItemModel
-from ..custom_base_model import CustomBaseModel
-
-class DBFileAttachment(CustomBaseModel):
-    """Model for file attachments of a site visit as represented in the database"""
-
-    name: str
-    s3_bucket: str
-    s3_key: str
 
 
 class DBSiteVisit(DBItemModel):
@@ -29,10 +21,10 @@ class DBSiteVisit(DBItemModel):
     loc_tracking: bool
     ack_status: bool
     exit_time: Optional[datetime] = None
-    work_order: Optional[str] = None
+    work_order: Optional[int] = None
     description: Optional[str] = None
     on_site: Optional[bool] = None
-    attachments: list[DBFileAttachment] = Field(default_factory=list)
+    attachments: dict[str, str] = Field(default_factory=dict)
 
     @staticmethod
     def item_type() -> ItemType:
@@ -54,5 +46,10 @@ class DBSiteVisit(DBItemModel):
             site_id=self.site_id,
             user_id=self.user_id,
             entry_time=self.entry_time,
+            allowed_tracking=self.loc_tracking,
+            ack_status=self.ack_status,
             exit_time=self.exit_time,
+            work_order=self.work_order,
+            description=self.description,
+            on_site=self.on_site,
         )
