@@ -224,20 +224,26 @@ def create_file_attachment(
     sk = entry_time.isoformat()
     key = KeySchema(pk=pk, sk=sk)
 
+    # Condition expression in the high-level boto3 dynamodb resource don't allow for the use
+    # of expression attribute names in the condition. This means if the name of an attribute
+    # contains a ".", then it won't work in the condition expression as "." is reserved to
+    # access members of a map.
+    # This means that we can't check that a name exists in the attachments map from the
+    # condition expression. Instead getting it here to do the check.
     existing_item = table.get(key=key)
 
     if name in existing_item.attachments:
         logger.info(f"Attachment [{name}] already exists for visit [{str(key)}]")
         raise ResourceConflict(resource_type="file_attachment", resource_id=name)
 
-    # Using high-level condition expressions does not allow for using
-    # expression attribute names (seemingly, but I don't see it documented),
-    # so I can't check the name exists here, which is why it is done earlier
+    # There is also an added check here to see that the item hasn't been modified
+    # since we got it earlier, so we know that no changes have been made in between
     condition = (
         Attr("pk").exists()
         & Attr("sk").exists()
         & (Attr("attachments").not_exists() | Attr("attachments").size().lt(10))
         & Attr("last_modified_time").lt(timestamp.isoformat())
+        & Attr("last_modified_time").lte(existing_item.last_modified_time.isoformat())
     )
 
     try:
@@ -258,6 +264,7 @@ def create_file_attachment(
 
 def delete_file_attachment(
     table: DBTable[DBSiteVisit],
+    bucket: S3Bucket,
     site_id: str,
     user_id: str,
     entry_time: datetime,
@@ -283,6 +290,9 @@ def delete_file_attachment(
     sk = entry_time.isoformat()
     key = KeySchema(pk=pk, sk=sk)
 
+    existing_visit = table.get(key=key)
+    s3_key = existing_visit.attachments.get(name)
+
     condition = (
         Attr("pk").exists()
         & Attr("sk").exists()
@@ -290,7 +300,7 @@ def delete_file_attachment(
     )
 
     try:
-        return table.update(
+        new_visit = table.update(
             key=key,
             update_attributes={"attachments.#key": None},
             expression_attribute_names={
@@ -303,3 +313,8 @@ def delete_file_attachment(
     except ConditionCheckFailed as err:
         logger.exception(err)
         raise TimeConsistencyException(key=str(key), timestamp=timestamp)
+
+    if s3_key:
+        bucket.delete(key=s3_key)
+
+    return new_visit
