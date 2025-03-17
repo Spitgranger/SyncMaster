@@ -53,6 +53,16 @@ class FileType(Enum):
     FOLDER = "folder"
 
 
+class UserType(Enum):
+    """
+    Enum of the different types of user roles in the system
+    """
+
+    EMPLOYEE = "employee"
+    CONTRACTOR = "contractor"
+    ADMIN = "admin"
+
+
 @ttl_cache(maxsize=16, ttl=15 * 60)
 def create_client_with_role(service_name: str, role: str):
     """
