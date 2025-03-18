@@ -7,7 +7,15 @@ from backend.service.file_storage.s3_bucket import S3Bucket
 from backend.service.handler import lambda_handler
 from backend.service.models.api.site_visit import APIListSiteVisitResponse, APISiteVisit
 from backend.service.models.db.site_visit import DBSiteVisit
-from backend.service.util import AWSAccessLevel
+from backend.service.util import AWSAccessLevel, ItemType
+
+from ..constants import (
+    CURRENT_DATE_TIME,
+    PREV_DATE_TIME,
+    TEST_ATTACHMENT_NAME,
+    TEST_SITE_ID,
+    TEST_USER_ID,
+)
 
 
 def test_list_sites_handler(database_with_two_site_visits, list_site_visits_request):
@@ -121,5 +129,70 @@ def test_enter_site_handler_invalid_body(
 
     print(response)
 
-    assert response["statusCode"] == HTTPStatus.UNPROCESSABLE_ENTITY.value
+    assert response["statusCode"] == HTTPStatus.UNPROCESSABLE_ENTITY
+    assert response["multiValueHeaders"]["Content-Type"] == ["application/json"]
+
+
+def test_edit_site_visit_handler(database_with_two_site_visits, edit_site_visit_details_request):
+    response = lambda_handler(
+        event=edit_site_visit_details_request[0], context=edit_site_visit_details_request[1]
+    )
+
+    table = DBTable(AWSAccessLevel.READ, item_schema=DBSiteVisit)
+    bucket = S3Bucket(bucket_name=DOCUMENT_STORAGE_BUCKET_NAME, access=AWSAccessLevel.READ)
+
+    validated_response_body = APISiteVisit.model_validate_json(response["body"])
+
+    assert response["statusCode"] == HTTPStatus.OK
+    key = KeySchema(
+        pk=f"{ItemType.SITE_VISIT.value}#{TEST_SITE_ID}#{TEST_USER_ID}",
+        sk=CURRENT_DATE_TIME.isoformat(),
+    )
+    assert validated_response_body == table.get(key=key).to_api_model(bucket=bucket)
+    assert response["multiValueHeaders"]["Content-Type"] == ["application/json"]
+
+
+def test_add_file_attachment_handler(database_with_two_site_visits, add_file_attachment_request):
+    response = lambda_handler(
+        event=add_file_attachment_request[0], context=add_file_attachment_request[1]
+    )
+
+    table = DBTable(AWSAccessLevel.READ, item_schema=DBSiteVisit)
+    bucket = S3Bucket(bucket_name=DOCUMENT_STORAGE_BUCKET_NAME, access=AWSAccessLevel.READ)
+
+    validated_response_body = APISiteVisit.model_validate_json(response["body"])
+
+    assert response["statusCode"] == HTTPStatus.OK
+    key = KeySchema(
+        pk=f"{ItemType.SITE_VISIT.value}#{TEST_SITE_ID}#{TEST_USER_ID}",
+        sk=CURRENT_DATE_TIME.isoformat(),
+    )
+    assert validated_response_body == table.get(key=key).to_api_model(bucket=bucket)
+    assert TEST_ATTACHMENT_NAME in [
+        attachment.name for attachment in validated_response_body.attachments
+    ]
+    assert response["multiValueHeaders"]["Content-Type"] == ["application/json"]
+
+
+def test_remove_file_attachment_handler(
+    database_with_two_site_visits, remove_file_attachment_request, s3_bucket_with_item
+):
+    response = lambda_handler(
+        event=remove_file_attachment_request[0], context=remove_file_attachment_request[1]
+    )
+
+    table = DBTable(AWSAccessLevel.READ, item_schema=DBSiteVisit)
+    bucket = S3Bucket(bucket_name=DOCUMENT_STORAGE_BUCKET_NAME, access=AWSAccessLevel.READ)
+
+    validated_response_body = APISiteVisit.model_validate_json(response["body"])
+
+    assert response["statusCode"] == HTTPStatus.OK
+    key = KeySchema(
+        pk=f"{ItemType.SITE_VISIT.value}#{TEST_SITE_ID}#{TEST_USER_ID}",
+        sk=PREV_DATE_TIME.isoformat(),
+    )
+    assert validated_response_body == table.get(key=key).to_api_model(bucket=bucket)
+    assert TEST_ATTACHMENT_NAME not in [
+        attachment.name for attachment in validated_response_body.attachments
+    ]
     assert response["multiValueHeaders"]["Content-Type"] == ["application/json"]

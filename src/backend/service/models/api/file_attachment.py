@@ -2,8 +2,6 @@
 Representations of file attachments in the API
 """
 
-from datetime import datetime
-
 from ..custom_base_model import CustomBaseModel
 
 
@@ -17,8 +15,11 @@ class APIFileAttachmentResponse(CustomBaseModel):
 class APIAddFileAttachment(CustomBaseModel):
     """Format of a request to add a file attachment to a site visit"""
 
-    user_id: str
-    site_id: str
-    entry_time: datetime
     name: str
-    url: str
+    s3_key: str
+
+
+class APIRemoveFileAttachment(CustomBaseModel):
+    """Format of a request to remove a file attachment from a site visit"""
+
+    name: str

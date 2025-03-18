@@ -17,6 +17,7 @@ from ...database.db_table import DBTable
 from ...environment import DOCUMENT_STORAGE_BUCKET_NAME
 from ...exceptions import InsufficientUserPermissionException
 from ...file_storage.s3_bucket import S3Bucket
+from ...models.api.file_attachment import APIAddFileAttachment, APIRemoveFileAttachment
 from ...models.api.site_visit import (
     APIEnterSiteRequest,
     APIListSiteVisitResponse,
@@ -25,7 +26,9 @@ from ...models.api.site_visit import (
 from ...models.db.site_visit import DBSiteVisit
 from ...site_visits.site_visits import (
     add_exit_time,
+    create_file_attachment,
     create_site_entry,
+    delete_file_attachment,
     list_site_visits,
     update_visit_details,
 )
@@ -82,7 +85,7 @@ def edit_visit_details_handler(
     """
     Adds additional details to an existing site visit in the database
 
-    :param site_id: The site id that the user is exiting
+    :param site_id: The site id for the visit
     :param entry_time: The entry time of the visit to add the details to
     :param visit_details: The details of the visit to update/add
     :return: The details of the updated site visit
@@ -105,6 +108,89 @@ def edit_visit_details_handler(
     )
 
     bucket = S3Bucket(bucket_name=DOCUMENT_STORAGE_BUCKET_NAME, access=AWSAccessLevel.READ)
+
+    return Response(
+        status_code=HTTPStatus.OK.value,
+        content_type=content_types.APPLICATION_JSON,
+        body=visit.to_api_model(bucket=bucket).model_dump_json(),
+        headers=CORS_HEADERS,
+    )
+
+
+@router.patch("/<site_id>/visit/<entry_time>/attachments/add")
+def add_file_attachment_handler(
+    site_id: Annotated[str, Path()],
+    entry_time: Annotated[datetime, Path()],
+    attachment_details: Annotated[APIAddFileAttachment, Body()],
+):
+    """
+    Adds a file attachment to an existing site visit in the database
+
+    :param site_id: The site id for the visit
+    :param entry_time: The entry time of the visit to add the attachment to
+    :param attachment_details: The details of the attachment to add
+    :return: The details of the updated site visit
+    """
+    request_time = datetime.fromtimestamp(
+        router.current_event["requestContext"]["requestTimeEpoch"] / 1000, tz=timezone.utc
+    )
+
+    # Getting user id from claims
+    user_id = router.current_event["requestContext"]["authorizer"]["claims"]["sub"]
+
+    table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBSiteVisit)
+    visit = create_file_attachment(
+        table=table,
+        site_id=site_id,
+        user_id=user_id,
+        entry_time=entry_time,
+        timestamp=request_time,
+        name=attachment_details.name,
+        s3_key=attachment_details.s3_key,
+    )
+
+    bucket = S3Bucket(bucket_name=DOCUMENT_STORAGE_BUCKET_NAME, access=AWSAccessLevel.READ)
+
+    return Response(
+        status_code=HTTPStatus.OK.value,
+        content_type=content_types.APPLICATION_JSON,
+        body=visit.to_api_model(bucket=bucket).model_dump_json(),
+        headers=CORS_HEADERS,
+    )
+
+
+@router.patch("/<site_id>/visit/<entry_time>/attachments/remove")
+def remove_file_attachment_handler(
+    site_id: Annotated[str, Path()],
+    entry_time: Annotated[datetime, Path()],
+    attachment_details: Annotated[APIRemoveFileAttachment, Body()],
+):
+    """
+    Remove a file attachment from an existing site visit in the database
+
+    :param site_id: The site id for the visit
+    :param entry_time: The entry time of the visit to remove the attachment from
+    :param attachment_details: The details of the attachment to remove
+    :return: The details of the updated site visit
+    """
+    request_time = datetime.fromtimestamp(
+        router.current_event["requestContext"]["requestTimeEpoch"] / 1000, tz=timezone.utc
+    )
+
+    # Getting user id from claims
+    user_id = router.current_event["requestContext"]["authorizer"]["claims"]["sub"]
+
+    table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBSiteVisit)
+    bucket = S3Bucket(bucket_name=DOCUMENT_STORAGE_BUCKET_NAME, access=AWSAccessLevel.WRITE)
+    visit = delete_file_attachment(
+        table=table,
+        bucket=bucket,
+        site_id=site_id,
+        user_id=user_id,
+        entry_time=entry_time,
+        timestamp=request_time,
+        name=attachment_details.name,
+    )
 
     return Response(
         status_code=HTTPStatus.OK.value,
