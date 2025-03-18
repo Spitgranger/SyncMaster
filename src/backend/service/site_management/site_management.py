@@ -10,8 +10,9 @@ from aws_lambda_powertools.logging import Logger
 from boto3.dynamodb.conditions import Attr, Key
 
 from ..database.db_table import GSI, DBTable, KeySchema
-from ..exceptions import ConditionCheckFailed, ResourceConflict, TimeConsistencyException
+from ..exceptions import ConditionCheckFailed, ResourceConflict, TimeConsistencyException, BadRequestException
 from ..models.db.site import DBSite
+from ..models.db.document import DBDocument
 from ..util import ItemType
 
 logger = Logger()
@@ -112,18 +113,27 @@ def update_site(
         raise TimeConsistencyException(key=str(key), timestamp=timestamp) from err
 
 
-def delete_site(table: DBTable[DBSite], site_id: str, timestamp: datetime) -> None:
+def delete_site(site_table: DBTable[DBSite], document_table: DBTable[DBDocument], site_id: str, timestamp: datetime) -> None:
     """
     Delete a site from the database
 
-    :param table: The table to use when deleting the site. Requires write permissions
+    :param site_table: The table to use when deleting the site. Requires write permissions
+    :param document_table: The table to use when checking for documents in the site. 
+        Requires write permissions
     :param site_id: The unique identifier of the site to delete
     :param timestamp: The time at which the request to delete the site was issued
     :raises TimeConsistencyException: In the time since this delete was requested, a new
         update has been made to the entry. Not sure whether to proceed with delete
+    :raises BadRequestException: When documents still exist in the site requested for
+        deletion
     :raises ExternalServiceException: An unexpected error occurs in AWS
     :raises PermissionException: The given table does not have write permissions
     """
+    document_key_condition = Key("pk").eq(f"{DBDocument.item_type().value}#{site_id}#root")
+    documents, _ = document_table.query(key_condition_expression=document_key_condition, limit=1)
+    if documents:
+        raise BadRequestException(f"Documents exist for site [{site_id}], cannot delete site")
+
     key = KeySchema(pk=DBSite.item_type().value, sk=site_id)
     condition = (
         Attr("pk").exists()
@@ -132,7 +142,7 @@ def delete_site(table: DBTable[DBSite], site_id: str, timestamp: datetime) -> No
     )
 
     try:
-        table.delete(key=key, condition_expression=condition)
+        site_table.delete(key=key, condition_expression=condition)
     except ConditionCheckFailed as err:
         logger.exception(err)
         raise TimeConsistencyException(key=str(key), timestamp=timestamp) from err

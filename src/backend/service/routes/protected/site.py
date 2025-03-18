@@ -15,6 +15,7 @@ from ...database.db_table import DBTable
 from ...exceptions import InsufficientUserPermissionException
 from ...models.api.site import APIListSitesResponse, APISite, APISitePartial
 from ...models.db.site import DBSite
+from ...models.db.document import DBDocument
 from ...site_management.site_management import (
     create_site,
     delete_site,
@@ -22,7 +23,7 @@ from ...site_management.site_management import (
     list_sites,
     update_site,
 )
-from ...util import AWSAccessLevel, decode_db_key, encode_db_key
+from ...util import AWSAccessLevel, decode_db_key, encode_db_key, CORS_HEADERS
 
 router = Router()
 
@@ -69,6 +70,7 @@ def create_site_handler(site: Annotated[APISite, Body()]):
             latitude=new_site.latitude,
             acceptable_range=new_site.acceptable_range,
         ),
+        headers=CORS_HEADERS,
     )
 
 
@@ -118,6 +120,7 @@ def update_site_handler(
             latitude=new_site.latitude,
             acceptable_range=new_site.acceptable_range,
         ),
+        headers=CORS_HEADERS,
     )
 
 
@@ -150,6 +153,7 @@ def get_site_handler(
             latitude=new_site.latitude,
             acceptable_range=new_site.acceptable_range,
         ),
+        headers=CORS_HEADERS,
     )
 
 
@@ -171,12 +175,14 @@ def delete_site_handler(site_id: Annotated[str, Path(min_length=5, max_length=5)
     if role != "admin":
         raise InsufficientUserPermissionException(role=role, action="delete site")
 
-    table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBSite)
-    delete_site(table=table, site_id=site_id, timestamp=request_time)
+    site_table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBSite)
+    document_table = DBTable(access=AWSAccessLevel.READ, item_schema=DBDocument)
+    delete_site(site_table=site_table, document_table=document_table, site_id=site_id, timestamp=request_time)
 
     return Response(
         status_code=HTTPStatus.NO_CONTENT.value,
         content_type=content_types.APPLICATION_JSON,
+        headers=CORS_HEADERS,
     )
 
 
@@ -212,4 +218,5 @@ def list_sites_handler(
         body=APIListSitesResponse(
             sites=[site.to_api_model() for site in sites], last_key=encoded_key
         ),
+        headers=CORS_HEADERS,
     )
