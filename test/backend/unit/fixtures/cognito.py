@@ -25,6 +25,9 @@ def cognito_mock():
         user_pool_id = response["UserPool"]["Id"]
         response = client.create_user_pool_client(UserPoolId=user_pool_id, ClientName="test-client")
         client_id = response["UserPoolClient"]["ClientId"]
+        response = client.create_group(UserPoolId=user_pool_id, GroupName="admin")
+        response = client.create_group(UserPoolId=user_pool_id, GroupName="employee")
+        response = client.create_group(UserPoolId=user_pool_id, GroupName="contractor")
         yield client, client_id, user_pool_id
 
 
@@ -37,6 +40,9 @@ def cognito_mock_admin():
         user_pool_id = response["UserPool"]["Id"]
         response = client.create_user_pool_client(UserPoolId=user_pool_id, ClientName="test-client")
         client_id = response["UserPoolClient"]["ClientId"]
+        response = client.create_group(UserPoolId=user_pool_id, GroupName="admin")
+        response = client.create_group(UserPoolId=user_pool_id, GroupName="employee")
+        response = client.create_group(UserPoolId=user_pool_id, GroupName="contractor")
         yield client, client_id, user_pool_id
 
 
@@ -89,7 +95,7 @@ def get_users_request():
 def get_users_request_changed():
     """Creates a mock create user request."""
     yield GetUsersByAttributeRequest(
-        attributes={"custom:role": "user"},
+        attributes={"custom:role": "contractor"},
     )
 
 
@@ -98,7 +104,7 @@ def update_user_attribute_request():
     """Creates a mock create user request."""
     yield UpdateUserAttributeRequest(
         email="testuser@example.com",
-        attributes=[{"Name": "custom:role", "Value": "user"}],
+        attributes=[{"Name": "custom:role", "Value": "contractor"}],
     )
 
 

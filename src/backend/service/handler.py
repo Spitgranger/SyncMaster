@@ -31,13 +31,14 @@ def exception_handler(exception: Exception):
     :return: Response containing the correct HTTP code and message of exception
     """
     logger.error(exception)
+    error_message = str(exception) or repr(exception) or "Unknown error"
     status_code = HTTPStatus.INTERNAL_SERVER_ERROR.value
     content_type = content_types.APPLICATION_JSON
     body = {"error": str(exception)}
     if isinstance(exception, HTTPError):
         status_code = exception.http_code.value
         content_type = content_types.APPLICATION_JSON
-        body = {"error": str(exception)}
+        body = {"error": error_message}
 
     return Response(
         status_code=status_code, content_type=content_type, body=body, headers=CORS_HEADERS

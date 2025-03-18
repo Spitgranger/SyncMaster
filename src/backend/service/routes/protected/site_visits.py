@@ -27,7 +27,7 @@ from ...site_visits.site_visits import (
     list_site_visits,
     update_visit_details,
 )
-from ...util import CORS_HEADERS, AWSAccessLevel
+from ...util import CORS_HEADERS, AWSAccessLevel, UserType
 
 router = Router()
 
@@ -155,11 +155,11 @@ def list_site_visits_handler(
     :return: The details of all site visits retrieved
     """
     # Getting role from user claims
-    role = router.current_event["requestContext"]["authorizer"]["claims"]["custom:role"]
+    roles = router.current_event["requestContext"]["authorizer"]["claims"]["cognito:groups"]
 
     # Role check to ensure admin
-    if role != "admin":
-        raise InsufficientUserPermissionException(role=role, action="list site visits")
+    if UserType.ADMIN.value not in roles:
+        raise InsufficientUserPermissionException(role=roles, action="list site visits")
 
     decoded_key: Optional[dict] = None
     if start_key:
