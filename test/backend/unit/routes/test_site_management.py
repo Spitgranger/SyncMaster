@@ -44,6 +44,7 @@ def test_list_sites_handler_paginated(
         method="GET",
         query_params={"limit": "1", "start_key": response_body.last_key},
         user_role="admin",
+        user_groups=["admin"],
     )
 
     response = lambda_handler(event=new_event[0], context=new_event[1])

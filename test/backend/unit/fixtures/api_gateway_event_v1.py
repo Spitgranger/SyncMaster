@@ -333,6 +333,7 @@ def create_site_request(api_gateway_event):
                 "acceptable_range": str(TEST_SITE_RANGE),
             }
         ),
+        user_groups=["admin"],
     )
     yield event, context
 
@@ -351,6 +352,7 @@ def create_site_request_bad_role(api_gateway_event):
                 "acceptable_range": str(TEST_SITE_RANGE),
             }
         ),
+        user_groups=["contractor"],
     )
     yield event, context
 
@@ -369,6 +371,7 @@ def update_site_request(api_gateway_event):
                 "acceptable_range": str(TEST_SITE_RANGE_ALT),
             }
         ),
+        user_groups=["admin"],
     )
     yield event, context
 
@@ -387,6 +390,7 @@ def update_site_request_bad_role(api_gateway_event):
                 "acceptable_range": str(TEST_SITE_RANGE_ALT),
             }
         ),
+        user_groups=["contractor"],
     )
     yield event, context
 
@@ -399,6 +403,7 @@ def delete_site_request(api_gateway_event):
         user_role="admin",
         time=FUTURE_DATE_TIME,
         path_params={"site_id": TEST_SITE_ID},
+        user_groups=["admin"],
     )
     yield event, context
 
@@ -411,6 +416,7 @@ def delete_site_request_bad_role(api_gateway_event):
         user_role="contractor",
         time=FUTURE_DATE_TIME,
         path_params={"site_id": TEST_SITE_ID},
+        user_groups=["contractor"],
     )
     yield event, context
 
@@ -422,6 +428,7 @@ def get_site_request(api_gateway_event):
         method="GET",
         user_role="admin",
         path_params={"site_id": TEST_SITE_ID},
+        user_groups=["admin"],
     )
     yield event, context
 
@@ -433,6 +440,7 @@ def get_site_request_bad_role(api_gateway_event):
         method="GET",
         user_role="contractor",
         path_params={"site_id": TEST_SITE_ID},
+        user_groups=["contractor"],
     )
     yield event, context
 
@@ -440,7 +448,10 @@ def get_site_request_bad_role(api_gateway_event):
 @pytest.fixture()
 def list_sites_request(api_gateway_event):
     event, context = api_gateway_event(
-        path=f"/protected/site-management", method="GET", user_role="admin"
+        path=f"/protected/site-management",
+        method="GET",
+        user_role="admin",
+        user_groups=["admin"],
     )
     yield event, context
 
@@ -452,6 +463,7 @@ def list_sites_request_paginated(api_gateway_event):
         method="GET",
         user_role="admin",
         query_params={"limit": "1"},
+        user_groups=["admin"],
     )
     yield event, context
 
@@ -459,6 +471,9 @@ def list_sites_request_paginated(api_gateway_event):
 @pytest.fixture()
 def list_sites_request_bad_role(api_gateway_event):
     event, context = api_gateway_event(
-        path=f"/protected/site-management", method="GET", user_role="contractor"
+        path=f"/protected/site-management",
+        method="GET",
+        user_role="contractor",
+        user_groups=["contractor"],
     )
     yield event, context

@@ -10,9 +10,14 @@ from aws_lambda_powertools.logging import Logger
 from boto3.dynamodb.conditions import Attr, Key
 
 from ..database.db_table import GSI, DBTable, KeySchema
-from ..exceptions import ConditionCheckFailed, ResourceConflict, TimeConsistencyException, BadRequestException
-from ..models.db.site import DBSite
+from ..exceptions import (
+    BadRequestException,
+    ConditionCheckFailed,
+    ResourceConflict,
+    TimeConsistencyException,
+)
 from ..models.db.document import DBDocument
+from ..models.db.site import DBSite
 from ..util import ItemType
 
 logger = Logger()
@@ -113,12 +118,17 @@ def update_site(
         raise TimeConsistencyException(key=str(key), timestamp=timestamp) from err
 
 
-def delete_site(site_table: DBTable[DBSite], document_table: DBTable[DBDocument], site_id: str, timestamp: datetime) -> None:
+def delete_site(
+    site_table: DBTable[DBSite],
+    document_table: DBTable[DBDocument],
+    site_id: str,
+    timestamp: datetime,
+) -> None:
     """
     Delete a site from the database
 
     :param site_table: The table to use when deleting the site. Requires write permissions
-    :param document_table: The table to use when checking for documents in the site. 
+    :param document_table: The table to use when checking for documents in the site.
         Requires write permissions
     :param site_id: The unique identifier of the site to delete
     :param timestamp: The time at which the request to delete the site was issued

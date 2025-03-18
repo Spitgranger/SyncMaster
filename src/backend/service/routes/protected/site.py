@@ -14,8 +14,8 @@ from typing_extensions import Annotated
 from ...database.db_table import DBTable
 from ...exceptions import InsufficientUserPermissionException
 from ...models.api.site import APIListSitesResponse, APISite, APISitePartial
-from ...models.db.site import DBSite
 from ...models.db.document import DBDocument
+from ...models.db.site import DBSite
 from ...site_management.site_management import (
     create_site,
     delete_site,
@@ -23,7 +23,7 @@ from ...site_management.site_management import (
     list_sites,
     update_site,
 )
-from ...util import AWSAccessLevel, decode_db_key, encode_db_key, CORS_HEADERS
+from ...util import CORS_HEADERS, AWSAccessLevel, UserType, decode_db_key, encode_db_key
 
 router = Router()
 
@@ -41,11 +41,11 @@ def create_site_handler(site: Annotated[APISite, Body()]):
     )
 
     # Getting role from user claims
-    role = router.current_event["requestContext"]["authorizer"]["claims"]["custom:role"]
+    roles = router.current_event["requestContext"]["authorizer"]["claims"]["cognito:groups"]
 
     # Role check to ensure admin
-    if role != "admin":
-        raise InsufficientUserPermissionException(role=role, action="create site")
+    if UserType.ADMIN.value not in roles:
+        raise InsufficientUserPermissionException(role=roles, action="create site")
 
     # Getting user id from claims
     user_id = router.current_event["requestContext"]["authorizer"]["claims"]["sub"]
@@ -91,11 +91,11 @@ def update_site_handler(
     )
 
     # Getting role from user claims
-    role = router.current_event["requestContext"]["authorizer"]["claims"]["custom:role"]
+    roles = router.current_event["requestContext"]["authorizer"]["claims"]["cognito:groups"]
 
     # Role check to ensure admin
-    if role != "admin":
-        raise InsufficientUserPermissionException(role=role, action="update site")
+    if UserType.ADMIN.value not in roles:
+        raise InsufficientUserPermissionException(role=roles, action="update site")
 
     # Getting user id from claims
     user_id = router.current_event["requestContext"]["authorizer"]["claims"]["sub"]
@@ -135,11 +135,11 @@ def get_site_handler(
     :return: The details of the fetched site
     """
     # Getting role from user claims
-    role = router.current_event["requestContext"]["authorizer"]["claims"]["custom:role"]
+    roles = router.current_event["requestContext"]["authorizer"]["claims"]["cognito:groups"]
 
     # Role check to ensure admin
-    if role != "admin":
-        raise InsufficientUserPermissionException(role=role, action="get site")
+    if UserType.ADMIN.value not in roles:
+        raise InsufficientUserPermissionException(role=roles, action="get site")
 
     table = DBTable(access=AWSAccessLevel.READ, item_schema=DBSite)
     new_site = get_site(table=table, site_id=site_id)
@@ -169,15 +169,20 @@ def delete_site_handler(site_id: Annotated[str, Path(min_length=5, max_length=5)
     )
 
     # Getting role from user claims
-    role = router.current_event["requestContext"]["authorizer"]["claims"]["custom:role"]
+    roles = router.current_event["requestContext"]["authorizer"]["claims"]["cognito:groups"]
 
     # Role check to ensure admin
-    if role != "admin":
-        raise InsufficientUserPermissionException(role=role, action="delete site")
+    if UserType.ADMIN.value not in roles:
+        raise InsufficientUserPermissionException(role=roles, action="delete site")
 
     site_table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBSite)
     document_table = DBTable(access=AWSAccessLevel.READ, item_schema=DBDocument)
-    delete_site(site_table=site_table, document_table=document_table, site_id=site_id, timestamp=request_time)
+    delete_site(
+        site_table=site_table,
+        document_table=document_table,
+        site_id=site_id,
+        timestamp=request_time,
+    )
 
     return Response(
         status_code=HTTPStatus.NO_CONTENT.value,
@@ -199,11 +204,11 @@ def list_sites_handler(
     :return: The list of sites and their details
     """
     # Getting role from user claims
-    role = router.current_event["requestContext"]["authorizer"]["claims"]["custom:role"]
+    roles = router.current_event["requestContext"]["authorizer"]["claims"]["cognito:groups"]
 
     # Role check to ensure admin
-    if role != "admin":
-        raise InsufficientUserPermissionException(role=role, action="list sites")
+    if UserType.ADMIN.value not in roles:
+        raise InsufficientUserPermissionException(role=roles, action="list site")
 
     decoded_start_key = decode_db_key(key=start_key) if start_key else None
 

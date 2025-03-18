@@ -1,8 +1,13 @@
 import pytest
 from backend.service.database.db_table import DBTable, KeySchema
-from backend.service.exceptions import ResourceConflict, ResourceNotFound, TimeConsistencyException, BadRequestException
-from backend.service.models.db.site import DBSite
+from backend.service.exceptions import (
+    BadRequestException,
+    ResourceConflict,
+    ResourceNotFound,
+    TimeConsistencyException,
+)
 from backend.service.models.db.document import DBDocument
+from backend.service.models.db.site import DBSite
 from backend.service.site_management.site_management import (
     create_site,
     delete_site,
@@ -96,7 +101,12 @@ def test_delete_site(database_with_site):
     site_table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBSite)
     document_table = DBTable(access=AWSAccessLevel.READ, item_schema=DBDocument)
 
-    delete_site(site_table=site_table, document_table=document_table, site_id=TEST_SITE_ID, timestamp=FUTURE_DATE_TIME)
+    delete_site(
+        site_table=site_table,
+        document_table=document_table,
+        site_id=TEST_SITE_ID,
+        timestamp=FUTURE_DATE_TIME,
+    )
 
     with pytest.raises(ResourceNotFound):
         site_table.get(key=KeySchema(pk=old_site.pk, sk=old_site.sk))
@@ -108,7 +118,12 @@ def test_delete_site_document_exists(database_with_site, database_with_document)
     document_table = DBTable(access=AWSAccessLevel.READ, item_schema=DBDocument)
 
     with pytest.raises(BadRequestException):
-        delete_site(site_table=site_table, document_table=document_table, site_id=TEST_SITE_ID, timestamp=FUTURE_DATE_TIME)
+        delete_site(
+            site_table=site_table,
+            document_table=document_table,
+            site_id=TEST_SITE_ID,
+            timestamp=FUTURE_DATE_TIME,
+        )
 
     assert site_table.get(key=KeySchema(pk=old_site.pk, sk=old_site.sk)) == old_site
 
@@ -119,7 +134,12 @@ def test_delete_site_time_consistency_error(database_with_site):
     document_table = DBTable(access=AWSAccessLevel.READ, item_schema=DBDocument)
 
     with pytest.raises(TimeConsistencyException):
-        delete_site(site_table=site_table, document_table=document_table, site_id=TEST_SITE_ID, timestamp=PREV_DATE_TIME)
+        delete_site(
+            site_table=site_table,
+            document_table=document_table,
+            site_id=TEST_SITE_ID,
+            timestamp=PREV_DATE_TIME,
+        )
 
 
 def test_get_site(database_with_site):
