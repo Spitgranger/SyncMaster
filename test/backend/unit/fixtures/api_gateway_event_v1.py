@@ -32,6 +32,7 @@ def api_gateway_event():
         query_params: dict[str, str] = {},
         time: datetime = CURRENT_DATE_TIME,
         user_role: str = "contractor",
+        user_groups: list[str] = ["contractor"],
     ):
         request_id = str(uuid.uuid4())
 
@@ -42,6 +43,7 @@ def api_gateway_event():
                 "claims": {
                     "sub": TEST_USER_ID,
                     "email_verified": False,
+                    "cognito:groups": user_groups,
                     "iss": "https://cognito-idp.us-east-2.amazonaws.com/us-east-2_AAAAAAAA",
                     "cognito:username": "Test@gmail.com",
                     "custom:company": "testcompany",
@@ -154,6 +156,7 @@ def list_site_visits_request(api_gateway_event):
             "limit": "2",
         },
         user_role="admin",
+        user_groups=["admin"],
     )
     yield event, context
 
@@ -167,6 +170,7 @@ def list_site_visits_request_paginated(api_gateway_event):
             "limit": "1",
         },
         user_role="admin",
+        user_groups=["admin"],
     )
     yield event, context
 
@@ -174,7 +178,10 @@ def list_site_visits_request_paginated(api_gateway_event):
 @pytest.fixture()
 def list_site_visits_request_bad_role(api_gateway_event):
     event, context = api_gateway_event(
-        path=f"/protected/site/visits", method="GET", user_role="contractor"
+        path=f"/protected/site/visits",
+        method="GET",
+        user_role="contractor",
+        user_groups=["contractor"],
     )
     yield event, context
 
@@ -291,6 +298,7 @@ def delete_files_request(api_gateway_event):
             "site_id": TEST_SITE_ID,
         },
         user_role="admin",
+        user_groups=["admin"],
     )
     yield event, context
 
@@ -306,6 +314,7 @@ def delete_files_bad_role_request(api_gateway_event):
             "site_id": TEST_SITE_ID,
         },
         user_role="contractor",
+        user_groups=["contractor"],
     )
     yield event, context
 

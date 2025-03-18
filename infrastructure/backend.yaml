@@ -56,13 +56,13 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Sid: AllowLambdaServiceToAssumeRole
             Principal:
               Service:
-                - !Sub 'lambda.${AWS::URLSuffix}'
+                - !Sub "lambda.${AWS::URLSuffix}"
             Action:
               - sts:AssumeRole
 
@@ -72,34 +72,34 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Sid: AllowLambdaServiceToAssumeRole
             Principal:
               Service:
-                - !Sub 'lambda.${AWS::URLSuffix}'
+                - !Sub "lambda.${AWS::URLSuffix}"
             Action:
               - sts:AssumeRole
 
   CognitoAccessPolicy:
-      Type: AWS::IAM::ManagedPolicy
-      Properties:
-        Description: Access to necessary cognito actions
-        PolicyDocument:
-          Version: 2012-10-17
-          Statement:
-            - Effect: Allow
-              Action:
-                - cognito-idp:AdminCreateUser
-                - cognito-idp:AdminInitiateAuth
-                - cognito-idp:AdminUpdateUserAttributes
-                - cognito-idp:AdminAddUserToGroup
-                - cognito-idp:AdminGetUser
-                - cognito-idp:ListUsers
-              Resource:
-                - !Sub "arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPool}"
-
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Access to necessary cognito actions
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - cognito-idp:AdminCreateUser
+              - cognito-idp:AdminInitiateAuth
+              - cognito-idp:AdminUpdateUserAttributes
+              - cognito-idp:AdminAddUserToGroup
+              - cognito-idp:AdminGetUser
+              - cognito-idp:ListUsers
+              - cognito-idp:AdminListGroupsForUser
+            Resource:
+              - !Sub "arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPool}"
 
   DatabaseRead:
     Type: AWS::IAM::ManagedPolicy
@@ -137,31 +137,31 @@ Resources:
               - !GetAtt Database.Arn
 
   BucketWritePolicy:
-      Type: AWS::IAM::ManagedPolicy
-      Properties:
-        Description: Write access to bucket
-        PolicyDocument:
-          Version: 2012-10-17
-          Statement:
-            - Effect: Allow
-              Action:
-                - s3:PutObject
-                - s3:DeleteObject
-              Resource:
-                - !Sub arn:aws:s3:::${Bucket}/*
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Write access to bucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:PutObject
+              - s3:DeleteObject
+            Resource:
+              - !Sub arn:aws:s3:::${Bucket}/*
 
   BucketReadPolicy:
-      Type: AWS::IAM::ManagedPolicy
-      Properties:
-        Description: Read access to bucket
-        PolicyDocument:
-          Version: 2012-10-17
-          Statement:
-            - Effect: Allow
-              Action:
-                - s3:GetObject
-              Resource:
-                - !Sub arn:aws:s3:::${Bucket}/*
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Read access to bucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:GetObject
+            Resource:
+              - !Sub arn:aws:s3:::${Bucket}/*
 
   S3ReadRole:
     Type: AWS::IAM::Role
@@ -170,7 +170,7 @@ Resources:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
         - !Ref BucketReadPolicy
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Principal:
@@ -185,7 +185,7 @@ Resources:
         - !Ref BucketReadPolicy
         - !Ref BucketWritePolicy
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Principal:
@@ -193,20 +193,20 @@ Resources:
             Action: sts:AssumeRole
 
   CognitoAccessRole:
-      Type: AWS::IAM::Role
-      Properties:
-        RoleName: CognitoLambdaExecutionRole
-        ManagedPolicyArns:
-          - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-          - !Ref CognitoAccessPolicy
-        AssumeRolePolicyDocument:
-          Version: "2012-10-17"
-          Statement:
-            - Effect: Allow
-              Principal:
-                AWS: !GetAtt LambdaExecutionRole.Arn
-              Action:
-                - sts:AssumeRole
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: CognitoLambdaExecutionRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - !Ref CognitoAccessPolicy
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !GetAtt LambdaExecutionRole.Arn
+            Action:
+              - sts:AssumeRole
 
   DatabaseReadRole:
     Type: AWS::IAM::Role
@@ -215,7 +215,7 @@ Resources:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
         - !Ref DatabaseRead
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Principal:
@@ -230,7 +230,7 @@ Resources:
         - !Ref DatabaseRead
         - !Ref DatabaseWrite
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Principal:
@@ -272,6 +272,27 @@ Resources:
         - ADMIN_NO_SRP_AUTH
         - USER_PASSWORD_AUTH
 
+  UserPoolAdminGroup:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      Description: User group for admin users
+      GroupName: admin
+      UserPoolId: !Ref UserPool
+
+  UserPoolEmployeeGroup:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      Description: User group for employee users
+      GroupName: employee
+      UserPoolId: !Ref UserPool
+
+  UserPoolContractorGroup:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      Description: User group for contractor users
+      GroupName: contractor
+      UserPoolId: !Ref UserPool
+
   Database:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -309,22 +330,22 @@ Resources:
       CorsConfiguration:
         CorsRules:
           - AllowedHeaders:
-              - '*'
+              - "*"
             AllowedMethods:
-              - 'GET'
-              - 'POST'
+              - "GET"
+              - "POST"
             AllowedOrigins:
-              - '*'
+              - "*"
             ExposedHeaders:
               - Date
             Id: myCORSRuleId1
             MaxAge: 3600
- 
+
   UnprotectedApiFunction:
     Type: AWS::Serverless::Function
     Properties:
       Handler: service.handler.lambda_handler
-      Role: !GetAtt 'UnprotectedLambdaExecutionRole.Arn'
+      Role: !GetAtt "UnprotectedLambdaExecutionRole.Arn"
       CodeUri: ../src/backend
       Description: API handler for functions that do not require auth
       Events:
@@ -339,7 +360,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: service.handler.lambda_handler
-      Role: !GetAtt 'LambdaExecutionRole.Arn'
+      Role: !GetAtt "LambdaExecutionRole.Arn"
       CodeUri: ../src/backend
       Description: API handler for functions that require auth
       Events:
@@ -361,6 +382,6 @@ Resources:
           DOCUMENT_STORAGE_BUCKET_NAME: !Ref Bucket
 
 Outputs:
-    SyncMasterApi:
-        Description: "API Gateway Base Path for SyncMaster backend API"
-        Value: !Sub "https://${API}.execute-api.${AWS::Region}.amazonaws.com/${Env}/"
+  SyncMasterApi:
+    Description: "API Gateway Base Path for SyncMaster backend API"
+    Value: !Sub "https://${API}.execute-api.${AWS::Region}.amazonaws.com/${Env}/"
