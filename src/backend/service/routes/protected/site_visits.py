@@ -14,7 +14,9 @@ from aws_lambda_powertools.event_handler.openapi.params import Body, Path, Query
 from typing_extensions import Annotated
 
 from ...database.db_table import DBTable
+from ...environment import DOCUMENT_STORAGE_BUCKET_NAME
 from ...exceptions import InsufficientUserPermissionException
+from ...file_storage.s3_bucket import S3Bucket
 from ...models.api.site_visit import (
     APIEnterSiteRequest,
     APIListSiteVisitResponse,
@@ -61,10 +63,12 @@ def enter_site_handler(
         on_site=visit_details.on_site,
     )
 
+    bucket = S3Bucket(bucket_name=DOCUMENT_STORAGE_BUCKET_NAME, access=AWSAccessLevel.READ)
+
     return Response(
         status_code=HTTPStatus.CREATED.value,
         content_type=content_types.APPLICATION_JSON,
-        body=visit.to_api_model().model_dump_json(),
+        body=visit.to_api_model(bucket=bucket).model_dump_json(),
         headers=CORS_HEADERS,
     )
 
@@ -100,10 +104,12 @@ def edit_visit_details_handler(
         updated_details=visit_details,
     )
 
+    bucket = S3Bucket(bucket_name=DOCUMENT_STORAGE_BUCKET_NAME, access=AWSAccessLevel.READ)
+
     return Response(
         status_code=HTTPStatus.OK.value,
         content_type=content_types.APPLICATION_JSON,
-        body=visit.to_api_model().model_dump_json(),
+        body=visit.to_api_model(bucket=bucket).model_dump_json(),
         headers=CORS_HEADERS,
     )
 
@@ -129,10 +135,12 @@ def exit_site_handler(site_id: Annotated[str, Path()], entry_time: Annotated[dat
         table=table, site_id=site_id, user_id=user_id, entry_time=entry_time, timestamp=request_time
     )
 
+    bucket = S3Bucket(bucket_name=DOCUMENT_STORAGE_BUCKET_NAME, access=AWSAccessLevel.READ)
+
     return Response(
         status_code=HTTPStatus.OK.value,
         content_type=content_types.APPLICATION_JSON,
-        body=visit.to_api_model().model_dump_json(),
+        body=visit.to_api_model(bucket=bucket).model_dump_json(),
         headers=CORS_HEADERS,
     )
 
@@ -180,8 +188,10 @@ def list_site_visits_handler(
         key_bytes = json.dumps(last_eval_key).encode("utf-8")
         encoded_key = base64.urlsafe_b64encode(key_bytes).decode("utf-8")
 
+    bucket = S3Bucket(bucket_name=DOCUMENT_STORAGE_BUCKET_NAME, access=AWSAccessLevel.READ)
+
     response_body = APIListSiteVisitResponse(
-        visits=[visit.to_api_model() for visit in visits], last_key=encoded_key
+        visits=[visit.to_api_model(bucket=bucket) for visit in visits], last_key=encoded_key
     )
 
     return Response(

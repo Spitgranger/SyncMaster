@@ -6,8 +6,13 @@ from http import HTTPStatus
 
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver, Response, content_types
+from aws_lambda_powertools.event_handler.openapi.exceptions import (
+    SerializationError,
+    ValidationException,
+)
 from aws_lambda_powertools.logging import correlation_paths
 from aws_lambda_powertools.utilities.typing import LambdaContext
+from pydantic import ValidationError
 
 from .exceptions import HTTPError
 from .routes.protected import documents, site_visits, users
@@ -31,10 +36,13 @@ def exception_handler(exception: Exception):
     :return: Response containing the correct HTTP code and message of exception
     """
     logger.error(exception)
+    logger.error(type(exception))
     error_message = str(exception) or repr(exception) or "Unknown error"
     status_code = HTTPStatus.INTERNAL_SERVER_ERROR.value
     content_type = content_types.APPLICATION_JSON
     body = {"error": str(exception)}
+    if isinstance(exception, (ValidationException, ValidationError, SerializationError)):
+        status_code = HTTPStatus.UNPROCESSABLE_ENTITY.value
     if isinstance(exception, HTTPError):
         status_code = exception.http_code.value
         content_type = content_types.APPLICATION_JSON

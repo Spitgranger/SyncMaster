@@ -124,6 +124,23 @@ def enter_site_request(api_gateway_event):
         path=f"/protected/site/{TEST_SITE_ID}/enter",
         method="POST",
         path_params={"site_id": TEST_SITE_ID},
+        body=json.dumps({"allowed_tracking": True, "ack_status": True, "on_site": True}),
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def enter_site_request_invalid_body(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/site/{TEST_SITE_ID}/enter",
+        method="POST",
+        path_params={"site_id": TEST_SITE_ID},
+        body=json.dumps(
+            {
+                "allowed_tracking": True,
+                "ack_status": True,
+            }
+        ),
     )
     yield event, context
 
@@ -131,9 +148,9 @@ def enter_site_request(api_gateway_event):
 @pytest.fixture()
 def exit_site_request(api_gateway_event):
     event, context = api_gateway_event(
-        path=f"/protected/site/{TEST_SITE_ID}/exit",
+        path=f"/protected/site/{TEST_SITE_ID}/exit/{CURRENT_DATE_TIME.isoformat()}",
         method="PATCH",
-        path_params={"site_id": TEST_SITE_ID},
+        path_params={"site_id": TEST_SITE_ID, "entry_time": CURRENT_DATE_TIME.isoformat()},
         time=FUTURE_DATE_TIME,
     )
     yield event, context
