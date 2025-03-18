@@ -228,7 +228,7 @@ def delete_file_attachment(
     Deletes a file attachment from a site visit in the database
 
     :param table: The DBTable object to use to access the database. Requires write access
-    :param table: The S3Bucket object to use to access the bucket. Requires write access
+    :param bucket: The S3Bucket object to use to access the bucket. Requires write access
     :param site_id: The identifier of the site being visited
     :param user_id: The identifier of the user visiting the site
     :param entry_time: The entry time of the site visit entry
