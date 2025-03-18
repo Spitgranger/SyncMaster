@@ -8,7 +8,6 @@ from backend.service.document_management.document_management import (
 )
 from backend.service.environment import DOCUMENT_STORAGE_BUCKET_NAME
 from backend.service.exceptions import (
-    ExitTimeConflict,
     ResourceConflict,
     ResourceNotFound,
     TimeConsistencyException,

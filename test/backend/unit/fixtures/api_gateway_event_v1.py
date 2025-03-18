@@ -8,6 +8,7 @@ from ..constants import (
     CURRENT_DATE_TIME,
     FUTURE_DATE_TIME,
     PREV_DATE_TIME,
+    TEST_ATTACHMENT_NAME,
     TEST_DOCUMENT_ID,
     TEST_PARENT_FOLDER_ID,
     TEST_S3_FILE_KEY,
@@ -19,6 +20,8 @@ from ..constants import (
     TEST_SITE_RANGE,
     TEST_SITE_RANGE_ALT,
     TEST_USER_ID,
+    TEST_VISIT_DESCRIPTION,
+    TEST_WORK_ORDER,
 )
 
 
@@ -130,6 +133,23 @@ def enter_site_request(api_gateway_event):
         path=f"/protected/site/{TEST_SITE_ID}/enter",
         method="POST",
         path_params={"site_id": TEST_SITE_ID},
+        body=json.dumps({"allowed_tracking": True, "ack_status": True, "on_site": True}),
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def enter_site_request_invalid_body(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/site/{TEST_SITE_ID}/enter",
+        method="POST",
+        path_params={"site_id": TEST_SITE_ID},
+        body=json.dumps(
+            {
+                "allowed_tracking": True,
+                "ack_status": True,
+            }
+        ),
     )
     yield event, context
 
@@ -137,10 +157,60 @@ def enter_site_request(api_gateway_event):
 @pytest.fixture()
 def exit_site_request(api_gateway_event):
     event, context = api_gateway_event(
-        path=f"/protected/site/{TEST_SITE_ID}/exit",
+        path=f"/protected/site/{TEST_SITE_ID}/exit/{CURRENT_DATE_TIME.isoformat()}",
         method="PATCH",
-        path_params={"site_id": TEST_SITE_ID},
+        path_params={"site_id": TEST_SITE_ID, "entry_time": CURRENT_DATE_TIME.isoformat()},
         time=FUTURE_DATE_TIME,
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def edit_site_visit_details_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/site/{TEST_SITE_ID}/visit/{CURRENT_DATE_TIME.isoformat()}",
+        method="PATCH",
+        path_params={"site_id": TEST_SITE_ID, "entry_time": CURRENT_DATE_TIME.isoformat()},
+        time=FUTURE_DATE_TIME,
+        body=json.dumps(
+            {
+                "work_order": TEST_WORK_ORDER,
+                "description": TEST_VISIT_DESCRIPTION,
+            }
+        ),
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def add_file_attachment_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/site/{TEST_SITE_ID}/visit/{CURRENT_DATE_TIME.isoformat()}/attachments/add",
+        method="PATCH",
+        path_params={"site_id": TEST_SITE_ID, "entry_time": CURRENT_DATE_TIME.isoformat()},
+        time=FUTURE_DATE_TIME,
+        body=json.dumps(
+            {
+                "name": TEST_ATTACHMENT_NAME,
+                "s3_key": TEST_S3_FILE_KEY,
+            }
+        ),
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def remove_file_attachment_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/site/{TEST_SITE_ID}/visit/{PREV_DATE_TIME.isoformat()}/attachments/remove",
+        method="PATCH",
+        path_params={"site_id": TEST_SITE_ID, "entry_time": PREV_DATE_TIME.isoformat()},
+        time=FUTURE_DATE_TIME,
+        body=json.dumps(
+            {
+                "name": TEST_ATTACHMENT_NAME,
+            }
+        ),
     )
     yield event, context
 
