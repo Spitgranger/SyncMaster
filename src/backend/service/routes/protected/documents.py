@@ -23,7 +23,7 @@ from ...exceptions import InsufficientUserPermissionException
 from ...file_storage.s3_bucket import S3Bucket
 from ...models.api.document import APIDocumentUploadRequest
 from ...models.db.document import DBDocument
-from ...util import CORS_HEADERS, AWSAccessLevel, create_http_response
+from ...util import CORS_HEADERS, AWSAccessLevel, UserType, create_http_response
 
 router = Router()
 
@@ -114,11 +114,11 @@ def delete_file_handler(
     :return: dictionary containing http response
     """
     # Getting role from user claims
-    role = router.current_event["requestContext"]["authorizer"]["claims"]["custom:role"]
+    roles = router.current_event["requestContext"]["authorizer"]["claims"]["cognito:groups"]
 
     # Role check to ensure admin for document deletion
-    if role != "admin":
-        raise InsufficientUserPermissionException(role=role, action="delete documents")
+    if UserType.ADMIN.value not in roles:
+        raise InsufficientUserPermissionException(role=roles, action="delete documents")
 
     s3_bucket = S3Bucket(DOCUMENT_STORAGE_BUCKET_NAME, AWSAccessLevel.WRITE)
     document_table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBDocument)

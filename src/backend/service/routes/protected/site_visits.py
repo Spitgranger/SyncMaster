@@ -16,7 +16,7 @@ from ...exceptions import InsufficientUserPermissionException
 from ...models.api.site_visit import APIListSiteVisitResponse, APISiteVisit
 from ...models.db.site_visit import DBSiteVisit
 from ...site_visits.site_visits import add_exit_time, create_site_entry, list_site_visits
-from ...util import CORS_HEADERS, AWSAccessLevel, decode_db_key, encode_db_key
+from ...util import CORS_HEADERS, AWSAccessLevel, UserType, decode_db_key, encode_db_key
 
 router = Router()
 
@@ -96,11 +96,11 @@ def list_site_visits_handler(
     :return: The details of all site visits retrieved
     """
     # Getting role from user claims
-    role = router.current_event["requestContext"]["authorizer"]["claims"]["custom:role"]
+    roles = router.current_event["requestContext"]["authorizer"]["claims"]["cognito:groups"]
 
     # Role check to ensure admin
-    if role != "admin":
-        raise InsufficientUserPermissionException(role=role, action="list site visits")
+    if UserType.ADMIN.value not in roles:
+        raise InsufficientUserPermissionException(role=roles, action="list site visits")
 
     decoded_key = decode_db_key(key=start_key) if start_key else None
 
