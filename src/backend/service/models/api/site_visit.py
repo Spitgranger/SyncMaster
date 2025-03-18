@@ -9,7 +9,7 @@ from pydantic import Field, model_validator
 from typing_extensions import Self
 
 from ..custom_base_model import CustomBaseModel
-from .file_attachment import APIFileAttachment
+from .file_attachment import APIFileAttachmentResponse
 
 
 class APISiteVisit(CustomBaseModel):
@@ -24,7 +24,7 @@ class APISiteVisit(CustomBaseModel):
     work_order: Optional[int] = None
     description: Optional[str] = None
     on_site: Optional[bool] = None
-    attachments: list[APIFileAttachment] = Field(default_factory=list)
+    attachments: list[APIFileAttachmentResponse] = Field(default_factory=list)
 
 
 class APIEnterSiteRequest(CustomBaseModel):
@@ -40,7 +40,7 @@ class APIEnterSiteRequest(CustomBaseModel):
         Validates that if location is being tracked, then we must
         know whether or not the user is on site
         """
-        if self.allowed_tracking and self.on_site == None:
+        if self.allowed_tracking and self.on_site is None:
             raise ValueError("[allowed_tracking] = true, must provide [on_site]")
         return self
 

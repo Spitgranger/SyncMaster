@@ -18,7 +18,6 @@ from ...exceptions import InsufficientUserPermissionException
 from ...models.api.site_visit import (
     APIEnterSiteRequest,
     APIListSiteVisitResponse,
-    APISiteVisit,
     EditableSiteVisitDetails,
 )
 from ...models.db.site_visit import DBSiteVisit
@@ -41,6 +40,7 @@ def enter_site_handler(
     Adds a users site visit to the database, with their entry time
 
     :param site_id: The site id that the user is entering
+    :param visit_details: Details of the visit which are available on entry
     :return: The details of the added site visit
     """
     request_time = datetime.fromtimestamp(
@@ -80,6 +80,7 @@ def edit_visit_details_handler(
 
     :param site_id: The site id that the user is exiting
     :param entry_time: The entry time of the visit to add the details to
+    :param visit_details: The details of the visit to update/add
     :return: The details of the updated site visit
     """
     request_time = datetime.fromtimestamp(

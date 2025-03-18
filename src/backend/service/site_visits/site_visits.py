@@ -10,6 +10,7 @@ from boto3.dynamodb.conditions import Attr, Key
 
 from ..database.db_table import GSI, DBTable, KeySchema
 from ..exceptions import (
+    BadRequestException,
     ConditionCheckFailed,
     LimitExceeded,
     ResourceConflict,
@@ -40,6 +41,9 @@ def create_site_entry(
     :param site_id: The identifier of the site being visited
     :param user_id: The identifier of the user visiting the site
     :param timestamp: The time at which the request for the site entry came in
+    :param ack_status: Whether or not all documents were acknowledged before entering the site
+    :param loc_tracking: Whether or not the user allowed us to track their location
+    :param on_site: Whether or not the user was on site
     :return: The representation of the site visit in the database
     :raises ResourceConflict: There is already a site visit in the database with the same parameters
     :raises ExternalServiceException: An unexpected error occurs in AWS
@@ -67,57 +71,6 @@ def create_site_entry(
         ) from err
 
 
-def update_visit_details(
-    table: DBTable[DBSiteVisit],
-    site_id: str,
-    user_id: str,
-    entry_time: datetime,
-    timestamp: datetime,
-    updated_details: EditableSiteVisitDetails,
-) -> DBSiteVisit:
-    """
-    Updates a site visit in the database with its exit time
-
-    :param table: The DBTable object to use to access the database. Requires write access
-    :param site_id: The identifier of the site being visited
-    :param user_id: The identifier of the user visiting the site
-    :param entry_time: The entry time of the site visit entry
-    :param timestamp: The time at which the request for the site exit came in
-    :param updated_details: Contains the editable site visit details to be updated
-    :return: The representation of the site visit in the database
-    :raises ResourceNotFound: The user has never visited this site before
-    :raises TimeConsistencyException: In the time since this update was requested, a new
-        update has been made to the entry. Not sure whether to proceed with update
-    :raises ExternalServiceException: An unexpected error occurs in AWS
-    :raises PermissionException: The given table does not have write permissions
-    """
-    key = KeySchema(
-        pk=f"{ItemType.SITE_VISIT.value}#{site_id}#{user_id}", sk=entry_time.isoformat()
-    )
-
-    # Extract fields explicitly set attributes the model, this avoids updating an attribute
-    # to None, if it was not explicitly set to None
-    update_attrs = {
-        f: getattr(updated_details, f)
-        for f in updated_details.model_fields_set
-        if getattr(updated_details, f, None) is not None
-    }
-
-    try:
-        return table.update(
-            key=key,
-            update_attributes=update_attrs,
-            last_modified_by=user_id,
-            last_modified_time=timestamp,
-            condition_expression=Attr("pk").exists()
-            & Attr("sk").exists()
-            & Attr("last_modified_time").lt(timestamp.isoformat()),
-        )
-    except ConditionCheckFailed as err:
-        logger.exception(err)
-        raise TimeConsistencyException(key=str(key), timestamp=timestamp) from err
-
-
 def add_exit_time(
     table: DBTable[DBSiteVisit],
     site_id: str,
@@ -135,8 +88,6 @@ def add_exit_time(
     :param timestamp: The time at which the request for the site exit came in
     :return: The representation of the site visit in the database
     :raises ResourceNotFound: The user has never visited this site before
-    :raises TimeConsistencyException: In the time since this update was requested, a new
-        update has been made to the entry. Not sure whether to proceed with update
     :raises ExternalServiceException: An unexpected error occurs in AWS
     :raises PermissionException: The given table does not have write permissions
     """
@@ -206,17 +157,19 @@ def create_file_attachment(
     s3_key: str,
 ) -> DBSiteVisit:
     """
-    Adds a file attachment to the database
+    Adds a file attachment to a site visit in the database
 
     :param table: The DBTable object to use to access the database. Requires write access
     :param site_id: The identifier of the site being visited
     :param user_id: The identifier of the user visiting the site
     :param entry_time: The entry time of the site visit entry
-    :param timestamp: The time at which the request for the site exit came in
+    :param timestamp: The time at which the request came in
     :param name: The display name of the attachment
     :param s3_key: The s3_key that the attachment has been uploaded to
     :return: The representation of the attachment in the database
     :raises ResourceConflict: An attachment with the same name exists for the visit
+    :raises LimitExceeded: Only 10 attachments can be uploaded to a site visit,
+        so this error is raised, when this limit is exceeded
     :raises ExternalServiceException: An unexpected error occurs in AWS
     :raises PermissionException: The given table does not have write permissions
     """
@@ -272,17 +225,18 @@ def delete_file_attachment(
     name: str,
 ) -> DBSiteVisit:
     """
-    Adds a file attachment to the database
+    Deletes a file attachment from a site visit in the database
 
     :param table: The DBTable object to use to access the database. Requires write access
+    :param table: The S3Bucket object to use to access the bucket. Requires write access
     :param site_id: The identifier of the site being visited
     :param user_id: The identifier of the user visiting the site
     :param entry_time: The entry time of the site visit entry
     :param timestamp: The time at which the request for the site exit came in
     :param name: The display name of the attachment
-    :param s3_key: The s3_key that the attachment has been uploaded to
     :return: The representation of the attachment in the database
-    :raises ResourceConflict: An attachment with the same name exists for the visit
+    :raises TimeConsistencyException: In the time since this update was requested, a new
+        update has been made to the entry. Not sure whether to proceed with update
     :raises ExternalServiceException: An unexpected error occurs in AWS
     :raises PermissionException: The given table does not have write permissions
     """
@@ -297,6 +251,7 @@ def delete_file_attachment(
         Attr("pk").exists()
         & Attr("sk").exists()
         & Attr("last_modified_time").lt(timestamp.isoformat())
+        & Attr("last_modified_time").lte(existing_visit.last_modified_time.isoformat())
     )
 
     try:
@@ -312,9 +267,63 @@ def delete_file_attachment(
         )
     except ConditionCheckFailed as err:
         logger.exception(err)
-        raise TimeConsistencyException(key=str(key), timestamp=timestamp)
+        raise TimeConsistencyException(key=str(key), timestamp=timestamp) from err
 
     if s3_key:
         bucket.delete(key=s3_key)
 
     return new_visit
+
+
+def update_visit_details(
+    table: DBTable[DBSiteVisit],
+    site_id: str,
+    user_id: str,
+    entry_time: datetime,
+    timestamp: datetime,
+    updated_details: EditableSiteVisitDetails,
+) -> DBSiteVisit:
+    """
+    Updates a site visit in the database with its exit time
+
+    :param table: The DBTable object to use to access the database. Requires write access
+    :param site_id: The identifier of the site being visited
+    :param user_id: The identifier of the user visiting the site
+    :param entry_time: The entry time of the site visit entry
+    :param timestamp: The time at which the request came in
+    :param updated_details: Contains the editable site visit details to be updated
+    :return: The representation of the site visit in the database
+    :raises TimeConsistencyException: In the time since this update was requested, a new
+        update has been made to the entry. Not sure whether to proceed with update
+    :raises BadRequestException: There are no explicitly set details to update
+    :raises ExternalServiceException: An unexpected error occurs in AWS
+    :raises PermissionException: The given table does not have write permissions
+    """
+    key = KeySchema(
+        pk=f"{ItemType.SITE_VISIT.value}#{site_id}#{user_id}", sk=entry_time.isoformat()
+    )
+
+    if not updated_details.model_fields_set:
+        raise BadRequestException("No attributes provided for update")
+
+    # Extract fields explicitly set on the model, this avoids updating an attribute
+    # to None, if it was not explicitly set to None
+    update_attrs = {
+        k: v
+        for k, v in updated_details.model_dump(exclude_none=False).items()
+        if k in updated_details.model_fields_set
+    }
+
+    try:
+        return table.update(
+            key=key,
+            update_attributes=update_attrs,
+            last_modified_by=user_id,
+            last_modified_time=timestamp,
+            condition_expression=Attr("pk").exists()
+            & Attr("sk").exists()
+            & Attr("last_modified_time").lt(timestamp.isoformat()),
+        )
+    except ConditionCheckFailed as err:
+        logger.exception(err)
+        raise TimeConsistencyException(key=str(key), timestamp=timestamp) from err

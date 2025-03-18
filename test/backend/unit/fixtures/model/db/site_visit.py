@@ -4,9 +4,12 @@ from backend.service.models.db.site_visit import DBSiteVisit
 from ....constants import (
     CURRENT_DATE_TIME,
     PREV_DATE_TIME,
+    TEST_ATTACHMENT_NAME,
     TEST_S3_FILE_KEY,
     TEST_SITE_ID,
     TEST_USER_ID,
+    TEST_VISIT_DESCRIPTION,
+    TEST_WORK_ORDER,
 )
 
 
@@ -22,6 +25,9 @@ def db_site_visit_complete():
         loc_tracking=True,
         ack_status=True,
         on_site=True,
+        work_order=TEST_WORK_ORDER,
+        description=TEST_VISIT_DESCRIPTION,
+        attachments={TEST_ATTACHMENT_NAME: TEST_S3_FILE_KEY},
     )
 
 

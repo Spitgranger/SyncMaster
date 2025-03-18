@@ -1,10 +1,12 @@
 from datetime import datetime, timezone
 
-TEST_ATTACHMENT_NAME = "hello.txt"
+TEST_ATTACHMENT_NAME = "test.txt"
 TEST_S3_FILE_KEY = "hello.txt"
 TEST_S3_FILE_CONTENT = "Hello World"
 TEST_USER_ID = "b15b955a-0ffc-4890-9025-49f37bab09f9"
 TEST_SITE_ID = "HC059"
+TEST_WORK_ORDER = 123456
+TEST_VISIT_DESCRIPTION = "I did some work today"
 TEST_DOCUMENT_PATH = "some/file.txt"
 TEST_DOCUMENT_PATH_ALT = "some/file2.txt"
 TEST_PARENT_FOLDER_ID = "root"

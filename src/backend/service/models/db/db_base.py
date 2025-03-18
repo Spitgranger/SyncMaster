@@ -7,7 +7,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from datetime import datetime
 
-from pydantic import computed_field, field_serializer
+from pydantic import computed_field
 
 from ...util import ItemType
 from ..custom_base_model import CustomBaseModel

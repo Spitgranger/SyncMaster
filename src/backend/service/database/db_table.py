@@ -142,6 +142,8 @@ class DBTable[T: DBItemModel]:
         :param last_modified_time: The time to update the last_modified_time to
         :param last_modified_by: The user to update the last_modified_by to
         :param condition_expression: A condition that must be met for the update to succeed
+        :param expression_attribute_names: Aliases which can be used in the update attr's to address
+            names containing special characters (i.e., containing ".")
         :return: The full updated item
         :raises ConditionCheckFailed: The provided condition was not met
         :raises ExternalServiceException: Unexpected error occurs in AWS
@@ -198,27 +200,24 @@ class DBTable[T: DBItemModel]:
             raise ExternalServiceException("Unknown Error from AWS") from err
         return self.item_schema.model_validate(response["Attributes"])
 
-    def delete(
-        self, key: KeySchema, condition_expression: Optional[ConditionBase] = None
-    ) -> Optional[T]:
+    def delete(self, key: KeySchema, condition_expression: Optional[ConditionBase] = None) -> None:
         """
         Deletes a specified item from the database
 
         :param key: The key of the item to delete in the database
         :param condition_expression: The condition that must be met before the item can be
             deleted from the table
-        :return: The deleted item, if the item specified for deletion existed
         :raises ConditionCheckFailed: The provided condition was not met
         :raises ExternalServiceException: Unexpected error occurs in AWS
         :raises PermissionException: Assumed role does not have permission delete an item,
             likely due to the table being initialized with only read permissions
         """
-        kwargs: dict = {"Key": key, "ReturnValues": "ALL_OLD"}
+        kwargs: dict = {"Key": key}
         if condition_expression:
             kwargs["ConditionExpression"] = condition_expression
 
         try:
-            response = self._table.delete_item(**kwargs)
+            self._table.delete_item(**kwargs)
         except ClientError as err:
             if err.response["Error"]["Code"] == "AccessDeniedException":
                 raise PermissionException(
@@ -227,8 +226,6 @@ class DBTable[T: DBItemModel]:
             if err.response["Error"]["Code"] == "ConditionalCheckFailedException":
                 raise ConditionCheckFailed() from err
             raise ExternalServiceException("Unknown Error from AWS") from err
-        if response.get("Attributes"):
-            self.item_schema.model_validate(response["Attributes"])
 
     def query(
         self,
