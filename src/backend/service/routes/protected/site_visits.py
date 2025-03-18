@@ -2,8 +2,6 @@
 Routes for site visit APIs
 """
 
-import base64
-import json
 from datetime import datetime, timezone
 from http import HTTPStatus
 from typing import Optional
@@ -18,7 +16,7 @@ from ...exceptions import InsufficientUserPermissionException
 from ...models.api.site_visit import APIListSiteVisitResponse, APISiteVisit
 from ...models.db.site_visit import DBSiteVisit
 from ...site_visits.site_visits import add_exit_time, create_site_entry, list_site_visits
-from ...util import CORS_HEADERS, AWSAccessLevel, UserType
+from ...util import CORS_HEADERS, AWSAccessLevel, UserType, decode_db_key, encode_db_key
 
 router = Router()
 
@@ -84,7 +82,7 @@ def exit_site_handler(site_id: Annotated[str, Path()]):
 def list_site_visits_handler(
     from_time: Annotated[Optional[datetime], Query()] = None,
     to_time: Annotated[Optional[datetime], Query()] = None,
-    limit: Annotated[Optional[int], Query()] = None,
+    limit: Annotated[Optional[int], Query(le=100)] = None,
     start_key: Annotated[Optional[str], Query()] = None,
 ) -> Response[APIListSiteVisitResponse]:
     """
@@ -104,10 +102,7 @@ def list_site_visits_handler(
     if UserType.ADMIN.value not in roles:
         raise InsufficientUserPermissionException(role=roles, action="list site visits")
 
-    decoded_key: Optional[dict] = None
-    if start_key:
-        key_bytes = base64.urlsafe_b64decode(start_key.encode("utf-8"))
-        decoded_key = json.loads(key_bytes)
+    decoded_key = decode_db_key(key=start_key) if start_key else None
 
     table = DBTable(access=AWSAccessLevel.READ, item_schema=DBSiteVisit)
     visits, last_eval_key = list_site_visits(
@@ -118,10 +113,7 @@ def list_site_visits_handler(
         start_key=decoded_key,
     )
 
-    encoded_key = None
-    if last_eval_key:
-        key_bytes = json.dumps(last_eval_key).encode("utf-8")
-        encoded_key = base64.urlsafe_b64encode(key_bytes).decode("utf-8")
+    encoded_key = encode_db_key(key=last_eval_key) if last_eval_key else None
 
     response_body = APIListSiteVisitResponse(
         visits=[visit.to_api_model() for visit in visits], last_key=encoded_key

@@ -2,6 +2,8 @@
 Generic utility functions common across modules
 """
 
+import base64
+import json
 from enum import Enum
 from typing import Optional
 
@@ -42,6 +44,7 @@ class ItemType(Enum):
 
     DOCUMENT = "document"
     SITE_VISIT = "site_visit"
+    SITE = "site"
 
 
 class FileType(Enum):
@@ -128,6 +131,28 @@ def create_resource_with_role(service_name: str, role: str):
         if err.response["Error"]["Code"] == "AccessDenied":
             raise PermissionException("Insufficient permissions to assume role") from err
         raise ExternalServiceException("Unknown Error from AWS") from err
+
+
+def decode_db_key(key: str) -> dict:
+    """
+    Decodes an encoded dynamodb key
+
+    :param key: The encoded dynamodb key
+    :return: The decoded dynamodb key
+    """
+    key_str = base64.urlsafe_b64decode(key.encode("utf-8")).decode("utf-8")
+    return json.loads(key_str)
+
+
+def encode_db_key(key: dict) -> str:
+    """
+    Encodes a dynamodb key, to be returned in an API, and used in queries
+
+    :param key: The dynamodb key
+    :return: The encoded dynamodb key
+    """
+    key_bytes = json.dumps(key).encode("utf-8")
+    return base64.urlsafe_b64encode(key_bytes).decode("utf-8")
 
 
 def create_http_response(

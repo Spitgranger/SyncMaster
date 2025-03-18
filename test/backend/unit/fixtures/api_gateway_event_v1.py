@@ -12,6 +12,12 @@ from ..constants import (
     TEST_PARENT_FOLDER_ID,
     TEST_S3_FILE_KEY,
     TEST_SITE_ID,
+    TEST_SITE_LATITUDE,
+    TEST_SITE_LATITUDE_ALT,
+    TEST_SITE_LONGITUDE,
+    TEST_SITE_LONGITUDE_ALT,
+    TEST_SITE_RANGE,
+    TEST_SITE_RANGE_ALT,
     TEST_USER_ID,
 )
 
@@ -307,6 +313,166 @@ def delete_files_bad_role_request(api_gateway_event):
             "parent_folder_id": TEST_PARENT_FOLDER_ID,
             "site_id": TEST_SITE_ID,
         },
+        user_role="contractor",
+        user_groups=["contractor"],
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def create_site_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/site-management",
+        method="POST",
+        user_role="admin",
+        body=json.dumps(
+            {
+                "site_id": TEST_SITE_ID,
+                "longitude": str(TEST_SITE_LONGITUDE),
+                "latitude": str(TEST_SITE_LATITUDE),
+                "acceptable_range": str(TEST_SITE_RANGE),
+            }
+        ),
+        user_groups=["admin"],
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def create_site_request_bad_role(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/site-management",
+        method="POST",
+        user_role="contractor",
+        body=json.dumps(
+            {
+                "site_id": TEST_SITE_ID,
+                "longitude": str(TEST_SITE_LONGITUDE),
+                "latitude": str(TEST_SITE_LATITUDE),
+                "acceptable_range": str(TEST_SITE_RANGE),
+            }
+        ),
+        user_groups=["contractor"],
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def update_site_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/site-management/{TEST_SITE_ID}",
+        method="PATCH",
+        user_role="admin",
+        time=FUTURE_DATE_TIME,
+        path_params={"site_id": TEST_SITE_ID},
+        body=json.dumps(
+            {
+                "longitude": str(TEST_SITE_LONGITUDE_ALT),
+                "acceptable_range": str(TEST_SITE_RANGE_ALT),
+            }
+        ),
+        user_groups=["admin"],
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def update_site_request_bad_role(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/site-management/{TEST_SITE_ID}",
+        method="PATCH",
+        user_role="contractor",
+        time=FUTURE_DATE_TIME,
+        path_params={"site_id": TEST_SITE_ID},
+        body=json.dumps(
+            {
+                "longitude": str(TEST_SITE_LONGITUDE_ALT),
+                "acceptable_range": str(TEST_SITE_RANGE_ALT),
+            }
+        ),
+        user_groups=["contractor"],
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def delete_site_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/site-management/{TEST_SITE_ID}",
+        method="DELETE",
+        user_role="admin",
+        time=FUTURE_DATE_TIME,
+        path_params={"site_id": TEST_SITE_ID},
+        user_groups=["admin"],
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def delete_site_request_bad_role(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/site-management/{TEST_SITE_ID}",
+        method="DELETE",
+        user_role="contractor",
+        time=FUTURE_DATE_TIME,
+        path_params={"site_id": TEST_SITE_ID},
+        user_groups=["contractor"],
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def get_site_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/site-management/{TEST_SITE_ID}",
+        method="GET",
+        user_role="admin",
+        path_params={"site_id": TEST_SITE_ID},
+        user_groups=["admin"],
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def get_site_request_bad_role(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/site-management/{TEST_SITE_ID}",
+        method="GET",
+        user_role="contractor",
+        path_params={"site_id": TEST_SITE_ID},
+        user_groups=["contractor"],
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def list_sites_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/site-management",
+        method="GET",
+        user_role="admin",
+        user_groups=["admin"],
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def list_sites_request_paginated(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/site-management",
+        method="GET",
+        user_role="admin",
+        query_params={"limit": "1"},
+        user_groups=["admin"],
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def list_sites_request_bad_role(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/site-management",
+        method="GET",
         user_role="contractor",
         user_groups=["contractor"],
     )

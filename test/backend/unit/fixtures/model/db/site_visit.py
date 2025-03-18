@@ -4,8 +4,6 @@ from backend.service.models.db.site_visit import DBSiteVisit
 from ....constants import (
     CURRENT_DATE_TIME,
     PREV_DATE_TIME,
-    TEST_DOCUMENT_PATH,
-    TEST_S3_FILE_KEY,
     TEST_SITE_ID,
     TEST_USER_ID,
 )
