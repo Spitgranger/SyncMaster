@@ -219,7 +219,9 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              AWS: !GetAtt LambdaExecutionRole.Arn
+              AWS: 
+                - !GetAtt LambdaExecutionRole.Arn
+                - !GetAtt UnprotectedLambdaExecutionRole.Arn
             Action: sts:AssumeRole
 
   DatabaseWriteRole:
@@ -326,7 +328,6 @@ Resources:
   Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: syncmaster-document-bucket
       CorsConfiguration:
         CorsRules:
           - AllowedHeaders:
@@ -355,6 +356,9 @@ Resources:
             Path: /unprotected/{proxy+} # Send requests on any path to the lambda function
             Method: ANY # Send requests using any http method to the lambda function
             RestApiId: !Ref API
+      Environment:
+        Variables:
+          TABLE_READ_ROLE: !GetAtt DatabaseReadRole.Arn
 
   ProtectedApiFunction:
     Type: AWS::Serverless::Function

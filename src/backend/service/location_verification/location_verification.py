@@ -4,9 +4,10 @@ Module for verifying a user's location
 
 from math import asin, cos, radians, sin, sqrt
 
-TARGET_LATITUDE = 43.2588581564085
-TARGET_LONGITUDE = -79.92097591189501
-ACCEPTABLE_RADIUS_METERS = 100
+from ..database.db_table import DBTable
+from ..models.db.site import DBSite
+from ..site_management.site_management import get_site
+from ..util import AWSAccessLevel
 
 
 def haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
@@ -28,16 +29,18 @@ def haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     return distance
 
 
-def verify_location(latitude: float, longitude: float, accuracy: float) -> bool:
+def verify_location(latitude: float, longitude: float, accuracy: float, site_id: str) -> bool:
     """
     Verify if provided coordinates are within a certain radius of the target point.
 
     :param latitude: latitude of user location
     :param longitude: longitude of user location
     :param accuracy: accuracy of user location in meters
+    :param site_id: the site to verify the user's location against
     :return: boolean for if a location is within range of the desired site
     """
-    distance = haversine(latitude, longitude, TARGET_LATITUDE, TARGET_LONGITUDE)
-    is_within_range = distance <= (ACCEPTABLE_RADIUS_METERS + accuracy)
+    site = get_site(table=DBTable(access=AWSAccessLevel.READ, item_schema=DBSite), site_id=site_id)
+    distance = haversine(latitude, longitude, float(site.latitude), float(site.longitude))
+    is_within_range = distance <= (float(site.acceptable_range) + accuracy)
 
     return is_within_range
