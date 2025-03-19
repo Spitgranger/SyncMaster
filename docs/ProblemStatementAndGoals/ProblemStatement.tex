@@ -22,34 +22,78 @@
     \toprule
     \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
     \midrule
-    Date1 & Name(s) & Description of changes\\
-    Date2 & Name(s) & Description of changes\\
-    ... & ... & ...\\
+    2024/09/17 & Whole team & Initial review and formatting of problem statement\\
+    2024/09/24 & Whole team & Initial problem statement and goals. Document completed\\
+    2025/03/19 & Mitchell Hynes & Update markdown to \LaTeX \\
     \bottomrule
   \end{tabularx}
 \end{table}
 
 \section{Problem Statement}
 
-\wss{You should check your problem statement with the
-  \href{https://github.com/smiths/capTemplate/blob/main/docs/Checklists/ProbState-Checklist.pdf}
-{problem statement checklist}.}
-
-\wss{You can change the section headings, as long as you include the required
-information.}
-
 \subsection{Problem}
+
+The City of Hamilton, Water Division requires an application to assist in the management and security of their
+water and wastewater stations. Stations are visited by internal staff and external contractors regularly, but no
+electronic log of their visit to site exists to confirm work that was performed. This makes it difficult to verify
+work completion and accurate invoicing. Each station has many documents associated with it (such as entry
+protocols, hazard assessments, etc) which are frequently updated and need to be effortlessly redistributed to
+relevant parties as required. This is currently completed manually and is very time consuming for the
+stakeholder and prone to human error. Many stations have site specific information, which is difficult to
+capture in a single document. Instead, a dynamic application which displays only information relevant to that
+station as it is needed would be advantageous. Information needs to be easily accessible to authorized site
+visitors.\\
+\\
+Many documents require signing, and currently it is a manual process to distribute and collect routine
+signatures. This functionality currently requires the stakeholder to use multiple applications. The stakeholder
+also currently has many different computer applications for documentation storage. Each has a different
+standard for storing and managing that information. This leads to duplication and outdated documents in
+many locations, rather than a single source of truth. The stakeholder requries contract management tools
+including syncing of contract files to the application and automatic alerts when documents, training, or
+signatures are set to expire.\\
+\\
+Directly related to station access is a management system for contractors. This includes the ability to collect
+and distribute contract documentation, contact information, training, and other records. A key control
+management subsystem would be beneficial to view key distribution in real time, as this is currently managed
+in a separate application. A system to authenticate users at stations prior to access would improve visibility
+and protection. A digital key system should control access and entry to the station approved from a work
+order generated in the work order system.\\
 
 \subsection{Inputs and Outputs}
 
-\wss{Characterize the problem in terms of ``high level'' inputs and outputs.
-Use abstraction so that you can avoid details.}
+\textbf{Inputs:}
+\begin{itemize}
+\item User login information for staff, internal contractors, and visitors
+\item Uploading of documents
+\item Signing of documents
+\item Completion of training
+\item Verification of arrivals and departures from the plant for contractors
+\item Adding of new staff and contractors
+\end{itemize}
+\textbf{Outputs:}
+\begin{itemize}
+\item Station documentation
+\item Station maps and access protocol information
+\item Station forms
+\item Site contact information
+\end{itemize}
 
 \subsection{Stakeholders}
-
+The stakeholder for this project is the City of Hamilton, Water Division. Primary stakeholders with the City are
+the Facilities team, SCADA (Supervisory Control and Data Acquisition) team, and Corporate Security.
+Depending on what is decided during the requirements gathering process, other stakeholders from the City
+may need to be included in the project, such as City IT.
+\begin{itemize}
+\item City of Hamilton, Water Division: Primary stakeholder and client for the project
+\item Facilities Team: Subdivision of the primary stakeholder
+\item SCADA (Supervisory Control and Data Acquisition): Subdivision of the primary stakeholder
+\item Corporate Security: A stakeholder with an interest regarding Hamilton Water station security
+\end{itemize}
 \subsection{Environment}
-
-\wss{Hardware and software environment}
+\begin{itemize}
+\item Software: Windows 10 operating system, android, iOS
+\item Hardware: Laptop computers, tablets, smartphones
+\end{itemize}
 
 \section{Goals}
 
