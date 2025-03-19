@@ -2,6 +2,7 @@
 
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage{longtable}
 
 \title{Problem Statement and Goals\\\progname}
 
@@ -96,45 +97,90 @@ may need to be included in the project, such as City IT.
 \end{itemize}
 
 \section{Goals}
-
+\begin{longtable}{|m{5cm}|m{8cm}|}
+\hline
+The system enables the synchronization of files across distributed consumers & 
+This is a basic goal that must be achieved for the proposed system to be
+useful. This involves both file synchronization and conflict resolution\\
+\hline
+Intuitive GUI with high learnability & The interface of the system should be easy to understand for first-time users
+as many of them will be contractors logging in for the first time\\
+\hline
+Accurate verification of users at stations & The application should be able to accurately verify that a user is at a specific
+station. This will provide visibility into who is at what station\\
+\hline
+Should integrate with current business practices of client & The project aims to assist the stakeholders and 
+provide value as a more efficient and secure method of completing existing tasks.
+It should not interfere with current business processes or create additional workload\\
+\hline
+\end{longtable}
 \section{Stretch Goals}
+
+\begin{longtable}{|m{5cm}|m{8cm}|}
+\hline
+Demonstrate the advantage of a
+single centralized platform instead
+of multiple disconnected platforms & Hamilton Water has applications which do not communicate
+between each other. Loss of information and working in “silos” is
+common as a result. Demonstrating the benefits of a platform
+which integrates the features of separate applications into one
+would be advantageous.\\
+\hline
+Expand the platform to be a contract management system,
+capable of having contract management tools accessible to authenticated project managers. &
+This would enable a greater integration of station and contractor
+documentation directly into the projects that utilize this information.\\
+\hline
+\end{longtable}
 
 \section{Challenge Level and Extras}
 
-\wss{State your expected challenge level (advanced, general or basic).  The
-  challenge can come through the required domain knowledge, the
-  implementation or
-  something else.  Usually the greater the novelty of a project the greater its
-  challenge level.  You should include your rationale for the selected level.
-  Approval of the level will be part of the discussion with the instructor for
-  approving the project.  The challenge level, with the approval (or request) of
-the instructor, can be modified over the course of the term.}
-
-\wss{Teams may wish to include extras as either potential bonus grades, or to
-  make up for a less advanced challenge level.  Potential extras
-  include usability
-  testing, code walkthroughs, user documentation, formal proof, GenderMag
-  personas, Design Thinking, etc.  Normally the maximum number of extras will be
-  two.  Approval of the extras will be part of the discussion with
-  the instructor
-  for approving the project.  The extras, with the approval (or request) of the
-instructor, can be modified over the course of the term.}
+The challenge level for this project is a general challenge level. This designation was decided because we do
+not believe there will be a research element required. The extras for this project will be conducting user
+testing and developing a user manual. These extras are a good choice for this project as it is being developed
+for a real client, with the objective of creating a usable tool. Extensive user testing and documentation will be
+critical for its long term use and maintenance by the client.
 
 \newpage{}
 
 \section*{Appendix --- Reflection}
 
-\wss{Not required for CAS 741}
-
-\input{../Reflection.tex}
-
 \begin{enumerate}
   \item What went well while writing this deliverable?
+  
+\begin{itemize}
+\item Sections were divided efficiently, and everyone was aligned on what was to be written and who would
+write each section
+\item We had great and open communication with the City during this deliverable which greatly aided us in
+developing the problem statement
+\item Our team effectively documented the actions we took and helped each other learn how to use the git
+workflow for developing our project
+\item Ample time was given to complete the deliverable
+\item Multiple meetings were set to review work and hold accountability for work done
+\item Everyone adhered to the self-imposed deadlines set for each section of the deliverable
+\end{itemize}
+
   \item What pain points did you experience during this deliverable, and how
     did you resolve them?
+  \begin{itemize}
+  \item Some members had a better idea of the problem space, while others were more familiar with the
+  development of software solutions. We overcame this by dividing members between this deliverable
+  and the Development Plan
+  \item Version control does not allow live collaboration on written documents in the same way that Google
+  Docs or Microsoft Word would. It was decided that the text for the different sections would be drafted
+  on Google Docs before being committed to GitHub  
+  \end{itemize}
+
   \item How did you and your team adjust the scope of your goals to ensure
     they are suitable for a Capstone project (not overly ambitious but also of
-    appropriate complexity for a senior design project)?
+    appropriate complexity for a senior design project)?\\
+    \\
+To adjust the scope of the goals, we first discussed the project with the stakeholders to figure out what
+their main objectives were with the project. We then discussed as a team to figure out how to narrow
+these down to the most important and achievable goals and brought them back to the stakeholders to
+make sure they were acceptable. The goals we decided on are appropriate in complexity for a senior
+design project, are measurable, and focus on aspects of the system that are most important to the
+stakeholder.
 \end{enumerate}
 
 \end{document}
