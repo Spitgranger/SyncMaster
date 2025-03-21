@@ -2,11 +2,13 @@
 Routes to associated with document management
 """
 
+import base64
 import json
 from datetime import datetime, timezone
 from http import HTTPStatus
+from typing import Optional
 
-from aws_lambda_powertools.event_handler import content_types
+from aws_lambda_powertools.event_handler import Response, content_types
 from aws_lambda_powertools.event_handler.api_gateway import Router
 from aws_lambda_powertools.event_handler.openapi.params import Body, Path, Query
 from typing_extensions import Annotated
@@ -16,12 +18,13 @@ from ...document_management.document_management import (
     delete,
     get_all_files,
     get_presigned_url,
+    list_expiring_documents,
     upload_file,
 )
 from ...environment import DOCUMENT_STORAGE_BUCKET_NAME
 from ...exceptions import InsufficientUserPermissionException
 from ...file_storage.s3_bucket import S3Bucket
-from ...models.api.document import APIDocumentUploadRequest
+from ...models.api.document import APIDocumentUploadRequest, APIExpiringDocumentResponse
 from ...models.db.document import DBDocument
 from ...util import CORS_HEADERS, AWSAccessLevel, UserType, create_http_response
 
@@ -125,4 +128,60 @@ def delete_file_handler(
     delete(document_table, s3_bucket, site_id, parent_folder_id, document_id)
     return create_http_response(
         status_code=HTTPStatus.NO_CONTENT.value,
+    )
+
+
+@router.get("/expiring_documents")
+def list_expiring_documents_handler(
+    days: Annotated[Optional[int], Query()] = None,
+    limit: Annotated[Optional[int], Query()] = None,
+    start_key: Annotated[Optional[str], Query()] = None,
+) -> Response[APIExpiringDocumentResponse]:
+    """
+    Lists all the documents expiring withing the provided timedelta.
+
+    :param days: Only documents expiring between now and this many days in the future are returned
+    :param limit: The maximum amount of site visits to retrieve
+    :param start_key: The key to start listing visits from, should be
+        obtained from the last_key of a previous request
+    :return: The documents that are expiring
+    """
+    request_time = datetime.fromtimestamp(
+        router.current_event["requestContext"]["requestTimeEpoch"] / 1000, tz=timezone.utc
+    )
+
+    # Getting role from user claims
+    roles = router.current_event["requestContext"]["authorizer"]["claims"]["cognito:groups"]
+
+    # Role check to ensure admin
+    if UserType.ADMIN.value not in roles:
+        raise InsufficientUserPermissionException(role=roles, action="list site visits")
+
+    decoded_key: Optional[dict] = None
+    if start_key:
+        key_bytes = base64.urlsafe_b64decode(start_key.encode("utf-8"))
+        decoded_key = json.loads(key_bytes)
+
+    table = DBTable(access=AWSAccessLevel.READ, item_schema=DBDocument)
+    documents, last_eval_key = list_expiring_documents(
+        table=table,
+        from_time=request_time,
+        days=days,
+        limit=limit,
+        start_key=decoded_key,
+    )
+
+    encoded_key = None
+    if last_eval_key:
+        key_bytes = json.dumps(last_eval_key).encode("utf-8")
+        encoded_key = base64.urlsafe_b64encode(key_bytes).decode("utf-8")
+
+    response_body = APIExpiringDocumentResponse(
+        documents=[document.to_api_model() for document in documents], last_key=encoded_key
+    )
+
+    return create_http_response(
+        status_code=HTTPStatus.OK.value,
+        content_type=content_types.APPLICATION_JSON,
+        body=response_body,
     )

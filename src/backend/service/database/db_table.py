@@ -30,6 +30,7 @@ class GSI(Enum):
     """
 
     GSI1 = auto()
+    GSI2 = auto()
 
 
 class KeySchema(TypedDict):

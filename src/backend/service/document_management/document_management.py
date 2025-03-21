@@ -2,14 +2,14 @@
 Module for document management operations
 """
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Optional
 from uuid import uuid4
 
 from aws_lambda_powertools.logging import Logger
 from boto3.dynamodb.conditions import Key
 
-from ..database.db_table import DBTable, KeySchema
+from ..database.db_table import GSI, DBTable, KeySchema
 from ..environment import DOCUMENT_STORAGE_BUCKET_NAME
 from ..exceptions import (
     ResourceConflict,
@@ -110,7 +110,7 @@ def upload_file(
         document_id=uuid4().hex,
         document_name=document_name,
         document_type=document_type,
-        document_expiry=document_expiry,
+        expiry_date=document_expiry,
         parent_folder_id=parent_folder_id,
         document_path=document_path,
         s3_bucket=DOCUMENT_STORAGE_BUCKET_NAME,
@@ -174,3 +174,39 @@ def delete(
                 s3_bucket.delete(key=item.s3_key, e_tag=item.s3_e_tag)
                 table.delete({"pk": item.pk, "sk": item.sk})
         table.delete({"pk": document.pk, "sk": document.sk})
+
+
+def list_expiring_documents(
+    table: DBTable[DBDocument],
+    from_time: datetime,
+    days: Optional[int] = None,
+    limit: Optional[int] = None,
+    start_key: Optional[dict] = None,
+) -> tuple[list[DBDocument], Optional[dict]]:
+    """
+    Function to get all documents that are expiring within a given time range, if no days
+    are provided, will return the documents that are expiring before the from_time
+
+    :param table: The DBTable object to use to access the database. Requires write access
+    :param from_time: The time from which to start looking for expiring documents
+    :param days: The number of days from the from_time to look for expiring documents
+    :param limit: Maximum number of documents to retrieve from the database
+    :param start_key: The key to start getting new documents from
+    :return: The list of documents expiring
+    :raises ExternalServiceException: An unexpected error occurs in AWS
+    """
+    key_expression = Key("type").eq(ItemType.DOCUMENT.value)
+    # Either query a range starting from today to the future or all before now
+    if days:
+        key_expression = key_expression & Key("expiry_date").between(
+            from_time.isoformat(), (from_time + timedelta(days=days)).isoformat()
+        )
+    else:
+        key_expression = key_expression & Key("expiry_date").lte(from_time.isoformat())
+    return table.query(
+        gsi=GSI.GSI2,
+        key_condition_expression=key_expression,
+        limit=limit,
+        scan_reverse=True,
+        start_key=start_key,
+    )

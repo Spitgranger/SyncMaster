@@ -305,6 +305,8 @@ Resources:
           AttributeType: S
         - AttributeName: type
           AttributeType: S
+        - AttributeName: expiry_date
+          AttributeType: S
       KeySchema:
         - AttributeName: pk
           KeyType: HASH
@@ -316,6 +318,14 @@ Resources:
             - AttributeName: type
               KeyType: HASH
             - AttributeName: last_modified_time
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: GSI2
+          KeySchema:
+            - AttributeName: type
+              KeyType: HASH
+            - AttributeName: expiry_date
               KeyType: RANGE
           Projection:
             ProjectionType: ALL

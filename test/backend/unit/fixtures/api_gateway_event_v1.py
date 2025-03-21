@@ -264,7 +264,7 @@ def upload_document_request(api_gateway_event, db_document):
                 "e_tag": db_document.s3_e_tag,
                 "user_id": db_document.last_modified_by,
                 "requires_ack": db_document.requires_ack,
-                "document_expiry": db_document.document_expiry,
+                "document_expiry": db_document.expiry_date.isoformat(),
             }
         ),
     )
@@ -309,5 +309,63 @@ def delete_files_bad_role_request(api_gateway_event):
         },
         user_role="contractor",
         user_groups=["contractor"],
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def list_expiring_documents_request_none(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/documents/expiring_documents",
+        method="GET",
+        query_params={
+            "days": "10",
+            "limit": "2",
+        },
+        user_role="admin",
+        user_groups=["admin"],
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def list_expiring_documents_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/documents/expiring_documents",
+        method="GET",
+        query_params={
+            "limit": "2",
+        },
+        user_role="admin",
+        user_groups=["admin"],
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def list_expiring_documents_bad_role_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/documents/expiring_documents",
+        method="GET",
+        query_params={
+            "limit": "2",
+        },
+        user_role="contractor",
+        user_groups=["contractor"],
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def list_expiring_documents_paginated_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/documents/expiring_documents",
+        method="GET",
+        query_params={
+            "limit": "1",
+        },
+        user_role="admin",
+        user_groups=["admin"],
+        time=datetime.now(),
     )
     yield event, context

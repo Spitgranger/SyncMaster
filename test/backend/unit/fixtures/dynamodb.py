@@ -10,6 +10,7 @@ TABLE_SPEC = dict(
         {"AttributeName": "sk", "AttributeType": "S"},
         {"AttributeName": "type", "AttributeType": "S"},
         {"AttributeName": "last_modified_time", "AttributeType": "S"},
+        {"AttributeName": "expiry_date", "AttributeType": "S"},
     ],
     KeySchema=[
         {"AttributeName": "pk", "KeyType": "HASH"},
@@ -23,7 +24,15 @@ TABLE_SPEC = dict(
                 {"AttributeName": "last_modified_time", "KeyType": "RANGE"},
             ],
             "Projection": {"ProjectionType": "ALL"},
-        }
+        },
+        {
+            "IndexName": "GSI2",
+            "KeySchema": [
+                {"AttributeName": "type", "KeyType": "HASH"},
+                {"AttributeName": "expiry_date", "KeyType": "RANGE"},
+            ],
+            "Projection": {"ProjectionType": "ALL"},
+        },
     ],
     BillingMode="PAY_PER_REQUEST",
 )
@@ -60,10 +69,12 @@ def database_with_documents_and_folders(
     empty_database.put_item(Item=db_document_file_in_folder.model_dump())
     return (
         empty_database,
-        db_document,
-        db_document_folder,
-        db_document_folder_in_folder,
-        db_document_file_in_folder,
+        [
+            db_document,
+            db_document_folder,
+            db_document_folder_in_folder,
+            db_document_file_in_folder,
+        ],
     )
 
 
