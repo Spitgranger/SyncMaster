@@ -32,7 +32,7 @@
   \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
   \midrule
   2025/03/10 & 1.0 & Initial Revision of VnV Report\\
-
+  2025/03/16 & 1.1 & Remove unit tests related to removed errors\\
   \bottomrule
 \end{tabularx}
 
@@ -558,23 +558,18 @@ to mock AWS services.
   raised & Pass\\ \hline
   UT-LG3 & Add an exit time to an existing log with no logged exit
   time, and ensure the change is reflected in the database & Pass\\ \hline
-  UT-LG4 & Add an exit time to an existing log with no logged exit
-  time, but an entry time prior to the exit time we are attempting to
-  add, and ensure a TimeConsistencyException is raised & Pass\\ \hline
-  UT-LG5 & Add an exit time to an existing log with a logged exit
-  time, and ensure an ExitTimeConflict is raised & Pass\\ \hline
-  UT-LG6 & Add an exit time, where there are no existing logs for
+  UT-LG4 & Add an exit time, where there are no existing logs for
   the user at the given site, and ensure an ResourceNotFound is
   raised & Pass\\ \hline
-  UT-LG7 & Get a list of all site visit logs, using admin and
+  UT-LG5 & Get a list of all site visit logs, using admin and
   employee credentials & Pass\\ \hline
-  UT-LG8 & Get a list of all site visit logs, using contractor
+  UT-LG6 & Get a list of all site visit logs, using contractor
   credentials, and ensure that an UnauthorizedException is raised &
   Pass\\ \hline
-  UT-LG9 & Get a list of all site visit logs using filters to only
+  UT-LG7 & Get a list of all site visit logs using filters to only
   include logs modified between two given dates, and ensure that logs
   are correctly filtered & Pass\\ \hline
-  UT-LG10 & Get a list of all site visit logs using a database
+  UT-LG8 & Get a list of all site visit logs using a database
   start\_key to start the listing from a certain log, and ensure that
   logs start from the correct location & Pass\\ \hline
   \caption{Unit Test Cases for Logging Module}

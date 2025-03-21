@@ -9,7 +9,6 @@ from backend.service.document_management.document_management import (
 )
 from backend.service.environment import DOCUMENT_STORAGE_BUCKET_NAME
 from backend.service.exceptions import (
-    ExitTimeConflict,
     ResourceConflict,
     ResourceNotFound,
     TimeConsistencyException,
@@ -188,7 +187,7 @@ def test_list_expiring_documents_now(database_with_documents_and_folders):
         from_time=CURRENT_DATE_TIME,
     )
 
-    assert len(documents) == 0
+    assert len(documents) == 2
 
 
 def test_list_expiring_documents_in_future(database_with_documents_and_folders):

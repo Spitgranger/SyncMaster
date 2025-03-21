@@ -2,6 +2,8 @@
 Module allowing interaction with S3 Buckets for file uploads, deletion, and reading
 """
 
+from typing import Optional
+
 from aws_lambda_powertools.logging import Logger
 from botocore.exceptions import ClientError
 
@@ -62,7 +64,7 @@ class S3Bucket:
             ClientMethod="get_object", Params={"Bucket": self.name, "Key": key}
         )
 
-    def delete(self, key: str, e_tag: str) -> None:
+    def delete(self, key: str, e_tag: Optional[str] = None) -> None:
         """
         Delete an object from S3
 

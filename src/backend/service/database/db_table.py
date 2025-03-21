@@ -130,6 +130,7 @@ class DBTable[T: DBItemModel]:
         last_modified_time: datetime,
         last_modified_by: str,
         condition_expression: Optional[ConditionBase] = None,
+        expression_attribute_names: Optional[dict[str, str]] = None,
     ) -> T:
         """
         Updates the given item in the db table. Be careful about modifying attributes that
@@ -142,6 +143,8 @@ class DBTable[T: DBItemModel]:
         :param last_modified_time: The time to update the last_modified_time to
         :param last_modified_by: The user to update the last_modified_by to
         :param condition_expression: A condition that must be met for the update to succeed
+        :param expression_attribute_names: Aliases which can be used in the update attr's to address
+            names containing special characters (i.e., containing ".")
         :return: The full updated item
         :raises ConditionCheckFailed: The provided condition was not met
         :raises ExternalServiceException: Unexpected error occurs in AWS
@@ -159,14 +162,16 @@ class DBTable[T: DBItemModel]:
         ]
         delete_attributes: list[str] = []
 
-        valid_field_aliases = [i.alias for i in self.item_schema.model_fields.values()]
+        if not expression_attribute_names:
+            expression_attribute_names = {}
+
         for k, v in update_attributes.items():
-            if (k in self.item_schema.model_fields.keys()) or (k in valid_field_aliases):
-                if v is not None:
-                    expression_attribute_values[f":{k}"] = v
-                    set_attributes.append(f"{k} = :{k}")
-                else:
-                    delete_attributes.append(k)
+            if v is not None:
+                expression_attribute = k.replace(".", "_").replace("#", "_")
+                expression_attribute_values[f":{expression_attribute}"] = v
+                set_attributes.append(f"{k} = :{expression_attribute}")
+            else:
+                delete_attributes.append(k)
 
         update_expression = f"SET {', '.join(set_attributes)}"
         if delete_attributes:
@@ -181,6 +186,7 @@ class DBTable[T: DBItemModel]:
                 Key=key,
                 UpdateExpression=update_expression,
                 ExpressionAttributeValues=expression_attribute_values,
+                ExpressionAttributeNames=expression_attribute_names,
                 ReturnValues="ALL_NEW",
                 **kwargs,
             )
@@ -197,7 +203,7 @@ class DBTable[T: DBItemModel]:
 
     def delete(self, key: KeySchema, condition_expression: Optional[ConditionBase] = None) -> None:
         """
-        Completes an existing multipart upload
+        Deletes a specified item from the database
 
         :param key: The key of the item to delete in the database
         :param condition_expression: The condition that must be met before the item can be
