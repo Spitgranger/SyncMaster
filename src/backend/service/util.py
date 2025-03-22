@@ -15,6 +15,7 @@ from botocore.exceptions import ClientError
 from cachetools.func import ttl_cache
 
 from .exceptions import ExternalServiceException, PermissionException
+from .models.custom_base_model import CustomBaseModel
 
 logger = Logger()
 
@@ -159,7 +160,7 @@ def create_http_response(
     status_code: int,
     content_type: Optional[str] = None,
     headers: Optional[dict] = None,
-    body: Optional[str] = None,
+    body: Optional[str | CustomBaseModel] = None,
 ) -> Response:
     """
     Function to create a Response object for the API Gateway

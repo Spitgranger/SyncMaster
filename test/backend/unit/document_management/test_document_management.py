@@ -4,6 +4,7 @@ from backend.service.document_management.document_management import (
     delete,
     get_all_files,
     get_presigned_url,
+    list_expiring_documents,
     upload_file,
 )
 from backend.service.environment import DOCUMENT_STORAGE_BUCKET_NAME
@@ -21,6 +22,7 @@ from backend.service.site_visits.site_visits import (
     list_site_visits,
 )
 from backend.service.util import AWSAccessLevel, FileType
+from pydantic_core.core_schema import NoneSchema
 from requests import get
 
 from ..constants import (
@@ -91,7 +93,7 @@ def test_create_document_with_resource_conflict(database_with_document):
             user_id=document.last_modified_by,
             requires_ack=document.requires_ack,
             timestamp=document.last_modified_time,
-            document_expiry=document.document_expiry,
+            document_expiry=document.expiry_date,
         )
 
 
@@ -162,7 +164,7 @@ def test_delete_file(database_with_document, s3_bucket_with_item):
 
 
 def test_delete_folder(database_with_documents_and_folders, s3_bucket_with_item):
-    base_resource, _, _, _, _ = database_with_documents_and_folders
+    base_resource, _ = database_with_documents_and_folders
     # Initialize bucket wrapper
     bucket = S3Bucket(bucket_name=DOCUMENT_STORAGE_BUCKET_NAME, access=AWSAccessLevel.WRITE)
     table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBDocument)
@@ -175,3 +177,51 @@ def test_delete_folder(database_with_documents_and_folders, s3_bucket_with_item)
     )
     items: list[dict] = base_resource.scan()["Items"]
     assert len(items) == 1
+
+
+def test_list_expiring_documents_now(database_with_documents_and_folders):
+    table = DBTable(access=AWSAccessLevel.READ, item_schema=DBDocument)
+
+    documents, _ = list_expiring_documents(
+        table=table,
+        from_time=CURRENT_DATE_TIME,
+    )
+
+    assert len(documents) == 2
+
+
+def test_list_expiring_documents_in_future(database_with_documents_and_folders):
+    table = DBTable(access=AWSAccessLevel.READ, item_schema=DBDocument)
+
+    documents, _ = list_expiring_documents(
+        table=table,
+        from_time=CURRENT_DATE_TIME,
+        days=10,
+    )
+
+    assert len(documents) == 2
+
+
+def test_list_expiring_documents_paginated(database_with_documents_and_folders):
+    table = DBTable(access=AWSAccessLevel.READ, item_schema=DBDocument)
+
+    documents, last_eval_key = list_expiring_documents(
+        table=table,
+        from_time=CURRENT_DATE_TIME,
+        limit=1,
+        days=10,
+    )
+
+    assert len(documents) == 1
+    assert last_eval_key is not None
+
+    documents, last_eval_key = list_expiring_documents(
+        table=table,
+        from_time=CURRENT_DATE_TIME,
+        limit=1,
+        days=10,
+        start_key=last_eval_key,
+    )
+
+    assert len(documents) == 1
+    assert last_eval_key is None

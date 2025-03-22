@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pytest
 from backend.service.environment import DOCUMENT_STORAGE_BUCKET_NAME
 from backend.service.models.db.document import DBDocument
@@ -32,6 +34,7 @@ def db_document(s3_bucket_with_item):
         last_modified_time=CURRENT_DATE_TIME,
         document_path=TEST_DOCUMENT_PATH,
         s3_bucket=DOCUMENT_STORAGE_BUCKET_NAME,
+        expiry_date=CURRENT_DATE_TIME,
         s3_key=TEST_S3_FILE_KEY,
         s3_e_tag=e_tag,
         requires_ack=True,
@@ -91,6 +94,7 @@ def db_document_file_in_folder(s3_bucket_with_item):
         last_modified_by=TEST_USER_ID,
         last_modified_time=CURRENT_DATE_TIME,
         document_path=TEST_DOCUMENT_PATH,
+        expiry_date=CURRENT_DATE_TIME,
         s3_bucket=DOCUMENT_STORAGE_BUCKET_NAME,
         s3_key=TEST_S3_FILE_KEY,
         s3_e_tag=e_tag,
