@@ -14,7 +14,7 @@
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.4.2",
-    "@mui/material": "^6.4.2",
+    "@mui/material": "^6.4.8",
     "@mui/material-nextjs": "^6.4.2",
     "@next/env": "^15.1.6",
     "jwt-decode": "^4.0.0",
