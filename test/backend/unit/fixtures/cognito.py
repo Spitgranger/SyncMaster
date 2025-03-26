@@ -15,7 +15,7 @@ from backend.service.user_authentication.user_authentication import (
 from backend.service.util import create_client_with_role
 from moto import mock_aws
 
-from ..constants import TEST_SITE_ID
+from ..constants import TEST_SITE_ID, TEST_USER_EMAIL
 
 
 @pytest.fixture
@@ -127,13 +127,52 @@ def signin_request():
 
 
 @pytest.fixture
+def admin_cognito_client_with_user(cognito_mock):
+    """Creates and registers a user in the mock Cognito user pool."""
+    client, client_id, user_pool_id = cognito_mock
+    cognito_client = AdminCognitoClient(client_id, user_pool_id)
+    cognito_client._client = client
+
+    email = TEST_USER_EMAIL
+    password = "TestPassword123!"
+
+    client.admin_create_user(
+        UserPoolId=user_pool_id,
+        Username=email,
+        UserAttributes=[
+            {"Name": "email", "Value": email},
+            {"Name": "custom:role", "Value": "contractor"},
+        ],
+        MessageAction="SUPPRESS",  # Suppresses email verification in the mock
+    )
+
+    client.admin_set_user_password(
+        UserPoolId=user_pool_id,
+        Username=email,
+        Password=password,
+        Permanent=True,
+    )
+
+    yield (
+        cognito_client,
+        SigninRequest(email=email, password=password),
+        SigninRequest(
+            email=email,
+            password=password,
+            location=[43.2588581564085, -79.92097591189501],
+            site_id=TEST_SITE_ID,
+        ),
+    )
+
+
+@pytest.fixture
 def cognito_client_with_user(cognito_mock):
     """Creates and registers a user in the mock Cognito user pool."""
     client, client_id, user_pool_id = cognito_mock
     cognito_client = CognitoClient(client_id)
     cognito_client._client = client
 
-    email = "testuser@example.com"
+    email = TEST_USER_EMAIL
     password = "TestPassword123!"
 
     client.admin_create_user(

@@ -46,6 +46,16 @@ class ItemType(Enum):
     DOCUMENT = "document"
     SITE_VISIT = "site_visit"
     SITE = "site"
+    USER_REQUEST = "user_request"
+
+
+class UserRequestAction(Enum):
+    """
+    Enum of different actions that can be taken on a user request
+    """
+
+    APPROVE = "approve"
+    REJECT = "reject"
 
 
 class FileType(Enum):
@@ -160,7 +170,7 @@ def create_http_response(
     status_code: int,
     content_type: Optional[str] = None,
     headers: Optional[dict] = None,
-    body: Optional[str | CustomBaseModel] = None,
+    body: Optional[str | CustomBaseModel | dict] = None,
 ) -> Response:
     """
     Function to create a Response object for the API Gateway

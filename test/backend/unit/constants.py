@@ -24,6 +24,11 @@ TEST_DOCUMENT_FOLDER_IN_FOLDER_ID = "24f323423adfadf3fkj"
 TEST_DOCUMENT_IN_FOLDER_ID = "41242daf8131333f"
 TEST_DOCUMENT_NAME = "Test.file"
 TEST_DOCUMENT_ETAG = "1234"
+TEST_USER_EMAIL = "test@test.com"
+TEST_USER_EMAIL_ALT = "test2@test.com"
+TEST_COMPANY_NAME = "Test Company"
+TEST_USER_NAME = "Bob Jones"
+TEST_USER_ROLE = "admin"
 PREV_DATE_TIME = datetime(
     year=2022, month=1, day=21, hour=11, minute=46, second=12, microsecond=34, tzinfo=timezone.utc
 )

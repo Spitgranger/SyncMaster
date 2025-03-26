@@ -15,7 +15,7 @@ from aws_lambda_powertools.utilities.typing import LambdaContext
 from pydantic import ValidationError
 
 from .exceptions import HTTPError
-from .routes.protected import documents, site, site_visits, users
+from .routes.protected import documents, site, site_visits, user_requests, users
 from .routes.unprotected import auth
 from .util import CORS_HEADERS
 
@@ -25,6 +25,7 @@ app.include_router(router=site_visits.router, prefix="/protected/site")
 app.include_router(router=site.router, prefix="/protected/site-management")
 app.include_router(router=users.router, prefix="/protected/users")
 app.include_router(router=documents.router, prefix="/protected/documents")
+app.include_router(router=user_requests.router, prefix="/protected/user-requests")
 app.include_router(router=auth.router, prefix="/unprotected/auth")
 
 
