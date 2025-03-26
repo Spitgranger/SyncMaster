@@ -44,7 +44,7 @@ wheels = [
 
 [[package]]
 name = "aws-sam-translator"
-version = "1.94.0"
+version = "1.95.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "boto3" },
@@ -52,9 +52,9 @@ dependencies = [
     { name = "pydantic" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ef/2c/69276246bc22293aec595dac217e0ad8299053d05c8ff00a24d1f09395b3/aws_sam_translator-1.94.0.tar.gz", hash = "sha256:8ec258d9f7ece72ef91c81f4edb45a2db064c16844b6afac90c575893beaa391", size = 326072 }
+sdist = { url = "https://files.pythonhosted.org/packages/61/8c/4ea1c5fafdec02f2b3a91d60889219a42c18f5c3dd93ec13ef985e4249f6/aws_sam_translator-1.95.0.tar.gz", hash = "sha256:fd2b891fc4cbdde1e06130eaf2710de5cc74442a656b7859b3840691144494cf", size = 327484 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/4a/84/f3ce5384246c86f3806ca7b8b009edb9ea58271fd222c0bd69e31191b75c/aws_sam_translator-1.94.0-py3-none-any.whl", hash = "sha256:100e33eeffcfa81f7c45cadeb0ee29596ce829f6b4d2745140f04fa19a41f539", size = 384395 },
+    { url = "https://files.pythonhosted.org/packages/d2/5a/2edbe63d0b1c1e3c685a9b8464626f59c48bfbcc4e20142acae5ddea504c/aws_sam_translator-1.95.0-py3-none-any.whl", hash = "sha256:c9e0f22cbe83c768f7d20a3afb7e654bd6bfc087b387528bd48e98366b82ae40", size = 385846 },
 ]
 
 [[package]]
@@ -152,7 +152,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "bandit", specifier = ">=1.8.0" },
-    { name = "cfn-lint", specifier = "==1.22.2" },
+    { name = "cfn-lint", specifier = "==1.32.1" },
     { name = "coverage", specifier = "==7.6.10" },
     { name = "coverage-threshold", specifier = "==0.5.0" },
     { name = "joserfc", specifier = ">=1.0.2" },
@@ -201,7 +201,7 @@ wheels = [
 
 [[package]]
 name = "cfn-lint"
-version = "1.22.2"
+version = "1.32.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aws-sam-translator" },
@@ -212,9 +212,9 @@ dependencies = [
     { name = "sympy" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/74/15/5f736b7ae3093553366ea24fa50af67cada8ed067c7f0cf3511f7824ae38/cfn_lint-1.22.2.tar.gz", hash = "sha256:83b3fb9ada7caf94bc75b4bf13999371f74aae39bad92280fd8c9d114ba4006c", size = 2848845 }
+sdist = { url = "https://files.pythonhosted.org/packages/ab/e5/155cad94f2162268cb5acd56e164bb2f9e146a490b5f68ae881686cd3819/cfn_lint-1.32.1.tar.gz", hash = "sha256:10282c0ec7fc6391da4877d9381a6b954f3c54ddcc0d3c97ee86f4783b5ae680", size = 2896622 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/bd/59/c42cd34cce30010369deb2acb8f734f509aa72bbcc27eed7c1fb26690528/cfn_lint-1.22.2-py3-none-any.whl", hash = "sha256:dd8f575f3cec51f07940fd2564a20a68377937ccac2d0c25b7f94713a7ccbad2", size = 4949622 },
+    { url = "https://files.pythonhosted.org/packages/53/d1/68dc62405b43a59aae187e5ee3c7f8e7f26fe3f53aa00f776d05e06aa8b8/cfn_lint-1.32.1-py3-none-any.whl", hash = "sha256:a8ea63ac8daa69a66a54a796998362fd063d9ba1e9c1fc3c932213b0c027669c", size = 5041376 },
 ]
 
 [[package]]
