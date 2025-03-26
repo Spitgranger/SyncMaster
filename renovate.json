@@ -1,9 +1,15 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "security:only-security-updates"
   ],
   "lockFileMaintenance": {
+    "enabled": true
+  },
+  "ignorePaths": [
+    "src/poc/**"
+  ],
+  "vulnerabilityAlerts": {
     "enabled": true
   }
 }
