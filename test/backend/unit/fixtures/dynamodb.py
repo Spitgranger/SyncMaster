@@ -102,3 +102,16 @@ def database_with_two_sites(database_with_site, db_site_new):
     database, complete_entry = database_with_site
     database.put_item(Item=db_site_new.model_dump())
     return empty_database, {complete_entry, db_site_new}
+
+
+@pytest.fixture()
+def database_with_user_request(empty_database, db_user_request):
+    empty_database.put_item(Item=db_user_request.model_dump())
+    return empty_database, db_user_request
+
+
+@pytest.fixture()
+def database_with_two_user_requests(database_with_user_request, db_user_request_new):
+    database, db_user_request = database_with_user_request
+    database.put_item(Item=db_user_request_new.model_dump())
+    return database, {db_user_request, db_user_request_new}

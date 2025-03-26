@@ -219,7 +219,7 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              AWS: 
+              AWS:
                 - !GetAtt LambdaExecutionRole.Arn
                 - !GetAtt UnprotectedLambdaExecutionRole.Arn
             Action: sts:AssumeRole
@@ -236,7 +236,9 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              AWS: !GetAtt LambdaExecutionRole.Arn
+              AWS:
+                - !GetAtt LambdaExecutionRole.Arn
+                - !GetAtt UnprotectedLambdaExecutionRole.Arn
             Action: sts:AssumeRole
 
   UserPool:
@@ -369,6 +371,7 @@ Resources:
       Environment:
         Variables:
           TABLE_READ_ROLE: !GetAtt DatabaseReadRole.Arn
+          TABLE_WRITE_ROLE: !GetAtt DatabaseWriteRole.Arn
 
   ProtectedApiFunction:
     Type: AWS::Serverless::Function

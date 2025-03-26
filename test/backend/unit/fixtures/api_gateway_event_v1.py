@@ -9,6 +9,7 @@ from ..constants import (
     FUTURE_DATE_TIME,
     PREV_DATE_TIME,
     TEST_ATTACHMENT_NAME,
+    TEST_COMPANY_NAME,
     TEST_DOCUMENT_ID,
     TEST_PARENT_FOLDER_ID,
     TEST_S3_FILE_KEY,
@@ -19,7 +20,10 @@ from ..constants import (
     TEST_SITE_LONGITUDE_ALT,
     TEST_SITE_RANGE,
     TEST_SITE_RANGE_ALT,
+    TEST_USER_EMAIL,
     TEST_USER_ID,
+    TEST_USER_NAME,
+    TEST_USER_ROLE,
     TEST_VISIT_DESCRIPTION,
     TEST_WORK_ORDER,
 )
@@ -603,5 +607,80 @@ def list_sites_request_bad_role(api_gateway_event):
         method="GET",
         user_role="contractor",
         user_groups=["contractor"],
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def create_user_request_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/unprotected/auth/create-request",
+        method="POST",
+        body=json.dumps(
+            {
+                "email": TEST_USER_EMAIL,
+                "company": TEST_COMPANY_NAME,
+                "name": TEST_USER_NAME,
+                "role_requested": TEST_USER_ROLE.lower(),
+            }
+        ),
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def get_user_request_request_paginated(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/user-requests/get-requests",
+        method="GET",
+        query_params={"limit": "1"},
+        user_role="admin",
+        user_groups=["admin"],
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def get_user_request_request_bad_role(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/user-requests/get-requests",
+        method="GET",
+        query_params={"limit": "1"},
+        user_role="contractor",
+        user_groups=["contractor"],
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def action_user_request_request_bad_role(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/user-requests/action-request",
+        method="POST",
+        user_role="contractor",
+        user_groups=["contractor"],
+        body=json.dumps(
+            {
+                "email": TEST_USER_EMAIL,
+                "action": "approve",
+            }
+        ),
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def action_user_request_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/user-requests/action-request",
+        method="POST",
+        user_role="admin",
+        user_groups=["admin"],
+        body=json.dumps(
+            {
+                "email": TEST_USER_EMAIL,
+                "action": "approve",
+            }
+        ),
     )
     yield event, context
