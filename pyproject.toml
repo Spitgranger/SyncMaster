@@ -21,7 +21,7 @@ dev = [
     "joserfc>=1.0.2",
     "moto==5.0.25",
     "mypy==1.14.1",
-    "pylint==3.3.3",
+    "pylint==3.3.6",
     "pytest==8.3.4",
     "pytest-cov==6.0.0",
     "pytest-env==1.1.5",
