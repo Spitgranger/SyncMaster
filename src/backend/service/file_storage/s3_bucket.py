@@ -58,6 +58,7 @@ class S3Bucket:
         Creates a presigned get url to get an object from S3
 
         :param key: The key of the object to get from S3
+        :param original_filename: The name of the file to be downloaded
         :return: The get object presigned url
         """
         return self._client.generate_presigned_url(
