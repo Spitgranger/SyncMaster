@@ -21,6 +21,7 @@ from .util import CORS_HEADERS
 
 logger = Logger()
 app = APIGatewayRestResolver(enable_validation=True)
+app.enable_swagger(path="/unprotected/swagger")
 app.include_router(router=site_visits.router, prefix="/protected/site")
 app.include_router(router=site.router, prefix="/protected/site-management")
 app.include_router(router=users.router, prefix="/protected/users")
