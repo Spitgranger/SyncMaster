@@ -55,7 +55,9 @@ class DBSiteVisit(DBItemModel):
         # pylint: disable=no-member
         for name, s3_key in self.attachments.items():
             attachments.append(
-                APIFileAttachmentResponse(name=name, url=bucket.create_get_url(key=s3_key))
+                APIFileAttachmentResponse(
+                    name=name, url=bucket.create_get_url(key=s3_key, original_filename=name)
+                )
             )
         return APISiteVisit(
             site_id=self.site_id,
