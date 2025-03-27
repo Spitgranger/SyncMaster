@@ -61,7 +61,12 @@ class S3Bucket:
         :return: The get object presigned url
         """
         return self._client.generate_presigned_url(
-            ClientMethod="get_object", Params={"Bucket": self.name, "Key": key, "ResponseContentDisposition": f'attachment; filename="{original_filename}"'}
+            ClientMethod="get_object",
+            Params={
+                "Bucket": self.name,
+                "Key": key,
+                "ResponseContentDisposition": f'attachment; filename="{original_filename}"',
+            },
         )
 
     def delete(self, key: str, e_tag: Optional[str] = None) -> None:
