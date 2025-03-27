@@ -45,6 +45,70 @@ Resources:
         AllowOrigin: "'*'"
         AllowHeaders: "'Content-Type,Authorization,X-Amz-Date'"
         MaxAge: 600
+      GatewayResponses:
+        RESOURCE_NOT_FOUND:
+          StatusCode: 404
+          ResponseParameters:
+            Headers:
+              Access-Control-Allow-Headers: "'*'"
+              Access-Control-Allow-Origin: "'*'"
+              Access-Control-Allow-Methods: "'GET,POST,PUT,DELETE,PATCH,OPTIONS'"
+        MISSING_AUTHENTICATION_TOKEN:
+          StatusCode: 401
+          ResponseParameters:
+            Headers:
+              Access-Control-Allow-Headers: "'*'"
+              Access-Control-Allow-Origin: "'*'"
+              Access-Control-Allow-Methods: "'GET,POST,PUT,DELETE,PATCH,OPTIONS'"
+        ACCESS_DENIED:
+          StatusCode: 403
+          ResponseParameters:
+            Headers:
+              Access-Control-Allow-Headers: "'*'"
+              Access-Control-Allow-Origin: "'*'"
+              Access-Control-Allow-Methods: "'GET,POST,PUT,DELETE,PATCH,OPTIONS'"
+        UNAUTHORIZED:
+          StatusCode: 401
+          ResponseParameters:
+            Headers:
+              Access-Control-Allow-Headers: "'*'"
+              Access-Control-Allow-Origin: "'*'"
+              Access-Control-Allow-Methods: "'GET,POST,PUT,DELETE,PATCH,OPTIONS'"
+        EXPIRED_TOKEN:
+          StatusCode: 401
+          ResponseParameters:
+            Headers:
+              Access-Control-Allow-Headers: "'*'"
+              Access-Control-Allow-Origin: "'*'"
+              Access-Control-Allow-Methods: "'GET,POST,PUT,DELETE,PATCH,OPTIONS'"
+        QUOTA_EXCEEDED:
+          StatusCode: 429
+          ResponseParameters:
+            Headers:
+              Access-Control-Allow-Headers: "'*'"
+              Access-Control-Allow-Origin: "'*'"
+              Access-Control-Allow-Methods: "'GET,POST,PUT,DELETE,PATCH,OPTIONS'"
+        THROTTLED:
+          StatusCode: 429
+          ResponseParameters:
+            Headers:
+              Access-Control-Allow-Headers: "'*'"
+              Access-Control-Allow-Origin: "'*'"
+              Access-Control-Allow-Methods: "'GET,POST,PUT,DELETE,PATCH,OPTIONS'"
+        DEFAULT_4XX:
+          StatusCode: 400
+          ResponseParameters:
+            Headers:
+              Access-Control-Allow-Headers: "'*'"
+              Access-Control-Allow-Origin: "'*'"
+              Access-Control-Allow-Methods: "'GET,POST,PUT,DELETE,PATCH,OPTIONS'"
+        DEFAULT_5XX:
+          StatusCode: 500
+          ResponseParameters:
+            Headers:
+              Access-Control-Allow-Headers: "'*'"
+              Access-Control-Allow-Origin: "'*'"
+              Access-Control-Allow-Methods: "'GET,POST,PUT,DELETE,PATCH,OPTIONS'"
       Auth:
         Authorizers:
           CognitoAuth:
