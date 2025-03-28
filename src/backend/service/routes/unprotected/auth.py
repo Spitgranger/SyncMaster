@@ -2,7 +2,6 @@
 Unprotected routes associated with authentication
 """
 
-from datetime import datetime, timezone
 from http import HTTPStatus
 
 from aws_lambda_powertools.event_handler import content_types
@@ -17,7 +16,7 @@ from ...models.db.user_request import DBUserRequest
 from ...models.user_authentication.user_request_response import SigninRequest
 from ...user_authentication.user_authentication import CognitoClient, signin_user_handler
 from ...user_requests.user_requests import create_user_request
-from ...util import AWSAccessLevel, create_http_response
+from ...util import AWSAccessLevel, create_http_response, time_epoch_to_datetime
 
 router = Router()
 
@@ -41,8 +40,8 @@ def create_user_request_handler(body: Annotated[APIUserRequest, Body()]):
     :return: dictionary containing http response
     """
     table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBUserRequest)
-    request_time = datetime.fromtimestamp(
-        router.current_event["requestContext"]["requestTimeEpoch"] / 1000, tz=timezone.utc
+    request_time = time_epoch_to_datetime(
+        router.current_event["requestContext"]["requestTimeEpoch"]
     )
     response_body = create_user_request(
         table=table,

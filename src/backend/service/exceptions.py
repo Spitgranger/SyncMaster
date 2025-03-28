@@ -139,8 +139,8 @@ class InsufficientUserPermissionException(HTTPError):
 
     http_code = HTTPStatus.FORBIDDEN
 
-    def __init__(self, role: str, action: str):
-        super().__init__(f"User role [{role}] not permitted to perform action [{action}]")
+    def __init__(self, roles: list[str], action: str):
+        super().__init__(f"User roles [{str(roles)}] not permitted to perform action [{action}]")
 
 
 class ConflictException(HTTPError):

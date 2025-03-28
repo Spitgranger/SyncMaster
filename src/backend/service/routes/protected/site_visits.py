@@ -2,7 +2,7 @@
 Routes for site visit APIs
 """
 
-from datetime import datetime, timezone
+from datetime import datetime
 from http import HTTPStatus
 from typing import Optional
 
@@ -13,7 +13,6 @@ from typing_extensions import Annotated
 
 from ...database.db_table import DBTable
 from ...environment import DOCUMENT_STORAGE_BUCKET_NAME
-from ...exceptions import InsufficientUserPermissionException
 from ...file_storage.s3_bucket import S3Bucket
 from ...models.api.file_attachment import APIAddFileAttachment, APIRemoveFileAttachment
 from ...models.api.site_visit import (
@@ -30,7 +29,15 @@ from ...site_visits.site_visits import (
     list_site_visits,
     update_visit_details,
 )
-from ...util import CORS_HEADERS, AWSAccessLevel, UserType, decode_db_key, encode_db_key
+from ...util import (
+    CORS_HEADERS,
+    AWSAccessLevel,
+    UserType,
+    decode_db_key,
+    encode_db_key,
+    time_epoch_to_datetime,
+    verify_user_role,
+)
 
 router = Router()
 
@@ -46,8 +53,8 @@ def enter_site_handler(
     :param visit_details: Details of the visit which are available on entry
     :return: The details of the added site visit
     """
-    request_time = datetime.fromtimestamp(
-        router.current_event["requestContext"]["requestTimeEpoch"] / 1000, tz=timezone.utc
+    request_time = time_epoch_to_datetime(
+        router.current_event["requestContext"]["requestTimeEpoch"]
     )
 
     # Getting user id from claims
@@ -88,8 +95,8 @@ def edit_visit_details_handler(
     :param visit_details: The details of the visit to update/add
     :return: The details of the updated site visit
     """
-    request_time = datetime.fromtimestamp(
-        router.current_event["requestContext"]["requestTimeEpoch"] / 1000, tz=timezone.utc
+    request_time = time_epoch_to_datetime(
+        router.current_event["requestContext"]["requestTimeEpoch"]
     )
 
     # Getting user id from claims
@@ -129,8 +136,8 @@ def add_file_attachment_handler(
     :param attachment_details: The details of the attachment to add
     :return: The details of the updated site visit
     """
-    request_time = datetime.fromtimestamp(
-        router.current_event["requestContext"]["requestTimeEpoch"] / 1000, tz=timezone.utc
+    request_time = time_epoch_to_datetime(
+        router.current_event["requestContext"]["requestTimeEpoch"]
     )
 
     # Getting user id from claims
@@ -171,8 +178,8 @@ def remove_file_attachment_handler(
     :param attachment_details: The details of the attachment to remove
     :return: The details of the updated site visit
     """
-    request_time = datetime.fromtimestamp(
-        router.current_event["requestContext"]["requestTimeEpoch"] / 1000, tz=timezone.utc
+    request_time = time_epoch_to_datetime(
+        router.current_event["requestContext"]["requestTimeEpoch"]
     )
 
     # Getting user id from claims
@@ -207,8 +214,8 @@ def exit_site_handler(site_id: Annotated[str, Path()], entry_time: Annotated[dat
     :param entry_time: The entry time of the visit to add the exit time to
     :return: The details of the updated site visit
     """
-    request_time = datetime.fromtimestamp(
-        router.current_event["requestContext"]["requestTimeEpoch"] / 1000, tz=timezone.utc
+    request_time = time_epoch_to_datetime(
+        router.current_event["requestContext"]["requestTimeEpoch"]
     )
 
     # Getting user id from claims
@@ -246,12 +253,14 @@ def list_site_visits_handler(
         obtained from the last_key of a previous request
     :return: The details of all site visits retrieved
     """
-    # Getting role from user claims
-    roles = router.current_event["requestContext"]["authorizer"]["claims"]["cognito:groups"]
 
-    # Role check to ensure admin
-    if UserType.ADMIN.value not in roles:
-        raise InsufficientUserPermissionException(role=roles, action="list site visits")
+    verify_user_role(
+        user_groups=router.current_event["requestContext"]["authorizer"]["claims"][
+            "cognito:groups"
+        ],
+        acceptable_roles=[UserType.ADMIN],
+        action="list site visits",
+    )
 
     decoded_key = decode_db_key(key=start_key) if start_key else None
 
