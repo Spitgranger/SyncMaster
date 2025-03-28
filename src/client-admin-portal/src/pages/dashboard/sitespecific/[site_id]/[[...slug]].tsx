@@ -18,20 +18,22 @@ import IconButton from '@mui/material/IconButton';
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteFileComponent from '@/components/DeleteFileComponent'
 
-const SiteWideDocuments = () => {
+const SiteSpecificDocuments = () => {
   const userState = useSelector((state: RootState) => state.user)
   const documentState = useSelector((state: RootState) => state.document)
   const { currentFolderFiles, isLoading } = documentState
   const { username, role, idToken, userId } = userState;
 
   const router = useRouter();
-  const folderId = router.query.slug ? router.query.slug[0] : "root"; // Handle slug logic
+  const siteId = router.query.site_id as string; // Extract site_id from the URL
+  const folderId = router.query.slug && router.query.slug.length > 0 ? router.query.slug[0] : "root"; // Handle slug logic
 
+  console.log("Site ID:", siteId);
   console.log("Folder ID:", folderId);
 
   const dispatch = useDispatch<AppDispatch>();
   React.useEffect(() => {
-    dispatch(getDocuments({ site_id: "ALL", folder_id: folderId, idToken: userState.idToken })).then((response) => {
+    dispatch(getDocuments({ site_id: siteId, folder_id: folderId, idToken: userState.idToken })).then((response) => {
       if (response.meta.requestStatus === "fulfilled") {
         console.log("Documents fetched successfully");
       }
@@ -58,7 +60,7 @@ const SiteWideDocuments = () => {
 
   const handleDoubleClick = (file: { document_type: string; document_id: string }) => {
     if (file.document_type === "folder") {
-      router.push(`/dashboard/sitewide/${file.document_id}`);
+      router.push(`/dashboard/sitespecific/${siteId}/${file.document_id}`);
     }
   };
 
@@ -224,9 +226,9 @@ const SiteWideDocuments = () => {
             </TableBody>
           </Table>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <FileUploaderComponent site_id="ALL" parent_folder_id={folderId} document_path={"path"} user_id={userId} idToken={idToken} />
+            <FileUploaderComponent site_id={siteId} parent_folder_id={folderId} document_path={"path"} user_id={userId} idToken={idToken} />
             {selectedFile && (
-              <DeleteFileComponent site_id="ALL" parent_folder_id={folderId} document_id={selectedFile.document_id} idToken={idToken} />
+              <DeleteFileComponent site_id={siteId} parent_folder_id={folderId} document_id={selectedFile.document_id} idToken={idToken} />
             )}
           </Box>
         </>
@@ -235,8 +237,8 @@ const SiteWideDocuments = () => {
   );
 };
 
-export default SiteWideDocuments;
+export default SiteSpecificDocuments;
 
-SiteWideDocuments.getLayout = function getLayout(page: React.ReactElement) {
+SiteSpecificDocuments.getLayout = function getLayout(page: React.ReactElement) {
   return <DashboardLayout>{page}</DashboardLayout>;
 }

@@ -6,6 +6,10 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '@/theme';
 import { NextPage } from 'next';
+import { Provider } from 'react-redux';
+import { store } from "../state/store"
+import AuthProvider from '@/contexts/AuthWrapper';
+
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: React.ReactElement) => React.ReactNode;
@@ -21,15 +25,23 @@ export default function MyApp(props: AppPropsWithLayout) {
   const layout = getLayout(<Component {...pageProps} />)
 
   return (
-    <AppCacheProvider {...props}>
-      <Head>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
-      </Head>
-      <ThemeProvider theme={theme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
-        {layout}
-      </ThemeProvider>
-    </AppCacheProvider>
+    <Provider store={store}>
+      <AuthProvider>
+
+        <AppCacheProvider {...props}>
+          <Head>
+            <meta name="viewport" content="initial-scale=1, width=device-width" />
+          </Head>
+          <ThemeProvider theme={theme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+
+            {layout}
+
+          </ThemeProvider>
+        </AppCacheProvider>
+      </AuthProvider>
+
+    </Provider>
   );
 }
