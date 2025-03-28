@@ -40,6 +40,7 @@ export const getUserRequests = createAsyncThunk(
       },
     });
     if (response.ok) {
+      //console.log("User requests fetched successfully", response.json());
       return response.json();
     }
     throw new Error("Failed to get user requests");
@@ -47,11 +48,11 @@ export const getUserRequests = createAsyncThunk(
 );
 
 // POST /protected/user-requests/action-request
-// Expected payload: { "email": "user@example.com", "action": "accept" or "reject" }
+// Expected payload: { "email": "user@example.com", "action": "approve" or "reject" }
 export const actionRequest = createAsyncThunk(
   'userRequests/actionRequest',
   async (
-    data: { email: string; action: "accept" | "reject" },
+    data: { email: string; action: "approve" | "reject" },
     thunkAPI
   ) => {
     const state = thunkAPI.getState() as RootState;
@@ -64,8 +65,13 @@ export const actionRequest = createAsyncThunk(
       },
       body: JSON.stringify(data),
     });
+
     if (response.ok) {
-      return response.json();
+      if (data.action === "approve" && response.status === 201) {
+        return response.json(); // Approve returns a 201 with a JSON body
+      } else if (data.action === "reject" && response.status === 204) {
+        return { message: "Request rejected successfully" }; // Reject returns a 204 with no body
+      }
     }
     throw new Error("Failed to perform action on user request");
   }
@@ -83,7 +89,7 @@ const userRequestsSlice = createSlice({
     });
     builder.addCase(getUserRequests.fulfilled, (state, action: PayloadAction<UserRequest[]>) => {
       state.loading = false;
-      state.requests = action.payload;
+      state.requests = action.payload.requests || []; // Assuming the response has a 'requests' field
     });
     builder.addCase(getUserRequests.rejected, (state, action) => {
       state.loading = false;

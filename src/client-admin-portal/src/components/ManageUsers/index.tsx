@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useState } from 'react';
 import {
   Container,
@@ -142,8 +141,21 @@ const ManageUsersTable: React.FC = () => {
         <Typography variant="h5" fontWeight="bold" textAlign="left" gutterBottom>
           Manage Users
         </Typography>
-        <Button variant="contained" color="primary" sx={{ mb: 2 }} onClick={() => router.push('/dashboard/adduser')}>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ mr: 2, mb: 2 }}
+          onClick={() => router.push('/dashboard/adduser')}
+        >
           + ADD NEW USER
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{ mb: 2 }}
+          onClick={() => router.push('/dashboard/manageusers/user-requests')}
+        >
+          User Requests
         </Button>
       </Container>
       <Container sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 6 }}>
