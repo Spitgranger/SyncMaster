@@ -13,7 +13,8 @@ import {
   Paper,
   CircularProgress,
   TableSortLabel,
-  Collapse
+  Collapse,
+  Button
 } from '@mui/material';
 import { getSiteVisits } from '@/state/site/siteVisitsSlice';
 import { RootState, AppDispatch } from '@/state/store';
@@ -118,12 +119,57 @@ const SiteVisitsTable: React.FC = () => {
 
   const sortedVisits = visits ? stableSort(visits, getComparator(order, orderBy)) : [];
 
+  const handleExport = () => {
+    if (!sortedVisits || sortedVisits.length === 0) return;
+
+    const exportData = sortedVisits.map(visit => ({
+      "Site ID": visit.site_id,
+      "User ID": visit.user_id,
+      "Entry Time": new Date(visit.entry_time).toLocaleString(),
+      "Exit Time": visit.exit_time ? new Date(visit.exit_time).toLocaleString() : 'N/A',
+      "Allowed Tracking": visit.allowed_tracking ? 'Yes' : 'No',
+      "Acknowledgment Status": visit.ack_status ? 'Yes' : 'No',
+      "Work Order": visit.work_order,
+      "On Site": visit.on_site ? 'Yes' : 'No',
+      "Description": visit.description,
+      "Attachments": visit.attachments && visit.attachments.length > 0 ? visit.attachments.map(a => a.name).join(', ') : ''
+    }));
+
+    // Convert the export data to a CSV string
+    const headers = Object.keys(exportData[0]);
+    const csvRows = [];
+    // Add header row
+    csvRows.push(headers.join(','));
+    // Add data rows
+    for (const row of exportData) {
+      const values = headers.map(header => {
+        const escaped = String(row[header]).replace(/"/g, '""');
+        return `"${escaped}"`;
+      });
+      csvRows.push(values.join(','));
+    }
+    const csvString = csvRows.join('\n');
+
+    // Create a Blob from the CSV string and trigger a download
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'site_visits.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <>
       <Container sx={{ mt: 0, px: 0 }}>
         <Typography variant="h5" fontWeight="bold" textAlign="left" gutterBottom>
           Site Visits
         </Typography>
+        <Button variant="contained" onClick={handleExport}>
+          Export to Excel
+        </Button>
       </Container>
       <Container sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 6 }}>
         {isLoading ? (
