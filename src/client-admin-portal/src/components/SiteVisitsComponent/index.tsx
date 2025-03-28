@@ -168,7 +168,7 @@ const SiteVisitsTable: React.FC = () => {
           Site Visits
         </Typography>
         <Button variant="contained" onClick={handleExport}>
-          Export to Excel
+          Export to CSV
         </Button>
       </Container>
       <Container sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 6 }}>
