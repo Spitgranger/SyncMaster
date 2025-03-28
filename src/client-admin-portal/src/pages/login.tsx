@@ -1,10 +1,12 @@
 'use client'
 import NonNavbarLogo from '@/components/NonNavbarLogo'
 import SignInForm from '@/components/SignInForm'
+import { initializeUser } from '@/utils/userHelpers'
 import { Container } from '@mui/material'
 import React from 'react'
 
 const LoginPage = () => {
+    initializeUser()
     return (
         <Container
             sx={

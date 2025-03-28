@@ -5,15 +5,27 @@ import { Button, IconButton, InputAdornment, TextField, Typography } from '@mui/
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Link from 'next/link';
-import { signInUser } from '@/services/userService';
 import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { signInUser } from '@/state/user/userSlice';
+import { AppDispatch } from '@/state/store';
+import { useSelector } from 'react-redux'
+import { RootState } from '@/state/store'
 
 const SignInForm = () => {
+
+    const userState = useSelector((state:RootState) => state.user)
+    const {accessToken,username,role, isSignedIn} = userState
+
+    const dispatch = useDispatch<AppDispatch>()
+
     const [email, setEmail] = useState("")
     const [emailError, setEmailError] = useState(false);
 
     const [password, setPassword] = useState("")
     const [showPassword, setShowPassword] = useState(false);
+
+    const [isSignInButtonDisabled, setisSignInButtonDisabled] = useState(false);
 
     const router = useRouter();
 
@@ -40,17 +52,27 @@ const SignInForm = () => {
         event.preventDefault();
     };
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        console.log("here after click");        
         event.preventDefault();
-        try {
-            const result = await signInUser(email, password);
-            localStorage.setItem("accessToken", result.AccessToken);
-            localStorage.setItem("IdToken", result.IdToken);
-            console.log("Signed in successfully", result);
-            router.push('/dashboard/sitewide');
-        } catch (error) {
-            console.error("Sign in failed", error);
-        }
+        setisSignInButtonDisabled(true)
+        dispatch(signInUser({ email, password })).then((response) => {
+
+            if (response.meta.requestStatus === "fulfilled") {
+                console.log("reponse returned", response);
+
+                localStorage.setItem("accessToken", response.payload.AccessToken);
+                localStorage.setItem("idToken", response.payload.IdToken);
+                router.push("/dashboard/sitewide")
+            }
+            else {
+                console.log("an error occured while signing in");
+                console.log(response);
+
+
+            }
+        })
+        setisSignInButtonDisabled(false)
     }
 
     return (
@@ -59,6 +81,9 @@ const SignInForm = () => {
             maxWidth: "552px",
             px: "24px"
         }}>
+        <div>here{role}</div>
+        <div>here s{username}</div>
+
             <form onSubmit={handleSubmit}>
                 <Grid size={12} py={2}>
                     <Typography variant='h5'>Sign In</Typography>
@@ -109,7 +134,7 @@ const SignInForm = () => {
                         </Link>
                     </Grid>
 
-                    <Button type="submit" size='large' variant='contained'>Sign In</Button>
+                    <Button disabled={isSignInButtonDisabled} type="submit" size='large' variant='contained'>Sign In</Button>
 
                     <Grid display={"flex"} justifyContent={"center"}>
                         <Link style={{ textAlign: 'center', color: "#1976d2" }} href={'/sign-up'}>

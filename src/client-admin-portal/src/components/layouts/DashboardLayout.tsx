@@ -22,8 +22,11 @@ import { Settings, Business } from '@mui/icons-material';
 import { AiOutlineGlobal } from 'react-icons/ai';
 import SpecificIcon from '../Icons/SpecificIcon';
 import UserIcon from '../Icons/UserIcon';
-import { Avatar } from '@mui/material';
+import { Avatar, Button } from '@mui/material';
 import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/state/store';
+import { signOutUser } from '@/state/user/userSlice';
 interface Props {
   children: React.ReactNode;
 }
@@ -103,6 +106,7 @@ export default function DashboardLayout({ children }: Props) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleDrawerOpen = () => {
     setOpen((open) => !open);
@@ -112,6 +116,21 @@ export default function DashboardLayout({ children }: Props) {
     setOpen(false);
   };
 
+  function handleSignOut(event: React.MouseEvent<HTMLButtonElement>): void {
+    event.preventDefault();
+    dispatch(signOutUser()).then((response) => {
+      if (response.meta.requestStatus === "fulfilled") {
+        localStorage.removeItem("idToken")
+        localStorage.removeItem("accessToken")
+        router.push("/login");
+      }
+      else {
+        console.log("an error occured while signing out");
+        console.log(response)
+      }
+    })
+  }
+  
   return (
     <>
       <AppBar position="fixed">
@@ -137,6 +156,7 @@ export default function DashboardLayout({ children }: Props) {
             </Grid>
           </Grid>
           <Avatar />
+          <Button onClick={handleSignOut}>Sign Out</Button>
         </Toolbar>
       </AppBar>
       <Box sx={{ display: 'flex' }}>
@@ -175,7 +195,7 @@ export default function DashboardLayout({ children }: Props) {
           <Divider />
           <Typography pt={1} px={2} variant='subtitle1' color="textSecondary">Organization</Typography>
           <List>
-            {[{ text: 'Site Visits', icon: <Business sx={{ color: "black" }} />, route: "/dashboard/sitevisits" }, { text: 'Manage Users', icon: <UserIcon />, route: "/dashboard/manageusers" }, { text: 'Settings', icon: <Settings sx={{ color: "black" }} />, route: "/dashboard/settings" }].map((link: SidebarLink) => (
+            {[{ text: 'Site Visits', icon: <Business sx={{ color: "black" }} />, route: "/dashboard/sitevisits" },{ text: 'Manage Sites', icon: <Business sx={{ color: "black" }} />, route: "/dashboard/managesites" } ,{ text: 'Manage Users', icon: <UserIcon />, route: "/dashboard/manageusers" }, { text: 'Settings', icon: <Settings sx={{ color: "black" }} />, route: "/dashboard/settings" }].map((link: SidebarLink) => (
               <ListItem key={link.text} disablePadding>
                 <ListItemButton onClick={() => { router.push(link.route) }} selected={router.pathname.startsWith(link.route)}>
                   <ListItemIcon>
