@@ -1,0 +1,37 @@
+version: 1
+applications:
+  - frontend-admin:
+      buildPath: "src/client-admin-portal" # run install and build from monorepo project root
+      phases:
+        preBuild:
+          commands:
+            - npm ci
+        build:
+          commands:
+            - npm run build
+      artifacts:
+        baseDirectory: build
+        files:
+          - "**/*"
+      cache:
+        paths:
+          - src/client-admin-portal/node_modules/**/*
+    appRoot: src/client-admin-portal
+
+  - frontend-contractor:
+      buildPath: "src/client-contractor-portal"
+      phases:
+        preBuild:
+          commands:
+            - npm ci
+        build:
+          commands:
+            - npm run build
+      artifacts:
+        baseDirectory: build
+        files:
+          - "**/*"
+      cache:
+        paths:
+          - src/client-contractor-portal/node_modules/**/*
+    appRoot: src/client-contractor-portal
