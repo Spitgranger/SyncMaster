@@ -27,6 +27,7 @@ interface Attachment {
 interface Visit {
   site_id: string;
   user_id: string;
+  user_email: string;
   entry_time: string;
   exit_time: string;
   allowed_tracking: boolean;
@@ -34,6 +35,7 @@ interface Visit {
   work_order: number;
   description: string;
   on_site: boolean;
+  employee_id: string;
   attachments: Attachment[];
 }
 
@@ -79,9 +81,12 @@ function stableSort(array: Visit[], comparator: (a: Visit, b: Visit) => number) 
   return stabilizedThis.map((el) => el[0]);
 }
 
+// Updated columns array to include user_email and employee_id
 const columns = [
   { id: 'site_id', label: 'Site ID' },
   { id: 'user_id', label: 'User ID' },
+  { id: 'user_email', label: 'User Email' },
+  { id: 'employee_id', label: 'Employee ID' },
   { id: 'entry_time', label: 'Entry Time' },
   { id: 'exit_time', label: 'Exit Time' },
   { id: 'allowed_tracking', label: 'Allowed Tracking' },
@@ -125,6 +130,8 @@ const SiteVisitsTable: React.FC = () => {
     const exportData = sortedVisits.map(visit => ({
       "Site ID": visit.site_id,
       "User ID": visit.user_id,
+      "User Email": visit.user_email,
+      "Employee ID": visit.employee_id,
       "Entry Time": new Date(visit.entry_time).toLocaleString(),
       "Exit Time": visit.exit_time ? new Date(visit.exit_time).toLocaleString() : 'N/A',
       "Allowed Tracking": visit.allowed_tracking ? 'Yes' : 'No',
@@ -163,7 +170,7 @@ const SiteVisitsTable: React.FC = () => {
 
   return (
     <>
-      <Container sx={{ mt: 0, px: 0 }}>
+      <Container maxWidth={false} disableGutters sx={{ mt: 0, px: 2 }}>
         <Typography variant="h5" fontWeight="bold" textAlign="left" gutterBottom>
           Site Visits
         </Typography>
@@ -171,7 +178,7 @@ const SiteVisitsTable: React.FC = () => {
           Export to CSV
         </Button>
       </Container>
-      <Container sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 6 }}>
+      <Container maxWidth={false} disableGutters sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 6, px: 2 }}>
         {isLoading ? (
           <CircularProgress />
         ) : (
@@ -203,6 +210,8 @@ const SiteVisitsTable: React.FC = () => {
                       >
                         <TableCell>{visit.site_id}</TableCell>
                         <TableCell>{visit.user_id}</TableCell>
+                        <TableCell>{visit.user_email}</TableCell>
+                        <TableCell>{visit.employee_id}</TableCell>
                         <TableCell>{new Date(visit.entry_time).toLocaleString()}</TableCell>
                         <TableCell>{visit.exit_time ? new Date(visit.exit_time).toLocaleString() : 'N/A'}</TableCell>
                         <TableCell>{visit.allowed_tracking ? 'Yes' : 'No'}</TableCell>

@@ -6,7 +6,7 @@ import SiteVisitsTable from '@/components/SiteVisitsComponent'
 
 export default function SiteWideDocuments() {
   return (
-    <Container maxWidth={"lg"}>
+    <Container maxWidth={false}>
       <SiteVisitsTable />
     </Container>
   )
