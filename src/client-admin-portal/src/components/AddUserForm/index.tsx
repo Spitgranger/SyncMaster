@@ -1,47 +1,60 @@
+"use client";
 import React, { useState, useEffect } from 'react';
-import { Container, TextField, Button, Typography, MenuItem, Select, FormControl, InputLabel, Box } from '@mui/material';
-import { createUser } from '@/services/userService';
+import { Container, TextField, Button, Typography, MenuItem, Select, FormControl, InputLabel, Box, CircularProgress } from '@mui/material';
 import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
+import { createUser, resetCreateUserStatus } from '@/state/user/userManagementSlice'; // Import the reset action
+import { RootState, AppDispatch } from '@/state/store';
 
 const AddUserForm: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+  const { idToken } = useSelector((state: RootState) => state.user);
+  const { createUserStatus, error } = useSelector((state: RootState) => state.userManagement);
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [company, setCompany] = useState('');
   const [role, setRole] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<boolean>(false);
-  const [idToken, setIdToken] = useState<string | null>(null);
-  const router = useRouter();
+  const [localError, setLocalError] = useState<string | null>(null);
 
+  // Reset createUserStatus on component mount so the form starts fresh
   useEffect(() => {
-    // Since this is a client component, localStorage is available.
-    const token = localStorage.getItem('IdToken');
-    setIdToken(token);
-  }, []);
+    dispatch(resetCreateUserStatus());
+  }, [dispatch]);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  // Redirect after a successful user creation
+  useEffect(() => {
+    if (createUserStatus === 'succeeded') {
+      // Reset status before redirecting to avoid instant redirect on subsequent visits
+      dispatch(resetCreateUserStatus());
+      setTimeout(() => router.push('/dashboard/manageusers'), 2000);
+    }
+  }, [createUserStatus, router, dispatch]);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(null);
-    setSuccess(false);
+    setLocalError(null);
 
     if (!name || !email || !company || !role) {
-      setError('All fields are required');
+      setLocalError('All fields are required');
       return;
     }
 
     if (!idToken) {
-      setError('Authentication token not found. Please sign in again.');
+      setLocalError('Authentication token not found. Please sign in again.');
       return;
     }
 
-    try {
-      // Pass the IdToken as required by the API
-      await createUser(email, role as 'admin' | 'contractor' | 'employee', company, name, idToken);
-      setSuccess(true);
-      setTimeout(() => router.push('/dashboard/manageusers'), 2000); // Redirect after success
-    } catch (err: any) {
-      setError('Failed to create user. Please try again.');
-    }
+    // Dispatch the createUser thunk with the necessary data
+    dispatch(createUser({
+      email,
+      attributes: {
+        "custom:role": role as 'admin' | 'contractor' | 'employee',
+        "custom:company": company,
+        name,
+      }
+    }));
   };
 
   return (
@@ -53,8 +66,9 @@ const AddUserForm: React.FC = () => {
         Please enter the following details about the new user
       </Typography>
 
+      {localError && <Typography color="error" textAlign="center">{localError}</Typography>}
       {error && <Typography color="error" textAlign="center">{error}</Typography>}
-      {success && (
+      {createUserStatus === 'succeeded' && (
         <Typography color="success.main" textAlign="center">
           User created successfully! Redirecting...
         </Typography>
@@ -98,8 +112,8 @@ const AddUserForm: React.FC = () => {
             <MenuItem value="contractor">Contractor</MenuItem>
           </Select>
         </FormControl>
-        <Button type="submit" variant="contained" color="primary" fullWidth>
-          + ADD NEW USER
+        <Button type="submit" variant="contained" color="primary" fullWidth disabled={createUserStatus === 'loading'}>
+          {createUserStatus === 'loading' ? <CircularProgress size={24} /> : '+ ADD NEW USER'}
         </Button>
       </Box>
     </Container>
