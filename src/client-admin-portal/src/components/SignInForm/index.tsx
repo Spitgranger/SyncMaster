@@ -9,13 +9,8 @@ import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { signInUser } from '@/state/user/userSlice';
 import { AppDispatch } from '@/state/store';
-import { useSelector } from 'react-redux'
-import { RootState } from '@/state/store'
 
 const SignInForm = () => {
-
-    const userState = useSelector((state:RootState) => state.user)
-    const {accessToken,username,role, isSignedIn} = userState
 
     const dispatch = useDispatch<AppDispatch>()
 
@@ -53,7 +48,7 @@ const SignInForm = () => {
     };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        console.log("here after click");        
+        console.log("here after click");
         event.preventDefault();
         setisSignInButtonDisabled(true)
         dispatch(signInUser({ email, password })).then((response) => {
@@ -81,9 +76,6 @@ const SignInForm = () => {
             maxWidth: "552px",
             px: "24px"
         }}>
-        <div>here{role}</div>
-        <div>here s{username}</div>
-
             <form onSubmit={handleSubmit}>
                 <Grid size={12} py={2}>
                     <Typography variant='h5'>Sign In</Typography>
