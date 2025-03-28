@@ -17,6 +17,7 @@ class APISiteVisit(CustomBaseModel):
 
     site_id: str
     user_id: str
+    user_email: str
     entry_time: datetime
     allowed_tracking: bool
     ack_status: bool
@@ -24,6 +25,7 @@ class APISiteVisit(CustomBaseModel):
     work_order: Optional[int] = None
     description: Optional[str] = None
     on_site: Optional[bool] = None
+    employee_id: Optional[str] = None
     attachments: list[APIFileAttachmentResponse] = Field(default_factory=list)
 
 
@@ -33,6 +35,7 @@ class APIEnterSiteRequest(CustomBaseModel):
     allowed_tracking: bool
     ack_status: bool
     on_site: Optional[bool] = None
+    employee_id: Optional[str] = None
 
     @model_validator(mode="after")
     def require_on_site_if_tracking_location(self) -> Self:
