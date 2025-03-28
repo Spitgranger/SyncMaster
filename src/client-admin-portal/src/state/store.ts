@@ -4,6 +4,7 @@ import documentReducer from "./document/documentSlice"
 import siteReducer from "./site/siteSlice"
 import siteVisitsReducer from './site/siteVisitsSlice';
 import userManagementReducer from "./user/userManagementSlice"
+import userRequestReducer from "./user/userRequestSlice"
 
 export const store = configureStore({
     reducer: {
@@ -11,7 +12,8 @@ export const store = configureStore({
         document: documentReducer,
         site: siteReducer,
         siteVisits: siteVisitsReducer,
-        userManagement: userManagementReducer
+        userManagement: userManagementReducer,
+        userRequest: userRequestReducer
     },
 });
 
