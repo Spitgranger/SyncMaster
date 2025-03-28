@@ -4,18 +4,18 @@ import documentReducer from "./document/documentSlice"
 import siteReducer from "./site/siteSlice"
 import siteVisitsReducer from './site/siteVisitsSlice';
 import userManagementReducer from "./user/userManagementSlice"
-import userRequestReducer from "./user/userRequestSlice"
+import userRequestsReducer from "./user/userRequestsSlice"
 
 export const store = configureStore({
     reducer: {
-        user: userReducer,
-        document: documentReducer,
-        site: siteReducer,
-        siteVisits: siteVisitsReducer,
-        userManagement: userManagementReducer,
-        userRequest: userRequestReducer
+      user: userReducer,
+      document: documentReducer,
+      site: siteReducer,
+      siteVisits: siteVisitsReducer,
+      userManagement: userManagementReducer,
+      userRequests: userRequestsReducer  // changed key here
     },
-});
+  });
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
