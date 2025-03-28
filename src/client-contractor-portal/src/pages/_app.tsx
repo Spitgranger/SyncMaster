@@ -5,22 +5,26 @@ import { AppCacheProvider } from '@mui/material-nextjs/v15-pagesRouter';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '@/theme';
-import { DocumentTreeContextProvider } from '@/contexts/DocumentTreeContext';
+import { Provider } from 'react-redux';
+import { store } from "../state/store"
+import AuthWrapper from '@/contexts/AuthWrapper';
 
 export default function MyApp(props: AppProps) {
   const { Component, pageProps } = props;
   return (
-    <AppCacheProvider {...props}>
-      <Head>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
-      </Head>
-      <ThemeProvider theme={theme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
-        <DocumentTreeContextProvider>
-          <Component {...pageProps} />
-        </DocumentTreeContextProvider>
-      </ThemeProvider>
-    </AppCacheProvider>
+    <Provider store={store}>
+      <AuthWrapper>
+      <AppCacheProvider {...props}>
+        <Head>
+          <meta name="viewport" content="initial-scale=1, width=device-width" />
+        </Head>
+        <ThemeProvider theme={theme}>
+          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+          <CssBaseline />
+            <Component {...pageProps} />
+        </ThemeProvider>
+      </AppCacheProvider>
+      </AuthWrapper>
+    </Provider>
   );
 }

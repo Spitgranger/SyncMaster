@@ -5,50 +5,80 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { signinUser } from "@/services/authService";
 import { useRouter } from "next/router";
 import { jwtDecode } from "jwt-decode"; // Install this: npm install jwt-decode
+import { AppDispatch } from "@/state/store";
+import { useDispatch } from "react-redux";
+import { signInUser } from "@/state/user/userSlice";
+import getGeolocation from "@/utils/getLocation";
 
 const SignInForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+  const { id } = router.query;
+
+  const dispatch = useDispatch<AppDispatch>()
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const location = await getGeolocation();
+    if (location[0] !== null || location[1] === null) {
 
-    try {
-      const data = await signinUser(email, password);
-
-      if (data.AccessToken) {
-        console.log("Authentication response:", data);
-
-        // ✅ Store Access Token
-        localStorage.setItem("accessToken", data.AccessToken);
-        localStorage.setItem("IdToken", data.IdToken);
-
-        // ✅ Decode and store User ID from IdToken
-        if (data.IdToken) {
-          const decodedToken: any = jwtDecode(data.IdToken);
-          const userId = decodedToken?.sub; // "sub" typically contains the User ID
-
-          if (userId) {
-            localStorage.setItem("userId", userId);
-            console.log("User ID stored:", userId);
+      dispatch(signInUser({ email, password, location })).then((response) => {
+        if (response.meta.requestStatus === "fulfilled") {
+          console.log("Login successful");
+          localStorage.setItem("accessToken", response.payload.AccessToken);
+          localStorage.setItem("idToken", response.payload.IdToken);
+          router.push(`/portal/acknowledgement?id=${id}`);
+        } else {
+          console.log("an error occured while signing in");
+          if (response.payload.status === 403) {
+            console.log("Redirecting to reset password page...");
+            router.push(`/reset-password?email=${encodeURIComponent(email)}`);
           }
         }
-
-        // ✅ Redirect after login
-        window.location.href = "/acknowledgement";
-      } else {
-        console.log("Invalid email or password.");
       }
-    } catch (err: any) {
-      if (err.response?.status === 403) {
-        console.log("Redirecting to reset password page...");
-        router.push(`/reset-password?email=${encodeURIComponent(email)}`);
-      } else {
-        console.error("Login failed. Please check your credentials.");
-      }
+      );
     }
+    else {
+      console.log("Location not found")
+    }
+
+    //   try {
+    //     const data = await signinUser(email, password);
+
+    //     if (data.AccessToken) {
+    //       console.log("Authentication response:", data);
+
+    //       // ✅ Store Access Token
+    //       localStorage.setItem("accessToken", data.AccessToken);
+    //       localStorage.setItem("IdToken", data.IdToken);
+
+    //       // ✅ Decode and store User ID from IdToken
+    //       if (data.IdToken) {
+    //         const decodedToken: any = jwtDecode(data.IdToken);
+    //         const userId = decodedToken?.sub; // "sub" typically contains the User ID
+
+    //         if (userId) {
+    //           localStorage.setItem("userId", userId);
+    //           console.log("User ID stored:", userId);
+    //         }
+    //       }
+
+    //       // ✅ Redirect after login
+    //       window.location.href = "/acknowledgement";
+    //     } else {
+    //       console.log("Invalid email or password.");
+    //     }
+    //   } catch (err: any) {
+    //     if (err.response?.status === 403) {
+    //       console.log("Redirecting to reset password page...");
+    //       router.push(`/reset-password?email=${encodeURIComponent(email)}`);
+    //     } else {
+    //       console.error("Login failed. Please check your credentials.");
+    //     }
+    //   }
   };
 
   return (
