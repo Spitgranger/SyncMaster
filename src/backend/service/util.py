@@ -4,6 +4,7 @@ Generic utility functions common across modules
 
 import base64
 import json
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Optional
 
@@ -14,7 +15,11 @@ from botocore.config import Config
 from botocore.exceptions import ClientError
 from cachetools.func import ttl_cache
 
-from .exceptions import ExternalServiceException, PermissionException
+from .exceptions import (
+    ExternalServiceException,
+    InsufficientUserPermissionException,
+    PermissionException,
+)
 from .models.custom_base_model import CustomBaseModel
 
 logger = Logger()
@@ -188,3 +193,33 @@ def create_http_response(
         body=body,
         headers=headers,
     )
+
+
+def time_epoch_to_datetime(time_epoch: int) -> datetime:
+    """
+    From time epoch given in api gateway request, create a datetime object
+
+    :param time_epoch: The time epoch to convert into a datetime
+    :return: The datetime representing the time epoch
+    """
+    return datetime.fromtimestamp(time_epoch / 1000, tz=timezone.utc)
+
+
+def verify_user_role(user_groups: list[str], acceptable_roles: list[UserType], action: str) -> None:
+    """
+    Verify the users groups fall under the list of acceptable groups for the action
+    they want to perform
+
+    :param user_groups: The user groups the user beolngs to
+    :param acceptable_roles: The roles that are allowed to perform the given action
+    :param action: The action being performed
+    :raises InsufficientUserPermissionException: If user cannot perform the given action
+    """
+    allowed_access = False
+
+    for role in acceptable_roles:
+        if role.value in user_groups:
+            allowed_access = True
+
+    if not allowed_access:
+        raise InsufficientUserPermissionException(roles=user_groups, action=action)

@@ -4,7 +4,6 @@ Routes to associated with document management
 
 import base64
 import json
-from datetime import datetime, timezone
 from http import HTTPStatus
 from typing import Optional
 
@@ -22,11 +21,17 @@ from ...document_management.document_management import (
     upload_file,
 )
 from ...environment import DOCUMENT_STORAGE_BUCKET_NAME
-from ...exceptions import InsufficientUserPermissionException
 from ...file_storage.s3_bucket import S3Bucket
 from ...models.api.document import APIDocumentUploadRequest, APIExpiringDocumentResponse
 from ...models.db.document import DBDocument
-from ...util import CORS_HEADERS, AWSAccessLevel, UserType, create_http_response
+from ...util import (
+    CORS_HEADERS,
+    AWSAccessLevel,
+    UserType,
+    create_http_response,
+    time_epoch_to_datetime,
+    verify_user_role,
+)
 
 router = Router()
 
@@ -38,9 +43,10 @@ def upload_handler(body: Annotated[APIDocumentUploadRequest, Body()]):
     :param body: The body of the HTTP request
     :return: dictionary containing http response
     """
-    request_time = datetime.fromtimestamp(
-        router.current_event["requestContext"]["requestTimeEpoch"] / 1000, tz=timezone.utc
+    request_time = time_epoch_to_datetime(
+        router.current_event["requestContext"]["requestTimeEpoch"]
     )
+
     document_table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBDocument)
     item = upload_file(
         document_table,
@@ -116,12 +122,13 @@ def delete_file_handler(
     :param document_id: The unique identifier of the document to be deleted
     :return: dictionary containing http response
     """
-    # Getting role from user claims
-    roles = router.current_event["requestContext"]["authorizer"]["claims"]["cognito:groups"]
-
-    # Role check to ensure admin for document deletion
-    if UserType.ADMIN.value not in roles:
-        raise InsufficientUserPermissionException(role=roles, action="delete documents")
+    verify_user_role(
+        user_groups=router.current_event["requestContext"]["authorizer"]["claims"][
+            "cognito:groups"
+        ],
+        acceptable_roles=[UserType.ADMIN],
+        action="delete documents",
+    )
 
     s3_bucket = S3Bucket(DOCUMENT_STORAGE_BUCKET_NAME, AWSAccessLevel.WRITE)
     document_table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBDocument)
@@ -146,16 +153,16 @@ def list_expiring_documents_handler(
         obtained from the last_key of a previous request
     :return: The documents that are expiring
     """
-    request_time = datetime.fromtimestamp(
-        router.current_event["requestContext"]["requestTimeEpoch"] / 1000, tz=timezone.utc
+    request_time = time_epoch_to_datetime(
+        router.current_event["requestContext"]["requestTimeEpoch"]
     )
-
-    # Getting role from user claims
-    roles = router.current_event["requestContext"]["authorizer"]["claims"]["cognito:groups"]
-
-    # Role check to ensure admin
-    if UserType.ADMIN.value not in roles:
-        raise InsufficientUserPermissionException(role=roles, action="list site visits")
+    verify_user_role(
+        user_groups=router.current_event["requestContext"]["authorizer"]["claims"][
+            "cognito:groups"
+        ],
+        acceptable_roles=[UserType.EMPLOYEE, UserType.ADMIN],
+        action="list expiring documents",
+    )
 
     decoded_key: Optional[dict] = None
     if start_key:

@@ -12,7 +12,6 @@ from typing_extensions import Annotated
 
 from ...database.db_table import DBTable
 from ...environment import USER_POOL_CLIENT_ID, USER_POOL_ID
-from ...exceptions import InsufficientUserPermissionException
 from ...models.api.user_requests import (
     APIActionUserRequest,
     APIGetUserRequestsResponse,
@@ -20,7 +19,14 @@ from ...models.api.user_requests import (
 from ...models.db.user_request import DBUserRequest
 from ...user_authentication.user_authentication import AdminCognitoClient
 from ...user_requests.user_requests import action_user_request, get_user_requests
-from ...util import AWSAccessLevel, UserType, create_http_response, decode_db_key, encode_db_key
+from ...util import (
+    AWSAccessLevel,
+    UserType,
+    create_http_response,
+    decode_db_key,
+    encode_db_key,
+    verify_user_role,
+)
 
 router = Router()
 
@@ -36,12 +42,14 @@ def get_user_requests_handler(
     :param start_key: The key to start the query from as query string
     :return: dictionary containing http response
     """
-    # Getting role from user claims
-    roles = router.current_event["requestContext"]["authorizer"]["claims"]["cognito:groups"]
 
-    # Role check to ensure admin
-    if UserType.ADMIN.value not in roles:
-        raise InsufficientUserPermissionException(role=roles, action="list site visits")
+    verify_user_role(
+        user_groups=router.current_event["requestContext"]["authorizer"]["claims"][
+            "cognito:groups"
+        ],
+        acceptable_roles=[UserType.ADMIN, UserType.EMPLOYEE],
+        action="get user requests",
+    )
 
     decoded_key = decode_db_key(key=start_key) if start_key else None
 
@@ -69,12 +77,13 @@ def action_user_request_handler(body: Annotated[APIActionUserRequest, Body()]):
     :param body: The body of the HTTP request
     :return: dictionary containing http response
     """
-    # Getting role from user claims
-    roles = router.current_event["requestContext"]["authorizer"]["claims"]["cognito:groups"]
-
-    # Role check to ensure admin
-    if UserType.ADMIN.value not in roles:
-        raise InsufficientUserPermissionException(role=roles, action="list site visits")
+    verify_user_role(
+        user_groups=router.current_event["requestContext"]["authorizer"]["claims"][
+            "cognito:groups"
+        ],
+        acceptable_roles=[UserType.ADMIN],
+        action="action user requests",
+    )
 
     table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBUserRequest)
 
