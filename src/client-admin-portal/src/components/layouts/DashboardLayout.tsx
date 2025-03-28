@@ -193,8 +193,8 @@ export default function DashboardLayout({ children }: Props) {
             }}
           >
             <Box px={2} py={1}>
-              <Typography variant="body2" color="black" fontWeight="bold" sx={{mb:1}}>Name: {username}</Typography>
-              <Typography variant="body2" color="black" sx={{mb:1}}>Role: {role}</Typography>
+              <Typography variant="body2" color="black" fontWeight="bold" sx={{ mb: 1 }}>Name: {username}</Typography>
+              <Typography variant="body2" color="black" sx={{ mb: 1 }}>Role: {role}</Typography>
             </Box>
             <Divider />
             <MenuItem onClick={handleSignOutClick}>Sign Out</MenuItem>
@@ -237,7 +237,7 @@ export default function DashboardLayout({ children }: Props) {
           <Divider />
           <Typography pt={1} px={2} variant='subtitle1' color="textSecondary">Organization</Typography>
           <List>
-            {[{ text: 'Site Visits', icon: <Business sx={{ color: "black" }} />, route: "/dashboard/sitevisits" }, { text: 'Manage Sites', icon: <Business sx={{ color: "black" }} />, route: "/dashboard/managesites" }, { text: 'Manage Users', icon: <UserIcon />, route: "/dashboard/manageusers" }, { text: 'Settings', icon: <Settings sx={{ color: "black" }} />, route: "/dashboard/settings" }].map((link: SidebarLink) => (
+            {[{ text: 'Site Visits', icon: <Business sx={{ color: "black" }} />, route: "/dashboard/sitevisits" }, { text: 'Manage Sites', icon: <Business sx={{ color: "black" }} />, route: "/dashboard/managesites" }, { text: 'Manage Users', icon: <UserIcon />, route: "/dashboard/manageusers" }].map((link: SidebarLink) => (
               <ListItem key={link.text} disablePadding>
                 <ListItemButton onClick={() => { router.push(link.route) }} selected={router.pathname.startsWith(link.route)}>
                   <ListItemIcon>

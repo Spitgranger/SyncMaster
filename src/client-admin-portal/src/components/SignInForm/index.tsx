@@ -120,19 +120,21 @@ const SignInForm = () => {
                             }
                         }}
                     />
+                    { /*
                     <Grid display={"flex"} justifyContent={"flex-end"}>
                         <Link style={{ textAlign: 'right', color: "#1976d2" }} href={'/forgot-password'}>
                             <Typography variant='body1'>Forgot Password?</Typography>
                         </Link>
                     </Grid>
+                    */
+                    }
 
                     <Button disabled={isSignInButtonDisabled} type="submit" size='large' variant='contained'>Sign In</Button>
-
-                    <Grid display={"flex"} justifyContent={"center"}>
+                    {/* <Grid display={"flex"} justifyContent={"center"}>
                         <Link style={{ textAlign: 'center', color: "#1976d2" }} href={'/sign-up'}>
                             <Typography variant='body1'>Sign Up</Typography>
                         </Link>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </form>
         </Grid>
