@@ -10,6 +10,7 @@ TABLE_SPEC = dict(
         {"AttributeName": "sk", "AttributeType": "S"},
         {"AttributeName": "type", "AttributeType": "S"},
         {"AttributeName": "last_modified_time", "AttributeType": "S"},
+        {"AttributeName": "expiry_date", "AttributeType": "S"},
     ],
     KeySchema=[
         {"AttributeName": "pk", "KeyType": "HASH"},
@@ -23,7 +24,15 @@ TABLE_SPEC = dict(
                 {"AttributeName": "last_modified_time", "KeyType": "RANGE"},
             ],
             "Projection": {"ProjectionType": "ALL"},
-        }
+        },
+        {
+            "IndexName": "GSI2",
+            "KeySchema": [
+                {"AttributeName": "type", "KeyType": "HASH"},
+                {"AttributeName": "expiry_date", "KeyType": "RANGE"},
+            ],
+            "Projection": {"ProjectionType": "ALL"},
+        },
     ],
     BillingMode="PAY_PER_REQUEST",
 )
@@ -60,10 +69,12 @@ def database_with_documents_and_folders(
     empty_database.put_item(Item=db_document_file_in_folder.model_dump())
     return (
         empty_database,
-        db_document,
-        db_document_folder,
-        db_document_folder_in_folder,
-        db_document_file_in_folder,
+        [
+            db_document,
+            db_document_folder,
+            db_document_folder_in_folder,
+            db_document_file_in_folder,
+        ],
     )
 
 
@@ -77,4 +88,30 @@ def database_with_complete_site_visit(empty_database, db_site_visit_complete):
 def database_with_two_site_visits(database_with_complete_site_visit, db_site_visit_only_entry):
     database, complete_entry = database_with_complete_site_visit
     database.put_item(Item=db_site_visit_only_entry.model_dump())
-    return database, {complete_entry, db_site_visit_only_entry}
+    return database, [complete_entry, db_site_visit_only_entry]
+
+
+@pytest.fixture()
+def database_with_site(empty_database, db_site):
+    empty_database.put_item(Item=db_site.model_dump())
+    return empty_database, db_site
+
+
+@pytest.fixture()
+def database_with_two_sites(database_with_site, db_site_new):
+    database, complete_entry = database_with_site
+    database.put_item(Item=db_site_new.model_dump())
+    return empty_database, {complete_entry, db_site_new}
+
+
+@pytest.fixture()
+def database_with_user_request(empty_database, db_user_request):
+    empty_database.put_item(Item=db_user_request.model_dump())
+    return empty_database, db_user_request
+
+
+@pytest.fixture()
+def database_with_two_user_requests(database_with_user_request, db_user_request_new):
+    database, db_user_request = database_with_user_request
+    database.put_item(Item=db_user_request_new.model_dump())
+    return database, {db_user_request, db_user_request_new}

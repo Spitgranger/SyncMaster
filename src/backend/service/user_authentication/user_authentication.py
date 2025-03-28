@@ -166,11 +166,16 @@ class AdminCognitoClient:
             )
         return response
 
-    # This maybe useful in the future, keeping it commented out for Rev0
-    #  def add_user_to_group(self, username: str, group_name: str):
-    #      self._client.admin_add_user_to_group(
-    #          UserPoolId=self._user_pool_id, Username=username, GroupName=group_name
-    #      )
+    def add_user_to_group(self, username: str, group_name: str) -> None:
+        """
+        Adds a user to a specific cognito user pool group
+        :param username:  The username of the user
+        :param group_name: The name of the group to add the user to
+        :return None:
+        """
+        self._client.admin_add_user_to_group(
+            UserPoolId=self._user_pool_id, Username=username, GroupName=group_name
+        )
 
     def update_user_attributes(self, username: str, attributes: List[Dict[str, str]]) -> Dict:
         """
@@ -277,9 +282,14 @@ def signin_user_handler(signin_request: SigninRequest, cognito_client: CognitoCl
         user = cognito_client.get_user(access_token)
         for attr in user.get("UserAttributes", {}):
             if attr["Name"] == "custom:role" and attr["Value"] == "contractor":
-                if signin_request.location is None:
+                if signin_request.location is None or signin_request.site_id is None:
                     raise UnauthorizedException("Location not provided for contractor")
-                if not verify_location(signin_request.location[0], signin_request.location[1], 10):
+                if not verify_location(
+                    signin_request.location[0],
+                    signin_request.location[1],
+                    10,
+                    site_id=signin_request.site_id,
+                ):
                     cognito_client.sign_out(access_token)
                     raise UnauthorizedException("User is not on site")
 
@@ -345,6 +355,9 @@ def admin_create_user_handler(
             attributes.append({"Name": key, "Value": value})
 
         response_body = cognito_client.admin_create_user(create_user_request.email, attributes)
+        cognito_client.add_user_to_group(
+            create_user_request.email, create_user_request.attributes["custom:role"]
+        )
 
         return Response(
             status_code=HTTPStatus.CREATED.value,

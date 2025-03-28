@@ -14,7 +14,7 @@ from backend.service.util import AWSAccessLevel
 from botocore.exceptions import ClientError
 from botocore.stub import Stubber
 
-from ..constants import TEST_S3_FILE_CONTENT, TEST_S3_FILE_KEY
+from ..constants import TEST_ATTACHMENT_NAME, TEST_S3_FILE_CONTENT, TEST_S3_FILE_KEY
 
 
 def test_upload_file(empty_s3_bucket):
@@ -55,7 +55,7 @@ def test_get_object_url(s3_bucket_with_item):
     bucket = S3Bucket(bucket_name=DOCUMENT_STORAGE_BUCKET_NAME, access=AWSAccessLevel.READ)
 
     # Create get url
-    url = bucket.create_get_url(key=TEST_S3_FILE_KEY)
+    url = bucket.create_get_url(key=TEST_S3_FILE_KEY, original_filename=TEST_ATTACHMENT_NAME)
 
     # Get content from URL
     http_response = requests.get(url=url)

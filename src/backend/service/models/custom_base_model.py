@@ -2,6 +2,8 @@
 Defines a customized model configuration for this project
 """
 
+from datetime import datetime
+
 from pydantic import BaseModel
 from pydantic.config import ConfigDict
 
@@ -17,6 +19,10 @@ class CustomBaseModel(BaseModel):
         loc_by_alias=True,
         populate_by_name=True,
         use_enum_values=True,
+        json_encoders={
+            datetime: lambda v: v.isoformat()
+            # Make formatting consistent with built-in python ISO formatting
+        },
     )
 
     def model_dump(self, *args, exclude_none=True, by_alias=True, mode="json", **kwargs) -> dict:

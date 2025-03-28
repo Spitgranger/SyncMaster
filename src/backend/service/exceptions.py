@@ -74,17 +74,15 @@ class ResourceConflict(HTTPError):
         super().__init__(f"Resource [{resource_id}] of type [{resource_type}] already exists")
 
 
-class ExitTimeConflict(HTTPError):
+class LimitExceeded(HTTPError):
     """
-    Error relating to an exit time already existing for a user's latest visit
+    Error relating to a limit being exceeded
     """
 
-    http_code = HTTPStatus.CONFLICT
+    http_code = HTTPStatus.BAD_REQUEST
 
-    def __init__(self, site_id: str, user_id: str):
-        super().__init__(
-            f"An exit is already logged at site [{site_id}] for user [{user_id}]'s latest visit"
-        )
+    def __init__(self, resource_type: str, limit: int):
+        super().__init__(f"exceeded limit of [{limit}] [{resource_type}]'s")
 
 
 class TimeConsistencyException(HTTPError):
@@ -141,8 +139,8 @@ class InsufficientUserPermissionException(HTTPError):
 
     http_code = HTTPStatus.FORBIDDEN
 
-    def __init__(self, role: str, action: str):
-        super().__init__(f"User role [{role}] not permitted to perform action [{action}]")
+    def __init__(self, roles: list[str], action: str):
+        super().__init__(f"User roles [{str(roles)}] not permitted to perform action [{action}]")
 
 
 class ConflictException(HTTPError):

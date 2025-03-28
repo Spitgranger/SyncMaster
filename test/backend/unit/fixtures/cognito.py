@@ -15,6 +15,8 @@ from backend.service.user_authentication.user_authentication import (
 from backend.service.util import create_client_with_role
 from moto import mock_aws
 
+from ..constants import TEST_SITE_ID, TEST_USER_EMAIL
+
 
 @pytest.fixture
 def cognito_mock():
@@ -25,6 +27,9 @@ def cognito_mock():
         user_pool_id = response["UserPool"]["Id"]
         response = client.create_user_pool_client(UserPoolId=user_pool_id, ClientName="test-client")
         client_id = response["UserPoolClient"]["ClientId"]
+        response = client.create_group(UserPoolId=user_pool_id, GroupName="admin")
+        response = client.create_group(UserPoolId=user_pool_id, GroupName="employee")
+        response = client.create_group(UserPoolId=user_pool_id, GroupName="contractor")
         yield client, client_id, user_pool_id
 
 
@@ -37,6 +42,9 @@ def cognito_mock_admin():
         user_pool_id = response["UserPool"]["Id"]
         response = client.create_user_pool_client(UserPoolId=user_pool_id, ClientName="test-client")
         client_id = response["UserPoolClient"]["ClientId"]
+        response = client.create_group(UserPoolId=user_pool_id, GroupName="admin")
+        response = client.create_group(UserPoolId=user_pool_id, GroupName="employee")
+        response = client.create_group(UserPoolId=user_pool_id, GroupName="contractor")
         yield client, client_id, user_pool_id
 
 
@@ -89,7 +97,7 @@ def get_users_request():
 def get_users_request_changed():
     """Creates a mock create user request."""
     yield GetUsersByAttributeRequest(
-        attributes={"custom:role": "user"},
+        attributes={"custom:role": "contractor"},
     )
 
 
@@ -98,7 +106,7 @@ def update_user_attribute_request():
     """Creates a mock create user request."""
     yield UpdateUserAttributeRequest(
         email="testuser@example.com",
-        attributes=[{"Name": "custom:role", "Value": "user"}],
+        attributes=[{"Name": "custom:role", "Value": "contractor"}],
     )
 
 
@@ -119,13 +127,13 @@ def signin_request():
 
 
 @pytest.fixture
-def cognito_client_with_user(cognito_mock):
+def admin_cognito_client_with_user(cognito_mock):
     """Creates and registers a user in the mock Cognito user pool."""
     client, client_id, user_pool_id = cognito_mock
-    cognito_client = CognitoClient(client_id)
+    cognito_client = AdminCognitoClient(client_id, user_pool_id)
     cognito_client._client = client
 
-    email = "testuser@example.com"
+    email = TEST_USER_EMAIL
     password = "TestPassword123!"
 
     client.admin_create_user(
@@ -149,6 +157,48 @@ def cognito_client_with_user(cognito_mock):
         cognito_client,
         SigninRequest(email=email, password=password),
         SigninRequest(
-            email=email, password=password, location=[43.2588581564085, -79.92097591189501]
+            email=email,
+            password=password,
+            location=[43.2588581564085, -79.92097591189501],
+            site_id=TEST_SITE_ID,
+        ),
+    )
+
+
+@pytest.fixture
+def cognito_client_with_user(cognito_mock):
+    """Creates and registers a user in the mock Cognito user pool."""
+    client, client_id, user_pool_id = cognito_mock
+    cognito_client = CognitoClient(client_id)
+    cognito_client._client = client
+
+    email = TEST_USER_EMAIL
+    password = "TestPassword123!"
+
+    client.admin_create_user(
+        UserPoolId=user_pool_id,
+        Username=email,
+        UserAttributes=[
+            {"Name": "email", "Value": email},
+            {"Name": "custom:role", "Value": "contractor"},
+        ],
+        MessageAction="SUPPRESS",  # Suppresses email verification in the mock
+    )
+
+    client.admin_set_user_password(
+        UserPoolId=user_pool_id,
+        Username=email,
+        Password=password,
+        Permanent=True,
+    )
+
+    yield (
+        cognito_client,
+        SigninRequest(email=email, password=password),
+        SigninRequest(
+            email=email,
+            password=password,
+            location=[43.2588581564085, -79.92097591189501],
+            site_id=TEST_SITE_ID,
         ),
     )

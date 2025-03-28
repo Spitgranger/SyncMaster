@@ -2,6 +2,9 @@
 Generic utility functions common across modules
 """
 
+import base64
+import json
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Optional
 
@@ -12,7 +15,12 @@ from botocore.config import Config
 from botocore.exceptions import ClientError
 from cachetools.func import ttl_cache
 
-from .exceptions import ExternalServiceException, PermissionException
+from .exceptions import (
+    ExternalServiceException,
+    InsufficientUserPermissionException,
+    PermissionException,
+)
+from .models.custom_base_model import CustomBaseModel
 
 logger = Logger()
 
@@ -42,6 +50,17 @@ class ItemType(Enum):
 
     DOCUMENT = "document"
     SITE_VISIT = "site_visit"
+    SITE = "site"
+    USER_REQUEST = "user_request"
+
+
+class UserRequestAction(Enum):
+    """
+    Enum of different actions that can be taken on a user request
+    """
+
+    APPROVE = "approve"
+    REJECT = "reject"
 
 
 class FileType(Enum):
@@ -51,6 +70,16 @@ class FileType(Enum):
 
     FILE = "file"
     FOLDER = "folder"
+
+
+class UserType(Enum):
+    """
+    Enum of the different types of user roles in the system
+    """
+
+    EMPLOYEE = "employee"
+    CONTRACTOR = "contractor"
+    ADMIN = "admin"
 
 
 @ttl_cache(maxsize=16, ttl=15 * 60)
@@ -120,11 +149,33 @@ def create_resource_with_role(service_name: str, role: str):
         raise ExternalServiceException("Unknown Error from AWS") from err
 
 
+def decode_db_key(key: str) -> dict:
+    """
+    Decodes an encoded dynamodb key
+
+    :param key: The encoded dynamodb key
+    :return: The decoded dynamodb key
+    """
+    key_str = base64.urlsafe_b64decode(key.encode("utf-8")).decode("utf-8")
+    return json.loads(key_str)
+
+
+def encode_db_key(key: dict) -> str:
+    """
+    Encodes a dynamodb key, to be returned in an API, and used in queries
+
+    :param key: The dynamodb key
+    :return: The encoded dynamodb key
+    """
+    key_bytes = json.dumps(key).encode("utf-8")
+    return base64.urlsafe_b64encode(key_bytes).decode("utf-8")
+
+
 def create_http_response(
     status_code: int,
     content_type: Optional[str] = None,
     headers: Optional[dict] = None,
-    body: Optional[str] = None,
+    body: Optional[str | CustomBaseModel | dict] = None,
 ) -> Response:
     """
     Function to create a Response object for the API Gateway
@@ -142,3 +193,33 @@ def create_http_response(
         body=body,
         headers=headers,
     )
+
+
+def time_epoch_to_datetime(time_epoch: int) -> datetime:
+    """
+    From time epoch given in api gateway request, create a datetime object
+
+    :param time_epoch: The time epoch to convert into a datetime
+    :return: The datetime representing the time epoch
+    """
+    return datetime.fromtimestamp(time_epoch / 1000, tz=timezone.utc)
+
+
+def verify_user_role(user_groups: list[str], acceptable_roles: list[UserType], action: str) -> None:
+    """
+    Verify the users groups fall under the list of acceptable groups for the action
+    they want to perform
+
+    :param user_groups: The user groups the user beolngs to
+    :param acceptable_roles: The roles that are allowed to perform the given action
+    :param action: The action being performed
+    :raises InsufficientUserPermissionException: If user cannot perform the given action
+    """
+    allowed_access = False
+
+    for role in acceptable_roles:
+        if role.value in user_groups:
+            allowed_access = True
+
+    if not allowed_access:
+        raise InsufficientUserPermissionException(roles=user_groups, action=action)

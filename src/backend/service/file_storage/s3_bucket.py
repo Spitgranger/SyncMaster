@@ -2,6 +2,8 @@
 Module allowing interaction with S3 Buckets for file uploads, deletion, and reading
 """
 
+from typing import Optional
+
 from aws_lambda_powertools.logging import Logger
 from botocore.exceptions import ClientError
 
@@ -51,18 +53,24 @@ class S3Bucket:
             raise PermissionException("Creating an upload URL requires write access")
         return self._client.generate_presigned_post(Bucket=self.name, Key=key, Fields={})
 
-    def create_get_url(self, key: str) -> str:
+    def create_get_url(self, key: str, original_filename: str) -> str:
         """
         Creates a presigned get url to get an object from S3
 
         :param key: The key of the object to get from S3
+        :param original_filename: The name of the file to be downloaded
         :return: The get object presigned url
         """
         return self._client.generate_presigned_url(
-            ClientMethod="get_object", Params={"Bucket": self.name, "Key": key}
+            ClientMethod="get_object",
+            Params={
+                "Bucket": self.name,
+                "Key": key,
+                "ResponseContentDisposition": f'attachment; filename="{original_filename}"',
+            },
         )
 
-    def delete(self, key: str, e_tag: str) -> None:
+    def delete(self, key: str, e_tag: Optional[str] = None) -> None:
         """
         Delete an object from S3
 

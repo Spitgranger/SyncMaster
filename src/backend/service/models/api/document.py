@@ -37,3 +37,10 @@ class APIDocumentUploadRequest(CustomBaseModel):
     user_id: str
     requires_ack: bool
     document_expiry: Optional[datetime] = None
+
+
+class APIExpiringDocumentResponse(CustomBaseModel):
+    """A list of expiring documents for the provided date delta"""
+
+    documents: list[APIDocumentResponse]
+    last_key: Optional[str] = None
