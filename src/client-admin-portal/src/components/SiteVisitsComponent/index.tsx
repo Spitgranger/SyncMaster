@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Container,
@@ -11,15 +11,92 @@ import {
   TableHead,
   TableRow,
   Paper,
-  CircularProgress
+  CircularProgress,
+  TableSortLabel,
+  Collapse
 } from '@mui/material';
 import { getSiteVisits } from '@/state/site/siteVisitsSlice';
 import { RootState, AppDispatch } from '@/state/store';
+
+interface Attachment {
+  name: string;
+  url: string;
+}
+
+interface Visit {
+  site_id: string;
+  user_id: string;
+  entry_time: string;
+  exit_time: string;
+  allowed_tracking: boolean;
+  ack_status: boolean;
+  work_order: number;
+  description: string;
+  on_site: boolean;
+  attachments: Attachment[];
+}
+
+type Order = 'asc' | 'desc';
+
+// Helper to convert values for comparison
+function getComparableValue(visit: Visit, orderBy: keyof Visit) {
+  let value = visit[orderBy];
+  if (orderBy === 'entry_time' || orderBy === 'exit_time') {
+    return new Date(value as string).getTime();
+  }
+  if (typeof value === 'boolean') {
+    return value ? 1 : 0;
+  }
+  return value;
+}
+
+function descendingComparator(a: Visit, b: Visit, orderBy: keyof Visit) {
+  const valueA = getComparableValue(a, orderBy);
+  const valueB = getComparableValue(b, orderBy);
+  if (valueB < valueA) {
+    return -1;
+  }
+  if (valueB > valueA) {
+    return 1;
+  }
+  return 0;
+}
+
+function getComparator(order: Order, orderBy: keyof Visit) {
+  return order === 'desc'
+    ? (a: Visit, b: Visit) => descendingComparator(a, b, orderBy)
+    : (a: Visit, b: Visit) => -descendingComparator(a, b, orderBy);
+}
+
+function stableSort(array: Visit[], comparator: (a: Visit, b: Visit) => number) {
+  const stabilizedThis = array.map((el, index) => [el, index] as [Visit, number]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
+
+const columns = [
+  { id: 'site_id', label: 'Site ID' },
+  { id: 'user_id', label: 'User ID' },
+  { id: 'entry_time', label: 'Entry Time' },
+  { id: 'exit_time', label: 'Exit Time' },
+  { id: 'allowed_tracking', label: 'Allowed Tracking' },
+  { id: 'ack_status', label: 'Acknowledgment Status' },
+  { id: 'work_order', label: 'Work Order' },
+  { id: 'on_site', label: 'On Site' },
+];
 
 const SiteVisitsTable: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { idToken } = useSelector((state: RootState) => state.user);
   const { visits, isLoading } = useSelector((state: RootState) => state.siteVisits);
+
+  const [order, setOrder] = useState<Order>('asc');
+  const [orderBy, setOrderBy] = useState<keyof Visit>('site_id');
+  const [expandedRow, setExpandedRow] = useState<number | null>(null);
 
   useEffect(() => {
     if (!idToken) {
@@ -28,6 +105,18 @@ const SiteVisitsTable: React.FC = () => {
     }
     dispatch(getSiteVisits({ params: {}, idToken }));
   }, [dispatch, idToken]);
+
+  const handleRequestSort = (property: keyof Visit) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
+  const handleRowClick = (index: number) => {
+    setExpandedRow(expandedRow === index ? null : index);
+  };
+
+  const sortedVisits = visits ? stableSort(visits, getComparator(order, orderBy)) : [];
 
   return (
     <>
@@ -44,25 +133,74 @@ const SiteVisitsTable: React.FC = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell><strong>Site ID</strong></TableCell>
-                  <TableCell><strong>User ID</strong></TableCell>
-                  <TableCell><strong>Entry Time</strong></TableCell>
-                  <TableCell><strong>Exit Time</strong></TableCell>
+                  {columns.map((column) => (
+                    <TableCell key={column.id}>
+                      <TableSortLabel
+                        active={orderBy === column.id}
+                        direction={orderBy === column.id ? order : 'asc'}
+                        onClick={() => handleRequestSort(column.id as keyof Visit)}
+                      >
+                        <strong>{column.label}</strong>
+                      </TableSortLabel>
+                    </TableCell>
+                  ))}
                 </TableRow>
               </TableHead>
               <TableBody>
-                {visits && visits.length > 0 ? (
-                  visits.map((visit, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{visit.site_id}</TableCell>
-                      <TableCell>{visit.user_id}</TableCell>
-                      <TableCell>{new Date(visit.entry_time).toLocaleString()}</TableCell>
-                      <TableCell>{visit.exit_time ? new Date(visit.exit_time).toLocaleString() : 'N/A'}</TableCell>
-                    </TableRow>
+                {sortedVisits && sortedVisits.length > 0 ? (
+                  sortedVisits.map((visit, index) => (
+                    <React.Fragment key={index}>
+                      <TableRow
+                        hover
+                        onClick={() => handleRowClick(index)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <TableCell>{visit.site_id}</TableCell>
+                        <TableCell>{visit.user_id}</TableCell>
+                        <TableCell>{new Date(visit.entry_time).toLocaleString()}</TableCell>
+                        <TableCell>{visit.exit_time ? new Date(visit.exit_time).toLocaleString() : 'N/A'}</TableCell>
+                        <TableCell>{visit.allowed_tracking ? 'Yes' : 'No'}</TableCell>
+                        <TableCell>{visit.ack_status ? 'Yes' : 'No'}</TableCell>
+                        <TableCell>{visit.work_order}</TableCell>
+                        <TableCell>{visit.on_site ? 'Yes' : 'No'}</TableCell>
+                      </TableRow>
+                      {expandedRow === index && (
+                        <TableRow>
+                          <TableCell colSpan={columns.length}>
+                            <Collapse in={expandedRow === index} timeout="auto" unmountOnExit>
+                              <Container sx={{ py: 2 }}>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  Description:
+                                </Typography>
+                                <Typography variant="body2" gutterBottom>
+                                  {visit.description}
+                                </Typography>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  Attachments:
+                                </Typography>
+                                {visit.attachments && visit.attachments.length > 0 ? (
+                                  visit.attachments.map((attachment, i) => (
+                                    <div key={i}>
+                                      <a href={attachment.url} target="_blank" rel="noopener noreferrer">
+                                        {attachment.name}
+                                      </a>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <Typography variant="body2">No attachments</Typography>
+                                )}
+                              </Container>
+                            </Collapse>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </React.Fragment>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={4} align="center">No site visits found</TableCell>
+                    <TableCell colSpan={columns.length} align="center">
+                      No site visits found
+                    </TableCell>
                   </TableRow>
                 )}
               </TableBody>
