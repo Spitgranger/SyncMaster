@@ -42,7 +42,7 @@ const SignInForm = () => {
         if (response.payload.status === 403) {
           if(response.payload.message==="")
             console.log("Redirecting to reset password page...");
-          router.push(`/reset-password?email=${encodeURIComponent(email)}`);
+          window.location.href = `https://frontend-deploy-staging.dmwyzucbne4b7.amplifyapp.com/reset-password}`;
         }
       }
     }).finally(() => {

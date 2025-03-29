@@ -2,6 +2,7 @@
 import React from 'react';
 import Container from '@mui/material/Container';
 import { Box, Typography } from '@mui/material';
+import NonNavbarLogo from '@/components/NonNavbarLogo'
 
 const EndVisitPage = () => {
   return (
@@ -16,6 +17,7 @@ const EndVisitPage = () => {
           mx: 'auto'
         }}
       >
+        <NonNavbarLogo />
         <Typography variant="h5" gutterBottom>
           Thank You for Working with Hamilton Water
         </Typography>
