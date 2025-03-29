@@ -5,50 +5,85 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { signinUser } from "@/services/authService";
 import { useRouter } from "next/router";
 import { jwtDecode } from "jwt-decode"; // Install this: npm install jwt-decode
+import { AppDispatch } from "@/state/store";
+import { useDispatch } from "react-redux";
+import { setSiteId, signInUser } from "@/state/user/userSlice";
+import getGeolocation from "@/utils/getLocation";
+import { set } from "date-fns";
 
 const SignInForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+  const { id } = router.query;
+
+  const dispatch = useDispatch<AppDispatch>()
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    try {
-      const data = await signinUser(email, password);
-
-      if (data.AccessToken) {
-        console.log("Authentication response:", data);
-
-        // ✅ Store Access Token
-        localStorage.setItem("accessToken", data.AccessToken);
-        localStorage.setItem("IdToken", data.IdToken);
-
-        // ✅ Decode and store User ID from IdToken
-        if (data.IdToken) {
-          const decodedToken: any = jwtDecode(data.IdToken);
-          const userId = decodedToken?.sub; // "sub" typically contains the User ID
-
-          if (userId) {
-            localStorage.setItem("userId", userId);
-            console.log("User ID stored:", userId);
+    const location = await getGeolocation();
+    if (location.length === 2 && location.every((value, index) => value === [0, 0][index])) {
+      localStorage.setItem("allowedTracking", "false");
+    }
+    else{
+      localStorage.setItem("allowedTracking", "true");
+    }
+    console.log("Location coordinates:", location);
+      dispatch(signInUser({ email, password, location })).then((response) => {
+        if (response.meta.requestStatus === "fulfilled") {
+          console.log("Login successful");
+          localStorage.setItem("accessToken", response.payload.AccessToken);
+          localStorage.setItem("idToken", response.payload.IdToken);
+          localStorage.setItem("siteId", typeof id === "string" ? id : "");
+          dispatch(setSiteId({ siteId: typeof id === "string" ? id : "" }));
+          router.push(`/portal/acknowledgement`);
+        } else {
+          console.log("an error occured while signing in");
+          if (response.payload.status === 403) {
+            if(response.payload.message==="")
+            console.log("Redirecting to reset password page...");
+            router.push(`/reset-password?email=${encodeURIComponent(email)}`);
           }
         }
+      }
+      );
 
-        // ✅ Redirect after login
-        window.location.href = "/acknowledgement";
-      } else {
-        console.log("Invalid email or password.");
-      }
-    } catch (err: any) {
-      if (err.response?.status === 403) {
-        console.log("Redirecting to reset password page...");
-        router.push(`/reset-password?email=${encodeURIComponent(email)}`);
-      } else {
-        console.error("Login failed. Please check your credentials.");
-      }
-    }
+    //   try {
+    //     const data = await signinUser(email, password);
+
+    //     if (data.AccessToken) {
+    //       console.log("Authentication response:", data);
+
+    //       // ✅ Store Access Token
+    //       localStorage.setItem("accessToken", data.AccessToken);
+    //       localStorage.setItem("IdToken", data.IdToken);
+
+    //       // ✅ Decode and store User ID from IdToken
+    //       if (data.IdToken) {
+    //         const decodedToken: any = jwtDecode(data.IdToken);
+    //         const userId = decodedToken?.sub; // "sub" typically contains the User ID
+
+    //         if (userId) {
+    //           localStorage.setItem("userId", userId);
+    //           console.log("User ID stored:", userId);
+    //         }
+    //       }
+
+    //       // ✅ Redirect after login
+    //       window.location.href = "/acknowledgement";
+    //     } else {
+    //       console.log("Invalid email or password.");
+    //     }
+    //   } catch (err: any) {
+    //     if (err.response?.status === 403) {
+    //       console.log("Redirecting to reset password page...");
+    //       router.push(`/reset-password?email=${encodeURIComponent(email)}`);
+    //     } else {
+    //       console.error("Login failed. Please check your credentials.");
+    //     }
+    //   }
   };
 
   return (

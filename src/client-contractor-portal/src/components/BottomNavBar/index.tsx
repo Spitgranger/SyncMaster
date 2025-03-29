@@ -7,12 +7,14 @@ import { useRouter } from 'next/router';
 const BottomNavBar = () => {
   const router = useRouter();
   const currentPath = router.pathname;
+  console.log("current path",currentPath);
+  
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-    if (newValue === '/jobs') {
-      router.push('/jobs');
-    } else if (newValue === '/documents') {
-      router.push('/documents');
+    if (newValue === '/portal/jobs') {
+      router.push('/portal/jobs');
+    } else if (newValue === '/portal/documents') {
+      router.push('/portal/documents');
     }
   };
 
