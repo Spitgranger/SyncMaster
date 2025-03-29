@@ -73,7 +73,7 @@ def update_user_handler(body: Annotated[UpdateUserAttributeRequest, Body()]):
             "cognito:groups"
         ],
         acceptable_roles=[UserType.ADMIN],
-        action="upload documents",
+        action="update user",
     )
 
     cognito_client = AdminCognitoClient(USER_POOL_CLIENT_ID, USER_POOL_ID)
