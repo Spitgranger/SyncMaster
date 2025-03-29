@@ -107,7 +107,7 @@ interface SidebarLink {
 
 export default function DashboardLayout({ children }: Props) {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const userState = useSelector((state: RootState) => state.user)
@@ -171,8 +171,8 @@ export default function DashboardLayout({ children }: Props) {
             <Grid container spacing={1} width={"168px"} display={"flex"} flexDirection={"row"}>
               <Image src={hamiltonLogo} width={44.71} height={38} alt='Hamilton Logo' />
 
-              <Typography width={115} variant="body1" lineHeight={1.2} fontWeight={700} >
-                Hamilton Waterworks
+              <Typography width={100} variant="body1" lineHeight={1.2} fontWeight={700} >
+                Hamilton Water
               </Typography>
             </Grid>
           </Grid>
@@ -237,7 +237,7 @@ export default function DashboardLayout({ children }: Props) {
           <Divider />
           <Typography pt={1} px={2} variant='subtitle1' color="textSecondary">Organization</Typography>
           <List>
-            {[{ text: 'Site Visits', icon: <Business sx={{ color: "black" }} />, route: "/dashboard/sitevisits" }, { text: 'Manage Sites', icon: <Business sx={{ color: "black" }} />, route: "/dashboard/managesites" }, { text: 'Manage Users', icon: <UserIcon />, route: "/dashboard/manageusers" }, { text: 'Settings', icon: <Settings sx={{ color: "black" }} />, route: "/dashboard/settings" }].map((link: SidebarLink) => (
+            {[{ text: 'Site Visits', icon: <Business sx={{ color: "black" }} />, route: "/dashboard/sitevisits" }, { text: 'Manage Sites', icon: <Business sx={{ color: "black" }} />, route: "/dashboard/managesites" }, { text: 'Manage Users', icon: <UserIcon />, route: "/dashboard/manageusers" }].map((link: SidebarLink) => (
               <ListItem key={link.text} disablePadding>
                 <ListItemButton onClick={() => { router.push(link.route) }} selected={router.pathname.startsWith(link.route)}>
                   <ListItemIcon>

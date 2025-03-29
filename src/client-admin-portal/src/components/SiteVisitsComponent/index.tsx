@@ -27,6 +27,7 @@ interface Attachment {
 interface Visit {
   site_id: string;
   user_id: string;
+  user_email: string;
   entry_time: string;
   exit_time: string;
   allowed_tracking: boolean;
@@ -34,6 +35,7 @@ interface Visit {
   work_order: number;
   description: string;
   on_site: boolean;
+  employee_id: string;
   attachments: Attachment[];
 }
 
@@ -79,9 +81,12 @@ function stableSort(array: Visit[], comparator: (a: Visit, b: Visit) => number) 
   return stabilizedThis.map((el) => el[0]);
 }
 
+// Updated columns array to include user_email and employee_id
 const columns = [
   { id: 'site_id', label: 'Site ID' },
   { id: 'user_id', label: 'User ID' },
+  { id: 'user_email', label: 'User Email' },
+  { id: 'employee_id', label: 'Employee ID' },
   { id: 'entry_time', label: 'Entry Time' },
   { id: 'exit_time', label: 'Exit Time' },
   { id: 'allowed_tracking', label: 'Allowed Tracking' },
@@ -111,6 +116,7 @@ const SiteVisitsTable: React.FC = () => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+    setExpandedRow(null); // Close the open container when table is sorted
   };
 
   const handleRowClick = (index: number) => {
@@ -119,12 +125,17 @@ const SiteVisitsTable: React.FC = () => {
 
   const sortedVisits = visits ? stableSort(visits, getComparator(order, orderBy)) : [];
 
+  // Define visibleColumns (exclude user_id) for table display
+  const visibleColumns = columns.filter(column => column.id !== 'user_id');
+
   const handleExport = () => {
     if (!sortedVisits || sortedVisits.length === 0) return;
 
     const exportData = sortedVisits.map(visit => ({
       "Site ID": visit.site_id,
-      "User ID": visit.user_id,
+      "User ID": visit.user_id, // still included in CSV export
+      "User Email": visit.user_email,
+      "Employee ID": visit.employee_id,
       "Entry Time": new Date(visit.entry_time).toLocaleString(),
       "Exit Time": visit.exit_time ? new Date(visit.exit_time).toLocaleString() : 'N/A',
       "Allowed Tracking": visit.allowed_tracking ? 'Yes' : 'No',
@@ -163,7 +174,7 @@ const SiteVisitsTable: React.FC = () => {
 
   return (
     <>
-      <Container sx={{ mt: 0, px: 0 }}>
+      <Container maxWidth={false} disableGutters sx={{ mt: 0, px: 2 }}>
         <Typography variant="h5" fontWeight="bold" textAlign="left" gutterBottom>
           Site Visits
         </Typography>
@@ -171,7 +182,7 @@ const SiteVisitsTable: React.FC = () => {
           Export to CSV
         </Button>
       </Container>
-      <Container sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 6 }}>
+      <Container maxWidth={false} disableGutters sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 6, px: 2 }}>
         {isLoading ? (
           <CircularProgress />
         ) : (
@@ -179,7 +190,7 @@ const SiteVisitsTable: React.FC = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  {columns.map((column) => (
+                  {visibleColumns.map((column) => (
                     <TableCell key={column.id}>
                       <TableSortLabel
                         active={orderBy === column.id}
@@ -202,7 +213,9 @@ const SiteVisitsTable: React.FC = () => {
                         style={{ cursor: 'pointer' }}
                       >
                         <TableCell>{visit.site_id}</TableCell>
-                        <TableCell>{visit.user_id}</TableCell>
+                        {/* User ID cell is intentionally hidden from table display */}
+                        <TableCell>{visit.user_email}</TableCell>
+                        <TableCell>{visit.employee_id}</TableCell>
                         <TableCell>{new Date(visit.entry_time).toLocaleString()}</TableCell>
                         <TableCell>{visit.exit_time ? new Date(visit.exit_time).toLocaleString() : 'N/A'}</TableCell>
                         <TableCell>{visit.allowed_tracking ? 'Yes' : 'No'}</TableCell>
@@ -212,9 +225,9 @@ const SiteVisitsTable: React.FC = () => {
                       </TableRow>
                       {expandedRow === index && (
                         <TableRow>
-                          <TableCell colSpan={columns.length}>
+                          <TableCell colSpan={visibleColumns.length}>
                             <Collapse in={expandedRow === index} timeout="auto" unmountOnExit>
-                              <Container sx={{ py: 2 }}>
+                              <Container maxWidth={false} sx={{ py: 2, textAlign: 'left' }}>
                                 <Typography variant="subtitle1" gutterBottom>
                                   Description:
                                 </Typography>
@@ -244,7 +257,7 @@ const SiteVisitsTable: React.FC = () => {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={columns.length} align="center">
+                    <TableCell colSpan={visibleColumns.length} align="center">
                       No site visits found
                     </TableCell>
                   </TableRow>

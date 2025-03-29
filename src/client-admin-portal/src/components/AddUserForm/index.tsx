@@ -28,9 +28,9 @@ const AddUserForm: React.FC = () => {
     if (createUserStatus === 'succeeded') {
       // Reset status before redirecting to avoid instant redirect on subsequent visits
       dispatch(resetCreateUserStatus());
-      setTimeout(() => router.push('/dashboard/manageusers'), 2000);
+      setTimeout(() => router.push(`/dashboard/manageusers?success=${email}`), 30000);
     }
-  }, [createUserStatus, router, dispatch]);
+  }, [createUserStatus, router, dispatch, email]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -70,7 +70,7 @@ const AddUserForm: React.FC = () => {
       {error && <Typography color="error" textAlign="center">{error}</Typography>}
       {createUserStatus === 'succeeded' && (
         <Typography color="success.main" textAlign="center">
-          User created successfully! Redirecting...
+          User {email} was successfully added! Redirecting...
         </Typography>
       )}
 

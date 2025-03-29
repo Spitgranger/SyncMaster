@@ -19,7 +19,7 @@ const NonNavbarLogo = () => {
         <Image src={hamiltonLogo} width={160} height={139} alt='Hamilton Logo'></Image>
       </Grid>
       <Grid size={12} textAlign={"center"}>
-        <Typography fontWeight={"bold"} variant='h4'>Hamilton Waterworks</Typography>
+        <Typography fontWeight={"bold"} variant='h4'>Hamilton Water</Typography>
       </Grid>
     </Grid>
   )

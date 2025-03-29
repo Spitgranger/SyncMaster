@@ -39,6 +39,7 @@ const ManageUsersTable: React.FC = () => {
   const router = useRouter();
   const { users, loading, error } = useSelector((state: RootState) => state.userManagement);
   const { idToken } = useSelector((state: RootState) => state.user);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   // Local state for edit dialog and form values.
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -55,6 +56,21 @@ const ManageUsersTable: React.FC = () => {
     }
     dispatch(getUsers({}));
   }, [dispatch, idToken]);
+
+  // Check for a success query parameter and display a success message if found.
+  useEffect(() => {
+    if (router.query.success) {
+      const email = Array.isArray(router.query.success)
+        ? router.query.success[0]
+        : router.query.success;
+      setSuccessMsg(`User ${email} was successfully added`);
+      // Clear the message and remove the query param after 3 seconds.
+      setTimeout(() => {
+        setSuccessMsg(null);
+        router.replace('/dashboard/manageusers', undefined, { shallow: true });
+      }, 3000);
+    }
+  }, [router.query, router]);
 
   // Format the raw user data for display.
   const formattedUsers: User[] = users.map((user: any) => {
@@ -141,6 +157,11 @@ const ManageUsersTable: React.FC = () => {
         <Typography variant="h5" fontWeight="bold" textAlign="left" gutterBottom>
           Manage Users
         </Typography>
+        {successMsg && (
+          <Typography color="success.main" textAlign="center">
+            {successMsg}
+          </Typography>
+        )}
         <Button
           variant="contained"
           color="primary"
