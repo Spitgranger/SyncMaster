@@ -31,12 +31,13 @@ const SignInForm = () => {
       localStorage.setItem("allowedTracking", "true");
     }
     console.log("Location coordinates:", location);
-      dispatch(signInUser({ email, password, location })).then((response) => {
+      dispatch(signInUser({ email, password, location,id })).then((response) => {
         if (response.meta.requestStatus === "fulfilled") {
           console.log("Login successful");
           localStorage.setItem("accessToken", response.payload.AccessToken);
           localStorage.setItem("idToken", response.payload.IdToken);
           localStorage.setItem("siteId", typeof id === "string" ? id : "");
+          localStorage.setItem("userOnSite", response.payload.UserOnSite);
           dispatch(setSiteId({ siteId: typeof id === "string" ? id : "" }));
           router.push(`/portal/acknowledgement`);
         } else {

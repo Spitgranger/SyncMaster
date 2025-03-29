@@ -58,14 +58,9 @@ export const signInUser = createAsyncThunk(
         const email = userData.email;
         const password = userData.password;
         const location = userData.location;
+        const site_id = userData.id;
 
-        let requestBody = null;
-
-        if(location[0] !== null || location[1] === null) {
-            requestBody = { email, password, location };
-        }else{
-            requestBody = { email, password };
-        }
+        let requestBody = { email: email, password: password, location: location, site_id: site_id };
 
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/unprotected/auth/signin`, {
             method: "POST",
