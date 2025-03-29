@@ -47,7 +47,7 @@ def upload_handler(body: Annotated[APIDocumentUploadRequest, Body()]):
         user_groups=router.current_event["requestContext"]["authorizer"]["claims"][
             "cognito:groups"
         ],
-        acceptable_roles=[UserType.ADMIN, UserType.CONTRACTOR],
+        acceptable_roles=[UserType.ADMIN],
         action="upload documents",
     )
 
