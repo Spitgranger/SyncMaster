@@ -367,6 +367,8 @@ def upload_document_request(api_gateway_event, db_document):
                 "document_expiry": db_document.expiry_date.isoformat(),
             }
         ),
+        user_role="admin",
+        user_groups=["admin"],
     )
     yield event, context
 
