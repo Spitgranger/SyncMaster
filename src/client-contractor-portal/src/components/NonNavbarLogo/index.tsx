@@ -23,7 +23,7 @@ const NonNavbarLogo = () => {
       </Grid>
       <Grid>
         <Typography fontWeight="bold" variant="h4">
-          Hamilton Waterworks
+          Hamilton Water
         </Typography>
       </Grid>
     </Grid>
