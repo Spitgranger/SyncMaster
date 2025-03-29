@@ -1,15 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Box, Button, Typography, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-// ADDED: Icon for QR code (optional, you can use any icon or text button)
 import QrCode2Icon from '@mui/icons-material/QrCode2';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/state/store';
 import { deleteSite, getSites, updateSite } from '@/state/site/siteSlice';
-// ADDED: import from qrcode.react
 import { QRCodeCanvas } from 'qrcode.react';
 
 const SiteCardManageComponent = ({
@@ -35,8 +33,11 @@ const SiteCardManageComponent = ({
     acceptableRange: acceptable_range.toString(),
   });
 
-  // ADDED: State for controlling the QR code dialog
+  // Control the QR code dialog
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
+
+  // IMPORTANT: Use a ref to capture the <canvas> element from QRCodeCanvas
+  const qrRef = useRef<HTMLCanvasElement>(null);
 
   const clientUrl = process.env.NEXT_PUBLIC_API_CONTRACTOR_BASE_URL;
   const dispatch = useDispatch<AppDispatch>();
@@ -50,7 +51,6 @@ const SiteCardManageComponent = ({
     setIsEditModalOpen(true);
   };
 
-  // ADDED: Functions to open/close the QR dialog
   const handleOpenQRModal = () => {
     setIsQRModalOpen(true);
   };
@@ -112,6 +112,22 @@ const SiteCardManageComponent = ({
     });
   };
 
+  // Function to download the QR code as an image (PNG)
+  const handleDownloadQRCode = () => {
+    if (!qrRef.current) return;
+
+    // Convert the canvas content to a DataURL
+    const dataUrl = qrRef.current.toDataURL("image/png");
+
+    // Create an <a> tag and trigger download
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = `site-${siteId}-qr.png`; // File name
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <Grid
       sx={{
@@ -138,10 +154,9 @@ const SiteCardManageComponent = ({
       <Box>
         <EditIcon sx={{ mr: 2, cursor: "pointer" }} onClick={handleEditClick} />
         <DeleteIcon sx={{ mr: 2, cursor: "pointer" }} onClick={handleDeleteClick} />
-        {/* ADDED: A button or icon to open the QR Code dialog */}
         <QrCode2Icon sx={{ cursor: "pointer" }} onClick={handleOpenQRModal} />
 
-        {/* Deletion Confirmation Dialog */}
+        {/* Confirm Deletion Dialog */}
         <Dialog open={isModalOpen} onClose={handleCloseModal}>
           <DialogTitle>Confirm Deletion</DialogTitle>
           <DialogContent>
@@ -227,24 +242,25 @@ const SiteCardManageComponent = ({
           </DialogActions>
         </Dialog>
 
-        {/* ADDED: QR Code Dialog */}
+        {/* QR Code Dialog */}
         <Dialog open={isQRModalOpen} onClose={handleCloseQRModal}>
           <DialogTitle>Site QR Code</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              Scan or save this QR code for quick access to the site.
-            </DialogContentText>
             <Box sx={{ textAlign: "center", mt: 2 }}>
+              {/* Add ref to capture the <canvas> element */}
               <QRCodeCanvas
-                // Value for the QR code:
+                ref={qrRef}
                 value={`${clientUrl}?id=${siteId}`}
-                size={200}
-                // You can tweak level, bgColor, fgColor, etc. as needed
+                size={300}
               />
             </Box>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseQRModal}>Close</Button>
+            {/* Save Image Button */}
+            <Button onClick={handleDownloadQRCode}>
+              Save Image
+            </Button>
           </DialogActions>
         </Dialog>
       </Box>
