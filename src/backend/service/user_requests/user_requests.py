@@ -28,6 +28,7 @@ def create_user_request(
     company: str,
     name: str,
     time: datetime,
+    cognito_client: AdminCognitoClient,
 ) -> DBUserRequest:
     """
     Create a new user request with the given parameters
@@ -38,9 +39,20 @@ def create_user_request(
     :param company: The company the user is associated with
     :param name: The name of the user
     :param time: The time the request was made
+    :param cognito_client: The client to interact with the Cognito service
     :raises ExternalServiceException: An unexpected error occurs in AWS
-    :raises ResourceConflict: A user request with the same email and request id already exists
+    :raises ConflictException: A user request with the same email or user already exists
+    :raises ResourceConflict: The user request already exists in the database
     """
+    # Check if the user already exists in Cognito
+    try:
+        cognito_client.get_user_by_username(email)
+        raise ConflictException("User with this email already exists")
+    except ClientError as err:
+        error_code = err.response["Error"]["Code"]
+        if error_code != "UserNotFoundException":
+            logger.error(err)
+            raise ExternalServiceException from err
     user_request = DBUserRequest(
         email=email,
         company=company,
