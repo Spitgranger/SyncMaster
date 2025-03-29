@@ -65,7 +65,8 @@ const SiteWideDocuments = () => {
   const isSelected = (id: string) => selected === id;
 
   const sortedFiles = React.useMemo(() => {
-    return [...currentFolderFiles].sort((a, b) => {
+    const files = currentFolderFiles || []; // Ensure it's always an array
+    return [...files].sort((a, b) => {
       if (orderBy === 'document_name') {
         return order === 'asc'
           ? a.document_name.localeCompare(b.document_name)

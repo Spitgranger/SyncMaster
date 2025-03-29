@@ -1,7 +1,6 @@
 import { initializeUser } from "@/utils/userHelpers";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { initialize } from "next/dist/server/lib/render-server";
-import { Router, useRouter } from "next/router";
+import router  from "next/router";
 import jwt from 'jsonwebtoken'
 
 interface UserState {
@@ -49,23 +48,38 @@ const userSlice = createSlice({
 })
 
 export const signInUser = createAsyncThunk(
-    "user/signIn",
-    async (userData: any) => {
-        const email = userData.email;
-        const password = userData.password;
+  "user/signIn",
+  async (userData: any) => {
+    const { email, password, new_password } = userData;
+    const body = {
+      email,
+      password,
+      ...(new_password ? { new_password } : {})
+    };
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/unprotected/auth/signin`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
-        });
-        if (response.ok) {
-            return response.json()
-        }
-        else {
-            throw new Error("Failed to Sign In")
-        }
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/unprotected/auth/signin`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    if (response.ok) {
+      return response.json();
+    } else if (response.status === 403) {
+      // Redirect to reset-password page for OTP scenario
+      router.push("/reset-password");
+      // Throwing an error to update the thunk lifecycle (optional)
+      throw new Error("OTP detected: redirecting to reset-password page.");
+    } else if (response.status === 404) {
+      // Throwing an error to update the thunk lifecycle (optional)
+      throw new Error("User not found");
+    } else if (response.status === 401) {
+      // Throwing an error to update the thunk lifecycle (optional)
+      throw new Error("Incorrect password");
+    } else {
+      throw new Error("Failed to Sign In");
     }
+  }
 );
 
 export const signOutUser = createAsyncThunk(

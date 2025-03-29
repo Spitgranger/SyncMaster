@@ -29,10 +29,12 @@ def create_site_entry(
     table: DBTable[DBSiteVisit],
     site_id: str,
     user_id: str,
+    user_email: str,
     loc_tracking: bool,
     ack_status: bool,
     timestamp: datetime,
     on_site: Optional[bool] = None,
+    employee_id: Optional[str] = None,
 ) -> DBSiteVisit:
     """
     Creates a site visit in the database for an initial entry
@@ -40,10 +42,12 @@ def create_site_entry(
     :param table: The DBTable object to use to access the database. Requires write access
     :param site_id: The identifier of the site being visited
     :param user_id: The identifier of the user visiting the site
+    :param user_email: The email of the user entering the site
     :param timestamp: The time at which the request for the site entry came in
     :param ack_status: Whether or not all documents were acknowledged before entering the site
     :param loc_tracking: Whether or not the user allowed us to track their location
     :param on_site: Whether or not the user was on site
+    :param employee_id: The id of the employee accompanying the user
     :return: The representation of the site visit in the database
     :raises ResourceConflict: There is already a site visit in the database with the same parameters
     :raises ExternalServiceException: An unexpected error occurs in AWS
@@ -55,9 +59,11 @@ def create_site_entry(
         entry_time=timestamp,
         site_id=site_id,
         user_id=user_id,
+        user_email=user_email,
         loc_tracking=loc_tracking,
         ack_status=ack_status,
         on_site=on_site,
+        employee_id=employee_id,
     )
 
     condition = Attr("pk").not_exists() & Attr("sk").not_exists()

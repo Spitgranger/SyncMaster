@@ -2,12 +2,12 @@
 import React from 'react'
 import DashboardLayout from '@/components/layouts/DashboardLayout'
 import { Container } from '@mui/material'
-import SiteVisitsTable from '@/components/SiteVisitsComponent'
+import UserRequests from '@/components/userRequests'
 
 export default function SiteWideDocuments() {
   return (
-    <Container maxWidth={false}>
-      <SiteVisitsTable />
+    <Container maxWidth={"lg"}>
+      <UserRequests />
     </Container>
   )
 }
