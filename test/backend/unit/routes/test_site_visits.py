@@ -103,6 +103,20 @@ def test_exit_site_handler(
     assert response["multiValueHeaders"]["Content-Type"] == ["application/json"]
 
 
+def test_get_visit_handler(database_with_complete_site_visit, get_site_visit_request):
+    _, visit = database_with_complete_site_visit
+    response = lambda_handler(event=get_site_visit_request[0], context=get_site_visit_request[1])
+
+    table = DBTable(AWSAccessLevel.READ, item_schema=DBSiteVisit)
+    bucket = S3Bucket(bucket_name=DOCUMENT_STORAGE_BUCKET_NAME, access=AWSAccessLevel.READ)
+
+    assert response["statusCode"] == HTTPStatus.OK
+    assert APISiteVisit.model_validate_json(response["body"]) == table.get(
+        key=KeySchema(pk=visit.pk, sk=visit.sk)
+    ).to_api_model(bucket=bucket)
+    assert response["multiValueHeaders"]["Content-Type"] == ["application/json"]
+
+
 def test_enter_site_handler(empty_database, enter_site_request, db_site_visit_only_entry):
     response = lambda_handler(event=enter_site_request[0], context=enter_site_request[1])
 
