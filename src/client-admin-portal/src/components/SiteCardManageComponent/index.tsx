@@ -153,19 +153,21 @@ const SiteCardManageComponent = ({ siteId, longitude, latitude, acceptable_range
                         />
                         <TextField
                             margin="dense"
-                            label="Longitude"
-                            name="longitude"
-                            fullWidth
-                            value={editSite.longitude}
-                            onChange={handleInputChange}
-                        />
-                        <TextField
-                            margin="dense"
                             label="Latitude"
                             name="latitude"
                             fullWidth
                             value={editSite.latitude}
                             onChange={handleInputChange}
+                            helperText="degrees (°)"
+                        />
+                        <TextField
+                            margin="dense"
+                            label="Longitude"
+                            name="longitude"
+                            fullWidth
+                            value={editSite.longitude}
+                            onChange={handleInputChange}
+                            helperText="degrees (°)"
                         />
                         <TextField
                             margin="dense"
@@ -174,6 +176,7 @@ const SiteCardManageComponent = ({ siteId, longitude, latitude, acceptable_range
                             fullWidth
                             value={editSite.acceptableRange}
                             onChange={handleInputChange}
+                            helperText="meters (m)"
                         />
                         {isEditing && (
                             <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>

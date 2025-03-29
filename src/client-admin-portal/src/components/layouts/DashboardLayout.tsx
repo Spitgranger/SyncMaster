@@ -107,7 +107,7 @@ interface SidebarLink {
 
 export default function DashboardLayout({ children }: Props) {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const userState = useSelector((state: RootState) => state.user)
@@ -171,8 +171,8 @@ export default function DashboardLayout({ children }: Props) {
             <Grid container spacing={1} width={"168px"} display={"flex"} flexDirection={"row"}>
               <Image src={hamiltonLogo} width={44.71} height={38} alt='Hamilton Logo' />
 
-              <Typography width={115} variant="body1" lineHeight={1.2} fontWeight={700} >
-                Hamilton Waterworks
+              <Typography width={100} variant="body1" lineHeight={1.2} fontWeight={700} >
+                Hamilton Water
               </Typography>
             </Grid>
           </Grid>

@@ -2,7 +2,7 @@
 import React from 'react'
 import DashboardLayout from '@/components/layouts/DashboardLayout'
 import { Container } from '@mui/material'
-import UserRequests from '@/components/userRequests/userRequests'
+import UserRequests from '@/components/userRequests'
 
 export default function SiteWideDocuments() {
   return (

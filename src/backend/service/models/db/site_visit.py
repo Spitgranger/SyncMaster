@@ -18,6 +18,7 @@ class DBSiteVisit(DBItemModel):
     """Model representing a site visit in the database"""
 
     user_id: str
+    user_email: str
     site_id: str
     entry_time: datetime
     loc_tracking: bool
@@ -26,6 +27,7 @@ class DBSiteVisit(DBItemModel):
     work_order: Optional[int] = None
     description: Optional[str] = None
     on_site: Optional[bool] = None
+    employee_id: Optional[str] = None
     attachments: dict[str, str] = Field(default_factory=dict)
 
     @staticmethod
@@ -62,6 +64,7 @@ class DBSiteVisit(DBItemModel):
         return APISiteVisit(
             site_id=self.site_id,
             user_id=self.user_id,
+            user_email=self.user_email,
             entry_time=self.entry_time,
             allowed_tracking=self.loc_tracking,
             ack_status=self.ack_status,
@@ -69,5 +72,6 @@ class DBSiteVisit(DBItemModel):
             work_order=self.work_order,
             description=self.description,
             on_site=self.on_site,
+            employee_id=self.employee_id,
             attachments=attachments,
         )

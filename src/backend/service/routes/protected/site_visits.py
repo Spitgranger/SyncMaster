@@ -60,15 +60,20 @@ def enter_site_handler(
     # Getting user id from claims
     user_id = router.current_event["requestContext"]["authorizer"]["claims"]["sub"]
 
+    # Getting user email (which is stored as cognito username) from claims
+    user_email = router.current_event["requestContext"]["authorizer"]["claims"]["cognito:username"]
+
     table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBSiteVisit)
     visit = create_site_entry(
         table=table,
         site_id=site_id,
         user_id=user_id,
+        user_email=user_email,
         loc_tracking=visit_details.allowed_tracking,
         ack_status=visit_details.ack_status,
         timestamp=request_time,
         on_site=visit_details.on_site,
+        employee_id=visit_details.employee_id,
     )
 
     bucket = S3Bucket(bucket_name=DOCUMENT_STORAGE_BUCKET_NAME, access=AWSAccessLevel.READ)
