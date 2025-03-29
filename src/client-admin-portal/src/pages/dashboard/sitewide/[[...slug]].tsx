@@ -52,6 +52,16 @@ const SiteWideDocuments = () => {
     setOrderBy(property);
   };
 
+  const getExpiryColor = (expiryDate: string) => {
+    const now = new Date();
+    const expiry = new Date(expiryDate);
+    const diffInDays = (expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
+
+    if (diffInDays < 0) return "red"; // Expired
+    if (diffInDays < 30) return "orange"; // Less than a month
+    return "inherit"; // Default color
+  };
+
   const handleClick = (id: string) => {
     setSelected((prevSelected) => (prevSelected === id ? null : id));
   };
@@ -75,6 +85,10 @@ const SiteWideDocuments = () => {
         const dateA = new Date(a.last_modified);
         const dateB = new Date(b.last_modified);
         return order === 'asc' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
+      } else if (orderBy === 'document_expiry') {
+        const dateA = a.document_expiry ? new Date(a.document_expiry).getTime() : Infinity;
+        const dateB = b.document_expiry ? new Date(b.document_expiry).getTime() : Infinity;
+        return order === 'asc' ? dateA - dateB : dateB - dateA;
       }
       return 0;
     });
@@ -181,6 +195,20 @@ const SiteWideDocuments = () => {
                     ) : null}
                   </TableSortLabel>
                 </TableCell>
+                <TableCell>
+                  <TableSortLabel
+                    active={orderBy === 'document_expiry'}
+                    direction={order}
+                    onClick={() => handleRequestSort('document_expiry')}
+                  >
+                    Expiry Date
+                    {orderBy === 'document_expiry' ? (
+                      <Box component="span" sx={visuallyHidden}>
+                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                      </Box>
+                    ) : null}
+                  </TableSortLabel>
+                </TableCell>
                 <TableCell>Type</TableCell>
               </TableRow>
             </TableHead>
@@ -213,6 +241,14 @@ const SiteWideDocuments = () => {
                     </TableCell>
                     <TableCell>
                       <Typography variant="body1">{formatDate(file.last_modified)}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography
+                        variant="body1"
+                        sx={{ color: file.document_expiry ? getExpiryColor(file.document_expiry) : "inherit" }}
+                      >
+                        {file.document_expiry ? formatDate(file.document_expiry) : "N/A"}
+                      </Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="body1">
