@@ -35,13 +35,14 @@ const AcknowledgementPage = () => {
 
     const proceedAction = () => {
       const allowedTracking = localStorage.getItem("allowedTracking") === "true";
+      const userOnSite = localStorage.getItem("userOnSite") === "true";
 
       dispatch(enterSite({
         site_id: siteId,
         idToken: idToken,
         allowed_tracking: allowedTracking,
         ack_status: acknowledgedAll,
-        on_site: true,
+        on_site: userOnSite,
         employee_id: employeeID
       })).then((response) => {
         if (response.meta.requestStatus === "fulfilled") {

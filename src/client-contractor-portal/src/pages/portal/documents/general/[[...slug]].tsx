@@ -53,11 +53,6 @@ const SiteWideDocuments = () => {
     setSelected((prevSelected) => (prevSelected === id ? null : id));
   };
 
-  const handleDoubleClick = (file: { document_type: string; document_id: string }) => {
-    if (file.document_type === "folder") {
-      router.push(`/dashboard/sitewide/${file.document_id}`);
-    }
-  };
 
   const isSelected = (id: string) => selected === id;
 
@@ -76,11 +71,6 @@ const SiteWideDocuments = () => {
       return 0;
     });
   }, [currentFolderFiles, order, orderBy]);
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return format(date, "MMMM d, yyyy 'at' h:mm a");
-  };
 
   const selectedFile = React.useMemo(() => {
     if (!selected) return null;
@@ -177,7 +167,6 @@ const SiteWideDocuments = () => {
                     key={file.document_id}
                     sx={{ cursor: 'pointer' }}
                     onClick={() => handleClick(file.document_id)}
-                    onDoubleClick={() => handleDoubleClick(file)}
                     selected={isItemSelected}
                   >
                     <TableCell padding="checkbox">
@@ -194,7 +183,7 @@ const SiteWideDocuments = () => {
                           variant="body1"
                           onClick={() => {
                             if (file.document_type === "folder") {
-                              router.push(`/dashboard/sitewide/${file.document_id}`);
+                              router.push(`/portal/documents/general/${file.document_id}`);
                             }
                           }}
                         >
