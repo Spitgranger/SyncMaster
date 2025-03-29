@@ -107,7 +107,7 @@ interface SidebarLink {
 
 export default function DashboardLayout({ children }: Props) {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const userState = useSelector((state: RootState) => state.user)
