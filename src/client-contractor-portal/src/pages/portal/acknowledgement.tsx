@@ -13,6 +13,7 @@ import { RootState } from "@/state/store";
 import { sign } from "crypto";
 import { signOutUser } from "@/state/user/userSlice";
 import { enterSite, setEntryTime } from "@/state/site/siteSlice";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const AcknowledgementPage = () => {
   const router = useRouter();
@@ -86,7 +87,16 @@ const AcknowledgementPage = () => {
 
   return (
     isLoading || !acknowledgementDocuments ? (
-      <p>Loading...</p>
+      <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+              }}
+            >
+              <CircularProgress />
+            </div>
     ) : (
       <Container
         sx={{

@@ -67,8 +67,8 @@ export default function PortalLayout({ children }: Props) {
                     <Grid container alignItems={"center"}>
                         <Grid container spacing={1} width={"168px"} display={"flex"} flexDirection={"row"}>
                             <Image src={hamiltonLogo} width={44.71} height={38} alt='Hamilton Logo' />
-                            <Typography width={115} variant="body1" lineHeight={1.2} fontWeight={700} >
-                                Hamilton Waterworks
+                            <Typography width={110} variant="body1" lineHeight={1.2} fontWeight={700} >
+                                Hamilton Water
                             </Typography>
                         </Grid>
                     </Grid>
