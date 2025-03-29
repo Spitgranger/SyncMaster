@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Container, Typography, Checkbox, FormControlLabel, Button, Box, Link, Radio, RadioGroup, FormControl, FormLabel } from '@mui/material';
+import React, { useState, useRef, useEffect } from 'react';
+import { Container, Typography, Checkbox, FormControlLabel, Button, Box, Link, Radio, RadioGroup, FormControl, FormLabel, TextField, FormHelperText } from '@mui/material';
 
 interface Document {
   document_id: string;
@@ -9,7 +9,7 @@ interface Document {
 
 interface AcknowledgmentFormProps {
   documents: Document[];
-  onProceed: () => void;
+  onProceed: (data: { acknowledgedAll: boolean; hasCompletedTraining: boolean; accompaniedByEmployee: boolean; employeeID: string | null }) => Promise<void>;
 }
 
 const truncateText = (text: string, maxLength: number) => {
@@ -25,6 +25,7 @@ const AcknowledgmentForm: React.FC<AcknowledgmentFormProps> = ({ documents = [],
 
   const [trainingCompleted, setTrainingCompleted] = useState<string | null>(null);
   const [accompaniedByEmployee, setAccompaniedByEmployee] = useState<string | null>(null);
+  const [cityEmployeeId, setCityEmployeeId] = useState<string>('');
 
   const handleCheckboxChange = (docId: string) => {
     setAcknowledged((prev) => ({ ...prev, [docId]: !prev[docId] }));
@@ -41,11 +42,34 @@ const AcknowledgmentForm: React.FC<AcknowledgmentFormProps> = ({ documents = [],
     setAccompaniedByEmployee(event.target.value);
   };
 
+  const handleCityEmployeeIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCityEmployeeId(event.target.value);
+  };
+
   const allAcknowledged = Object.values(acknowledged).every((value) => value);
   const canProceed =
-    allAcknowledged &&
     trainingCompleted !== null &&
-    (trainingCompleted === "yes" || (trainingCompleted === "no" && accompaniedByEmployee !== null));
+    (trainingCompleted === "yes" ||
+      (trainingCompleted === "no" && accompaniedByEmployee === "yes" && cityEmployeeId.trim() !== '') ||
+      (trainingCompleted === "no" && accompaniedByEmployee === "no"));
+
+  const handleProceed = () => {
+    const acknowledgmentStatus = {
+      allAcknowledged,
+      acknowledgedItems: acknowledged,
+      cityEmployeeId: accompaniedByEmployee === "yes" ? cityEmployeeId : null,
+    };
+    console.log('Acknowledgment Status:', acknowledgmentStatus.allAcknowledged);
+    console.log('Training Completed:', trainingCompleted);
+    console.log('Accompanied By Employee:', accompaniedByEmployee);
+    console.log('City Employee ID:', cityEmployeeId);
+    onProceed({
+      acknowledgedAll: allAcknowledged,
+      hasCompletedTraining: trainingCompleted === "yes",
+      accompaniedByEmployee: accompaniedByEmployee === "yes",
+      employeeID: accompaniedByEmployee === "yes" ? cityEmployeeId : null,
+    });
+  };
 
   return (
     <Container sx={{ mt: 4, px: 2, textAlign: 'center' }}>
@@ -58,10 +82,21 @@ const AcknowledgmentForm: React.FC<AcknowledgmentFormProps> = ({ documents = [],
       {sortedDocuments.length > 0 ? (
         sortedDocuments.map((doc) => (
           <Box key={doc.document_id} sx={{ my: 2, textAlign: 'left' }}>
-            <Typography variant="h6">{truncateText(doc.document_name, 30)}</Typography>
+            <Typography
+              variant="h6"
+              sx={{
+                display: 'inline-block',
+                maxWidth: '75%',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {doc.document_name}
+            </Typography>
             <Typography variant="body2">
               Link: <Link href={doc.s3_presigned_get} target="_blank" rel="noopener noreferrer">
-                {truncateText(doc.s3_presigned_get, 40)}
+                Click Here to View Document
               </Link>
             </Typography>
             <FormControlLabel
@@ -94,6 +129,22 @@ const AcknowledgmentForm: React.FC<AcknowledgmentFormProps> = ({ documents = [],
               <FormControlLabel value="yes" control={<Radio />} label="Yes" />
               <FormControlLabel value="no" control={<Radio />} label="No" />
             </RadioGroup>
+            {accompaniedByEmployee === "yes" && (
+              <>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                  Please provide the ID of the city employee accompanying you. <Typography variant='body2' component="span" color="red">(Required)</Typography>
+                </Typography>
+                <TextField
+                  label="City Employee ID"
+                  variant="outlined"
+                  value={cityEmployeeId}
+                  onChange={handleCityEmployeeIdChange}
+                  sx={{ mt: 2 }}
+                  fullWidth
+                  required
+                />
+              </>
+            )}
           </FormControl>
         )}
       </Box>
@@ -101,7 +152,7 @@ const AcknowledgmentForm: React.FC<AcknowledgmentFormProps> = ({ documents = [],
         variant="contained"
         color="primary"
         disabled={!canProceed}
-        onClick={onProceed}
+        onClick={handleProceed}
         sx={{ mt: 3 }}
       >
         CONTINUE

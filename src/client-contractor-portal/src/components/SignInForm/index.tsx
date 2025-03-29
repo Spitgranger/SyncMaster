@@ -23,6 +23,7 @@ const SignInForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const location = await getGeolocation();
+    console.log("Location coordinates:", location);
     if (location[0] !== null || location[1] === null) {
 
       dispatch(signInUser({ email, password, location })).then((response) => {
@@ -34,6 +35,7 @@ const SignInForm = () => {
         } else {
           console.log("an error occured while signing in");
           if (response.payload.status === 403) {
+            if(response.payload.message==="")
             console.log("Redirecting to reset password page...");
             router.push(`/reset-password?email=${encodeURIComponent(email)}`);
           }
