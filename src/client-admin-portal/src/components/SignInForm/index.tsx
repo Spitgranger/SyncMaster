@@ -4,6 +4,7 @@ import Grid from '@mui/material/Grid2';
 import { Button, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import CircularProgress from '@mui/material/CircularProgress';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
@@ -111,8 +112,18 @@ const SignInForm = () => {
             }}
           />
           
-          <Button disabled={isSignInButtonDisabled} type="submit" size='large' variant='contained'>
-            Sign In
+          <Button
+              disabled={isSignInButtonDisabled}
+              type="submit"
+              size='large'
+              variant='contained'
+              style={{ minWidth: '100px', minHeight: '36px' }}
+            >
+              {isSignInButtonDisabled ? (
+                <CircularProgress size={24} />
+              ) : (
+                'Sign In'
+              )}
           </Button>
 
           <Grid display={"flex"} justifyContent={"center"}>
