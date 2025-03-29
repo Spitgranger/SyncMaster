@@ -129,19 +129,19 @@ const ManageSites = () => {
                     />
                     <TextField
                         margin="dense"
-                        label="Longitude"
-                        name="longitude"
+                        label="Latitude"
+                        name="latitude"
                         fullWidth
-                        value={newSite.longitude}
+                        value={newSite.latitude}
                         onChange={handleInputChange}
                         helperText="degrees (°)"
                     />
                     <TextField
                         margin="dense"
-                        label="Latitude"
-                        name="latitude"
+                        label="Longitude"
+                        name="longitude"
                         fullWidth
-                        value={newSite.latitude}
+                        value={newSite.longitude}
                         onChange={handleInputChange}
                         helperText="degrees (°)"
                     />
