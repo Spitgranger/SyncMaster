@@ -22,6 +22,7 @@ from ...user_authentication.user_authentication import (
     logout_user_handler,
     signup_user_handler,
 )
+from ...util import UserType, verify_user_role
 
 router = Router()
 
@@ -67,6 +68,14 @@ def update_user_handler(body: Annotated[UpdateUserAttributeRequest, Body()]):
     :param body: The body of the HTTP request
     :return: dictionary containing http response
     """
+    verify_user_role(
+        user_groups=router.current_event["requestContext"]["authorizer"]["claims"][
+            "cognito:groups"
+        ],
+        acceptable_roles=[UserType.ADMIN],
+        action="update user",
+    )
+
     cognito_client = AdminCognitoClient(USER_POOL_CLIENT_ID, USER_POOL_ID)
 
     return admin_update_user_attributes_handler(body, cognito_client)
@@ -79,6 +88,13 @@ def get_users_handler(body: Annotated[GetUsersByAttributeRequest, Body()]):
     :param body: The body of the HTTP request
     :return: dictionary containing http response
     """
+    verify_user_role(
+        user_groups=router.current_event["requestContext"]["authorizer"]["claims"][
+            "cognito:groups"
+        ],
+        acceptable_roles=[UserType.ADMIN],
+        action="get users",
+    )
     cognito_client = AdminCognitoClient(USER_POOL_CLIENT_ID, USER_POOL_ID)
 
     return admin_get_users_handler(body, cognito_client)

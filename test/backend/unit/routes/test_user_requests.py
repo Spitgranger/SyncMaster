@@ -1,30 +1,20 @@
 from http import HTTPStatus
 
-from backend.service.database.db_table import DBTable, KeySchema
-from backend.service.environment import DOCUMENT_STORAGE_BUCKET_NAME
-from backend.service.file_storage.s3_bucket import S3Bucket
 from backend.service.handler import lambda_handler
-from backend.service.models.api.site_visit import APIListSiteVisitResponse, APISiteVisit
 from backend.service.models.api.user_requests import APIGetUserRequestsResponse, APIUserRequest
-from backend.service.models.db.site_visit import DBSiteVisit
-from backend.service.util import AWSAccessLevel, ItemType
 
 from ..constants import (
-    CURRENT_DATE_TIME,
-    PREV_DATE_TIME,
-    TEST_ATTACHMENT_NAME,
     TEST_COMPANY_NAME,
-    TEST_SITE_ID,
     TEST_USER_EMAIL,
-    TEST_USER_ID,
 )
 
 
-def test_create_user_request_handler(empty_database, create_user_request_request):
+def test_create_user_request_handler(
+    empty_database, create_user_request_request, cognito_mock_admin
+):
     response = lambda_handler(
         event=create_user_request_request[0], context=create_user_request_request[1]
     )
-    print(response["body"])
     request = APIUserRequest.model_validate_json(response["body"])
 
     assert response["statusCode"] == HTTPStatus.CREATED
@@ -105,10 +95,10 @@ def test_action_user_request_bad_role(
     assert response["multiValueHeaders"]["Content-Type"] == ["application/json"]
 
 
-def test_action_user(database_with_user_request, cognito_client_admin, action_user_request_request):
+def test_action_user(database_with_user_request, cognito_mock_admin, action_user_request_request):
     response = lambda_handler(
         event=action_user_request_request[0], context=action_user_request_request[1]
     )
 
-    assert response["statusCode"] == HTTPStatus.INTERNAL_SERVER_ERROR
+    assert response["statusCode"] == HTTPStatus.CREATED
     assert response["multiValueHeaders"]["Content-Type"] == ["application/json"]
