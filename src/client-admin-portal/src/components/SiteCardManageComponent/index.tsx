@@ -250,7 +250,7 @@ const SiteCardManageComponent = ({
               {/* Add ref to capture the <canvas> element */}
               <QRCodeCanvas
                 ref={qrRef}
-                value={`${clientUrl}?site_id=${siteId}`}
+                value={`${clientUrl}?id=${siteId}`}
                 size={300}
               />
             </Box>
