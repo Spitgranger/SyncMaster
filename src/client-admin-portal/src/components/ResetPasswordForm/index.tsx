@@ -4,6 +4,7 @@ import Grid from '@mui/material/Grid2';
 import { Button, IconButton, InputAdornment, TextField, Typography, Alert } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import CircularProgress from '@mui/material/CircularProgress';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
@@ -199,8 +200,17 @@ const ResetPasswordForm = () => {
             />
           </Grid>
           <Grid display="flex" justifyContent="center">
-            <Button disabled={isSubmitDisabled} type="submit" size="large" variant="contained">
-              Reset Password
+          <Button
+              disabled={isSubmitDisabled}
+              type="submit"
+              size="large"
+              variant="contained"
+            >
+              {isSubmitDisabled ? (
+                <CircularProgress size={24} />
+              ) : (
+                'Reset Password'
+              )}
             </Button>
           </Grid>
           <Grid display="flex" justifyContent="center">
