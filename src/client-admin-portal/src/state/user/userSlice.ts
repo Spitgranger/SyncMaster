@@ -70,6 +70,12 @@ export const signInUser = createAsyncThunk(
       router.push("/reset-password");
       // Throwing an error to update the thunk lifecycle (optional)
       throw new Error("OTP detected: redirecting to reset-password page.");
+    } else if (response.status === 404) {
+      // Throwing an error to update the thunk lifecycle (optional)
+      throw new Error("User not found");
+    } else if (response.status === 401) {
+      // Throwing an error to update the thunk lifecycle (optional)
+      throw new Error("Incorrect password");
     } else {
       throw new Error("Failed to Sign In");
     }

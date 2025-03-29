@@ -26,6 +26,7 @@ const ResetPasswordForm = () => {
   const [passwordMismatchError, setPasswordMismatchError] = useState(false);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -89,7 +90,7 @@ const ResetPasswordForm = () => {
       }, 1000);
     } catch (error: any) {
       console.error("Reset password error:", error.message);
-      // Optionally, display an error message here
+      setErrorMessage(error.message || "Something went wrong during sign in.");
     } finally {
       setIsSubmitDisabled(false);
     }
@@ -104,6 +105,13 @@ const ResetPasswordForm = () => {
         {successMessage && (
           <Grid py={2}>
             <Alert severity="success">{successMessage}</Alert>
+          </Grid>
+        )}
+        {errorMessage && (
+          <Grid size={12} py={1}>
+            <Typography color="error">
+              {errorMessage}
+            </Typography>
           </Grid>
         )}
         <Grid container direction="column" spacing={2} py={2}>
@@ -214,7 +222,7 @@ const ResetPasswordForm = () => {
             </Button>
           </Grid>
           <Grid display="flex" justifyContent="center">
-            <Link href="/sign-in" style={{ textAlign: "center", color: "#1976d2" }}>
+            <Link href="/login" style={{ textAlign: "center", color: "#1976d2" }}>
               <Typography variant="body1">Back to Sign In</Typography>
             </Link>
           </Grid>
