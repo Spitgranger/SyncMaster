@@ -12,6 +12,7 @@ interface UserState {
     role: string | null;
     username: string | null;
     userId: string | null;
+    siteId: string | null;
 }
 
 const initialState: UserState = initializeUser()
@@ -20,9 +21,9 @@ const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        signIn: (state, action) => {
-
-        },
+        setSiteId(state, action) {
+            state.siteId = action.payload.siteId;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -43,6 +44,8 @@ const userSlice = createSlice({
                 state.isSignedIn = false
                 state.role = null
                 state.username = null
+                state.userId = null
+                state.siteId = null
                 console.log(state);
             }
             )
@@ -55,11 +58,14 @@ export const signInUser = createAsyncThunk(
         const email = userData.email;
         const password = userData.password;
         const location = userData.location;
+        const site_id = userData.id;
+
+        let requestBody = { email: email, password: password, location: location, site_id: site_id };
 
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/unprotected/auth/signin`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password, location }),
+            body: JSON.stringify(requestBody),
         });
 
         if (response.ok) {
@@ -78,7 +84,7 @@ export const signOutUser = createAsyncThunk(
         const state = thunkAPI.getState() as { user: UserState }
         const userData = state.user
         console.log(userData);
-        
+
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/protected/users/signout?user_token=${userData.accessToken}`, {
             method: "GET",
             headers: {
@@ -92,5 +98,7 @@ export const signOutUser = createAsyncThunk(
         return true;
     }
 )
+
+export const { setSiteId } = userSlice.actions
 
 export default userSlice.reducer
