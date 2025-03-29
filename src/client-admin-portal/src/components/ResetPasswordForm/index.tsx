@@ -4,6 +4,7 @@ import Grid from '@mui/material/Grid2';
 import { Button, IconButton, InputAdornment, TextField, Typography, Alert } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import CircularProgress from '@mui/material/CircularProgress';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
@@ -25,6 +26,7 @@ const ResetPasswordForm = () => {
   const [passwordMismatchError, setPasswordMismatchError] = useState(false);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -88,7 +90,7 @@ const ResetPasswordForm = () => {
       }, 1000);
     } catch (error: any) {
       console.error("Reset password error:", error.message);
-      // Optionally, display an error message here
+      setErrorMessage(error.message || "Something went wrong during sign in.");
     } finally {
       setIsSubmitDisabled(false);
     }
@@ -103,6 +105,13 @@ const ResetPasswordForm = () => {
         {successMessage && (
           <Grid py={2}>
             <Alert severity="success">{successMessage}</Alert>
+          </Grid>
+        )}
+        {errorMessage && (
+          <Grid size={12} py={1}>
+            <Typography color="error">
+              {errorMessage}
+            </Typography>
           </Grid>
         )}
         <Grid container direction="column" spacing={2} py={2}>
@@ -199,12 +208,21 @@ const ResetPasswordForm = () => {
             />
           </Grid>
           <Grid display="flex" justifyContent="center">
-            <Button disabled={isSubmitDisabled} type="submit" size="large" variant="contained">
-              Reset Password
+          <Button
+              disabled={isSubmitDisabled}
+              type="submit"
+              size="large"
+              variant="contained"
+            >
+              {isSubmitDisabled ? (
+                <CircularProgress size={24} />
+              ) : (
+                'Reset Password'
+              )}
             </Button>
           </Grid>
           <Grid display="flex" justifyContent="center">
-            <Link href="/sign-in" style={{ textAlign: "center", color: "#1976d2" }}>
+            <Link href="/login" style={{ textAlign: "center", color: "#1976d2" }}>
               <Typography variant="body1">Back to Sign In</Typography>
             </Link>
           </Grid>

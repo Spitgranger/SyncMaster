@@ -4,6 +4,7 @@ import Grid from '@mui/material/Grid2';
 import { Button, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import CircularProgress from '@mui/material/CircularProgress';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
@@ -19,6 +20,7 @@ const SignInForm = () => {
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false);
   const [isSignInButtonDisabled, setIsSignInButtonDisabled] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -44,6 +46,7 @@ const SignInForm = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSignInButtonDisabled(true);
+    setErrorMessage(""); // Clear any previous error message
     try {
       // Using unwrap() will throw an error if the thunk is rejected
       const response = await dispatch(signInUser({ email, password })).unwrap();
@@ -51,12 +54,12 @@ const SignInForm = () => {
       localStorage.setItem("idToken", response.IdToken);
       router.push("/dashboard/sitewide");
     } catch (error: any) {
-      // If OTP detection occurred, the thunk already triggered a redirect
       if (error.message.includes("OTP detected")) {
         console.log("OTP detected; redirecting to reset-password page.");
       } else {
         console.error("Sign in error:", error.message);
-        // Optionally update state or display an error notification to the user here.
+        // 2. Set the errorMessage state based on the error
+        setErrorMessage(error.message || "Something went wrong during sign in.");
       }
     } finally {
       setIsSignInButtonDisabled(false);
@@ -73,6 +76,13 @@ const SignInForm = () => {
         <Grid size={12} py={2}>
           <Typography variant='h5'>Sign In</Typography>
         </Grid>
+        {errorMessage && (
+          <Grid size={12} py={1}>
+            <Typography color="error">
+              {errorMessage}
+            </Typography>
+          </Grid>
+        )}
         <Grid size={12} container direction={'column'} spacing={2} py={2}>
           <TextField
             type='email'
@@ -111,8 +121,18 @@ const SignInForm = () => {
             }}
           />
           
-          <Button disabled={isSignInButtonDisabled} type="submit" size='large' variant='contained'>
-            Sign In
+          <Button
+              disabled={isSignInButtonDisabled}
+              type="submit"
+              size='large'
+              variant='contained'
+              style={{ minWidth: '100px', minHeight: '36px' }}
+            >
+              {isSignInButtonDisabled ? (
+                <CircularProgress size={24} />
+              ) : (
+                'Sign In'
+              )}
           </Button>
 
           <Grid display={"flex"} justifyContent={"center"}>
