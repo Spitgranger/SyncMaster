@@ -40,7 +40,6 @@ export const getUserRequests = createAsyncThunk(
       },
     });
     if (response.ok) {
-      //console.log("User requests fetched successfully", response.json());
       return response.json();
     }
     throw new Error("Failed to get user requests");
@@ -77,6 +76,37 @@ export const actionRequest = createAsyncThunk(
   }
 );
 
+// POST /unprotected/auth/create-request
+// Expected payload:
+// {
+//   "email": "thinkpad220@hotmail.com",
+//   "company": "Millers Plumboing",
+//   "name": "Jack Nickson",
+//   "role_requested": "admin"
+// }
+export const createAccountRequest = createAsyncThunk(
+  'userRequests/createAccountRequest',
+  async (
+    data: { email: string; company: string; name: string; role_requested: string },
+    thunkAPI
+  ) => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/unprotected/auth/create-request`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      }
+    );
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error("Failed to create account request");
+  }
+);
+
 const userRequestsSlice = createSlice({
   name: 'userRequests',
   initialState,
@@ -108,6 +138,21 @@ const userRequestsSlice = createSlice({
     builder.addCase(actionRequest.rejected, (state, action) => {
       state.actionRequestStatus = 'failed';
       state.error = action.error.message || 'Failed to perform action on user request';
+    });
+
+    // createAccountRequest cases
+    builder.addCase(createAccountRequest.pending, (state) => {
+      state.actionRequestStatus = 'loading';
+      state.error = null;
+    });
+    builder.addCase(createAccountRequest.fulfilled, (state, action: PayloadAction<any>) => {
+      state.actionRequestStatus = 'succeeded';
+      // Optionally, add the new account request to state.requests if needed:
+      // state.requests.push(action.payload);
+    });
+    builder.addCase(createAccountRequest.rejected, (state, action) => {
+      state.actionRequestStatus = 'failed';
+      state.error = action.error.message || 'Failed to create account request';
     });
   },
 });

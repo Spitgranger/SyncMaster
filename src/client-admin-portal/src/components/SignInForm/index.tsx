@@ -130,7 +130,7 @@ const SignInForm = () => {
 
                     <Grid display={"flex"} justifyContent={"center"}>
                         <Link style={{ textAlign: 'center', color: "#1976d2" }} href={'/sign-up'}>
-                            <Typography variant='body1'>Sign Up</Typography>
+                            <Typography variant='body1'>Request Account</Typography>
                         </Link>
                     </Grid>
                 </Grid>
