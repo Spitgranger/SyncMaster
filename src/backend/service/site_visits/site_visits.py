@@ -118,6 +118,28 @@ def add_exit_time(
         ) from err
 
 
+def get_site_visit(
+    table: DBTable[DBSiteVisit],
+    site_id: str,
+    user_id: str,
+    entry_time: datetime,
+) -> DBSiteVisit:
+    """
+    Get a site visit from the database
+    :param table: The DBTable object to use to access the database. Requires write access
+    :param site_id: The site id that was visited
+    :param user_id: The user visiting the site
+    :param entry_time: The time the site was entered
+    :return: The details of the specified site visit
+    :raises ResourceNotFound: No site visit found matching requirements
+    :raises ExternalServiceException: An unexpected error occurs in AWS
+    """
+    key = KeySchema(
+        pk=f"{ItemType.SITE_VISIT.value}#{site_id}#{user_id}", sk=entry_time.isoformat()
+    )
+    return table.get(key=key)
+
+
 def list_site_visits(
     table: DBTable[DBSiteVisit],
     from_time: Optional[datetime] = None,
