@@ -15,7 +15,7 @@ export default function Documents() {
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow onClick={() => router.push(`${router.asPath}/sitewide`)}>
+          <TableRow onClick={() => router.push(`${router.asPath}/general`)}>
             <TableCell align='center' >
               <Box display="flex" alignItems="center" >
                 <Folder />
@@ -26,7 +26,7 @@ export default function Documents() {
             </TableCell>
           </TableRow>
 
-          <TableRow onClick={() => router.push(`${router.asPath}/sitespecific`)}>
+          <TableRow onClick={() => router.push(`${router.asPath}/specific`)}>
             <TableCell align='center' >
               <Box display="flex" alignItems="center" >
                 <Folder />

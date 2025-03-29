@@ -7,7 +7,6 @@ import { useRouter } from 'next/router'
 import React, { } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getDocuments } from '@/state/document/documentSlice' // Adjust the path as needed
-import FileUploaderComponent from '@/components/FileUploaderComponent'
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { visuallyHidden } from '@mui/utils';
 import Checkbox from '@mui/material/Checkbox';
@@ -16,13 +15,11 @@ import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import DownloadIcon from '@mui/icons-material/Download';
-import DeleteFileComponent from '@/components/DeleteFileComponent'
 
 const SiteWideDocuments = () => {
   const userState = useSelector((state: RootState) => state.user)
   const documentState = useSelector((state: RootState) => state.document)
   const { currentFolderFiles, isLoading } = documentState
-  const { username, role, idToken, userId } = userState;
 
   const router = useRouter();
   const folderId = router.query.slug ? router.query.slug[0] : "root"; // Handle slug logic
@@ -31,7 +28,7 @@ const SiteWideDocuments = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   React.useEffect(() => {
-    dispatch(getDocuments({ site_id: "ALL", folder_id: folderId, idToken: userState.idToken })).then((response) => {
+    dispatch(getDocuments({ site_id: userState.siteId, folder_id: folderId, idToken: userState.idToken })).then((response) => {
       if (response.meta.requestStatus === "fulfilled") {
         console.log("Documents fetched successfully");
       }
@@ -56,11 +53,6 @@ const SiteWideDocuments = () => {
     setSelected((prevSelected) => (prevSelected === id ? null : id));
   };
 
-  const handleDoubleClick = (file: { document_type: string; document_id: string }) => {
-    if (file.document_type === "folder") {
-      router.push(`/dashboard/sitewide/${file.document_id}`);
-    }
-  };
 
   const isSelected = (id: string) => selected === id;
 
@@ -79,11 +71,6 @@ const SiteWideDocuments = () => {
       return 0;
     });
   }, [currentFolderFiles, order, orderBy]);
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return format(date, "MMMM d, yyyy 'at' h:mm a");
-  };
 
   const selectedFile = React.useMemo(() => {
     if (!selected) return null;
@@ -124,7 +111,7 @@ const SiteWideDocuments = () => {
             <TableHead >
               {selectedFile && selectedFile.document_type === "file" && (
                 <TableRow sx={{ height: "20px" }}>
-                  <TableCell sx={{ px: 0, py: 0 }} colSpan={4}>
+                  <TableCell sx={{ px: 0, py: 0 }} colSpan={3}>
                     <Toolbar
                       sx={{
                         minHeight: "40px !important",
@@ -167,20 +154,6 @@ const SiteWideDocuments = () => {
                     ) : null}
                   </TableSortLabel>
                 </TableCell>
-                <TableCell>
-                  <TableSortLabel
-                    active={orderBy === 'last_modified'}
-                    direction={order}
-                    onClick={() => handleRequestSort('last_modified')}
-                  >
-                    Date Modified
-                    {orderBy === 'last_modified' ? (
-                      <Box component="span" sx={visuallyHidden}>
-                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                      </Box>
-                    ) : null}
-                  </TableSortLabel>
-                </TableCell>
                 <TableCell>Type</TableCell>
               </TableRow>
             </TableHead>
@@ -194,7 +167,6 @@ const SiteWideDocuments = () => {
                     key={file.document_id}
                     sx={{ cursor: 'pointer' }}
                     onClick={() => handleClick(file.document_id)}
-                    onDoubleClick={() => handleDoubleClick(file)}
                     selected={isItemSelected}
                   >
                     <TableCell padding="checkbox">
@@ -206,13 +178,18 @@ const SiteWideDocuments = () => {
                     <TableCell>
                       <Box display="flex" alignItems="center">
                         {file.document_type === "folder" ? <Folder /> : <InsertDriveFile />}
-                        <Typography sx={{ marginLeft: 1, mt: "5px" }} variant="body1">
+                        <Typography
+                          sx={{ marginLeft: 1, mt: "5px", cursor: file.document_type === "folder" ? 'pointer' : 'default' }}
+                          variant="body1"
+                          onClick={() => {
+                            if (file.document_type === "folder") {
+                              router.push(`/portal/documents/general/${file.document_id}`);
+                            }
+                          }}
+                        >
                           {file.document_name}
                         </Typography>
                       </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body1">{formatDate(file.last_modified)}</Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="body1">
@@ -224,12 +201,6 @@ const SiteWideDocuments = () => {
               })}
             </TableBody>
           </Table>
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <FileUploaderComponent site_id="ALL" parent_folder_id={folderId} document_path={"path"} user_id={userId} idToken={idToken} />
-            {selectedFile && (
-              <DeleteFileComponent site_id="ALL" parent_folder_id={folderId} document_id={selectedFile.document_id} idToken={idToken} />
-            )}
-          </Box>
         </>
       )}
     </Container>
