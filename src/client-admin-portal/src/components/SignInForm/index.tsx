@@ -120,11 +120,6 @@ const SignInForm = () => {
                             }
                         }}
                     />
-                    <Grid display={"flex"} justifyContent={"flex-end"}>
-                        <Link style={{ textAlign: 'right', color: "#1976d2" }} href={'/forgot-password'}>
-                            <Typography variant='body1'>Forgot Password?</Typography>
-                        </Link>
-                    </Grid>
 
                     <Button disabled={isSignInButtonDisabled} type="submit" size='large' variant='contained'>Sign In</Button>
 

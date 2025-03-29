@@ -148,14 +148,14 @@ const SignUpForm = () => {
                 </Typography>
               </Grid>
             )}
-            <Grid>
+            <Grid display="flex" justifyContent="center">
               <Button disabled={isSignUpButtonDisabled} type="submit" size="large" variant="contained">
                 Request Account
               </Button>
             </Grid>
             <Grid display="flex" justifyContent="center">
-              <Link href="/sign-in">
-                <Typography variant="body1">Sign In</Typography>
+              <Link href="/login">
+                <Typography variant="body1">Back to Sign In</Typography>
               </Link>
             </Grid>
           </Grid>
