@@ -137,7 +137,7 @@ export default function JobsPage() {
           <Box sx={{ display: "flex", width: "100%", justifyContent: "space-between", mb: 2, p: 1, alignItems: "center" }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
               <WorkIcon />
-              <Typography ml={1} variant='body1'>Work Order Number</Typography>
+              <Typography ml={1} variant='body1' fontWeight={500}>Work Order Number</Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
               {work_order ? (
@@ -161,8 +161,8 @@ export default function JobsPage() {
 
           <Box sx={{ display: "flex", flexDirection: 'column', width: "100%", mb: 2, p: 1, }}>
             <Box sx={{ display: "flex", width: "100%", justifyContent: "space-between", mb: 1, alignItems: "center" }}>
-              <Typography variant='h6'>
-                Comments
+              <Typography variant='body2' fontSize={16} fontWeight={700}>
+                Description of Work Done
               </Typography>
               {description ? (
                 <EditIcon sx={{ cursor: 'pointer' }} onClick={handleEditComments} />
@@ -188,8 +188,8 @@ export default function JobsPage() {
           </Box>
 
           <Box sx={{ display: "flex", flexDirection: 'column', width: "100%", mb: 1, p: 1, }}>
-            <Typography variant='h6' sx={{ mb: 2 }}>
-              Files
+            <Typography variant='body1' fontWeight={700} sx={{ mb: 2 }}>
+              Add any relevant photos/documents below
             </Typography>
             {attachments && attachments.length > 0 ? (
               <>
@@ -288,7 +288,7 @@ export default function JobsPage() {
           }}
         >
           <Typography variant="h6" mb={2}>
-            Enter Comments
+            Enter Description of Work Done
           </Typography>
           {commentsError && (
             <Typography color="error" mb={2}>
@@ -302,7 +302,7 @@ export default function JobsPage() {
             variant="outlined"
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Add your comments here"
+            placeholder="Add work description here"
             sx={{ mb: 2 }}
           />
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
