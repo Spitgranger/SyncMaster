@@ -29,6 +29,7 @@ import { AppDispatch, RootState } from '@/state/store';
 import { signOutUser } from '@/state/user/userSlice';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
 
 interface Props {
   children: React.ReactNode;
@@ -237,7 +238,7 @@ export default function DashboardLayout({ children }: Props) {
           <Divider />
           <Typography pt={1} px={2} variant='subtitle1' color="textSecondary">Organization</Typography>
           <List>
-            {[{ text: 'Site Visits', icon: <Business sx={{ color: "black" }} />, route: "/dashboard/sitevisits" }, { text: 'Manage Sites', icon: <Business sx={{ color: "black" }} />, route: "/dashboard/managesites" }, { text: 'Manage Users', icon: <UserIcon />, route: "/dashboard/manageusers" }].map((link: SidebarLink) => (
+            {[{ text: 'Site Visits', icon: <TransferWithinAStationIcon sx={{ color: "black" }} />, route: "/dashboard/sitevisits" }, { text: 'Manage Sites', icon: <Business sx={{ color: "black" }} />, route: "/dashboard/managesites" }, { text: 'Manage Users', icon: <UserIcon />, route: "/dashboard/manageusers" }].map((link: SidebarLink) => (
               <ListItem key={link.text} disablePadding>
                 <ListItemButton onClick={() => { router.push(link.route) }} selected={router.pathname.startsWith(link.route)}>
                   <ListItemIcon>
