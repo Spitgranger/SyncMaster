@@ -32,7 +32,7 @@ const UserRequests: React.FC = () => {
       if (action === 'approve') {
         setSuccessMsg(`User ${email} was successfully added`);
         // Clear the message after 3 seconds.
-        setTimeout(() => setSuccessMsg(null), 3000);
+        setTimeout(() => setSuccessMsg(null), 30000);
       }
       // Refresh the list after performing the action.
       dispatch(getUserRequests({}));
