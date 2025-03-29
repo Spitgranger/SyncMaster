@@ -20,7 +20,7 @@
     "@reduxjs/toolkit": "^2.6.1",
     "date-fns": "^4.1.0",
     "jsonwebtoken": "^9.0.2",
-    "next": "15.1.6",
+    "next": "15.2.3",
     "qrcode.react": "^4.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
