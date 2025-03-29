@@ -124,12 +124,15 @@ const SiteVisitsTable: React.FC = () => {
 
   const sortedVisits = visits ? stableSort(visits, getComparator(order, orderBy)) : [];
 
+  // Define visibleColumns (exclude user_id) for table display
+  const visibleColumns = columns.filter(column => column.id !== 'user_id');
+
   const handleExport = () => {
     if (!sortedVisits || sortedVisits.length === 0) return;
 
     const exportData = sortedVisits.map(visit => ({
       "Site ID": visit.site_id,
-      "User ID": visit.user_id,
+      "User ID": visit.user_id, // still included in CSV export
       "User Email": visit.user_email,
       "Employee ID": visit.employee_id,
       "Entry Time": new Date(visit.entry_time).toLocaleString(),
@@ -186,7 +189,7 @@ const SiteVisitsTable: React.FC = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  {columns.map((column) => (
+                  {visibleColumns.map((column) => (
                     <TableCell key={column.id}>
                       <TableSortLabel
                         active={orderBy === column.id}
@@ -209,7 +212,7 @@ const SiteVisitsTable: React.FC = () => {
                         style={{ cursor: 'pointer' }}
                       >
                         <TableCell>{visit.site_id}</TableCell>
-                        <TableCell>{visit.user_id}</TableCell>
+                        {/* User ID cell is intentionally hidden from table display */}
                         <TableCell>{visit.user_email}</TableCell>
                         <TableCell>{visit.employee_id}</TableCell>
                         <TableCell>{new Date(visit.entry_time).toLocaleString()}</TableCell>
@@ -221,9 +224,9 @@ const SiteVisitsTable: React.FC = () => {
                       </TableRow>
                       {expandedRow === index && (
                         <TableRow>
-                          <TableCell colSpan={columns.length}>
+                          <TableCell colSpan={visibleColumns.length}>
                             <Collapse in={expandedRow === index} timeout="auto" unmountOnExit>
-                              <Container sx={{ py: 2 }}>
+                              <Container sx={{ py: 2, textAlign: 'left' }}>
                                 <Typography variant="subtitle1" gutterBottom>
                                   Description:
                                 </Typography>
@@ -253,7 +256,7 @@ const SiteVisitsTable: React.FC = () => {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={columns.length} align="center">
+                    <TableCell colSpan={visibleColumns.length} align="center">
                       No site visits found
                     </TableCell>
                   </TableRow>
