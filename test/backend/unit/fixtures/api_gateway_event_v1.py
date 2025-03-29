@@ -178,6 +178,17 @@ def exit_site_request(api_gateway_event):
 
 
 @pytest.fixture()
+def get_site_visit_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/site/{TEST_SITE_ID}/visit/{PREV_DATE_TIME.isoformat()}",
+        method="GET",
+        path_params={"site_id": TEST_SITE_ID, "entry_time": PREV_DATE_TIME.isoformat()},
+        time=FUTURE_DATE_TIME,
+    )
+    yield event, context
+
+
+@pytest.fixture()
 def edit_site_visit_details_request(api_gateway_event):
     event, context = api_gateway_event(
         path=f"/protected/site/{TEST_SITE_ID}/visit/{CURRENT_DATE_TIME.isoformat()}",
