@@ -116,6 +116,7 @@ const SiteVisitsTable: React.FC = () => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+    setExpandedRow(null); // Close the open container when table is sorted
   };
 
   const handleRowClick = (index: number) => {
@@ -226,7 +227,7 @@ const SiteVisitsTable: React.FC = () => {
                         <TableRow>
                           <TableCell colSpan={visibleColumns.length}>
                             <Collapse in={expandedRow === index} timeout="auto" unmountOnExit>
-                              <Container sx={{ py: 2, textAlign: 'left' }}>
+                              <Container maxWidth={false} sx={{ py: 2, textAlign: 'left' }}>
                                 <Typography variant="subtitle1" gutterBottom>
                                   Description:
                                 </Typography>
