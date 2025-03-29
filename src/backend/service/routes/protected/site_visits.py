@@ -26,6 +26,7 @@ from ...site_visits.site_visits import (
     create_file_attachment,
     create_site_entry,
     delete_file_attachment,
+    get_site_visit,
     list_site_visits,
     update_visit_details,
 )
@@ -60,15 +61,20 @@ def enter_site_handler(
     # Getting user id from claims
     user_id = router.current_event["requestContext"]["authorizer"]["claims"]["sub"]
 
+    # Getting user email (which is stored as cognito username) from claims
+    user_email = router.current_event["requestContext"]["authorizer"]["claims"]["cognito:username"]
+
     table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBSiteVisit)
     visit = create_site_entry(
         table=table,
         site_id=site_id,
         user_id=user_id,
+        user_email=user_email,
         loc_tracking=visit_details.allowed_tracking,
         ack_status=visit_details.ack_status,
         timestamp=request_time,
         on_site=visit_details.on_site,
+        employee_id=visit_details.employee_id,
     )
 
     bucket = S3Bucket(bucket_name=DOCUMENT_STORAGE_BUCKET_NAME, access=AWSAccessLevel.READ)
@@ -225,6 +231,30 @@ def exit_site_handler(site_id: Annotated[str, Path()], entry_time: Annotated[dat
     visit = add_exit_time(
         table=table, site_id=site_id, user_id=user_id, entry_time=entry_time, timestamp=request_time
     )
+
+    bucket = S3Bucket(bucket_name=DOCUMENT_STORAGE_BUCKET_NAME, access=AWSAccessLevel.READ)
+
+    return Response(
+        status_code=HTTPStatus.OK.value,
+        content_type=content_types.APPLICATION_JSON,
+        body=visit.to_api_model(bucket=bucket).model_dump_json(),
+        headers=CORS_HEADERS,
+    )
+
+
+@router.get("/<site_id>/visit/<entry_time>")
+def get_visit_handler(site_id: Annotated[str, Path()], entry_time: Annotated[datetime, Path()]):
+    """
+    Gets a site visit from the database
+    :param site_id: The site id to get the visit for
+    :param entry_time: The entry time of the visit to get
+    :return: The details of the site visit
+    """
+    # Getting user id from claims
+    user_id = router.current_event["requestContext"]["authorizer"]["claims"]["sub"]
+
+    table = DBTable(access=AWSAccessLevel.READ, item_schema=DBSiteVisit)
+    visit = get_site_visit(table=table, site_id=site_id, user_id=user_id, entry_time=entry_time)
 
     bucket = S3Bucket(bucket_name=DOCUMENT_STORAGE_BUCKET_NAME, access=AWSAccessLevel.READ)
 

@@ -129,19 +129,21 @@ const ManageSites = () => {
                     />
                     <TextField
                         margin="dense"
-                        label="Longitude"
-                        name="longitude"
-                        fullWidth
-                        value={newSite.longitude}
-                        onChange={handleInputChange}
-                    />
-                    <TextField
-                        margin="dense"
                         label="Latitude"
                         name="latitude"
                         fullWidth
                         value={newSite.latitude}
                         onChange={handleInputChange}
+                        helperText="degrees (°)"
+                    />
+                    <TextField
+                        margin="dense"
+                        label="Longitude"
+                        name="longitude"
+                        fullWidth
+                        value={newSite.longitude}
+                        onChange={handleInputChange}
+                        helperText="degrees (°)"
                     />
                     <TextField
                         margin="dense"
@@ -150,6 +152,7 @@ const ManageSites = () => {
                         fullWidth
                         value={newSite.acceptableRange}
                         onChange={handleInputChange}
+                        helperText="meters (m)"
                     />
                     {isAddingSite && (
                         <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>

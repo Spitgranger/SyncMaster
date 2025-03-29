@@ -1,10 +1,23 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
+interface Attachment {
+  name: string;
+  url: string;
+}
+
 interface SiteVisit {
   site_id: string;
   user_id: string;
+  user_email: string;
   entry_time: string;
-  exit_time?: string;
+  allowed_tracking: boolean;
+  ack_status: boolean;
+  exit_time: string;
+  work_order: number;
+  description: string;
+  on_site: boolean;
+  employee_id: string;
+  attachments: Attachment[];
 }
 
 export interface GetSiteVisitsParams {

@@ -225,6 +225,16 @@ class AdminCognitoClient:
 
         return users
 
+    def get_user_by_username(self, username: str) -> dict:
+        """
+        Retrieve a user from the user pool by username
+        :param username: The username of the user to retrieve
+        :return: A dictionary containing the user's attributes
+        :raises UserNotFoundException: If the user is not found in the user pool
+        """
+        response = self._client.admin_get_user(UserPoolId=self._user_pool_id, Username=username)
+        return response
+
 
 def signup_user_handler(signup_request: SignupRequest, cognito_client: CognitoClient) -> Response:
     """
@@ -280,20 +290,22 @@ def signin_user_handler(signin_request: SigninRequest, cognito_client: CognitoCl
         tokens = response.get("AuthenticationResult", {})
         access_token = tokens.get("AccessToken")
         user = cognito_client.get_user(access_token)
+        user_on_site = True
         for attr in user.get("UserAttributes", {}):
             if attr["Name"] == "custom:role" and attr["Value"] == "contractor":
-                if signin_request.location is None or signin_request.site_id is None:
-                    raise UnauthorizedException("Location not provided for contractor")
-                if not verify_location(
-                    signin_request.location[0],
-                    signin_request.location[1],
-                    10,
-                    site_id=signin_request.site_id,
+                if (
+                    signin_request.location is None
+                    or signin_request.site_id is None
+                    or not verify_location(
+                        signin_request.location[0],
+                        signin_request.location[1],
+                        10,
+                        site_id=signin_request.site_id,
+                    )
                 ):
-                    cognito_client.sign_out(access_token)
-                    raise UnauthorizedException("User is not on site")
-
+                    user_on_site = False
         response_body = {
+            "UserOnSite": user_on_site,
             "AccessToken": tokens.get("AccessToken"),
             "IdToken": tokens.get("IdToken"),
             "RefreshToken": tokens.get("RefreshToken"),

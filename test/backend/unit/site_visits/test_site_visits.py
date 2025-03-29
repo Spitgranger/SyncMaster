@@ -19,6 +19,7 @@ from backend.service.site_visits.site_visits import (
     create_file_attachment,
     create_site_entry,
     delete_file_attachment,
+    get_site_visit,
     list_site_visits,
     update_visit_details,
 )
@@ -32,6 +33,7 @@ from ..constants import (
     TEST_ATTACHMENT_NAME,
     TEST_S3_FILE_KEY,
     TEST_SITE_ID,
+    TEST_USER_EMAIL,
     TEST_USER_ID,
     TEST_VISIT_DESCRIPTION,
     TEST_WORK_ORDER,
@@ -45,6 +47,7 @@ def test_create_site_entry(empty_database):
         table=table,
         site_id=TEST_SITE_ID,
         user_id=TEST_USER_ID,
+        user_email=TEST_USER_EMAIL,
         timestamp=CURRENT_DATE_TIME,
         loc_tracking=True,
         ack_status=True,
@@ -63,6 +66,7 @@ def test_create_site_entry_with_resource_conflict(database_with_complete_site_vi
             table=table,
             site_id=site_visit.site_id,
             user_id=site_visit.user_id,
+            user_email=TEST_USER_EMAIL,
             timestamp=site_visit.entry_time,
             loc_tracking=True,
             ack_status=True,
@@ -95,6 +99,18 @@ def test_add_exit_time_with_resource_not_found(empty_database):
             timestamp=FUTURE_DATE_TIME,
             entry_time=CURRENT_DATE_TIME,
         )
+
+
+def test_get_site_entry(database_with_complete_site_visit):
+    _, site_visit = database_with_complete_site_visit
+    table = DBTable(access=AWSAccessLevel.READ, item_schema=DBSiteVisit)
+
+    assert site_visit == get_site_visit(
+        table=table,
+        site_id=site_visit.site_id,
+        user_id=site_visit.user_id,
+        entry_time=site_visit.entry_time,
+    )
 
 
 def test_list_site_entries(database_with_two_site_visits):

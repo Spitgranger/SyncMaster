@@ -11,6 +11,7 @@ from ..constants import (
     TEST_ATTACHMENT_NAME,
     TEST_COMPANY_NAME,
     TEST_DOCUMENT_ID,
+    TEST_EMPLOYEE_ID,
     TEST_PARENT_FOLDER_ID,
     TEST_S3_FILE_KEY,
     TEST_SITE_ID,
@@ -52,7 +53,7 @@ def api_gateway_event():
                     "email_verified": False,
                     "cognito:groups": user_groups,
                     "iss": "https://cognito-idp.us-east-2.amazonaws.com/us-east-2_AAAAAAAA",
-                    "cognito:username": "Test@gmail.com",
+                    "cognito:username": TEST_USER_EMAIL,
                     "custom:company": "testcompany",
                     "origin_jti": "555555aa-5aa5-5555-a555-a5aaa5a555a5",
                     "aud": "55aaaa5a5a555aa5aa5a5aaa5a",
@@ -63,7 +64,7 @@ def api_gateway_event():
                     "custom:role": user_role,
                     "iat": 1738377493,
                     "jti": "555555aa-5aa5-5555-a555-a5aaa5a555a5",
-                    "email": "Test@gmail.com",
+                    "email": TEST_USER_EMAIL,
                 },
                 "scopes": None,
             },
@@ -137,7 +138,14 @@ def enter_site_request(api_gateway_event):
         path=f"/protected/site/{TEST_SITE_ID}/enter",
         method="POST",
         path_params={"site_id": TEST_SITE_ID},
-        body=json.dumps({"allowed_tracking": True, "ack_status": True, "on_site": True}),
+        body=json.dumps(
+            {
+                "allowed_tracking": True,
+                "ack_status": True,
+                "on_site": True,
+                "employee_id": TEST_EMPLOYEE_ID,
+            }
+        ),
     )
     yield event, context
 
@@ -164,6 +172,17 @@ def exit_site_request(api_gateway_event):
         path=f"/protected/site/{TEST_SITE_ID}/exit/{CURRENT_DATE_TIME.isoformat()}",
         method="PATCH",
         path_params={"site_id": TEST_SITE_ID, "entry_time": CURRENT_DATE_TIME.isoformat()},
+        time=FUTURE_DATE_TIME,
+    )
+    yield event, context
+
+
+@pytest.fixture()
+def get_site_visit_request(api_gateway_event):
+    event, context = api_gateway_event(
+        path=f"/protected/site/{TEST_SITE_ID}/visit/{PREV_DATE_TIME.isoformat()}",
+        method="GET",
+        path_params={"site_id": TEST_SITE_ID, "entry_time": PREV_DATE_TIME.isoformat()},
         time=FUTURE_DATE_TIME,
     )
     yield event, context
@@ -301,14 +320,26 @@ def post_create_user_request(api_gateway_event):
 @pytest.fixture()
 def post_get_users_request(api_gateway_event):
     body = json.dumps({"attributes": {}})
-    event, context = api_gateway_event("/protected/users/get_users", "POST", body)
+    event, context = api_gateway_event(
+        path="/protected/users/get_users",
+        method="POST",
+        body=body,
+        user_role="admin",
+        user_groups=["admin"],
+    )
     yield event, context
 
 
 @pytest.fixture()
 def post_update_user_request(api_gateway_event):
     body = json.dumps({"email": "test@test.com", "attributes": [{"Name": "name", "Value": "test"}]})
-    event, context = api_gateway_event("/protected/users/update_user", "POST", body)
+    event, context = api_gateway_event(
+        path="/protected/users/update_user",
+        method="POST",
+        body=body,
+        user_role="admin",
+        user_groups=["admin"],
+    )
     yield event, context
 
 
@@ -347,6 +378,8 @@ def upload_document_request(api_gateway_event, db_document):
                 "document_expiry": db_document.expiry_date.isoformat(),
             }
         ),
+        user_role="admin",
+        user_groups=["admin"],
     )
     yield event, context
 

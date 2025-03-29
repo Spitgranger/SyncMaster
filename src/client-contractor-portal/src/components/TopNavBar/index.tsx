@@ -19,7 +19,7 @@ const TopNavBar = () => {
         >
           <Image src={hamiltonLogo} width={40} height={35} alt="Hamilton Logo" style={{ marginRight: 8 }} />
           <Typography variant="h6" fontWeight="bold">
-            Hamilton Waterworks
+            Hamilton Water
           </Typography>
         </Box>
 
