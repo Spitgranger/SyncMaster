@@ -37,7 +37,7 @@ def cognito_mock():
 def cognito_mock_admin():
     """Creates a mock Cognito client with IAM role"""
     with mock_aws():
-        client = create_client_with_role("s3", COGNITO_ACCESS_ROLE)
+        client = create_client_with_role("cognito-idp", COGNITO_ACCESS_ROLE)
         response = client.create_user_pool(PoolName="test-user-pool")
         user_pool_id = response["UserPool"]["Id"]
         response = client.create_user_pool_client(UserPoolId=user_pool_id, ClientName="test-client")
@@ -62,6 +62,15 @@ def cognito_client_admin(cognito_mock):
     """Returns a AdminCognitoClient instance with the mocked Cognito client."""
     client, client_id, user_pool_id = cognito_mock
     cognito_client = AdminCognitoClient(client_id, user_pool_id)
+    cognito_client._client = client  # Override with mock
+    yield cognito_client
+
+
+@pytest.fixture
+def cognito_client_admin_fake(cognito_mock):
+    """Returns a AdminCognitoClient instance with the mocked Cognito client."""
+    client, client_id, user_pool_id = cognito_mock
+    cognito_client = AdminCognitoClient(client_id, "awaww2")
     cognito_client._client = client  # Override with mock
     yield cognito_client
 

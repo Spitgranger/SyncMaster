@@ -309,14 +309,26 @@ def post_create_user_request(api_gateway_event):
 @pytest.fixture()
 def post_get_users_request(api_gateway_event):
     body = json.dumps({"attributes": {}})
-    event, context = api_gateway_event("/protected/users/get_users", "POST", body)
+    event, context = api_gateway_event(
+        path="/protected/users/get_users",
+        method="POST",
+        body=body,
+        user_role="admin",
+        user_groups=["admin"],
+    )
     yield event, context
 
 
 @pytest.fixture()
 def post_update_user_request(api_gateway_event):
     body = json.dumps({"email": "test@test.com", "attributes": [{"Name": "name", "Value": "test"}]})
-    event, context = api_gateway_event("/protected/users/update_user", "POST", body)
+    event, context = api_gateway_event(
+        path="/protected/users/update_user",
+        method="POST",
+        body=body,
+        user_role="admin",
+        user_groups=["admin"],
+    )
     yield event, context
 
 
@@ -355,6 +367,8 @@ def upload_document_request(api_gateway_event, db_document):
                 "document_expiry": db_document.expiry_date.isoformat(),
             }
         ),
+        user_role="admin",
+        user_groups=["admin"],
     )
     yield event, context
 

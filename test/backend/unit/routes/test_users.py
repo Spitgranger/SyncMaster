@@ -31,23 +31,23 @@ def test_create_user(cognito_mock, post_create_user_request):
     assert response["multiValueHeaders"]["Content-Type"] == ["application/json"]
 
 
-def test_get_users(cognito_mock, post_get_users_request):
+def test_get_users(cognito_mock_admin, post_get_users_request):
     event, context = post_get_users_request
 
     response = lambda_handler(event=event, context=context)
 
     # Check the response
-    assert response["statusCode"] == 500
+    assert response["statusCode"] == 200
     assert response["multiValueHeaders"]["Content-Type"] == ["application/json"]
 
 
-def test_update_user(cognito_mock, post_update_user_request):
+def test_update_user(cognito_mock_admin, post_update_user_request):
     event, context = post_update_user_request
 
     response = lambda_handler(event=event, context=context)
 
     # Check the response
-    assert response["statusCode"] == 500
+    assert response["statusCode"] == 404
     assert response["multiValueHeaders"]["Content-Type"] == ["application/json"]
 
 

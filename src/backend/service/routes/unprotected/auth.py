@@ -10,11 +10,15 @@ from aws_lambda_powertools.event_handler.openapi.params import Body
 from typing_extensions import Annotated
 
 from ...database.db_table import DBTable
-from ...environment import USER_POOL_CLIENT_ID
+from ...environment import USER_POOL_CLIENT_ID, USER_POOL_ID
 from ...models.api.user_requests import APIUserRequest
 from ...models.db.user_request import DBUserRequest
 from ...models.user_authentication.user_request_response import SigninRequest
-from ...user_authentication.user_authentication import CognitoClient, signin_user_handler
+from ...user_authentication.user_authentication import (
+    AdminCognitoClient,
+    CognitoClient,
+    signin_user_handler,
+)
 from ...user_requests.user_requests import create_user_request
 from ...util import AWSAccessLevel, create_http_response, time_epoch_to_datetime
 
@@ -43,6 +47,9 @@ def create_user_request_handler(body: Annotated[APIUserRequest, Body()]):
     request_time = time_epoch_to_datetime(
         router.current_event["requestContext"]["requestTimeEpoch"]
     )
+
+    cognito_client = AdminCognitoClient(user_pool_id=USER_POOL_ID, clientid=USER_POOL_CLIENT_ID)
+
     response_body = create_user_request(
         table=table,
         email=body.email,
@@ -50,6 +57,7 @@ def create_user_request_handler(body: Annotated[APIUserRequest, Body()]):
         company=body.company,
         name=body.name,
         time=request_time,
+        cognito_client=cognito_client,
     )
     return create_http_response(
         status_code=HTTPStatus.CREATED.value,

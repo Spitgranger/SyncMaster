@@ -100,9 +100,8 @@ def test_signin_success(cognito_client_with_user, database_with_site):
 
 def test_signin_fail_location(cognito_client_with_user, database_with_site):
     cognito_client, signin_request, _ = cognito_client_with_user
-    with pytest.raises(UnauthorizedException) as excinfo:
-        signin_user_handler(signin_request, cognito_client)
-    assert "Location not provided for contractor" in str(excinfo.value)
+    response = signin_user_handler(signin_request, cognito_client)
+    assert response.body["UserOnSite"] is False
 
 
 def test_signin_password_challenge(

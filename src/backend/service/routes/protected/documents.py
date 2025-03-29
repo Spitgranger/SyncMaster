@@ -43,6 +43,14 @@ def upload_handler(body: Annotated[APIDocumentUploadRequest, Body()]):
     :param body: The body of the HTTP request
     :return: dictionary containing http response
     """
+    verify_user_role(
+        user_groups=router.current_event["requestContext"]["authorizer"]["claims"][
+            "cognito:groups"
+        ],
+        acceptable_roles=[UserType.ADMIN],
+        action="upload documents",
+    )
+
     request_time = time_epoch_to_datetime(
         router.current_event["requestContext"]["requestTimeEpoch"]
     )

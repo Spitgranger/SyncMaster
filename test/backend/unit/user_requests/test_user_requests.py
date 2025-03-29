@@ -5,6 +5,7 @@ import pytest
 from backend.service.database.db_table import DBTable, KeySchema
 from backend.service.exceptions import (
     ConflictException,
+    ExternalServiceException,
     ResourceConflict,
     ResourceNotFound,
 )
@@ -25,7 +26,7 @@ from ..constants import (
 )
 
 
-def test_create_user_request(empty_database):
+def test_create_user_request(empty_database, cognito_client_admin):
     table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBUserRequest)
 
     request = create_user_request(
@@ -35,12 +36,13 @@ def test_create_user_request(empty_database):
         name=TEST_USER_NAME,
         requested_role=TEST_USER_ROLE,
         time=CURRENT_DATE_TIME,
+        cognito_client=cognito_client_admin,
     )
 
     assert table.get(key=KeySchema(pk=request.pk, sk=request.sk)) == request
 
 
-def test_create_user_request_conflict(database_with_user_request):
+def test_create_user_request_conflict(database_with_user_request, cognito_client_admin):
     table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBUserRequest)
     with pytest.raises(ResourceConflict):
         create_user_request(
@@ -50,6 +52,38 @@ def test_create_user_request_conflict(database_with_user_request):
             name=TEST_USER_NAME,
             requested_role=TEST_USER_ROLE,
             time=CURRENT_DATE_TIME,
+            cognito_client=cognito_client_admin,
+        )
+
+
+def test_create_user_request_conflict_with_existing_user(
+    empty_database, admin_cognito_client_with_user
+):
+    table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBUserRequest)
+    cognito_client, _, _ = admin_cognito_client_with_user
+    with pytest.raises(ConflictException):
+        create_user_request(
+            table=table,
+            email=TEST_USER_EMAIL,
+            company=TEST_COMPANY_NAME,
+            name=TEST_USER_NAME,
+            requested_role=TEST_USER_ROLE,
+            time=CURRENT_DATE_TIME,
+            cognito_client=cognito_client,
+        )
+
+
+def test_create_user_request_cognito_exception(empty_database, cognito_client_admin_fake):
+    table = DBTable(access=AWSAccessLevel.WRITE, item_schema=DBUserRequest)
+    with pytest.raises(ExternalServiceException):
+        create_user_request(
+            table=table,
+            email=TEST_USER_EMAIL,
+            company=TEST_COMPANY_NAME,
+            name=TEST_USER_NAME,
+            requested_role=TEST_USER_ROLE,
+            time=CURRENT_DATE_TIME,
+            cognito_client=cognito_client_admin_fake,
         )
 
 
