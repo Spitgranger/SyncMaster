@@ -12,21 +12,14 @@ import { getAcknowledgementDocuments } from "@/state/document/documentSlice";
 import { RootState } from "@/state/store";
 import { sign } from "crypto";
 import { signOutUser } from "@/state/user/userSlice";
-import { enterSite } from "@/state/site/siteSlice";
+import { enterSite, setEntryTime } from "@/state/site/siteSlice";
 
 const AcknowledgementPage = () => {
-  const isAuthenticated = useAuth();
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-  const id = router.query.id as string | undefined;
-  const { idToken } = useSelector((state: RootState) => state.user);
+  const { idToken, siteId } = useSelector((state: RootState) => state.user);
   const { isLoading, acknowledgementDocuments } = useSelector((state: RootState) => state.document);
   const { isEnteringOrExitingSite } = useSelector((state: RootState) => state.site);
-
-  const fakeDocuments = [
-    { name: "HSE Document", url: "https://web.hamilton/entry-exit-protocols" },
-    { name: "Fire Protocol Document", url: "https://web.hamilton/entry-exit-protocols" },
-  ];
 
   const handleProceed = async ({ acknowledgedAll, hasCompletedTraining, accompaniedByEmployee, employeeID }:
     {
@@ -41,16 +34,21 @@ const AcknowledgementPage = () => {
     });
 
     const proceedAction = () => {
+      const allowedTracking = localStorage.getItem("allowedTracking") === "true";
+
       dispatch(enterSite({
-        site_id: id,
+        site_id: siteId,
         idToken: idToken,
-        allowed_tracking: true,
+        allowed_tracking: allowedTracking,
         ack_status: acknowledgedAll,
         on_site: true,
         employee_id: employeeID
       })).then((response) => {
         if (response.meta.requestStatus === "fulfilled") {
           console.log("Entered site successfully");
+          const entryTime = response.payload.entry_time;
+          dispatch(setEntryTime({ entryTime }));
+          localStorage.setItem("entryTime", entryTime);
           router.push("/portal/jobs");
         } else {
           console.error("Failed to enter site");
@@ -66,9 +64,8 @@ const AcknowledgementPage = () => {
         } else {
           console.log("Failed to revoke token");
         }
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("idToken");
-        router.push("/login");
+        localStorage.clear();
+        router.push(`/login${siteId ? `?id=${siteId}` : ""}`);
       });
     } else {
       proceedAction();
@@ -77,20 +74,14 @@ const AcknowledgementPage = () => {
   };
 
   useEffect(() => {
-    console.log(id);
-
-    if (id) {
-      dispatch(getAcknowledgementDocuments({ site_id: id, idToken: idToken })).then((response) => {
-        if (response.meta.requestStatus === "fulfilled") {
-          console.log("Acknowledgement documents fetched successfully");
-        } else {
-          console.error("Failed to fetch acknowledgement documents");
-        }
-      });
-    }
-  }, [router]);
-
-  if (isAuthenticated === null) return <p>Loading...</p>;
+    dispatch(getAcknowledgementDocuments({ site_id: siteId, idToken: idToken })).then((response) => {
+      if (response.meta.requestStatus === "fulfilled") {
+        console.log("Acknowledgement documents fetched successfully");
+      } else {
+        console.error("Failed to fetch acknowledgement documents");
+      }
+    });
+  }, [dispatch]);
 
   return (
     isLoading || !acknowledgementDocuments ? (

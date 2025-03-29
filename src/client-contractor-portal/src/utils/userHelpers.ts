@@ -7,6 +7,7 @@ export function initializeUser() {
     let role = null
     let username = null
     let userId = null
+    let siteId = null
 
 
     if (isAuthenticated()) {
@@ -17,6 +18,7 @@ export function initializeUser() {
         role = decodedToken["custom:role"];
         username = decodedToken["name"]
         userId = decodedToken["sub"]
+        siteId = localStorage.getItem("siteId")
 
     }
     return {
@@ -25,7 +27,8 @@ export function initializeUser() {
         isSignedIn: isSignedIn,
         role: role,
         username: username,
-        userId: userId
+        userId: userId,
+        siteId: siteId
     }
 }
 
@@ -34,13 +37,14 @@ export function isAuthenticated() {
         console.log(localStorage.getItem("idToken"));
         console.log(localStorage.getItem("accessToken"));
 
-        if (localStorage.getItem("idToken") !== null && localStorage.getItem("accessToken") !== null) {
+        if (localStorage.getItem("idToken") !== null && localStorage.getItem("accessToken") !== null && localStorage.getItem("siteId") !== null) {
             const token: any = localStorage.getItem("idToken")
             const decodedToken: any = jwt.decode(token);
 
             if (decodedToken.exp < Math.round(Date.now() / 1000)) {
                 localStorage.removeItem("idToken")
                 localStorage.removeItem("accessToken")
+                localStorage.removeItem("siteId")
                 return false
             }
             else {

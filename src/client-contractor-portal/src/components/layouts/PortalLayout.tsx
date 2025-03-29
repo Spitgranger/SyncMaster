@@ -26,7 +26,7 @@ export default function PortalLayout({ children }: Props) {
 
     return (
         <>
-            <AppBar position="fixed" color='transparent' sx={{boxShadow:"none", borderBottom:"solid 1px black"}}>
+            <AppBar position="fixed"  sx={{boxShadow:"none", backgroundColor:"white",color:"black",borderBottom:"solid 1px black"}}>
                 <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
                     <Grid container alignItems={"center"}>
                         <Grid container spacing={1} width={"168px"} display={"flex"} flexDirection={"row"}>

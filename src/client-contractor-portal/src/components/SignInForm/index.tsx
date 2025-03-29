@@ -7,8 +7,9 @@ import { useRouter } from "next/router";
 import { jwtDecode } from "jwt-decode"; // Install this: npm install jwt-decode
 import { AppDispatch } from "@/state/store";
 import { useDispatch } from "react-redux";
-import { signInUser } from "@/state/user/userSlice";
+import { setSiteId, signInUser } from "@/state/user/userSlice";
 import getGeolocation from "@/utils/getLocation";
+import { set } from "date-fns";
 
 const SignInForm = () => {
   const [email, setEmail] = useState("");
@@ -23,15 +24,21 @@ const SignInForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const location = await getGeolocation();
+    if (location.length === 2 && location.every((value, index) => value === [0, 0][index])) {
+      localStorage.setItem("allowedTracking", "false");
+    }
+    else{
+      localStorage.setItem("allowedTracking", "true");
+    }
     console.log("Location coordinates:", location);
-    if (location[0] !== null || location[1] === null) {
-
       dispatch(signInUser({ email, password, location })).then((response) => {
         if (response.meta.requestStatus === "fulfilled") {
           console.log("Login successful");
           localStorage.setItem("accessToken", response.payload.AccessToken);
           localStorage.setItem("idToken", response.payload.IdToken);
-          router.push(`/portal/acknowledgement?id=${id}`);
+          localStorage.setItem("siteId", typeof id === "string" ? id : "");
+          dispatch(setSiteId({ siteId: typeof id === "string" ? id : "" }));
+          router.push(`/portal/acknowledgement`);
         } else {
           console.log("an error occured while signing in");
           if (response.payload.status === 403) {
@@ -42,10 +49,6 @@ const SignInForm = () => {
         }
       }
       );
-    }
-    else {
-      console.log("Location not found")
-    }
 
     //   try {
     //     const data = await signinUser(email, password);

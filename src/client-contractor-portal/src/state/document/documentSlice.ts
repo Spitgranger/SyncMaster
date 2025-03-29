@@ -74,6 +74,8 @@ export const getAcknowledgementDocuments = createAsyncThunk(
     "document/getAcknowledgementDocuments",
     async (pathData: any) => {
         const { site_id, idToken } = pathData;
+        console.log("inside getting ack",site_id, idToken);
+        
         let folder_id = "root";
         let generalRequestPath = `protected/documents/ALL/${folder_id}/get_files`;
         let siteSpecificRequestPath = `protected/documents/${site_id}/${folder_id}/get_files`;
