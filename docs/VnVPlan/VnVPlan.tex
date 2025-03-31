@@ -1827,7 +1827,7 @@ Tests are selected based on coverage of normal cases, boundary cases
   ensure that an UnauthorizedException is raised\\ \hline
   UT-UA3 & Attempt to authenticate with an initial one-time
   password, and ensure that an ForceChangePasswordException is raised
- \\ \hline
+  \\ \hline
   UT-UA4 & Attempt to authenticate with the wrong password, and
   ensure that an UnauthorizedException is raised\\ \hline
   UT-UA5 & Attempt to authenticate with a user that does not exist,
@@ -1942,9 +1942,66 @@ Tests are selected based on coverage of normal cases, boundary cases
   UT-DM7 & Delete an existing file for a given site id and parent folder given
   that the file exists\\ \hline
   UT-DM8 & Delete a document of type folder that has with documents
-  inside for a given site id and parent folder and ensure that both 
+  inside for a given site id and parent folder and ensure that both
   the folder and its contents are recursively deleted\\ \hline
   \caption{Unit Test for Document Management Module}
+\end{longtable}
+
+\subsection{Site Management Module Unit Tests}
+
+\begin{longtable}{|m{2cm}|m{10cm}|}
+  \hline
+  \textbf{Test. ID} & \textbf{Description}\\ \hline
+  UT-SM1 & Create a site, and ensure it gets added to the
+  database with the correct information\\ \hline
+  UT-SM2 & Create a site with the same site id as an existing site,
+  and ensure a ResourceConflict is raised\\ \hline
+  UT-SM3 & Update a site, and ensure given attributes are reflected
+  in the database \\ \hline
+  UT-SM4 & Update a site where the update request came in earlier
+  than the last updated time of the existing entry, raise a
+  TimeConsistencyException\\ \hline
+  UT-SM5 & Delete a site, check that it no longer exists in the
+  database\\ \hline
+  UT-SM6 & Attempt to delete a site, where a document still exists
+  for that site in the database, ensure a BadRequestException is raised\\ \hline
+  UT-SM7 & Attempt to delete a site, where the site has been updated
+  since the delete request came in, ensure a TimeConsistencyException
+  is raised\\ \hline
+  UT-SM8 & Get a site from the database based on id, check attributes
+  match expectations\\ \hline
+  UT-SM9 & Attempt to get a site that doesn't exist, ensure a
+  ResourceNotFound is raised\\ \hline
+  UT-SM10 & Get a list of all sites from the database, ensure list of
+  sites matches what is the database\\ \hline
+  UT-SM11 & Get a list of sites from the database, with a size limit
+  of 1, then use the pagination start\_key to get the next site,
+  ensure these site details match expectations\\ \hline
+  \caption{Unit Test for Site Management Module}
+\end{longtable}
+
+\subsection{User Requests Module Unit Tests}
+
+\begin{longtable}{|m{2cm}|m{10cm}|}
+  \hline
+  \textbf{Test. ID} & \textbf{Description}\\ \hline
+  UT-UR1 & Create a user request, and ensure it gets added to the
+  database with the correct information\\ \hline
+  UT-UR2 & Create a user request with the same email as an existing
+  user request, and ensure a ResourceConflict is raised\\ \hline
+  UT-UR3 & Create a user request with the same email as an existing
+  user, and ensure a ConflictException is raised \\ \hline
+  UT-UR4 & Get all user requests in the database, ensure attributes
+  are correct\\ \hline
+  UT-UR5 & Approve a user request, ensure the correct user was added\\ \hline
+  UT-UR6 & Reject a user request, ensure user was not added\\ \hline
+  UT-UR7 & Approve a user request, but a user with the same email has
+  already been created, ensure ConflictException raised\\ \hline
+  UT-UR8 & Approve a user request that does not exist, ensure
+  ResourceNotFound raised\\ \hline
+  UT-UR9 & Attempt a non-existent action on a user request, ensure
+  ValueError is raised\\ \hline
+  \caption{Unit Test for User Requests Module}
 \end{longtable}
 
 \subsection{Tests for Nonfunctional Requirements}
@@ -1954,7 +2011,27 @@ not relevant.
 
 \subsection{Traceability Between Test Cases and Modules}
 
-% \wss{Provide evidence that all of the modules have been considered.}
+Note: * indicates that any test prefixed with the test case ID,
+covers the given module
+
+\begin{longtable}{|m{5cm}|m{9cm}|}
+  \hline
+  \textbf{Module} & \textbf{Test ID's} \\
+  \hline
+  Database Interaction & UT-DB* TC-FR-1 TC-FR-2 TC-FR-8 TC-FR-7 TC-FR-6\\ \hline
+  Logging & UT-LG* TC-FR-5 TC-EU1 TC-EU2\\ \hline
+  File Storage & UT-FS* TC-FR-1 TC-FR-2 TC-PR-10 TC-PR-11\\ \hline
+  Location Verification & UT-LV* TC-FR-5 TC-FR-8\\ \hline
+  User Management & UT-UM* TC-FR-4 TC-FR-7 TC-SS-1 TC-SS-4 TC-PR-5
+  TC-LR1 TC-LR2 TC-OE1 TC-OE2 \\ \hline
+  User Authentication & UT-AU* TC-FR-9 TC-PR-4 TC-AS1 TC-LF1 TC-LF2
+  TC-CR1\\ \hline
+  Document Management & UT-DM* TC-FR-1 TC-FR-2 TC-FR-3 TC-FR-7
+  TC-SS-2 TC-PR-1 TC-PR-3 TC-PR-5 TC-UP1 TC-UP2\\ \hline
+  Site Management & UT-SM*\\ \hline
+  User Requests & UT-UR*\\ \hline
+  \caption{Module to Test Case Traceability Matrix}
+\end{longtable}
 
 \newpage
 

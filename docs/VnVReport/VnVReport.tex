@@ -572,6 +572,12 @@ to mock AWS services.
   UT-LG8 & Get a list of all site visit logs using a database
   start\_key to start the listing from a certain log, and ensure that
   logs start from the correct location & Pass\\ \hline
+  UT-LG9 & Get a site visit log using its entry time, user\_id, and
+  site\_id, and ensure that obtained log details match the passed
+  criteria & Pass\\ \hline
+  UT-LG10 & Get a site visit log using its entry time, user\_id, and
+  site\_id, where the log doesn't exist, ensure ResourceNotFound is
+  raised & Pass\\ \hline
   \caption{Unit Test Cases for Logging Module}
 \end{longtable}
 
@@ -602,6 +608,65 @@ to mock AWS services.
   \caption{Unit Test for Document Management Module}
 \end{longtable}
 
+\subsection{Site Management Module Unit Tests}
+
+\begin{longtable}{|m{2cm}|m{10cm}|m{1.4cm}|}
+  \hline
+  \textbf{Test. ID} & \textbf{Description} & \textbf{Result} \\ \hline
+  UT-SM1 & Create a site, and ensure it gets added to the
+  database with the correct information & Pass\\ \hline
+  UT-SM2 & Create a site with the same site id as an existing site,
+  and ensure a ResourceConflict is raised & Pass\\ \hline
+  UT-SM3 & Update a site, and ensure given attributes are reflected
+  in the database & Pass\\ \hline
+  UT-SM4 & Update a site where the update request came in earlier
+  than the last updated time of the existing entry, raise a
+  TimeConsistencyException & Pass\\ \hline
+  UT-SM5 & Delete a site, check that it no longer exists in the
+  database & Pass\\ \hline
+  UT-SM6 & Attempt to delete a site, where a document still exists
+  for that site in the database, ensure a BadRequestException is
+  raised & Pass\\ \hline
+  UT-SM7 & Attempt to delete a site, where the site has been updated
+  since the delete request came in, ensure a TimeConsistencyException
+  is raised & Pass\\ \hline
+  UT-SM8 & Get a site from the database based on id, check attributes
+  match expectations & Pass\\ \hline
+  UT-SM9 & Attempt to get a site that doesn't exist, ensure a
+  ResourceNotFound is raised & Pass\\ \hline
+  UT-SM10 & Get a list of all sites from the database, ensure list of
+  sites matches what is the database & Pass\\ \hline
+  UT-SM11 & Get a list of sites from the database, with a size limit
+  of 1, then use the pagination start\_key to get the next site,
+  ensure these site details match expectations & Pass\\ \hline
+  \caption{Unit Test for Site Management Module}
+\end{longtable}
+
+\subsection{User Requests Module Unit Tests}
+
+\begin{longtable}{|m{2cm}|m{10cm}|m{1.4cm}|}
+  \hline
+  \textbf{Test. ID} & \textbf{Description} & \textbf{Result}\\ \hline
+  UT-UR1 & Create a user request, and ensure it gets added to the
+  database with the correct information & Pass\\ \hline
+  UT-UR2 & Create a user request with the same email as an existing
+  user request, and ensure a ResourceConflict is raised & Pass\\ \hline
+  UT-UR3 & Create a user request with the same email as an existing
+  user, and ensure a ConflictException is raised & Pass\\ \hline
+  UT-UR4 & Get all user requests in the database, ensure attributes
+  are correct & Pass\\ \hline
+  UT-UR5 & Approve a user request, ensure the correct user was added
+  & Pass\\ \hline
+  UT-UR6 & Reject a user request, ensure user was not added & Pass\\ \hline
+  UT-UR7 & Approve a user request, but a user with the same email has
+  already been created, ensure ConflictException raised & Pass\\ \hline
+  UT-UR8 & Approve a user request that does not exist, ensure
+  ResourceNotFound raised & Pass\\ \hline
+  UT-UR9 & Attempt a non-existent action on a user request, ensure
+  ValueError is raised & Pass\\ \hline
+  \caption{Unit Test for User Requests Module}
+\end{longtable}
+
 \section{Changes Due to Testing}
 
 The scope of the project has evolved since the original version of
@@ -623,14 +688,15 @@ this requirement. The scenarios are outlined in the following flow charts.
 \newpage
 
 \begin{figure}[h!]
-\includegraphics[scale=0.7]{ease_of_access.png}
-\caption{Prioritizing ease of access to the application with a visitor account}
+  \includegraphics[scale=0.7]{ease_of_access.png}
+  \caption{Prioritizing ease of access to the application with a
+  visitor account}
 \end{figure}
 \newpage
 \begin{figure}[h!]
-\includegraphics[scale=0.7]{trusted_access.png}
-\caption{Prioritizing security of the application
-by requiring a contractor account first be verified}
+  \includegraphics[scale=0.7]{trusted_access.png}
+  \caption{Prioritizing security of the application
+  by requiring a contractor account first be verified}
 \end{figure}
 \newpage
 \section{Automated Testing}
@@ -711,9 +777,14 @@ covers the given module
   Logging & UT-LG* TC-FR-5 TC-EU1 TC-EU2\\ \hline
   File Storage & UT-FS* TC-FR-1 TC-FR-2 TC-PR-10 TC-PR-11\\ \hline
   Location Verification & UT-LV* TC-FR-5 TC-FR-8\\ \hline
-  User Management & UT-UM* TC-FR-4 TC-FR-7 TC-SS-1 TC-SS-4 TC-PR-5 TC-LR1 TC-LR2 TC-OE1 TC-OE2 \\ \hline
-  User Authentication & UT-AU* TC-FR-9 TC-PR-4 TC-AS1 TC-LF1 TC-LF2 TC-CR1\\ \hline
-  Document Management & UT-DM* TC-FR-1 TC-FR-2 TC-FR-3 TC-FR-7 TC-SS-2 TC-PR-1 TC-PR-3 TC-PR-5 TC-UP1 TC-UP2\\ \hline
+  User Management & UT-UM* TC-FR-4 TC-FR-7 TC-SS-1 TC-SS-4 TC-PR-5
+  TC-LR1 TC-LR2 TC-OE1 TC-OE2 \\ \hline
+  User Authentication & UT-AU* TC-FR-9 TC-PR-4 TC-AS1 TC-LF1 TC-LF2
+  TC-CR1\\ \hline
+  Document Management & UT-DM* TC-FR-1 TC-FR-2 TC-FR-3 TC-FR-7
+  TC-SS-2 TC-PR-1 TC-PR-3 TC-PR-5 TC-UP1 TC-UP2\\ \hline
+  Site Management & UT-SM*\\ \hline
+  User Requests & UT-UR*\\ \hline
   \caption{Module to Test Case Traceability Matrix}
 \end{longtable}
 
