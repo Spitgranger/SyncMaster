@@ -9,7 +9,7 @@ dependencies = [
     "boto3==1.35.90",
     "botocore==1.35.90",
     "cachetools==5.5.2",
-    "pydantic[email]==2.10.4",
+    "pydantic[email]==2.11.1",
 ]
 
 [dependency-groups]
