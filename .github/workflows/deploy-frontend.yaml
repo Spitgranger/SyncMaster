@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'infrastructure/frontend.yaml'
+      - "infrastructure/frontend.yaml"
 
 permissions:
   id-token: write
@@ -14,6 +14,7 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: FrontendDeploy
     env:
       BASE_API_URL: ${{ secrets.BASE_API_URL }}
       PAT: ${{ secrets.PAT }}
@@ -33,4 +34,3 @@ jobs:
 
       - name: Create/Update Frontend Infrastructure
         run: ./scripts/frontend/deploy.sh
-
