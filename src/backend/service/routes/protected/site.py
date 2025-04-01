@@ -25,6 +25,8 @@ from ...util import (
     CORS_HEADERS,
     AWSAccessLevel,
     UserType,
+    create_open_api_error_response,
+    create_open_api_response,
     decode_db_key,
     encode_db_key,
     time_epoch_to_datetime,
@@ -34,7 +36,14 @@ from ...util import (
 router = Router()
 
 
-@router.post("/")
+@router.post(
+    "/",
+    security=[{"bearer": [UserType.ADMIN.value]}],
+    responses={
+        201: create_open_api_response(description="Created Site", response_body_schema=APISite),
+        409: create_open_api_error_response(description="Site with same id already exists"),
+    },
+)
 def create_site_handler(site: Annotated[APISite, Body()]):
     """
     Adds a site to the database
@@ -81,7 +90,13 @@ def create_site_handler(site: Annotated[APISite, Body()]):
     )
 
 
-@router.patch("/<site_id>")
+@router.patch(
+    "/<site_id>",
+    security=[{"bearer": [UserType.ADMIN.value]}],
+    responses={
+        200: create_open_api_response(description="Updated Site", response_body_schema=APISite)
+    },
+)
 def update_site_handler(
     site_id: Annotated[str, Path(min_length=5, max_length=5)],
     site_update_attrs: Annotated[APISitePartial, Body()],
@@ -132,7 +147,14 @@ def update_site_handler(
     )
 
 
-@router.get("/<site_id>")
+@router.get(
+    "/<site_id>",
+    security=[{"bearer": [UserType.ADMIN.value, UserType.EMPLOYEE.value]}],
+    responses={
+        200: create_open_api_response(description="Requested Site", response_body_schema=APISite),
+        404: create_open_api_error_response(description="Requested site does not exist"),
+    },
+)
 def get_site_handler(
     site_id: Annotated[str, Path(min_length=5, max_length=5)],
 ):
@@ -167,7 +189,11 @@ def get_site_handler(
     )
 
 
-@router.delete("/<site_id>")
+@router.delete(
+    "/<site_id>",
+    security=[{"bearer": [UserType.ADMIN.value]}],
+    responses={204: create_open_api_response(description="No Content", response_body_schema={})},
+)
 def delete_site_handler(site_id: Annotated[str, Path(min_length=5, max_length=5)]):
     """
     Delete a site
@@ -201,7 +227,15 @@ def delete_site_handler(site_id: Annotated[str, Path(min_length=5, max_length=5)
     )
 
 
-@router.get("/")
+@router.get(
+    "/",
+    security=[{"bearer": [UserType.ADMIN.value, UserType.EMPLOYEE.value]}],
+    responses={
+        200: create_open_api_response(
+            description="List of all sites", response_body_schema=APIListSitesResponse
+        )
+    },
+)
 def list_sites_handler(
     limit: Annotated[Optional[int], Query(le=100)] = None,
     start_key: Annotated[Optional[str], Query()] = None,

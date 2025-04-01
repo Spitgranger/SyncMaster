@@ -10,6 +10,7 @@ from aws_lambda_powertools.event_handler.openapi.exceptions import (
     SerializationError,
     ValidationException,
 )
+from aws_lambda_powertools.event_handler.openapi.models import HTTPBearer
 from aws_lambda_powertools.logging import correlation_paths
 from aws_lambda_powertools.utilities.typing import LambdaContext
 from pydantic import ValidationError
@@ -21,7 +22,11 @@ from .util import CORS_HEADERS
 
 logger = Logger()
 app = APIGatewayRestResolver(enable_validation=True)
-app.enable_swagger(path="/unprotected/swagger")
+app.enable_swagger(
+    path="/unprotected/swagger",
+    title="SyncMaster API Docs",
+    security_schemes={"bearer": HTTPBearer(bearerFormat="JWT")},
+)
 app.include_router(router=site_visits.router, prefix="/protected/site")
 app.include_router(router=site.router, prefix="/protected/site-management")
 app.include_router(router=users.router, prefix="/protected/users")

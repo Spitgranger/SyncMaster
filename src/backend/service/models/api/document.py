@@ -24,6 +24,12 @@ class APIDocumentResponse(CustomBaseModel):
     document_expiry: Optional[datetime] = None
 
 
+class APIDocumentListResponse(CustomBaseModel):
+    """A List of documents as represented in the API"""
+
+    document_id: list[APIDocumentResponse]
+
+
 class APIDocumentUploadRequest(CustomBaseModel):
     """A Document upload request from API"""
 

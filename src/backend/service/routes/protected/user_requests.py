@@ -23,6 +23,8 @@ from ...util import (
     AWSAccessLevel,
     UserType,
     create_http_response,
+    create_open_api_error_response,
+    create_open_api_response,
     decode_db_key,
     encode_db_key,
     verify_user_role,
@@ -31,7 +33,15 @@ from ...util import (
 router = Router()
 
 
-@router.get("/get-requests")
+@router.get(
+    "/get-requests",
+    security=[{"bearer": [UserType.ADMIN.value, UserType.EMPLOYEE.value]}],
+    responses={
+        200: create_open_api_response(
+            description="List of all user requests", response_body_schema=APIGetUserRequestsResponse
+        )
+    },
+)
 def get_user_requests_handler(
     limit: Annotated[Optional[int], Query(le=100)] = None,
     start_key: Annotated[Optional[str], Query()] = None,
@@ -70,7 +80,22 @@ def get_user_requests_handler(
     )
 
 
-@router.post("/action-request")
+@router.post(
+    "/action-request",
+    security=[{"bearer": [UserType.ADMIN.value]}],
+    responses={
+        201: create_open_api_response(description="Created User", response_body_schema={}),
+        204: create_open_api_response(
+            description="User Successfully Rejected, No content", response_body_schema={}
+        ),
+        404: create_open_api_error_response(
+            description="User request does not exist",
+        ),
+        409: create_open_api_error_response(
+            description="User with the same email as request already exists",
+        ),
+    },
+)
 def action_user_request_handler(body: Annotated[APIActionUserRequest, Body()]):
     """
     Route to action a user request

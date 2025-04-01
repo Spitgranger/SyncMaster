@@ -20,12 +20,38 @@ from ...user_authentication.user_authentication import (
     signin_user_handler,
 )
 from ...user_requests.user_requests import create_user_request
-from ...util import AWSAccessLevel, create_http_response, time_epoch_to_datetime
+from ...util import (
+    AWSAccessLevel,
+    create_http_response,
+    create_open_api_error_response,
+    create_open_api_response,
+    time_epoch_to_datetime,
+)
 
 router = Router()
 
 
-@router.post("/signin")
+@router.post(
+    "/signin",
+    responses={
+        200: create_open_api_response(
+            description="tokens, and whether or not the user is on site",
+            response_body_schema={
+                "UserOnSite": True,
+                "AccessToken": "str",
+                "IdToken": "str",
+                "RefreshToken": "str",
+            },
+        ),
+        403: create_open_api_error_response(
+            description="response when user needs to reset password",
+        ),
+        401: create_open_api_error_response(
+            description="response when user entered incorrect credentials"
+        ),
+        404: create_open_api_error_response(description="response when user does not exist"),
+    },
+)
 def signin_handler(body: Annotated[SigninRequest, Body()]):
     """
     Route to signup a new user
@@ -36,7 +62,16 @@ def signin_handler(body: Annotated[SigninRequest, Body()]):
     return signin_user_handler(body, cognito_client)
 
 
-@router.post("/create-request")
+@router.post(
+    "/create-request",
+    responses={
+        201: create_open_api_response(
+            description="The created user request",
+            response_body_schema=APIUserRequest,
+        ),
+        409: create_open_api_error_response(description="Email already in use"),
+    },
+)
 def create_user_request_handler(body: Annotated[APIUserRequest, Body()]):
     """
     Route to create a signup request for a new user
