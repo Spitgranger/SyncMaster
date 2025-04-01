@@ -1,6 +1,7 @@
 version: 1
 applications:
-  - frontend:
+  - appRoot: src/client-admin-portal
+    frontend:
       buildPath: "src/client-admin-portal" # run install and build from monorepo project root
       phases:
         preBuild:
@@ -16,9 +17,9 @@ applications:
       cache:
         paths:
           - src/client-admin-portal/node_modules/**/*
-    appRoot: src/client-admin-portal
 
-  - frontend-contractor:
+  - appRoot: src/client-contractor-portal
+    frontend:
       buildPath: "src/client-contractor-portal"
       phases:
         preBuild:
@@ -34,4 +35,3 @@ applications:
       cache:
         paths:
           - src/client-contractor-portal/node_modules/**/*
-    appRoot: src/client-contractor-portal
