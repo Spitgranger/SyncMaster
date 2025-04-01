@@ -279,6 +279,10 @@ def signin_user_handler(signin_request: SigninRequest, cognito_client: CognitoCl
     :param signin_request: The body of the HTTP request from API gateway
     :param cognito_client: The CognitoClient used to process the operation
     :return Response containg the result of the cognito operation, if successful
+    :raises UnauthorizedException: If bad credentials passed
+    :raises ForcePasswordChangeException: If password needs to be changed
+    :raises ResourceNotFound: If requested user does not exist
+    :raises ExternalServiceException: If an error occurs in AWS
     return the AccessToken, IdToken, and RefreshToken
     """
     try:
@@ -325,7 +329,7 @@ def signin_user_handler(signin_request: SigninRequest, cognito_client: CognitoCl
             case "UserNotFoundException":
                 raise ResourceNotFound("user", "username") from err
             case _:
-                raise ExternalServiceException from err
+                raise ExternalServiceException() from err
 
 
 def logout_user_handler(user_access_token: str, cognito_client: CognitoClient) -> Response:

@@ -27,7 +27,7 @@ from ...util import UserType, verify_user_role
 router = Router()
 
 
-@router.post("/signup")
+@router.post("/signup", security=[{"bearer": []}])
 def signup_handler(body: Annotated[SignupRequest, Body()]):
     """
     Route to signup a new user
@@ -38,7 +38,7 @@ def signup_handler(body: Annotated[SignupRequest, Body()]):
     return signup_user_handler(body, cognito_client)
 
 
-@router.post("/create_user")
+@router.post("/create_user", security=[{"bearer": []}])
 def create_user_handler(body: Annotated[AdminSignupRequest, Body()]):
     """
     Route to signup a new user
@@ -50,7 +50,7 @@ def create_user_handler(body: Annotated[AdminSignupRequest, Body()]):
     return admin_create_user_handler(body, cognito_client)
 
 
-@router.get("/signout")
+@router.get("/signout", security=[{"bearer": []}])
 def signout_handler(user_token: Annotated[str, Query()]):
     """
     Route to signout a new user
@@ -61,7 +61,7 @@ def signout_handler(user_token: Annotated[str, Query()]):
     return logout_user_handler(user_token, cognito_client)
 
 
-@router.post("/update_user")
+@router.post("/update_user", security=[{"bearer": [UserType.ADMIN.value]}])
 def update_user_handler(body: Annotated[UpdateUserAttributeRequest, Body()]):
     """
     Route to signup a new user
@@ -81,7 +81,7 @@ def update_user_handler(body: Annotated[UpdateUserAttributeRequest, Body()]):
     return admin_update_user_attributes_handler(body, cognito_client)
 
 
-@router.post("/get_users")
+@router.post("/get_users", security=[{"bearer": [UserType.ADMIN.value]}])
 def get_users_handler(body: Annotated[GetUsersByAttributeRequest, Body()]):
     """
     Route to get a list of users based on provided attributes
