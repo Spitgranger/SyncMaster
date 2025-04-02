@@ -41,6 +41,7 @@
   11/4/24 & 1.0 & Initial Draft of VnV Plan for Rev0\\
   03/04/25 & 1.1 & Modifications to Plan for Rev1\\
   03/31/25 & 1.2 & Add latest unit tests\\
+  04/02/25 & 1.3 & Remove FR-9\\
   \bottomrule
 \end{tabularx}
 
@@ -571,27 +572,30 @@ Below are tests for the functional requirements.
 \subsubsection{Training Verification}
 
 \begin{enumerate}
-  \item {TC-FR9\\}
+  \item {\sout{TC-FR9}\\}
 
-    Control: Manual
+    \sout{Control: Manual
 
-    Initial State: The system is running, and a contractor user has
-    not completed their annual health and safety training
+      Initial State: The system is running, and a contractor user has
+      not completed their annual health and safety training
 
-    Input: A contractor user that has not completed the training
-    accesses portal for a site visit
-    without an employee accompanying them. They acknowledge this during sign in.
+      Input: A contractor user that has not completed the training
+      accesses portal for a site visit
+      without an employee accompanying them. They acknowledge this
+      during sign in.
 
-    Output: The system notifies contractor they are not authorized to
-    access the site and should contact their facilities manager.
+      Output: The system notifies contractor they are not authorized to
+      access the site and should contact their facilities manager.
 
-    Test Case Derivation: Contractors are required to complete training before
-    they can access site, or else must be accompanied by an employee.
+      Test Case Derivation: Contractors are required to complete training before
+      they can access site, or else must be accompanied by an employee.
 
-    How test will be performed: Manually try to authenticate
-    as a contractor user without completing required training or an
-    emplyee during authentication process and verify that
-    the system prevents it.
+      How test will be performed: Manually try to authenticate
+      as a contractor user without completing required training or an
+      emplyee during authentication process and verify that
+    the system prevents it.}
+
+    \textcolor{red}{Requirement no longer exists}
 
 \end{enumerate}
 
@@ -1161,8 +1165,8 @@ Below are tests for the nonfunctional requirements.
     unit test corresponding to them
 
     How test will be performed: The test will be performed by
-    checking the Traceability Matrices in this document, to make sure
-    that there exists a unit test for all functional requirements.
+    checking the Traceability Matrices in this the VnV Report, to
+    make sure that there exists a unit test for all functional requirements.
 
   \item{TC-MS-6\\}
 
@@ -1252,6 +1256,23 @@ Below are tests for the nonfunctional requirements.
     checking that the deployment documentation exists and that a
     member of our development team can follow the provided steps to
     successfully deploy the application.
+
+  \item{TC-MS-11\\}
+
+    Type: Manual
+
+    Initial State: GitHub is functional
+
+    Input/Condition: The GitHub repository for the project is checked
+    to ensure that all functional requirements listed in the SRS have
+    an E2E test corresponding to them.
+
+    Output/Result: All functional requirements found in the SRS have a
+    E2E test corresponding to them
+
+    How test will be performed: The test will be performed by
+    checking the GitHub actions to ensure there is a workflow for testing
+    the deployed application, which covers all functional requirements
 
 \end{enumerate}
 
@@ -1644,7 +1665,7 @@ Below are tests for the nonfunctional requirements.
   FR6 & TC-FR6\\ \hline
   FR7 & TC-FR8\\ \hline
   FR8 & TC-FR7\\ \hline
-  FR9 & TC-FR9\\ \hline
+  \sout{FR9} & \sout{TC-FR9}\\ \hline
   LF-AP1 & TC-LF-1 \\ \hline
   LF-ST1 & TC-LF-2 \\ \hline
   UH-EU1 & TC-EU1\\ \hline
@@ -1670,8 +1691,9 @@ Below are tests for the nonfunctional requirements.
   OE-REL3 & TC-OE-4 \\ \hline
   OE-REL4 & TC-OE-4 \\ \hline
   MS-MTN4 & TC-MS-4 \\ \hline
-  MS-MTN5 & TC-MS-5 \\ \hline
+  MS-MTN5 & TC-MS-11 \\ \hline
   MS-MTN6 & TC-MS-6 \\ \hline
+  MS-MTN7 & TC-MS-5 \\ \hline
   MS-SUP1 & TC-MS-7 \\ \hline
   MS-SUP2 & TC-MS-8 \\ \hline
   MS-SUP3 & TC-MS-9 \\ \hline

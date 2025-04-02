@@ -12,6 +12,7 @@
 }
 \usepackage{longtable}
 \usepackage[round]{natbib}
+\usepackage[normalem]{ulem}
 
 \input{../Comments}
 \input{../Common}
@@ -34,6 +35,7 @@
   2025/03/10 & 1.0 & Initial Revision of VnV Report\\
   2025/03/16 & 1.1 & Remove unit tests related to removed errors\\
   2025/03/31 & 1.2 & Add latest unit tests\\
+  2025/04/02 & 1.3 & Remove FR-9, update passing tests\\
   \bottomrule
 \end{tabularx}
 
@@ -82,20 +84,21 @@ the Software Requirements Specification document
   allowed location\\ \hline
   TC-FR-6 & Admin user navigates to main portal when a document
   approaching expiry is present in the system & A notification is displayed
-  indicating the expiry of this document&
-  Fail, functionality is not fully implemented\\ \hline
+  indicating the expiry of this document &
+  Pass\\ \hline
   TC-FR-7 & Admin user navigates to main portal when users with
   expired training exist & A message indicating there are users with
-  expired trainings is displayed&
-  Fail, functionality is not fully implemented\\ \hline
+  expired trainings is displayed &
+  Pass\\ \hline
   TC-FR-8 & User authenticates into the system and acknowledges
   document & The acknowledgement is stored in the system with the
   required information &
-  Fail, functionality not fully implemented\\ \hline
-  TC-FR-9 & Contractor without the required training attempts to
-  authenticate & The system prevents authentication and displays a
-  message telling the user to contact their facilities manager &
-  Fail, functionality not fully implemented\\ \hline
+  Pass\\ \hline
+  \sout{TC-FR-9} & \sout{Contractor without the required training attempts to
+  authenticate} \textcolor{red}{Requirement no longer exists} &
+  \sout{The system prevents authentication and displays a message
+  telling the user to contact their facilities manager} &
+  \sout{Fail}\\ \hline
   \caption{Functional Requirement Test Cases}
 \end{longtable}
 
@@ -164,13 +167,10 @@ Through these actions, the following results were observed:\\
   Test passed.\\
   \hline
   TC-EU-2 & User 1& As an admin user, the tester was able to add a
-  site wide document but did not receive a warning before deleting file
-  thus identifying a bug in the system to be patched for rev1. Test failed.\\
+  site wide document and received a warning before deleting file. Test passed.\\
   \hline
   TC-EU-2 & User 2& As an admin user, the tester was able to add a
-  site wide document but did not receive a warning before deleting file
-  thus identifying a bug in the system to be patched for rev1, same
-  as issue identified for User 1. Test failed.\\
+  site wide document and received a warning before deleting file. Test passed.\\
   \hline
   TC-LR-1 & User 1& User successfully discovered the documentation
   page. Did not have issues with selecting documents and
@@ -305,19 +305,20 @@ Usability Study further before it will be submitted in the Extras folder.
   TC-MS-4 & - & There is 95\% line coverage and 90\% branch coverage
   on our code & Pass, this is being checked in GitHub actions\\ \hline
   TC-MS-5 & - & All functional requirements have a corresponding unit
-  test & Fail, FR8 and FR9 are missing unit tests as they are not
-  currently implemented\\ \hline
+  test & Pass\\ \hline
   TC-MS-6 & - & Contribution guidelines and maintainer documentation
-  of system approved by the City of Hamilton & Fail, not yet approved\\ \hline
+  of system approved by the City of Hamilton & Pass\\ \hline
   TC-MS-7 & - & User manual exists and has been approved by the City
-  of Hamilton & Fail, not yet created\\ \hline
+  of Hamilton & Pass\\ \hline
   TC-MS-8 & - & OAS3 compliant documentation has been provided for
-  all API's & Fail, not yet created\\ \hline
+  all API's & Pass, exists under /unprotected/swagger path of API\\ \hline
   TC-MS-9 & - & Internal abstractions (classes and functions) in the
   system have documentation associated with them & Pass, linter
   checks this\\ \hline
   TC-MS-10 & - & Documentation for deployment of the system exists &
-  Fail, not yet created\\ \hline
+  Pass\\ \hline
+  TC-MS-11 & - & E2E tests exist for all FR's &
+  Fail, out of scope, planned for development by City\\ \hline
   \caption{Maintainability and Support Test Cases}
 \end{longtable}
 
@@ -342,14 +343,12 @@ Usability Study further before it will be submitted in the Extras folder.
   with a set of entries which vary between incomplete, impossible, and
   malicious and checked how the application handled the inputs. User
   login fields and user creation fields tested. & Pass\\ \hline
-  TC-SS-5 & The application client has so far been tested using local
-  hosting. & Fail, not yet hosted\\ \hline
-  TC-SS-7 & Pull requests created by Dependabot are merged within
-  a week. & Fail, not yet integrated with Dependabot\\ \hline
+  TC-SS-5 & The application has been deployed to AWS & Pass\\ \hline
+  TC-SS-7 & Pull requests created by Dependabot/Renovate are
+  addressed within a week. & Pass\\ \hline
   TC-SS-8 & Check notification creation when contractor user declines
   acknowledgement, attempts to acknowledge but does not complete
-  action, or ignores acknowledge-
-  ment. & Fail, notification module not yet implemented\\ \hline
+  action, or ignores acknowledgement. & Pass\\ \hline
   \caption{Safety and Security Test Cases}
 \end{longtable}
 
@@ -715,8 +714,8 @@ N/A, the only automated testing we have is the unit tests.
   FR5 & TC-FR5, UT-UA2\\ \hline
   FR6 & TC-FR6, UT-DM1\\ \hline
   FR7 & TC-FR8, UT-DM4, UT-DM6\\ \hline
-  FR8 & TC-FR7\\ \hline
-  FR9 & TC-FR9\\ \hline
+  FR8 & TC-FR7, UT-LG1\\ \hline
+  \sout{FR9} & \sout{TC-FR9}\\ \hline
   LF-AP1 & TC-LF-1 \\ \hline
   LF-ST1 & TC-LF-2 \\ \hline
   UH-EU1 & TC-EU1\\ \hline
@@ -742,8 +741,9 @@ N/A, the only automated testing we have is the unit tests.
   OE-REL3 & TC-OE-4 \\ \hline
   OE-REL4 & TC-OE-4 \\ \hline
   MS-MTN4 & TC-MS-4 \\ \hline
-  MS-MTN5 & TC-MS-5 \\ \hline
+  MS-MTN5 & TC-MS-11\\ \hline
   MS-MTN6 & TC-MS-6 \\ \hline
+  MS-MTN7 & TC-MS-5 \\ \hline
   MS-SUP1 & TC-MS-7 \\ \hline
   MS-SUP2 & TC-MS-8 \\ \hline
   MS-SUP3 & TC-MS-9 \\ \hline
