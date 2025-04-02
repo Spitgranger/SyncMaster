@@ -57,10 +57,14 @@ Management System}
   11/04/2024 & Akshit Gulia & Removed FR-2\\
   11/04/2024 & Akshit Gulia & Removed PR-SL2\\
   12/27/2024 & Mitchell Hynes & Added Peer Review Issues 135, 136\\
-  01/27/2025 & Mitchell Hynes & Removed Sharepoint from scope, modified requirements\\
+  01/27/2025 & Mitchell Hynes & Removed Sharepoint from scope,
+  modified requirements\\
   03/04/2025 & Mitchell Hynes & Updated OE-PE1\\
-  03/30/2025 & Kyle D'Souza & Move MS-MTN-5 into future development plan by city\\
-  03/31/2025 & Mitchell Hynes & Add multi-factor authentication to future development\\
+  03/30/2025 & Kyle D'Souza & Move MS-MTN-5 into future development
+  plan by city\\
+  03/31/2025 & Mitchell Hynes & Add multi-factor authentication to
+  future development\\
+  04/02/2025 & Kyle D'Souza & Remove FR-9\\
   \bottomrule
 \end{tabularx}
 \pagenumbering{arabic}
@@ -254,12 +258,17 @@ To understand the current practices at the City of Hamilton see the
 N/A
 \subsection{Off-the-Shelf Software}
 \begin{enumerate} [{C-OTS}1.]
-  \item \sout{ The system must integrate with Sharepoint to synchronize documents in
-    Sharepoint with documents in the system.} \textcolor{red}{Removing due to technical infeasability.}
-  \item \sout{ The system must integrate with Infor EAM, to show the status of work
-    orders associated with a document.} \textcolor{red}{Removing as this software is not yet implemented and is proprietary.}
+  \item \sout{ The system must integrate with Sharepoint to
+      synchronize documents in
+    Sharepoint with documents in the system.}
+    \textcolor{red}{Removing due to technical infeasability.}
+  \item \sout{ The system must integrate with Infor EAM, to show the
+      status of work
+    orders associated with a document.} \textcolor{red}{Removing as
+    this software is not yet implemented and is proprietary.}
   \item \sout{The system must integrate with MySDS to show relevent relevant SDS
-    documents to users on a given site.} \textcolor{red}{Removing as MySDS is a proprietary system.}
+    documents to users on a given site.} \textcolor{red}{Removing as
+    MySDS is a proprietary system.}
 \end{enumerate}
 
 \subsection{Anticipated Workplace Environment}
@@ -277,10 +286,12 @@ N/A
 
 \subsection{Schedule Constraints}
 \begin{enumerate} [{C-SCH}1.]
-  \item \sout{A requirement is to integrate with the Infor EAM system the city intends
-    on using however, this system will not be available until
-    February 2025, so no testing can be done on this system until then.} 
-    \textcolor{red}{Removing as this software is not yet implemented and is proprietary.}
+  \item \sout{A requirement is to integrate with the Infor EAM system
+      the city intends
+      on using however, this system will not be available until
+    February 2025, so no testing can be done on this system until then.}
+    \textcolor{red}{Removing as this software is not yet implemented
+    and is proprietary.}
 
   \item The project deadline is April 2, 2025.
 \end{enumerate}
@@ -314,15 +325,17 @@ involved in the Project}
     Requires an accompanying hot works permit.
   \item HVAC: Heating, Ventilation, and Air Conditiong.
   \item Infor EAM: An Enterprise Asset Management system.
-  \item Integrity: The assurance that a documents content, format, and structure remain unchanged from its original state.
-  Measured by checking uploaded documents share the same checksum.
+  \item Integrity: The assurance that a documents content, format,
+    and structure remain unchanged from its original state.
+    Measured by checking uploaded documents share the same checksum.
   \item MySDS: An external application which provides safety data sheets.
   \item PMATS: Plant Maintenance and Technical Services.
   \item PO: Purchase Order.
   \item PPE: Personal Protective Equipment.
   \item SCADA: Supervisory Control and Data Acquisition.
   \item SDS: Safety Data Sheets.
-  \item \sout{Sharepoint: A Microsoft platform for collaboration and file storage.}
+  \item \sout{Sharepoint: A Microsoft platform for collaboration and
+    file storage.}
   \item Wet Well: A portion of a wastewater pumping station which receives
     and temporarily stores wastewater.
 \end{itemize}
@@ -356,7 +369,8 @@ involved in the Project}
     detailed cybersecurity specifications.
   \item The existing entry and exit procedure for stations is not modified
     and our application will coexist with it.
-  \item Existing City procedures will not change during the course of development.
+  \item Existing City procedures will not change during the course of
+    development.
   \item All external services are operating as expected.
 \end{itemize}
 \section{The Scope of the Work}
@@ -698,18 +712,23 @@ N/A.
       Sharepoint, this means any changes in this system must be
       reflected in the corresponding Sharepoint document, and any
     changes to the document in Sharepoint must be reflected in this system.}
-    \textcolor{red}{Removing as external access to City network is not possible.}
-  \item The system should have 3 types of users: Contractor, Employee, and Admin. 
+    \textcolor{red}{Removing as external access to City network is
+    not possible.}
+  \item The system should have 3 types of users: Contractor,
+    Employee, and Admin.
     Only Admin users can change
     access permissions of other users and have read and write
     accesses to all documents in the system. Contractors and Employee
-    users only have read access to documents. Employees have read-only access from the manager portal
-    and can't view contractor logs. Contractor station access and file uploads are logged.
+    users only have read access to documents. Employees have
+    read-only access from the manager portal
+    and can't view contractor logs. Contractor station access and
+    file uploads are logged.
     See (1) in \textbf{Section 9.2 Formal Expressions}.
   \item The current site, work order number, job details, and entry/exit time of
     contractors should be visible to admin users in the system.
   \item The system should implement a form of geolocation verification before
-    contractors are able to authenticate and upload documents. This must log when a contractor is on site. See (3) and
+    contractors are able to authenticate and upload documents. This
+    must log when a contractor is on site. See (3) and
     (4) in \textbf{Section 9.2 Formal Expressions}.
   \item The system must notify users when a complicance document has expired.
     See (7) in \textbf{Section 9.2 Formal Expressions}.
@@ -720,9 +739,11 @@ N/A.
     attempts to authenticate and upload documents at a particular site prior to
     completion of required training. See (6) in
     \textbf{Section 9.2 Formal Expressions}.
-  \item The system must prevent a user from authenticating or uploading
-    documents if the required training for the specific site is not complete, unless they are accompanied by an employee.
-    See (2) in \textbf{Section 9.2 Formal Expressions}.
+  \item \sout{The system must prevent a user from authenticating or uploading
+      documents if the required training for the specific site is not
+      complete, unless they are accompanied by an employee.
+    See (2) in \textbf{Section 9.2 Formal Expressions}}.
+    \textcolor{red}{No longer denying authorization, just logging}
 
 \end{enumerate}
 
@@ -809,11 +830,13 @@ N/A
 \section{Performance Requirements}
 \subsection{Speed and Latency Requirements}
 \begin{enumerate}[{PR-SL}1.]
-  \item Average time for retrieving the documents should not exceed 2 seconds to minimize user frustration
+  \item Average time for retrieving the documents should not exceed 2
+    seconds to minimize user frustration
   \item \sout{Synching documents with SharePoint should be completed in
     less than 7 seconds for file sizes up to 15 MB}
     \textcolor{red}{Removing as access to City network is not possible.}
-  \item The portal's user interface should be responsive and process user input within 2 seconds to minimize frustration.
+  \item The portal's user interface should be responsive and process
+    user input within 2 seconds to minimize frustration.
 \end{enumerate}
 \subsection{Safety-Critical Requirements}
 \begin{enumerate}[{PR-SC}1.]
@@ -824,11 +847,14 @@ N/A
 \subsection{Precision or Accuracy Requirements}
 \begin{enumerate}[{PR-PA}1.]
   \item Search queries related to documents or user data should
-    return at least 95\% relevant results as it strikes a balance in being confident in results 
+    return at least 95\% relevant results as it strikes a balance in
+    being confident in results
     while allowing a reasonable margin for error
   \item \sout{A data integrity of 99.99\% should be maintained to ensure no
-    corruption or data loss during upload or retrieval as data integrity is of high importance to maintain a single source of truth}\\
-    \textcolor{red}{Removing requirement on assumption cloud service provider will ensure integrity of its services}.
+      corruption or data loss during upload or retrieval as data
+    integrity is of high importance to maintain a single source of truth}\\
+    \textcolor{red}{Removing requirement on assumption cloud service
+    provider will ensure integrity of its services}.
 \end{enumerate}
 
 \subsection{Robustness or Fault-Tolerance Requirements}
@@ -842,7 +868,8 @@ N/A
 \begin{enumerate}[{PR-CR}1.]
   \item \sout{The system should be able to support peak data transfer rate
     of 1 Gbps for document uploads and downloads}\\
-    \textcolor{red}{Removing as this is dependent on the internet speed of the user and outside of our control}.
+    \textcolor{red}{Removing as this is dependent on the internet
+    speed of the user and outside of our control}.
   \item The system should be able to support individual file sizes up to 1GB
 \end{enumerate}
 
@@ -854,13 +881,15 @@ N/A
     sub-categories of documents under it).
   \item \sout{The system should be able to distribute traffic evenly and
     avoid single points of failures}\\
-    \textcolor{red}{Removing as this will be handled by external cloud provider}.
+    \textcolor{red}{Removing as this will be handled by external
+    cloud provider}.
 \end{enumerate}
 
 \subsection{Longevity Requirements}
 \begin{enumerate}[{PR-LR}1.]
   \item \sout{The system should have a scalable design to easily allow the
-    introduction of new features} \textcolor{red}{Removing as it's a constraint.}
+    introduction of new features} \textcolor{red}{Removing as it's a
+    constraint.}
 \end{enumerate}
 
 \newpage{}
@@ -884,10 +913,11 @@ N/A
     Sheets from MySDS.}\\
     \textcolor{red}{Direct integration with SharePoint and MySDS is
       no longer required by the stakeholders due to city policy and
-      security concerns.}
+    security concerns.}
   \item \sout{Application should be open for integration with upcoming Work
     Order tracking system in the city's Enterprise Asset Management software.}\\
-    \textcolor{red}{Work order system does not exist, removing requirement from scope.}
+    \textcolor{red}{Work order system does not exist, removing
+    requirement from scope.}
 \end{enumerate}
 \subsection{Productization Requirements}
 N/A
@@ -904,9 +934,11 @@ N/A
 \section{Maintainability and Support Requirements}
 \subsection{Maintenance Requirements}
 \begin{enumerate} [{MS-MTN}1.]
-  \item \sout{A deployment of the system should take no more than 30 minutes (not
+  \item \sout{A deployment of the system should take no more than 30
+      minutes (not
     including testing, and building time).}
-  \item \sout{The build time of the system should be no longer than 10 minutes (not
+  \item \sout{The build time of the system should be no longer than
+      10 minutes (not
     including testing time).}
   \item \sout{All automated tests should be able to run in under 10 minutes.}
   \item The system should have rigourous unit testing, line coverage should be
@@ -943,18 +975,23 @@ N/A
 \subsection{Access Requirements}
 \begin{enumerate} [{SR-AR}1.]
   \item Only authorized contractors and employees should be able to access the
-    portal for completing work on site. \sout{A visitor account will exist for authorized contractors without an account.} 
-    \textcolor{red}{Removing visitor account requirement to ensure only authorized contractors can access.}
+    portal for completing work on site. \sout{A visitor account will
+    exist for authorized contractors without an account.}
+    \textcolor{red}{Removing visitor account requirement to ensure
+    only authorized contractors can access.}
   \item Only admin users are able to view data on contractor and employee users.
   \item Only admin users are able to make changes to site settings.
-  \item Only admin users are able to upload documents to the contractor portal which will be viewed by contractors. Contractor users
-  are able to upload at most 10 documents for each of their site visits which can be viewed in the site logs by admin users.
+  \item Only admin users are able to upload documents to the
+    contractor portal which will be viewed by contractors. Contractor users
+    are able to upload at most 10 documents for each of their site
+    visits which can be viewed in the site logs by admin users.
 \end{enumerate}
 \subsection{Integrity Requirements}
 \begin{enumerate} [{SR-IR}1.]
   \item The application should not allow the addition, removal or modification
     of files by users without proper access and authentication.
-  \item \sout{The documents displayed should match the appropriate version available
+  \item \sout{The documents displayed should match the appropriate
+      version available
     on SharePoint and/or MySDS.}\\
     \textcolor{red}{Removing as not the responsibility of the development team}.
   \item The application should minimize the amount of bad or incomplete data
@@ -963,9 +1000,11 @@ N/A
 \subsection{Privacy Requirements}
 \begin{enumerate} [{SR-PR}1.]
   \item Data transmission will be encrypted.
-  \item \sout{The application should protect private information in accordance with
+  \item \sout{The application should protect private information in
+      accordance with
     any and all government privacy laws and policies.}\\
-    \textcolor{red}{Removing as verifying legal requirements is beyond the scope and skills of a small student software engineering team}.
+    \textcolor{red}{Removing as verifying legal requirements is
+    beyond the scope and skills of a small student software engineering team}.
 \end{enumerate}
 \subsection{Audit Requirements}
 \begin{enumerate} [{SR-AU}1.]
@@ -995,92 +1034,94 @@ N/A
 \subsection{Legal Requirements}
 \begin{enumerate}[{CR-L}1.]
   \item \sout{The application is to strictly abide by all regulations governing
-    the treatment of water and wastewater. This includes, but is not limited
-    to the \textit{Safe Drinking Water Act} (SDWA), 2002, the
-    \textit{Ontario Water Resources Act} (OWRA), the
+      the treatment of water and wastewater. This includes, but is not limited
+      to the \textit{Safe Drinking Water Act} (SDWA), 2002, the
+      \textit{Ontario Water Resources Act} (OWRA), the
     \textit{Environmental Protection Act} and the \textit{Clean Water Act}}.\\
   \item \sout{The application is to process any sensitive information per the
-    \textit{Personal Information and Protection and Electronic
-    Documents Act} and
+      \textit{Personal Information and Protection and Electronic
+      Documents Act} and
     the \textit{Freedom of Information and Protection of Privacy Act}}.\\
-    \textcolor{red}{Removing as verifying legal requirements is beyond the scope and skills of a student software engineering team}.
+    \textcolor{red}{Removing as verifying legal requirements is
+    beyond the scope and skills of a student software engineering team}.
 \end{enumerate}
 \subsection{Standards Compliance Requirements}
 \begin{enumerate}[{CR-S}1.]
   \item \sout{Documentation which must be stored on the City's BCOS
-    system are to be stored on the application in a manner which can
-    transfer the data. Our application will align with the City's
+      system are to be stored on the application in a manner which can
+      transfer the data. Our application will align with the City's
     DWQMS (Drinking Water Quality Management System).}\\
-    \textcolor{red}{Removing as application will not be connecting to any existing City platforms}.
+    \textcolor{red}{Removing as application will not be connecting to
+    any existing City platforms}.
 \end{enumerate}
 
 \section{Requirements Traceability Matrix}
 
 \begin{tabular}{|p{3cm}|p{3cm}|p{8cm}|}
-\hline
-\textbf{Requirement} & \textbf{Dependencies} & \textbf{Dependents}\\
-\hline
-FR1 & & PR-CR2, MS-MTN5, MS-MTN7, MS-SUP1\\
-FR3 & & PR-SC2, MS-MTN5, MS-MTN7\\
-FR4 & &MS-MTN5, MS-MTN7 \\
-FR5 & & MS-MTN5, MS-MTN7\\
-FR6 & & MS-MTN5, MS-MTN7\\
-FR7 & & MS-MTN5, MS-MTN7\\
-FR8 & & MS-MTN5, MS-MTN7\\
-FR9 & & MS-MTN5, MS-MTN7\\
-LF-AP1 & & \\
-LF-ST1 & & \\
-UH-EU1 & & \\
-UH-EU2 & & \\
-UH-LR1 & & \\
-UH-LR2 & & \\
-UH-UP1 & & \\
-UH-UP2 & & \\
-UH-AS1 & & \\
-PR-Sl1 & & \\
-PR-SL3 & & \\
-PR-SC1 & & \\
-PR-SC2 & FR-3& \\
-PR-PA1 & & \\
-PR-RFT1& & \\
-PR-CR2& FR1& \\
-PR-SE1& & \\
-OE-PE1& & \\
-OE-WE1& & \\
-OE-WE2& & \\
-OE-REl1& & \\
-OE-REL2& & \\
-OE-REL3& & \\
-OE-REL4& & \\
-\hline
+  \hline
+  \textbf{Requirement} & \textbf{Dependencies} & \textbf{Dependents}\\
+  \hline
+  FR1 & & PR-CR2, MS-MTN5, MS-MTN7, MS-SUP1\\
+  FR3 & & PR-SC2, MS-MTN5, MS-MTN7\\
+  FR4 & &MS-MTN5, MS-MTN7 \\
+  FR5 & & MS-MTN5, MS-MTN7\\
+  FR6 & & MS-MTN5, MS-MTN7\\
+  FR7 & & MS-MTN5, MS-MTN7\\
+  FR8 & & MS-MTN5, MS-MTN7\\
+  \sout{FR9} & & \sout{MS-MTN5, MS-MTN7}\\
+  LF-AP1 & & \\
+  LF-ST1 & & \\
+  UH-EU1 & & \\
+  UH-EU2 & & \\
+  UH-LR1 & & \\
+  UH-LR2 & & \\
+  UH-UP1 & & \\
+  UH-UP2 & & \\
+  UH-AS1 & & \\
+  PR-Sl1 & & \\
+  PR-SL3 & & \\
+  PR-SC1 & & \\
+  PR-SC2 & FR-3& \\
+  PR-PA1 & & \\
+  PR-RFT1& & \\
+  PR-CR2& FR1& \\
+  PR-SE1& & \\
+  OE-PE1& & \\
+  OE-WE1& & \\
+  OE-WE2& & \\
+  OE-REl1& & \\
+  OE-REL2& & \\
+  OE-REL3& & \\
+  OE-REL4& & \\
+  \hline
 \end{tabular}
 
 \begin{tabular}{|p{3cm}|p{3cm}|p{8cm}|}
-\hline
-\textbf{Requirement} & \textbf{Dependencies} & \textbf{Dependents}\\
-\hline
-MS-MTN4& & \\
-MS-MTN5& FR1, FR2, FR3, FR4, FR5, FR6, FR7, FR8, FR9& \\
-MS-MTN6& & \\
-MS-MTN7& FR1, FR2, FR3, FR4, FR5, FR6, FR7, FR8, FR9& \\
-MS-SUP1& FR1, FR2, FR3, FR4, FR5, FR6, FR7, FR8, FR9& \\
-MS-SUP2& & \\
-MS-SUP3& & \\
-MS-SUP4& & \\
-MS-APD1& & \\
-MS-ADP2& & \\
-MS-ADP3& & \\
-SR-AR1& & \\
-SR-AR2& & \\
-SR-AR3& & \\
-SR-AR4& & \\
-SR-IR1& & \\
-SR-IR3& & \\
-SR-PR1& & \\
-SR-AU1& & \\
-SR-S1& & \\
-CR-CR1& & \\
-\hline
+  \hline
+  \textbf{Requirement} & \textbf{Dependencies} & \textbf{Dependents}\\
+  \hline
+  MS-MTN4& & \\
+  MS-MTN5& FR1, FR2, FR3, FR4, FR5, FR6, FR7, FR8, \sout{FR9}& \\
+  MS-MTN6& & \\
+  MS-MTN7& FR1, FR2, FR3, FR4, FR5, FR6, FR7, FR8, \sout{FR9}& \\
+  MS-SUP1& FR1, FR2, FR3, FR4, FR5, FR6, FR7, FR8, \sout{FR9}& \\
+  MS-SUP2& & \\
+  MS-SUP3& & \\
+  MS-SUP4& & \\
+  MS-APD1& & \\
+  MS-ADP2& & \\
+  MS-ADP3& & \\
+  SR-AR1& & \\
+  SR-AR2& & \\
+  SR-AR3& & \\
+  SR-AR4& & \\
+  SR-IR1& & \\
+  SR-IR3& & \\
+  SR-PR1& & \\
+  SR-AU1& & \\
+  SR-S1& & \\
+  CR-CR1& & \\
+  \hline
 \end{tabular}
 \\
 \\
@@ -1095,15 +1136,18 @@ Table outlining all the requirements, their dependencies, and their dependents.
     deployed. The feasibility of reaching the required standards has
     yet to be determined.
   \item \sout{The feasibility of integrating the application with the City
-    of Hamilton's current systems (e.g., MySDS, SharePoint) has yet
-    to be determined. We require documentation and testing to assess
-    compatibility.} \textcolor{red}{The SyncMaster Application will not directly connect to these existing
+      of Hamilton's current systems (e.g., MySDS, SharePoint) has yet
+      to be determined. We require documentation and testing to assess
+    compatibility.} \textcolor{red}{The SyncMaster Application will
+      not directly connect to these existing
     City systems due to their proprietary nature and security concerns.}
   \item \sout{The feasibility of integration with upcoming systems, such as
-    the work order tracking system in Infor EAM and security
-    solutions, has yet to be determined. We require further
-    information and documentation from the City.} \textcolor{red}{The SyncMaster application will not directly tie into the InforEAM system
-    system as it is not yet deployed, is proprietary, and is outside of the core scope for this project.}
+      the work order tracking system in Infor EAM and security
+      solutions, has yet to be determined. We require further
+    information and documentation from the City.} \textcolor{red}{The
+      SyncMaster application will not directly tie into the InforEAM system
+      system as it is not yet deployed, is proprietary, and is outside
+    of the core scope for this project.}
 \end{enumerate}
 
 \section{Off-the-Shelf Solutions}
@@ -1116,10 +1160,12 @@ but existing solutions do not provide this capability. They also want to be
 able to verify that people were at a given site, when completing work, which
 again there isn't a ready made product to do.
 \subsection{Reusable Components}
-\sout{We can use Sharepoint as file storage, since the city wants Sharepoint and this
-system to be in sync, and storing the files in two seperate locations and then
-syncing them will introduce a lot of overhead. Instead, all files can just be
-stored on Sharepoint.} \textcolor{red}{The City's internal Sharepoint cannot be used as external actors are not permitted access.}
+\sout{We can use Sharepoint as file storage, since the city wants
+  Sharepoint and this
+  system to be in sync, and storing the files in two seperate locations and then
+  syncing them will introduce a lot of overhead. Instead, all files can just be
+stored on Sharepoint.} \textcolor{red}{The City's internal Sharepoint
+cannot be used as external actors are not permitted access.}
 \subsection{Products That Can Be Copied}
 N/A
 
@@ -1181,40 +1227,48 @@ requirements will be changed accordingly.
   \item Work on documentation and deliverables.
   \item Get feedback from stakeholders, TAs, and the professor and implement
     suggested changes.
-  \item Work on the initial prototype emphasizing the functional requirements and prepare a meeting in January
-to demonstrate to the stakeholder for feedback.
+  \item Work on the initial prototype emphasizing the functional
+    requirements and prepare a meeting in January
+    to demonstrate to the stakeholder for feedback.
 \end{enumerate}
 
 \subsection{Planning of the Development Phases}
 \begin{enumerate}
   \item \textit{Proof of Concept}: Will start development after
     October 9th, 2024. Aim to complete by November 4th.
-  \item \textit{Rev. 0}: Aim to complete by February 6, 2024. The priority for this revision will be to implement FR1, FR3, and FR5.
-  \item \textit{Rev. 1}: Aim to complete by March 30th, 2024. This revision will include the remaining functional requirements.
-  \item \textit{Future revisions}: To be completed by the City of Hamilton by future manintainers. Includes MS-MTN5
-  and multi-factor authentication.
+  \item \textit{Rev. 0}: Aim to complete by February 6, 2024. The
+    priority for this revision will be to implement FR1, FR3, and FR5.
+  \item \textit{Rev. 1}: Aim to complete by March 30th, 2024. This
+    revision will include the remaining functional requirements.
+  \item \textit{Future revisions}: To be completed by the City of
+    Hamilton by future manintainers. Includes MS-MTN5
+    and multi-factor authentication.
 \end{enumerate}
 
 \section{Migration to the New Product}
 \subsection{Requirements for Migration to the New Product}
 \begin{enumerate} [{MI-NP}1.]
   \item \sout{The system must be compatible with existing user roles in Active
-    Directory.\\
-    \textbf{Rationale}: Compatibility with existing business rules is needed
-    to ensure migration can be completed in a short period of time without
+      Directory.\\
+      \textbf{Rationale}: Compatibility with existing business rules is needed
+      to ensure migration can be completed in a short period of time without
     having to defined new roles.}
-    \textcolor{red}{Removing requirement. SyncMaster Application will be standalone and not integrate into any existing systems.}
+    \textcolor{red}{Removing requirement. SyncMaster Application will
+    be standalone and not integrate into any existing systems.}
 \end{enumerate}
 
 \subsection{Data That Has to be Modified or Translated for the New System}
 \begin{enumerate} [{MI-TR}1.]
-  \item \sout{Information stored on paper must be digitized for consumption for the
-    system.\\
-    \textbf{Rationale}: Some content that the system is to consume has not yet
-    been digitized. It will have to be digitized before the system is able to
+  \item \sout{Information stored on paper must be digitized for
+      consumption for the
+      system.\\
+      \textbf{Rationale}: Some content that the system is to consume has not yet
+      been digitized. It will have to be digitized before the system is able to
     use it.}
-    \textcolor{red}{Removing requirement. This would be the responsibility of the stakeholder to decide if it is necessary as
-    an end user of the system and is not a responsibility of the development team.}
+    \textcolor{red}{Removing requirement. This would be the
+      responsibility of the stakeholder to decide if it is necessary as
+      an end user of the system and is not a responsibility of the
+    development team.}
 \end{enumerate}
 
 \newpage{}
@@ -1228,8 +1282,10 @@ project until its completion.\\
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
   \toprule {\textbf{Item}} & {\textbf{Cost}} & {\textbf{Description}}\\
   \midrule
-  Cloud Services   & \$ 10     & Estimated Amazon Web Services (AWS) fees for 2 months of deployment\\
-  Domain Name      & \$ 20     & Estimated cost of registering a top level domain for SyncMaster           \\
+  Cloud Services   & \$ 10     & Estimated Amazon Web Services (AWS)
+  fees for 2 months of deployment\\
+  Domain Name      & \$ 20     & Estimated cost of registering a top
+  level domain for SyncMaster           \\
   \bottomrule
 \end{tabularx}
 
@@ -1272,219 +1328,230 @@ moment. This may change as the project evolves in the future.
 \end{enumerate}
 
 \section{References}
-This Requirements Specification was adapted from the Volere template available at the following links. 
+This Requirements Specification was adapted from the Volere template
+available at the following links.
 We acknowledge that this document uses material from the Volere Requirements
-Specification Template, copyright © 1995 – 2012 the Atlantic Systems Guild Limited.
+Specification Template, copyright © 1995 – 2012 the Atlantic Systems
+Guild Limited.
 \begin{itemize}
-\item \href{https://www.cs.uic.edu/~i440/VolereMaterials/templateArchive16/c%20Volere%20template16.pdf}{Volere Template}
-\item \href{https://www.volere.org/templates/volere-requirements-specification-template/}{Volere Website}
-\end{itemize}
+  \item
+    \href{https://www.cs.uic.edu/~i440/VolereMaterials/templateArchive16/c%20Volere%20template16.pdf}{Volere
+      % Template}
+    \item
+      \href{https://www.volere.org/templates/volere-requirements-specification-template/}{Volere
+      Website}
+  \end{itemize}
 
-\newpage{}
-\section*{Appendix --- Symbolic Parameters}
-$\hypertarget{min_age}{MIN\_AGE}$ = 18\\
-$\hypertarget{max_age}{MAX\_AGE}$ = 70
+  \newpage{}
+  \section*{Appendix --- Symbolic Parameters}
+  $\hypertarget{min_age}{MIN\_AGE}$ = 18\\
+  $\hypertarget{max_age}{MAX\_AGE}$ = 70
 
-\section*{Appendix --- Reflection}
-\begin{enumerate}
-  \item What went well while writing this deliverable? \\
-    \\
-    \textbf{Kyle} - For this deliverable we had worked on the
-    document much earlier in advance of the deadline than we did for
-    the problem statement and goals, which led to a higher quality of
-    work. Also since we started earlier we had much less issues with
-    merge conflicts than last time when we all started merging at
-    about the same time.\\
-    \\
-    \textbf{Mitchell} - I think that our team improved upon our
-    workflow from the first deliverable. The delegation of tasks and
-    management of outstanding work in Github issues was executed by
-    the team much more effectively.\\
-    \\
-    \textbf{Rafeed} - We decided to use LaTeX for this deliverable,
-    which had a much better workflow, especially when it came time to
-    do PRs and merges. The division of labour also worked out really
-    well, with everyone doing their parts on time and with high
-    quality. Kyle and Richard did a great job reviewing my PRs
-    objectively, increasing the quality of work I submitted. \\
-    \\
-    \textbf{Richard} - I think our team did a good job in translating high level
-    use cases and requirements from our stakeholders into system requirements
-    that we can implement. Communication between our team and the stakeholders
-    went smoothly which gave us ample time to elicit potential requirements.\\
-    \\
-    \textbf{Akshit} - I think our team did a fantastic job overall
-    for this deliverable.
-    The particular thing I liked was how we were able to brainstorm
-    the together the requirements,
-    constraints and potential problems for the project. All team
-    members helped each other whenever
-    required and as a result we were able to finish smoohtly with
-    this deliverable.\\
+  \section*{Appendix --- Reflection}
+  \begin{enumerate}
+    \item What went well while writing this deliverable? \\
+      \\
+      \textbf{Kyle} - For this deliverable we had worked on the
+      document much earlier in advance of the deadline than we did for
+      the problem statement and goals, which led to a higher quality of
+      work. Also since we started earlier we had much less issues with
+      merge conflicts than last time when we all started merging at
+      about the same time.\\
+      \\
+      \textbf{Mitchell} - I think that our team improved upon our
+      workflow from the first deliverable. The delegation of tasks and
+      management of outstanding work in Github issues was executed by
+      the team much more effectively.\\
+      \\
+      \textbf{Rafeed} - We decided to use LaTeX for this deliverable,
+      which had a much better workflow, especially when it came time to
+      do PRs and merges. The division of labour also worked out really
+      well, with everyone doing their parts on time and with high
+      quality. Kyle and Richard did a great job reviewing my PRs
+      objectively, increasing the quality of work I submitted. \\
+      \\
+      \textbf{Richard} - I think our team did a good job in
+      translating high level
+      use cases and requirements from our stakeholders into system requirements
+      that we can implement. Communication between our team and the stakeholders
+      went smoothly which gave us ample time to elicit potential requirements.\\
+      \\
+      \textbf{Akshit} - I think our team did a fantastic job overall
+      for this deliverable.
+      The particular thing I liked was how we were able to brainstorm
+      the together the requirements,
+      constraints and potential problems for the project. All team
+      members helped each other whenever
+      required and as a result we were able to finish smoohtly with
+      this deliverable.\\
 
-  \item What pain points did you experience during this deliverable, and how did
-    you resolve them? \\
-    \\
-    \textbf{Kyle} - Some of our team members had a better idea of the
-    stakeholders and their current workplace environment whereas
-    others had a better understanding of their vision for the project
-    and their requirements. We resolved this by attempting to divide
-    up work based on peoples strengths, while still adding everyone
-    to PR's as reviewers so they could try to understand the sections
-    that maybe weren't their strength or at least attempt to get a
-    better understanding.\\
-    \\
-    \textbf{Mitchell} - Viewing the most up to date version of the
-    pdf is difficult as commiting it to version control creates merge
-    conflicts. Our team decided to work around this problem by not
-    commiting the updated version of the pdf's in our branches, and
-    commiting a final good version at the end of the deliverable.\\
-    \\
-    \textbf{Rafeed} - The workflow does not allow for live
-    collaboration so it is difficult to get the input of other team
-    members on the parts we are doing without them having to review
-    your PRs, but everyone was very diligent with their reviews so
-    there wasn't too long of a delay to get everyone's ideas
-    together. We also had multiple meetings in-between to get
-    everyone on the same page.\\
-    \\
-    \textbf{Richard} - The division of work was somewhat uneven for this
-    deliverable. Some team members were more familiar with the stakeholder's
-    business and use cases which led to them contributing more than others.
-    This was mitigated through participation in document reviews and
-    conversations with stakeholders so that the rest of the team could also
-    learn more about the stakeholder and contribute more in the future.
-    \\
-    \textbf{Akshit} - I think one pain point that we experienced during this
-    deliverable was setting up Latex locally on our machines.
-    Sometimes, some team
-    members received unexpected errors during compilation but this
-    was easily overcome
-    by asking help from the fellow members.\\
-  \item How many of your requirements were inspired by speaking to your
-    client(s) or their proxies (e.g. your peers, stakeholders,
-    potential users)? \\
-    \\
-    The vast majority of our requirements were informed by speaking
-    to our clients or their proxies. Only really the look and feel,
-    and performance requirements were not informed by direct
-    discussion with the City. \\
-  \item Which of the courses you have taken, or are currently taking,
-    will help your team to be successful with your capstone project. \\
-    \\
-    \textbf{Kyle} - The requirements course (3RA3) will be very
-    helpful because it taught us about requirements documents and how
-    to elicit requirements. 3A04 will also be useful because it was
-    the first course where we applied requirements documents to a
-    project, and taught us about architecture styles for larger
-    systems like the one we will make in this project. The software
-    testing course (3S03) will be useful when it comes to creating
-    test cases for this project and verifying the requirements. The
-    human computer interfaces course (4HC3) that we are currently
-    taking will help with informing decisions about the UI of our
-    application and making sure to keep our clients in mind for all
-    design decisions.\\
-    \\
-    \textbf{Mitchell} - The introduction to software development
-    course (2AA4) will be useful as it serves as the basis for
-    software design which we will use extensively throughout this project.\\
-    \\
-    \textbf{Rafeed} - 3A04 was good experience for working on
-    large-scale development as a team. 3RA3 was useful in creating
-    this document and eliciting requirements from the stakeholders.
-    3S03 will be useful when creating a test plan. 4HC3 will be
-    useful when designing an intuitive user-friendly interface. \\
-    \\
-    \textbf{Richard} - The former 3XA3 would help as it taught a lot about the
-    software development process and has many deliverables that overlaped with
-    the capstone course. For more specialized skills such as requirement writing
-    and test plan writing, the skills learned from 3RA3 and 3S03 will be
-    helpful.
-    \\
-    \textbf{Akshit} - The SE 3RA3 and 3A04 courses have been
-    instrumental in my success
-    so far in the course so far as they provided me hands on
-    experience writing SRS
-    documents. I also believe the experience from SE 2AA4 and 3BB4
-    courses will help me during
-    the implementation phase.\\
-  \item What knowledge and skills will the team collectively need to
-    acquire to successfully complete this capstone project?  Examples
-    of possible knowledge to acquire include domain specific
-    knowledge from the domain of your application, or software
-    engineering knowledge, mechatronics knowledge or computer science
-    knowledge.  Skills may be related to technology, or writing, or
-    presentation, or team management, etc.  You should look to
-    identify at least one item for each team member. \\
-    \\
-    \textbf{Kyle} - Personally I have a lot of experience with using
-    AWS and python, so the backend part of our tech stack is not much
-    of a concern for me. However, I have limited experience with
-    javascript or the NextJS framework that we plan on using, so I
-    need to learn more about those.\\
-    \\
-    \textbf{Mitchell} - I have limited experience working in either
-    frontend or backend design. I will have to work closely with my
-    team members and the instructional team to develop these needed
-    skills throughout the project. My strength is my project
-    management experience and being a subject matter expert in the
-    client's area of work (water and wastewater plant maintenance).\\
-    \\
-    \textbf{Rafeed} - I have experience with solution delivery and
-    project management from my co-op. It may be useful in for this
-    capstone project when generating new features, deciding to cut
-    features, or if the project faces any roadblock. \\
-    \\
-    \textbf{Richard} - My skills are in systems programming and robotics, so
-    most web technologies required for this project will be new to me. While I
-    do have previous working with web technologies such as Node.Js and React,
-    I will have to review these skills to refresh my understanding.\\
-    \\
-    \textbf{Akshit} - I have experience in both frontend and backend
-    but I have not worked
-    with cloud technologies in the past on a regular basis. Since we
-    are planning to use AWS,
-    I will have to learn it and I am looking forward to it. \\
-  \item For each of the knowledge areas and skills identified in the previous
-    question, what are at least two approaches to acquiring the knowledge or
-    mastering the skill?  Of the identified approaches, which will each team
-    member pursue, and why did they make this choice? \\
-    \\
-    \textbf{Kyle} - In order to learn the javascript and NextJS I
-    will watch videos online explaining them and how they work. I
-    will also read the documentation for both and try using them in
-    my spare time to get a better understanding of them.\\
-    \\
-    \textbf{Mitchell} - When we have decided on the specific
-    technologies to use, I will follow the introductory tutorials
-    provided by the creators of those software products. I will
-    document my progress of this learning on Github. I will also
-    discuss with my team members what tasks would be suitable for me
-    to work on at my skill level, to help develop my skills while
-    still contributing to the teams success. \\
-    \\
-    \textbf{Rafeed} - Learning the tech stack we will be using is
-    crucial for providing value to this project. Two approaches to
-    learning would be to read documentation, and watch guides. While
-    I will be doing both, I will be mostly watching guides and
-    following along, as I feel I learn the best this way. \\
-    \\
-    \textbf{Richard} - The best approach for me is to build. Hands on experience
-    with the technology helps me learn pratical uses quickly. I also find that
-    doing improves my research skills relating to that technology
-    through reading
-    the documentation.\\
-    \\
-    \textbf{Akshit} - I planning on watching tutorials on youtube related to AWS
-    and also completing the basic certification course offered by
-    Amazon. I also plan on building a
-    small personal learning project on the side which uses AWS.\\
-\end{enumerate}
+    \item What pain points did you experience during this
+      deliverable, and how did
+      you resolve them? \\
+      \\
+      \textbf{Kyle} - Some of our team members had a better idea of the
+      stakeholders and their current workplace environment whereas
+      others had a better understanding of their vision for the project
+      and their requirements. We resolved this by attempting to divide
+      up work based on peoples strengths, while still adding everyone
+      to PR's as reviewers so they could try to understand the sections
+      that maybe weren't their strength or at least attempt to get a
+      better understanding.\\
+      \\
+      \textbf{Mitchell} - Viewing the most up to date version of the
+      pdf is difficult as commiting it to version control creates merge
+      conflicts. Our team decided to work around this problem by not
+      commiting the updated version of the pdf's in our branches, and
+      commiting a final good version at the end of the deliverable.\\
+      \\
+      \textbf{Rafeed} - The workflow does not allow for live
+      collaboration so it is difficult to get the input of other team
+      members on the parts we are doing without them having to review
+      your PRs, but everyone was very diligent with their reviews so
+      there wasn't too long of a delay to get everyone's ideas
+      together. We also had multiple meetings in-between to get
+      everyone on the same page.\\
+      \\
+      \textbf{Richard} - The division of work was somewhat uneven for this
+      deliverable. Some team members were more familiar with the stakeholder's
+      business and use cases which led to them contributing more than others.
+      This was mitigated through participation in document reviews and
+      conversations with stakeholders so that the rest of the team could also
+      learn more about the stakeholder and contribute more in the future.
+      \\
+      \textbf{Akshit} - I think one pain point that we experienced during this
+      deliverable was setting up Latex locally on our machines.
+      Sometimes, some team
+      members received unexpected errors during compilation but this
+      was easily overcome
+      by asking help from the fellow members.\\
+    \item How many of your requirements were inspired by speaking to your
+      client(s) or their proxies (e.g. your peers, stakeholders,
+      potential users)? \\
+      \\
+      The vast majority of our requirements were informed by speaking
+      to our clients or their proxies. Only really the look and feel,
+      and performance requirements were not informed by direct
+      discussion with the City. \\
+    \item Which of the courses you have taken, or are currently taking,
+      will help your team to be successful with your capstone project. \\
+      \\
+      \textbf{Kyle} - The requirements course (3RA3) will be very
+      helpful because it taught us about requirements documents and how
+      to elicit requirements. 3A04 will also be useful because it was
+      the first course where we applied requirements documents to a
+      project, and taught us about architecture styles for larger
+      systems like the one we will make in this project. The software
+      testing course (3S03) will be useful when it comes to creating
+      test cases for this project and verifying the requirements. The
+      human computer interfaces course (4HC3) that we are currently
+      taking will help with informing decisions about the UI of our
+      application and making sure to keep our clients in mind for all
+      design decisions.\\
+      \\
+      \textbf{Mitchell} - The introduction to software development
+      course (2AA4) will be useful as it serves as the basis for
+      software design which we will use extensively throughout this project.\\
+      \\
+      \textbf{Rafeed} - 3A04 was good experience for working on
+      large-scale development as a team. 3RA3 was useful in creating
+      this document and eliciting requirements from the stakeholders.
+      3S03 will be useful when creating a test plan. 4HC3 will be
+      useful when designing an intuitive user-friendly interface. \\
+      \\
+      \textbf{Richard} - The former 3XA3 would help as it taught a lot about the
+      software development process and has many deliverables that overlaped with
+      the capstone course. For more specialized skills such as
+      requirement writing
+      and test plan writing, the skills learned from 3RA3 and 3S03 will be
+      helpful.
+      \\
+      \textbf{Akshit} - The SE 3RA3 and 3A04 courses have been
+      instrumental in my success
+      so far in the course so far as they provided me hands on
+      experience writing SRS
+      documents. I also believe the experience from SE 2AA4 and 3BB4
+      courses will help me during
+      the implementation phase.\\
+    \item What knowledge and skills will the team collectively need to
+      acquire to successfully complete this capstone project?  Examples
+      of possible knowledge to acquire include domain specific
+      knowledge from the domain of your application, or software
+      engineering knowledge, mechatronics knowledge or computer science
+      knowledge.  Skills may be related to technology, or writing, or
+      presentation, or team management, etc.  You should look to
+      identify at least one item for each team member. \\
+      \\
+      \textbf{Kyle} - Personally I have a lot of experience with using
+      AWS and python, so the backend part of our tech stack is not much
+      of a concern for me. However, I have limited experience with
+      javascript or the NextJS framework that we plan on using, so I
+      need to learn more about those.\\
+      \\
+      \textbf{Mitchell} - I have limited experience working in either
+      frontend or backend design. I will have to work closely with my
+      team members and the instructional team to develop these needed
+      skills throughout the project. My strength is my project
+      management experience and being a subject matter expert in the
+      client's area of work (water and wastewater plant maintenance).\\
+      \\
+      \textbf{Rafeed} - I have experience with solution delivery and
+      project management from my co-op. It may be useful in for this
+      capstone project when generating new features, deciding to cut
+      features, or if the project faces any roadblock. \\
+      \\
+      \textbf{Richard} - My skills are in systems programming and robotics, so
+      most web technologies required for this project will be new to me. While I
+      do have previous working with web technologies such as Node.Js and React,
+      I will have to review these skills to refresh my understanding.\\
+      \\
+      \textbf{Akshit} - I have experience in both frontend and backend
+      but I have not worked
+      with cloud technologies in the past on a regular basis. Since we
+      are planning to use AWS,
+      I will have to learn it and I am looking forward to it. \\
+    \item For each of the knowledge areas and skills identified in the previous
+      question, what are at least two approaches to acquiring the knowledge or
+      mastering the skill?  Of the identified approaches, which will each team
+      member pursue, and why did they make this choice? \\
+      \\
+      \textbf{Kyle} - In order to learn the javascript and NextJS I
+      will watch videos online explaining them and how they work. I
+      will also read the documentation for both and try using them in
+      my spare time to get a better understanding of them.\\
+      \\
+      \textbf{Mitchell} - When we have decided on the specific
+      technologies to use, I will follow the introductory tutorials
+      provided by the creators of those software products. I will
+      document my progress of this learning on Github. I will also
+      discuss with my team members what tasks would be suitable for me
+      to work on at my skill level, to help develop my skills while
+      still contributing to the teams success. \\
+      \\
+      \textbf{Rafeed} - Learning the tech stack we will be using is
+      crucial for providing value to this project. Two approaches to
+      learning would be to read documentation, and watch guides. While
+      I will be doing both, I will be mostly watching guides and
+      following along, as I feel I learn the best this way. \\
+      \\
+      \textbf{Richard} - The best approach for me is to build. Hands
+      on experience
+      with the technology helps me learn pratical uses quickly. I also find that
+      doing improves my research skills relating to that technology
+      through reading
+      the documentation.\\
+      \\
+      \textbf{Akshit} - I planning on watching tutorials on youtube
+      related to AWS
+      and also completing the basic certification course offered by
+      Amazon. I also plan on building a
+      small personal learning project on the side which uses AWS.\\
+  \end{enumerate}
 
-\newpage
+  \newpage
 
-\bibliography{cite}
-\bibliographystyle{ieeetr}
-\nocite{*}
+  \bibliography{cite}
+  \bibliographystyle{ieeetr}
+  \nocite{*}
 
-\end{document}
+  \end{document}
