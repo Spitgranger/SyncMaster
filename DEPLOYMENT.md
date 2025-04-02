@@ -29,7 +29,7 @@ The frontend uses AWS Amplify, which automatically deploys the latest changes fr
 To do an initial setup of the Amplify infrastructure, you can follow these steps:
 
 * Deploy the backend (using either previous method) and record the API base url
-* [Create a GitHub PAT](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token) with permissions ???????
+* [Create a GitHub PAT](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token). The token should be a classic token with the admin:repo hook, both read and write
 * [Create access keys](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html) permitting deployment
 * [Create GitHub secrets](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions) for the access keys under `BASE_API_URL`, `PAT`, `AWS_ACCESS_KEY` and `AWS_ACCESS_KEY_SECRET`
 * Push a change to infrastructure/frontend.yaml on main, for the application to deploy
