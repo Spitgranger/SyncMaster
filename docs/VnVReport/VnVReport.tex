@@ -12,6 +12,7 @@
 }
 \usepackage{longtable}
 \usepackage[round]{natbib}
+\usepackage[normalem]{ulem}
 
 \input{../Comments}
 \input{../Common}
@@ -34,6 +35,7 @@
   2025/03/10 & 1.0 & Initial Revision of VnV Report\\
   2025/03/16 & 1.1 & Remove unit tests related to removed errors\\
   2025/03/31 & 1.2 & Add latest unit tests\\
+  2025/04/02 & 1.3 & Remove FR-9, update passing tests\\
   \bottomrule
 \end{tabularx}
 
@@ -92,10 +94,11 @@ the Software Requirements Specification document
   document & The acknowledgement is stored in the system with the
   required information &
   Pass\\ \hline
-  TC-FR-9 & Contractor without the required training attempts to
-  authenticate & The system prevents authentication and displays a
-  message telling the user to contact their facilities manager &
-  Pass\\ \hline
+  \sout{TC-FR-9} & \sout{Contractor without the required training attempts to
+  authenticate} Requirements no longer exists & \sout{The system
+    prevents authentication and displays a
+  message telling the user to contact their facilities manager} &
+  \sout{Fail}\\ \hline
   \caption{Functional Requirement Test Cases}
 \end{longtable}
 
@@ -712,8 +715,8 @@ N/A, the only automated testing we have is the unit tests.
   FR5 & TC-FR5, UT-UA2\\ \hline
   FR6 & TC-FR6, UT-DM1\\ \hline
   FR7 & TC-FR8, UT-DM4, UT-DM6\\ \hline
-  FR8 & TC-FR7\\ \hline
-  FR9 & TC-FR9\\ \hline
+  FR8 & TC-FR7, UT-LG1\\ \hline
+  \sout{FR9} & \sout{TC-FR9}\\ \hline
   LF-AP1 & TC-LF-1 \\ \hline
   LF-ST1 & TC-LF-2 \\ \hline
   UH-EU1 & TC-EU1\\ \hline
