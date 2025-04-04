@@ -2,6 +2,20 @@
 
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks,
+  citecolor=blue,
+  filecolor=black,
+  linkcolor=red,
+  urlcolor=blue
+}
+\usepackage[round]{natbib}
+\usepackage{longtable}
+\usepackage{enumitem,amssymb}
+\usepackage[normalem]{ulem}
+\usepackage{longtable}
 
 \title{Reflection and Traceability Report on \progname}
 
@@ -12,104 +26,157 @@
 \input{../Comments}
 \input{../Common}
 
+\setcitestyle{numbers}
+
 \begin{document}
 
 \maketitle
 
-\plt{Reflection is an important component of getting the full benefits from a
-  learning experience.  Besides the intrinsic benefits of reflection, this
-  document will be used to help the TAs grade how well your team responded to
-  feedback.  Therefore, traceability between Revision 0 and Revision 1 is and
-  important part of the reflection exercise.  In addition, several
-  CEAB (Canadian
-  Engineering Accreditation Board) Learning Outcomes (LOs) will be
-  assessed based
-on your reflections.}
-
 \section{Changes in Response to Feedback}
-
-\plt{Summarize the changes made over the course of the project in response to
-  feedback from TAs, the instructor, teammates, other teams, the project
-supervisor (if present), and from user testers.}
-
-\plt{For those teams with an external supervisor, please highlight
-  how the feedback
-  from the supervisor shaped your project.  In particular, you should
-  highlight the
-supervisor's response to your Rev 0 demonstration to them.}
-
-\plt{Version control can make the summary relatively easy, if you used issues
-  and meaningful commits.  If you feedback is in an issue, and you responded in
-  the issue tracker, you can point to the issue as part of explaining your
-  changes.  If addressing the issue required changes to code or
-  documentation, you
-  can point to the specific commit that made the changes.  Although
-  the links are
-  helpful for the details, you should include a label for each item
-  of feedback so
-  that the reader has an idea of what each item is about without the
-  need to click
-on everything to find out.}
-
-\plt{If you were not organized with your commits, traceability between feedback
-  and commits will not be feasible to capture after the fact.  You will instead
-  need to spend time writing down a summary of the changes made in response to
-each item of feedback.}
-
-\plt{You should address EVERY item of feedback.  A table or itemized list is
-  recommended.  You should record every item of feedback, along with
-  the source of
-  that feedback and the change you made in response to that feedback.  The
-  response can be a change to your documentation, code, or development process.
-  The response can also be the reason why no changes were made in
-  response to the
-  feedback.  To make this information manageable, you will record the
-  feedback and
-response separately for each deliverable in the sections that follow.}
-
-\plt{If the feedback is general or incomplete, the TA (or instructor) will not
-  be able to grade your response to feedback.  In that case your grade on this
-  document, and likely the Revision 1 versions of the other documents will be
-low.}
+Throughout the capstone project, many items of feedback were received and use to improve the quality of the application.
+The tables in the following section itemize each item of feedback and describes the pull request or issue in which it was addressed.
+Github issues proved to be an immensly useful tool for tracking and responding to feedback here, along with enabling discussions
+within the team.
 
 \subsection{SRS and Hazard Analysis}
+\begin{longtable}{|m{3cm}|m{3cm}|m{5cm}|m{1cm}|}
+  \hline
+  TA & Task - TA SRS Feedback - Prioritize requirements & Provided a priority of requirements which was then used to guide the
+  development as we first implemented the high priority requirements. Merged in PR \#429 & \#217\\
+  \hline
+  TA & Task - TA SRS Feedback - Add assumption City practices don't change and add traceability visualization &
+  Added traceability matrix as suggested in PR \#284 & \#216\\
+  \hline
+  TA & Task - TA SRS Feedback - Elaborate on integrity in requirements & Elaborated on requirements such as integrity per 
+  feedback in PR \#284 & \#215\\
+  \hline
+  TA & Task - TA SRS Feedback - Cite Volere template & Cited the Volere template in SRS per feedback in PR \#284 & \#214\\
+  \hline
+  TA & Task - TA Problem Statement Feedback - Goal Content & Demoted goals as documented on github in PR \#474 & \#156\\
+  \hline
+  Peer Review & Peer Review - Dates in Roadmap & Added a specific date for implementation in PR \#429 & \#195 \\
+ \hline
+ Peer Review & Peer Review - Security Requirement in FMEA Table & Added traceability to SR-AR1 for identified failure mode.
+ Some functional requirements are there because they are traceable to the safety risk, they don't necessarily need to be in the safety requirement section.
+  A new safety requirement was identified during the FMEA process and was added to the specific requirement section. Closed in PR \#429 & \#194\\
+\hline
+Peer Review & Peer Review - FMEA Table Missing Notification Design function & The project requirements have since evolved and the notification system
+ will be a front-end page which queries the logs gathered from the already identified design functions in the table. This particular module would not inhibit the use of the system,
+ loss of data, unauthorized access, or harm to users, so will not include as a hazard of its own. Closed without PR & \#192 \\
+ \hline
+ Peer Review & Peer Review - Conflict between User Authentication and FMEA Table & Elaborated on how AWS Cognito is the application interfaced with
+ in PR \#429 & \#177 \\
+ \hline
+ Peer Review & Peer Review - Scope not clearly defined & Added statement that the scope covers the outlined system components in PR \#429
+ & \#175 \\
+ \hline
+ Peer Review & Peer Review - Lack of Clarity For Potential Losses within Scope and Purpose & Added justification for why specific losses 
+ would occur in PR \#429 & \#174\\
+ \hline
+ Peer Review & Peer Review - Unclear Goal Description & Immediately directing the user to the problem statement where the project is described in much 
+ more detail was intentional to minimize repeating of information in more than one document. 
+ It makes maintaining the documents easier as when an element of the project changes there are fewer places it will need updating. Closed wihout PR
+ & \#141\\
+ \hline
+ Peer Review & Peer Review - Rationale for Performance Requirements & Elaborated on choice of numbers per feedback in PR \#284 & \#140\\
+ \hline
+ Peer Review & Peer Review - Missing Traceble Requirements & Duplicate feedback with issue \#216, refer to that issue & \#139\\
+ \hline
+ Peer Review & Peer Review - Longevity Requirements (What not How) & Included suggested change in PR \#284 & \#138\\
+ \hline
+ Peer Review & Peer Review - Phase In Plan & Completing the functional requirements are the main objective, and user testing will help to establish the non-functional requirements. 
+ Meeting with the City to be arranged in January. Included another point in the Project Planning Subsection. Closed in PR \#284 & \#137\\
+ \hline
+ Peer Review & Peer Review - Verifiability of Speed and Latency Requirements & PR-SL2 removed previously due to elimination of SharePoint integration from scope of work.
+ Added verbiage to identify ordinary application use cases for SL1 and SL3. Closed in PR \#284 & \#136 \\
+ \hline
+ Peer Review & Peer Review - Missing Terms in Glossary & Added the suggested acronyms for GPS, MySDS, and Sharepoint. 
+ The various users are defined in detail in section 2 of the document so excluded that term from the glossary. Closed in PR \#284
+ & \#135\\
+ \hline
+\end{longtable}
 
 \subsection{Design and Design Documentation}
+\begin{longtable}{|m{3cm}|m{3cm}|m{5cm}|m{1cm}|}
+\hline
+ Peer Review & Peer Review - [Design Doc] Module Uses & The team has decided not to put any AWS services/SDKs in the module guide
+ as it was determined that it serves no purpose. The documentation for these services are freely available and it would probably
+ be worse for us to write this documentation as we are not the designers and developers for these services. 
+ To address the issue, we have provided links in the appendix of the MIS to link the reader to such relevant documentation.
+ Closed in PR \#607 & \#358\\
+ \hline
+\end{longtable}
 
 \subsection{VnV Plan and Report}
-
+\begin{longtable}{|m{3cm}|m{3cm}|m{5cm}|m{1cm}|}
+  \hline
+   Peer Review & Peer Review - [VnV Plan] Inconsistency in Non-Functional Requirement TC-EU-2 & Removed the undo statement in PR \#474 & \#262\\
+   \hline
+   Peer Review & Peer Review - [VnV Plan] Explicitly State Individual Team Member(s) Roles & Outlining in the development plan, team member leading reviews 
+   and discussions varied depending on the subject at hand. Closed in PR \#474 & \#261\\
+   \hline
+   Peer Review & Peer Review - [VnV Plan] More Diverse Team Roles & Elaborated on team roles in the development plan in PR \#474 & \#260\\
+   \hline
+   Peer Review & Peer Review - [VnV Plan] Incorrect Initial states of several Non-Functional Requirements & Corrected the issue as described
+   in PR \#429 & \#259\\
+   \hline
+   Peer Review & Peer Review - [VnV Plan] Team role table is in the incorrect section & Corrected the location of the team role 
+   table in PR \#429 & \#258\\
+   \hline
+   Peer Review & Peer Review - [VnV Plan] Design Verification Plan Inclusion & Added the noted idea into PR \#429 & \#257\\
+   \hline
+   Peer Review & Peer Review - [VNV Report] Trace to Requirements & Trace to modules already exists, closed in PR \#601 & \#487\\
+  \hline
+  Peer Review & Peer Review - [VNV Report] Trace to Requirement & Added links per suggestion in PR \#601 & \#486\\
+  \hline
+  Peer Review & Peer Review - [VNV Report] Functional Requirement Evaluation & Added pass and fail details in PR \#601 & \#485\\
+  \hline
+  Peer Review & Peer Review - [VNV Report] Usability & Phase 1 and Phase 2 are not two phases of the same test, 
+  rather the testing of each of the two portals. Closed in PR \#601 & \#484\\
+  \hline
+  Peer Review & Peer Review - [VNV Report] Nonfunctional Requirement Evaluation & Trace to SRS provided in document,
+  closed in PR \#601 & \#483\\
+  \hline
+  Peer Review & Peer Review - [VNV Report] Non-Functional Tests & Added pass information in PR \#601 & \#482\\
+  \hline
+  \end{longtable}
 \section{Challenge Level and Extras}
 
 \subsection{Challenge Level}
 
-\plt{State the challenge level (advanced, general, basic) for your
-  project.  Your challenge level should exactly match what is included
-  in your problem statement.  This should be the challenge level agreed
-on between you and the course instructor.}
+The challenge level for this project was a general challenge level.
 
 \subsection{Extras}
 
-\plt{Summarize the extras (if any) that were tackled by this project.  Extras
-  can include usability testing, code walkthroughs, user documentation, formal
-  proof, GenderMag personas, Design Thinking, etc.  Extras should have already
-been approved by the course instructor as included in your problem statement.}
+The extras for this project are a user manual and a usability testing report.
+They can be found within the Extras folder in the GitHub repository 
+\href{https://github.com/Spitgranger/SyncMaster/tree/main/docs/Extras}{here}.
 
 \section{Design Iteration (LO11 (PrototypeIterate))}
 
-\plt{Explain how you arrived at your final design and implementation.  How did
-the design evolve from the first version to the final version?}
-
-\plt{Don't just say what you changed, say why you changed it.  The needs of the
-  client should be part of the explanation.  For example, if you made changes in
-  response to usability testing, explain what the testing found and what changes
-it led to.}
+The design of the SyncMaster application evolved repeatedly over the course of its development.
+The primary driver of this evolution was how the initial requirements changed after meetings with the stakeholder
+and constraints and challenges that were not originally foreseen came to be known.\\
+\\
+First, one of the original ideas in the project was to integrate the file syncing aspect of the application directly into the city's
+SharePoint. This would have had the benefit of enabling the stakeholder to use an existing tool which they were familiar with.
+However, discussing this with the stakeholder allowed for the discovery that it was against the City policy to connect any
+external application into the City network. This was an important discovery which shaped the first iteration of the design.\\
+\\
+Another factor which evolved was changing from tracking jobs which are performed to only tracking specific site visits. This
+came about when demonstrating our rev0 prototype to the stakeholder, and discussing many complexities which arise from trying
+to track a job across many visits, and how this introduces feature creep as the project evolves into a work order system which
+was never the original intention of the application.\\
+\\
+Finally, there was also discussion after rev0 and before rev1 about the idea of there being a visitor account in order to
+reduce the administrative burden which comes with account management. We produced flowcharts illustrating the concept for the
+stakeholder, but came to realize that a visitor account would enable any member of the public access into the system. In discussion
+with them, we evolved the requirements to only allow authorized users into the system, ultimatly discarding the visitor account.
 
 \section{Design Decisions (LO12)}
 
-\plt{Reflect and justify your design decisions.  How did limitations,
-  assumptions, and constraints influence your decisions?  Discuss each of these
-separately.}
-
+\textbf{Limitations:}\\
+\\
 \section{Economic Considerations (LO23)}
 
 \plt{Is there a market for your product? What would be involved in
@@ -122,6 +189,31 @@ separately.}
   open source project, how would you go about attracting users?  How
   many potential
 users currently exist?}
+
+This application is tailor made specifically for the City of Hamilton, with no intention on marketing it to
+other users at this time. There is certainly a demand for an application of this nature due to 
+the current challenges faced without the existance of an application with the specific features
+included in SyncMaster. One attraction of this application is its low cost of maintenance. The below table outlines the projected
+cloud computing costs of maintaining the application.\\
+\\
+\begin{tabular}{|m{5cm}|m{5cm}|}
+  \hline
+  File attachments and documents & 5 GB free storage, then \$0.023 per GB per month\\
+  \hline
+  Database & 25 GB free storage, then \$0.25 per GB per month\\
+  \hline
+  Compute/API & Can handle 1 million requests per month for free, not expected to exceed\\
+  \hline
+  Users & 10000 monthly users free per month, not expected to exceed\\
+  \hline
+  Domain name & expected to be \$20 per year for a domain name\\
+  \hline
+\end{tabular}
+\\
+\\
+If the City decides to use this application going forward, they would be guided by their internal procurement policies. Likely, this will involve the
+tendering of a service contract to procure services for the maintenance of the application. Bids for these contracts can vary 
+widely in price, but estimating it to cost a few thousand dollars for occasional maintenance and upkeep is a safe budget.
 
 \section{Reflection on Project Management (LO24)}
 
