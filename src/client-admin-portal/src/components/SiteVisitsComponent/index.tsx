@@ -189,7 +189,11 @@ const SiteVisitsTable: React.FC = () => {
         {isLoading ? (
           <CircularProgress />
         ) : (
-          <TableContainer component={Paper}>
+          <TableContainer component={Paper}
+          sx={{
+            maxHeight: '75vh', // Set a maximum height for the table container
+            overflow: 'auto',  // Enable scrolling
+          }}>
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
