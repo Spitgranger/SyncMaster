@@ -14,8 +14,11 @@ import {
   CircularProgress,
   TableSortLabel,
   Collapse,
-  Button
+  Button,
+  IconButton
 } from '@mui/material';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { getSiteVisits } from '@/state/site/siteVisitsSlice';
 import { RootState, AppDispatch } from '@/state/store';
 
@@ -187,11 +190,14 @@ const SiteVisitsTable: React.FC = () => {
           <CircularProgress />
         ) : (
           <TableContainer component={Paper}>
-            <Table>
+            <Table stickyHeader>
               <TableHead>
                 <TableRow>
                   {visibleColumns.map((column) => (
-                    <TableCell key={column.id}>
+                    <TableCell
+                      key={column.id}
+                      style={{ position: 'sticky', top: 0, background: 'white', zIndex: 1 }}
+                    >
                       <TableSortLabel
                         active={orderBy === column.id}
                         direction={orderBy === column.id ? order : 'asc'}
@@ -201,6 +207,11 @@ const SiteVisitsTable: React.FC = () => {
                       </TableSortLabel>
                     </TableCell>
                   ))}
+                  <TableCell
+                    style={{ position: 'sticky', top: 0, background: 'white', zIndex: 1 }}
+                  >
+                    {/* Extra header cell for chevron column (can be left blank) */}
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -222,10 +233,15 @@ const SiteVisitsTable: React.FC = () => {
                         <TableCell>{visit.ack_status ? 'Yes' : 'No'}</TableCell>
                         <TableCell>{visit.work_order}</TableCell>
                         <TableCell>{visit.on_site ? 'Yes' : 'No'}</TableCell>
+                        <TableCell>
+                          <IconButton size="small">
+                            {expandedRow === index ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                          </IconButton>
+                        </TableCell>
                       </TableRow>
                       {expandedRow === index && (
                         <TableRow>
-                          <TableCell colSpan={visibleColumns.length}>
+                          <TableCell colSpan={visibleColumns.length + 1}>
                             <Collapse in={expandedRow === index} timeout="auto" unmountOnExit>
                               <Container maxWidth={false} sx={{ py: 2, textAlign: 'left' }}>
                                 <Typography variant="subtitle1" gutterBottom>
@@ -257,7 +273,7 @@ const SiteVisitsTable: React.FC = () => {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={visibleColumns.length} align="center">
+                    <TableCell colSpan={visibleColumns.length + 1} align="center">
                       No site visits found
                     </TableCell>
                   </TableRow>
