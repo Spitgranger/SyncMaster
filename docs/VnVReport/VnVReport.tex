@@ -548,6 +548,23 @@ to mock AWS services.
   credentials, and ensure an UnauthorizedException is raised & Pass\\ \hline
   UT-UM17 & Delete a user, with an arbitrary error occuring from
   AWS, and check that an ExternalServiceException is raised & Pass\\ \hline
+  UT-UR1 & Create a user request, and ensure it gets added to the
+  database with the correct information & Pass\\ \hline
+  UT-UR2 & Create a user request with the same email as an existing
+  user request, and ensure a ResourceConflict is raised & Pass\\ \hline
+  UT-UR3 & Create a user request with the same email as an existing
+  user, and ensure a ConflictException is raised & Pass\\ \hline
+  UT-UR4 & Get all user requests in the database, ensure attributes
+  are correct & Pass\\ \hline
+  UT-UR5 & Approve a user request, ensure the correct user was added
+  & Pass\\ \hline
+  UT-UR6 & Reject a user request, ensure user was not added & Pass\\ \hline
+  UT-UR7 & Approve a user request, but a user with the same email has
+  already been created, ensure ConflictException raised & Pass\\ \hline
+  UT-UR8 & Approve a user request that does not exist, ensure
+  ResourceNotFound raised & Pass\\ \hline
+  UT-UR9 & Attempt a non-existent action on a user request, ensure
+  ValueError is raised & Pass\\ \hline
   \caption{Unit Test Cases for User Management Module}
 \end{longtable}
 
@@ -645,31 +662,6 @@ to mock AWS services.
   of 1, then use the pagination start\_key to get the next site,
   ensure these site details match expectations & Pass\\ \hline
   \caption{Unit Test for Site Management Module}
-\end{longtable}
-
-\subsection{User Requests Module Unit Tests}
-
-\begin{longtable}{|m{2cm}|m{10cm}|m{1.4cm}|}
-  \hline
-  \textbf{Test. ID} & \textbf{Description} & \textbf{Result}\\ \hline
-  UT-UR1 & Create a user request, and ensure it gets added to the
-  database with the correct information & Pass\\ \hline
-  UT-UR2 & Create a user request with the same email as an existing
-  user request, and ensure a ResourceConflict is raised & Pass\\ \hline
-  UT-UR3 & Create a user request with the same email as an existing
-  user, and ensure a ConflictException is raised & Pass\\ \hline
-  UT-UR4 & Get all user requests in the database, ensure attributes
-  are correct & Pass\\ \hline
-  UT-UR5 & Approve a user request, ensure the correct user was added
-  & Pass\\ \hline
-  UT-UR6 & Reject a user request, ensure user was not added & Pass\\ \hline
-  UT-UR7 & Approve a user request, but a user with the same email has
-  already been created, ensure ConflictException raised & Pass\\ \hline
-  UT-UR8 & Approve a user request that does not exist, ensure
-  ResourceNotFound raised & Pass\\ \hline
-  UT-UR9 & Attempt a non-existent action on a user request, ensure
-  ValueError is raised & Pass\\ \hline
-  \caption{Unit Test for User Requests Module}
 \end{longtable}
 
 \section{Changes Due to Testing}
@@ -789,13 +781,12 @@ covers the given module
   File Storage & UT-FS* TC-FR-1 TC-FR-2 TC-PR-10 TC-PR-11\\ \hline
   Location Verification & UT-LV* TC-FR-5 TC-FR-8\\ \hline
   User Management & UT-UM* TC-FR-4 TC-FR-7 TC-SS-1 TC-SS-4 TC-PR-5
-  TC-LR1 TC-LR2 TC-OE1 TC-OE2 \\ \hline
+  TC-LR1 TC-LR2 TC-OE1 TC-OE2 UT-UR* \\ \hline
   User Authentication & UT-AU* TC-FR-9 TC-PR-4 TC-AS1 TC-LF1 TC-LF2
   TC-CR1\\ \hline
   Document Management & UT-DM* TC-FR-1 TC-FR-2 TC-FR-3 TC-FR-7
   TC-SS-2 TC-PR-1 TC-PR-3 TC-PR-5 TC-UP1 TC-UP2\\ \hline
   Site Management & UT-SM*\\ \hline
-  User Requests & UT-UR*\\ \hline
   \caption{Module to Test Case Traceability Matrix}
 \end{longtable}
 
