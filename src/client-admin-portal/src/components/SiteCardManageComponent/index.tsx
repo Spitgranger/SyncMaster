@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Box, Button, Typography, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
+import { Box, Button, Typography, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Tooltip } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import EditIcon from '@mui/icons-material/Edit';
@@ -152,9 +152,15 @@ const SiteCardManageComponent = ({
         </Typography>
       </Box>
       <Box>
-        <EditIcon sx={{ mr: 2, cursor: "pointer" }} onClick={handleEditClick} />
-        <DeleteIcon sx={{ mr: 2, cursor: "pointer" }} onClick={handleDeleteClick} />
-        <QrCode2Icon sx={{ cursor: "pointer" }} onClick={handleOpenQRModal} />
+        <Tooltip title="Edit Site">
+          <EditIcon sx={{ mr: 2, cursor: "pointer" }} onClick={handleEditClick} />
+        </Tooltip>
+        <Tooltip title="Delete Site">
+          <DeleteIcon sx={{ mr: 2, cursor: "pointer" }} onClick={handleDeleteClick} />
+        </Tooltip>
+        <Tooltip title="Show QR Code">
+          <QrCode2Icon sx={{ cursor: "pointer" }} onClick={handleOpenQRModal} />
+        </Tooltip>
 
         {/* Confirm Deletion Dialog */}
         <Dialog open={isModalOpen} onClose={handleCloseModal}>
