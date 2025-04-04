@@ -19,6 +19,7 @@
 \usepackage[section]{placeins}
 \usepackage{caption}
 \usepackage{fullpage}
+\usepackage[normalem]{ulem}
 
 \hypersetup{
   bookmarks=true,     % show bookmarks bar?
@@ -114,6 +115,8 @@ The following table summarizes the primitive data types used by \progname.
     component in [1, $\infty$) \\
     real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
     boolean & boolean & either true or false\\
+    decimal & decimal & type that performs floating point arithmetic in exactly
+    the same way as mathematical arithmetic\\
     any & any & any data type\\
     \bottomrule
   \end{tabular}
@@ -163,16 +166,17 @@ for this project.
     \\
     \midrule
 
-    \multirow{7}{0.3\textwidth}{Software Decision Modules} & Audit
-    and Compliance Module
+    \multirow{7}{0.3\textwidth}{Software Decision Modules} &
+    \sout{Audit and Compliance Module}\\ &
+    \textcolor{red}{Site Management Module}
     \\
     & User Authentication Module      \\
     & Location Verification Module    \\
-    & Logging Module                  \\
+    & Logging Module \textcolor{red}{(Site Visits)}                  \\
     & Analytics and Reporting Module  \\
     & User Management Module          \\
     & Document Management Module      \\
-    & Job Management Module           \\
+    &\sout{Job Management Module}           \\
     \midrule
 
     \multirow{3}{0.3\textwidth}{Behaviour-Hiding Modules}  & {API
@@ -187,14 +191,10 @@ for this project.
   \caption{Module Hierarchy}
   \label{TblMH}
 \end{table}
-
-\newpage
-~\newpage
-
-\section{MIS of Audit and Compliance Module} \label{Module}
+\section{MIS of Site Management Module} \label{Module}
 
 \subsection{Module}
-Analytics and Reporting Module
+Site Management Module
 
 \subsection{Uses}
 Database Interaction Module
@@ -203,53 +203,53 @@ Database Interaction Module
 
 \subsubsection{Exported Constants}
 N/A
-
 \subsubsection{Exported Access Programs}
-
 \begin{center}
-  \begin{tabular}{p{4.5cm} p{4cm} p{4cm} p{4cm}}
-    \hline
-    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-    \hline
-
-    GetSignedDocuments & \textbf{FromDatetime:} string \newline
-    \textbf{ToDatetime:} string&
-    sequence[map[string $\rightarrow$ any]] &
-    \textbf{ExternalServiceFailure:} An internal error from AWS
-    \\
-    \hline
-    GetUnsignedDocuments & \textbf{FromDatetime:} string \newline
-    \textbf{ToDatetime:} string&
-    sequence[map[string $\rightarrow$ any]] &
-    \textbf{ExternalServiceFailure:} An internal error from AWS
-    \\
-    \hline
-    GetTrainingData & \textbf{FromDatetime:} string \newline
-    \textbf{ToDatetime:} string&
-    sequence[map[string $\rightarrow$ any]] &
-    \textbf{ExternalServiceFailure:} An internal error from AWS
-    \\
-    \hline
-    GetIncidentsData & \textbf{FromDatetime:} string \newline
-    \textbf{ToDatetime:} string&
-    sequence[map[string $\rightarrow$ any]] &
-    \textbf{ExternalServiceFailure:} An internal error from AWS
-    \\
-    \hline
-    GetWorkOrders & \textbf{FromDatetime:} string \newline
-    \textbf{ToDatetime:} string&
-    sequence[map[string $\rightarrow$ any]] &
-    \textbf{ExternalServiceFailure:} An internal error from AWS
-    \\
-    \hline
-    GetFlaggedContractors & \textbf{FromDatetime:} string \newline
-    \textbf{ToDatetime:} string&
-    sequence[map[string $\rightarrow$ any]] &
-    \textbf{ExternalServiceFailure:} An internal error from AWS\\
-    \hline
-  \end{tabular}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{|p{4.5cm}|p{4cm}|p{4cm}|p{5cm}|}
+      \hline
+      \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+      \hline
+      createSite & \textbf{siteId:} string \newline
+      \textbf{siteLatitude:} decimal \newline
+      \textbf{siteLongitude:} decimal \newline
+      \textbf{acceptableRange:} int &
+      map[string $\rightarrow$ any] &
+      \textbf{ExternalServiceFailure:} An internal error from AWS \newline
+      \textbf{ResourceConflict:} A site already exists with the same
+      siteId \newline
+      \textbf{PermissionException:} There does not exist write
+      permissions for the database \\
+      \hline
+      updateSite & \textbf{siteId:} string \newline
+      \textbf{siteLatitude:} decimal \newline
+      \textbf{siteLongitude:} decimal \newline
+      \textbf{acceptableRange:} int &
+      map[string $\rightarrow$ any] &
+      \textbf{ExternalServiceFailure:} An internal error from AWS \newline
+      \textbf{TimeConsistency:} An update has been made to the site
+      since the update was requested. \newline
+      \textbf{PermissionException:} There does not exist write
+      permissions for the database \\
+      \hline
+      deleteSite & \textbf{siteId:} string & None &
+      \textbf{ExternalServiceFailure:} An internal error from AWS \newline
+      \textbf{BadRequest:} Documents belonging to this site exist \newline
+      \textbf{TimeConsistency:} An update has been made to the site
+      since the delete was requested. \newline
+      \textbf{PermissionException:} There does not exist write
+      permissions for the database \\
+      \hline
+      getSite & \textbf{siteId:} string & map[string $\rightarrow$
+      any] & \textbf{ExternalServiceFailure:} An internal error from
+      AWS \newline \textbf{ResourceNotFound:} No site exists for the given id \\
+      \hline
+      listSites & N/A & sequence[map[string $\rightarrow$ any]] &
+      \textbf{ExternalServiceFailure:} An internal error from AWS \\
+      \hline
+    \end{tabular}
+  }
 \end{center}
-
 \subsection{Semantics}
 
 \subsubsection{State Variables}
@@ -275,37 +275,34 @@ LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to access
 the database.
 
 \subsubsection{Access Routine Semantics}
-\noindent GetSignedDocuments(FromDatetime: string, ToDatetime: string):
+\noindent createSite(siteId: string, siteLatitude: decimal, siteLongitude:
+decimal, acceptableRange: int):
 \begin{itemize}
-  \item output: sequence[map[string $\rightarrow$ any]]
+  \item output: map[string $\rightarrow$ any]
+  \item exception: ExternalServiceFailure, ResourceConflict, PermissionException
+\end{itemize}
+
+\noindent updateSite(siteId: string, siteLatitude, siteLongitude,
+acceptableRange):
+\begin{itemize}
+  \item output: map[string $\rightarrow$ any]
+  \item exception: ExternalServiceFailure, TimeConsistency, PermissionException
+\end{itemize}
+
+\noindent deleteSite(siteId: string):
+\begin{itemize}
+  \item output: N/A
+  \item exception: ExternalServiceFailure, BadRequest, TimeConsistency,
+    PermissionException
+\end{itemize}
+
+\noindent getSite(siteId: string):
+\begin{itemize}
+  \item output: map[string $\rightarrow$ any]
   \item exception: ExternalServiceFailure
 \end{itemize}
 
-\noindent GetUnsignedDocuments(FromDatetime: string, ToDatetime: string):
-\begin{itemize}
-  \item output: sequence[map[string $\rightarrow$ any]]
-  \item exception: ExternalServiceFailure
-\end{itemize}
-
-\noindent GetTrainingData(FromDatetime: string, ToDatetime: string):
-\begin{itemize}
-  \item output: sequence[map[string $\rightarrow$ any]]
-  \item exception: ExternalServiceFailure
-\end{itemize}
-
-\noindent GetIncidentsData(FromDatetime: string, ToDatetime: string):
-\begin{itemize}
-  \item output: sequence[map[string $\rightarrow$ any]]
-  \item exception: ExternalServiceFailure
-\end{itemize}
-
-\noindent GetWorkOrders(FromDatetime: string, ToDatetime: string):
-\begin{itemize}
-  \item output: sequence[map[string $\rightarrow$ any]]
-  \item exception: ExternalServiceFailure
-\end{itemize}
-
-\noindent GetFlaggedContractors(FromDatetime: string, ToDatetime: string):
+\noindent listSites(FromDatetime: string, ToDatetime: string):
 \begin{itemize}
   \item output: sequence[map[string $\rightarrow$ any]]
   \item exception: ExternalServiceFailure
@@ -467,7 +464,7 @@ the database.
   \end{tabular}
 \end{center}
 
-\section{MIS of Logging Module} \label{Module}
+\section{MIS of Logging Module \textcolor{red}{(Site Visits)}} \label{Module}
 
 \subsection{Module}
 
@@ -948,130 +945,6 @@ N/A
 \subsubsection{Local Functions}
 
 N/A
-
-% MIS of Job Management Module Beginning
-\section{MIS of Job Management Module} \label{Module}
-
-\subsection{Module}
-
-Module for contractors to enter their job information.
-
-\subsection{Uses}
-Database Interaction Module
-\subsection{Syntax}
-
-\subsubsection{Exported Constants}
-N/A
-\subsubsection{Exported Access Programs}
-
-\begin{center}
-  \begin{tabular}{>{\raggedright}p{2cm} >{\raggedright}p{5cm}
-    >{\raggedright}p{3cm} p{3cm}}
-    \hline
-    \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-    \hline
-    createJob & \textbf{jobType:} string, \textbf{workOrder:} int,
-    \textbf{userID:} string, \textbf{description:} string &
-    \textbf{jobID:} string &  \textbf{ExternalServiceFailure:} An
-    internal error from AWS \newline
-    \textbf{DuplicateWorkOrder:} Job with same work order already in database \\
-    \hline
-    editJob & \textbf{jobID:} string, \textbf{workOrder:} int,
-    \textbf{description:} string, \textbf{jobType:} string & None &
-    \textbf{ExternalServiceFailure:} An internal error from AWS \newline
-
-    \textbf{JobAlreadyCompleted:} This job is already closed\\
-    \hline
-    completeJob & \textbf{jobID:} string & None &
-    \textbf{ExternalServiceFailure:} An internal error from AWS\\
-    \hline
-    deleteJob & \textbf{jobID:} string & None &
-    \textbf{ExternalServiceFailure:} An internal error from AWS \newline
-    \textbf{JobAlreadyCompleted:} This job is already closed\\
-    \hline
-  \end{tabular}
-\end{center}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
-
-\begin{center}
-  \begin{tabular}{p{4cm} p{12cm}}
-    \hline
-    \textbf{Name} & \textbf{Description} \\
-    \hline
-    jobTypes & Set of available jobs $\{j_0, j_1, ..., j_n\}$, where
-    $j_k:string, k\in[0,n]$ \\
-    jobType & string $\in$ jobTypes \\
-    jobID & string identifying a created job \\
-    workOrder & number of type int \\
-    description & work description of type string \\
-    status & status of job, value in $\{open, closed$\}\\
-    \hline
-  \end{tabular}
-\end{center}
-
-\subsubsection{Environment Variables}
-
-\begin{center}
-  \begin{tabular}{p{6cm} p{10cm}}
-    \hline
-    \textbf{Name} & \textbf{Description} \\
-    \hline
-    LAMBDA\_EXECUTION\_ROLE & When an AWS Lambda Function (The chosen
-    AWS compute service for this project), it has an AWS IAM role
-    attached to it, that it uses when running. This role needs
-    permission for job database access for this module to work \\
-    \hline
-  \end{tabular}
-\end{center}
-
-\subsubsection{Assumptions}
-
-LAMBDA\_EXECUTION\_ROLE has the required permissions in AWS to
-execute the lambda's required tasks.
-
-\subsubsection{Access Routine Semantics}
-
-\noindent createJob(\textbf{jobType:}string, \textbf{workOrder:}int,
-\textbf{userID:}string, \textbf{description:}string):
-\begin{itemize}
-  \item transition: creates job associated with userID
-  \item output: the jobID
-  \item exception:  ExternalServiceFailure, DuplicateWorkOrder
-\end{itemize}
-
-\noindent editJob(\textbf{jobID:}string, \textbf{workOrder}int,
-\textbf{description}string, \textbf{jobType}string):
-\begin{itemize}
-  \item transition: edit job attributes if not closed
-  \item exception:  ExternalServiceFailure, JobAlreadyCompleted
-\end{itemize}
-
-\noindent completeJob(\textbf{jobID:}string):
-\begin{itemize}
-  \item transition: status = closed
-  \item exception:  ExternalServiceFailure
-\end{itemize}
-
-\noindent deleteJob(\textbf{jobID:}string):
-\begin{itemize}
-  \item transition: remove job if status is open
-  \item exception:  ExternalServiceFailure, JobAlreadyCompleted
-\end{itemize}
-
-%\wss{A module without environment variables or state variables is unlikely to
-% have a state transition.  In this case a state transition can only occur if
-%the module is changing the state of another module.}
-
-%\wss{Modules rarely have both a transition and an output.  In most cases you
-%will have one or the other.}
-
-\subsubsection{Local Functions}
-
-N/A
-% MIS of Job Management Module Ending
 
 \section{MIS of Location Verification Module} \label{Module}
 
