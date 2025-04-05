@@ -6,7 +6,7 @@
 \usepackage{graphicx}
 \usepackage{enumerate}
 \usepackage{float}
-
+\usepackage[normalem]{ulem}
 \hypersetup{
   colorlinks=true,       % false: boxed links; true: colored links
   linkcolor=red,          % color of internal links (change box color
@@ -42,7 +42,8 @@
     \midrule
     10/25/2024 & Whole Team & Rev0 Hazard Analysis\\
     11/04/2024 & Rafeed Iqbal & Changed ``SFR1'' to ``SR-S1''\\
-    02/20/2024 & Mitchell Hynes & added peer feedback \#195\\
+    02/20/2025 & Mitchell Hynes & added peer feedback \#195\\
+    03/31/2025 & Mitchell Hynes & removed H2-3\\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -177,13 +178,13 @@ are responsible for implementing the functionality which makes the hazards ident
       edited. & a. Allow administrator to adjust permissions &
       SR-AR2 \newline SR-AR3 \newline SR-IR1 & H2-2 \\
       \cline{2-8}
-      & User unable to complete Two-Factor Authentication & User
+      & User unable to complete Two-Factor Authentication \textcolor{red}{Moving to future development} & User
       unable to access application & a. User name and email not in
       database \newline b. User did not receive authentication email
       \newline c. User unable to access email account \newline d.
       Email address in database outdated or incorrect
       & Self-report by user & a. User to report authentication issue
-      to manager & SR-AR1 & H2-3 \\
+      to manager& SR-AR1 & H2-3\\
       \cline{2-8}
       & Failure to revoke permissions & Contractor retains access to system
       after they have completed project/no longer a contractor & a.

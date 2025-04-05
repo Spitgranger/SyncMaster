@@ -1,0 +1,36 @@
+name: Deploy CloudFormation Stack for Frontend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "infrastructure/frontend.yaml"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: FrontendDeploy
+    env:
+      BASE_API_URL: ${{ secrets.BASE_API_URL }}
+      PAT: ${{ secrets.PAT }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ACCESS_KEY_SECRET }}
+          aws-region: us-east-2
+
+      - name: Make deploy script executable
+        run: chmod +x scripts/frontend/deploy.sh
+
+      - name: Create/Update Frontend Infrastructure
+        run: ./scripts/frontend/deploy.sh

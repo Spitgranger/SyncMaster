@@ -17,7 +17,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Image from 'next/image';
-import hamiltonLogo from "../../../public/hamiltonCityLogo.svg";
+import hamiltonLogo from '../../../public/hamiltonCityLogo.svg';
 import { Settings, Business } from '@mui/icons-material';
 import { AiOutlineGlobal } from 'react-icons/ai';
 import SpecificIcon from '../Icons/SpecificIcon';
@@ -72,10 +72,10 @@ const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  justifyContent: "center",
-  backgroundColor: "#fff",
-  boxShadow: "none",
-  color: "black",
+  justifyContent: 'center',
+  backgroundColor: '#fff',
+  boxShadow: 'none',
+  color: 'black',
   borderBottom: `1px solid ${theme.palette.divider}`,
   variants: [
     {
@@ -111,7 +111,7 @@ export default function DashboardLayout({ children }: Props) {
   const [open, setOpen] = React.useState(true);
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-  const userState = useSelector((state: RootState) => state.user)
+  const userState = useSelector((state: RootState) => state.user);
   const { username, role } = userState;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
@@ -132,32 +132,32 @@ export default function DashboardLayout({ children }: Props) {
     setAnchorEl(null);
   };
 
-
   const handleSignOutClick = () => {
     handleMenuClose();
-    handleSignOut({ preventDefault: () => { } } as React.MouseEvent<HTMLButtonElement>);
+    handleSignOut({
+      preventDefault: () => {},
+    } as React.MouseEvent<HTMLButtonElement>);
   };
 
   function handleSignOut(event: React.MouseEvent<HTMLButtonElement>): void {
     event.preventDefault();
     dispatch(signOutUser()).then((response) => {
-      if (response.meta.requestStatus === "fulfilled") {
-        localStorage.removeItem("idToken")
-        localStorage.removeItem("accessToken")
-        router.push("/login");
+      if (response.meta.requestStatus === 'fulfilled') {
+        localStorage.removeItem('idToken');
+        localStorage.removeItem('accessToken');
+        router.push('/login');
+      } else {
+        console.log('an error occured while signing out');
+        console.log(response);
       }
-      else {
-        console.log("an error occured while signing out");
-        console.log(response)
-      }
-    })
+    });
   }
 
   return (
     <>
       <AppBar position="fixed">
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Grid container alignItems={"center"}>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Grid container alignItems={'center'}>
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -169,10 +169,26 @@ export default function DashboardLayout({ children }: Props) {
             >
               <MenuIcon />
             </IconButton>
-            <Grid container spacing={1} width={"168px"} display={"flex"} flexDirection={"row"}>
-              <Image src={hamiltonLogo} width={44.71} height={38} alt='Hamilton Logo' />
+            <Grid
+              container
+              spacing={1}
+              width={'168px'}
+              display={'flex'}
+              flexDirection={'row'}
+            >
+              <Image
+                src={hamiltonLogo}
+                width={44.71}
+                height={38}
+                alt="Hamilton Logo"
+              />
 
-              <Typography width={100} variant="body1" lineHeight={1.2} fontWeight={700} >
+              <Typography
+                width={100}
+                variant="body1"
+                lineHeight={1.2}
+                fontWeight={700}
+              >
                 Hamilton Water
               </Typography>
             </Grid>
@@ -194,8 +210,17 @@ export default function DashboardLayout({ children }: Props) {
             }}
           >
             <Box px={2} py={1}>
-              <Typography variant="body2" color="black" fontWeight="bold" sx={{ mb: 1 }}>Name: {username}</Typography>
-              <Typography variant="body2" color="black" sx={{ mb: 1 }}>Role: {role}</Typography>
+              <Typography
+                variant="body2"
+                color="black"
+                fontWeight="bold"
+                sx={{ mb: 1 }}
+              >
+                Name: {username}
+              </Typography>
+              <Typography variant="body2" color="black" sx={{ mb: 1 }}>
+                Role: {role}
+              </Typography>
             </Box>
             <Divider />
             <MenuItem onClick={handleSignOutClick}>Sign Out</MenuItem>
@@ -218,32 +243,73 @@ export default function DashboardLayout({ children }: Props) {
         >
           <DrawerHeader>
             <IconButton onClick={handleDrawerClose}>
-              {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+              {theme.direction === 'ltr' ? (
+                <ChevronLeftIcon />
+              ) : (
+                <ChevronRightIcon />
+              )}
             </IconButton>
           </DrawerHeader>
           <Divider />
-          <Typography pt={1} px={2} variant='subtitle1' color="textSecondary">Documents</Typography>
+          <Typography pt={1} px={2} variant="subtitle1" color="textSecondary">
+            Documents
+          </Typography>
           <List>
-            {[{ text: 'Site Wide', icon: <AiOutlineGlobal color='black' size={24} />, route: "/dashboard/sitewide" }, { text: 'Site Specific', icon: <SpecificIcon />, route: "/dashboard/sitespecific" }].map((link: SidebarLink) => (
+            {[
+              {
+                text: 'Site Wide',
+                icon: <AiOutlineGlobal color="black" size={24} />,
+                route: '/dashboard/sitewide',
+              },
+              {
+                text: 'Site Specific',
+                icon: <SpecificIcon />,
+                route: '/dashboard/sitespecific',
+              },
+            ].map((link: SidebarLink) => (
               <ListItem key={link.text} disablePadding>
-                <ListItemButton onClick={() => { router.push(link.route) }} selected={router.pathname.startsWith(link.route)}>
-                  <ListItemIcon >
-                    {link.icon}
-                  </ListItemIcon>
+                <ListItemButton
+                  onClick={() => {
+                    router.push(link.route);
+                  }}
+                  selected={router.pathname.startsWith(link.route)}
+                >
+                  <ListItemIcon>{link.icon}</ListItemIcon>
                   <ListItemText primary={link.text} />
                 </ListItemButton>
               </ListItem>
             ))}
           </List>
           <Divider />
-          <Typography pt={1} px={2} variant='subtitle1' color="textSecondary">Organization</Typography>
+          <Typography pt={1} px={2} variant="subtitle1" color="textSecondary">
+            Organization
+          </Typography>
           <List>
-            {[{ text: 'Site Visits', icon: <TransferWithinAStationIcon sx={{ color: "black" }} />, route: "/dashboard/sitevisits" }, { text: 'Manage Sites', icon: <Business sx={{ color: "black" }} />, route: "/dashboard/managesites" }, { text: 'Manage Users', icon: <UserIcon />, route: "/dashboard/manageusers" }].map((link: SidebarLink) => (
+            {[
+              {
+                text: 'Site Visits',
+                icon: <TransferWithinAStationIcon sx={{ color: 'black' }} />,
+                route: '/dashboard/sitevisits',
+              },
+              {
+                text: 'Manage Sites',
+                icon: <Business sx={{ color: 'black' }} />,
+                route: '/dashboard/managesites',
+              },
+              {
+                text: 'Manage Users',
+                icon: <UserIcon />,
+                route: '/dashboard/manageusers',
+              },
+            ].map((link: SidebarLink) => (
               <ListItem key={link.text} disablePadding>
-                <ListItemButton onClick={() => { router.push(link.route) }} selected={router.pathname.startsWith(link.route)}>
-                  <ListItemIcon>
-                    {link.icon}
-                  </ListItemIcon>
+                <ListItemButton
+                  onClick={() => {
+                    router.push(link.route);
+                  }}
+                  selected={router.pathname.startsWith(link.route)}
+                >
+                  <ListItemIcon>{link.icon}</ListItemIcon>
                   <ListItemText primary={link.text} />
                 </ListItemButton>
               </ListItem>

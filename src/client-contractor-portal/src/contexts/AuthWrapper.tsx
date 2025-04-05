@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { isAuthenticated } from '@/utils/userHelpers';
 import { useRouter } from 'next/router';
@@ -12,20 +12,20 @@ interface AuthProviderProps {
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
   const { id } = router.query;
-  
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Check if the user is authenticated
     const checkAuth = () => {
       const isAuth = isAuthenticated();
-      console.log("isAuth", isAuth);
-      
+      console.log('isAuth', isAuth);
+
       const pathname = window.location.pathname;
 
       // If the user is trying to access the portal and is not authenticated, redirect to login
-      if (pathname.includes("/portal") && !isAuth) {
-        router.push("/login");
+      if (pathname.includes('/portal') && !isAuth) {
+        router.push('/login');
       } else {
         // If authenticated or not on /portal, allow the page to load
         setLoading(false);

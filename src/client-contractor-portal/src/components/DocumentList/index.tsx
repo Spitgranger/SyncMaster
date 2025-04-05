@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { List, ListItemButton, ListItemIcon, ListItemText, Collapse, Typography, Container } from '@mui/material';
+import {
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Collapse,
+  Typography,
+  Container,
+} from '@mui/material';
 import FolderIcon from '@mui/icons-material/Folder';
 import DescriptionIcon from '@mui/icons-material/Description';
 import ExpandLess from '@mui/icons-material/ExpandLess';
@@ -27,7 +35,8 @@ const DocumentList: React.FC = () => {
         const groupedFiles: Record<string, File[]> = {};
 
         files.forEach((file: any) => {
-          const folderName = file.document_path.split('/').slice(-2, -1)[0] || 'General';
+          const folderName =
+            file.document_path.split('/').slice(-2, -1)[0] || 'General';
           if (!groupedFiles[folderName]) {
             groupedFiles[folderName] = [];
           }
@@ -37,7 +46,9 @@ const DocumentList: React.FC = () => {
           });
         });
 
-        const formattedDocuments = Object.entries(groupedFiles).map(([name, files]) => ({ name, files }));
+        const formattedDocuments = Object.entries(groupedFiles).map(
+          ([name, files]) => ({ name, files })
+        );
         setDocuments(formattedDocuments);
       } catch (error) {
         console.error('Failed to load documents', error);
@@ -56,7 +67,12 @@ const DocumentList: React.FC = () => {
 
   return (
     <Container sx={{ mt: 4, px: 2 }}>
-      <Typography variant="h5" fontWeight="bold" textAlign="center" gutterBottom>
+      <Typography
+        variant="h5"
+        fontWeight="bold"
+        textAlign="center"
+        gutterBottom
+      >
         Documents
       </Typography>
       <List>
@@ -70,10 +86,20 @@ const DocumentList: React.FC = () => {
                 <ListItemText primary={folder.name} />
                 {openFolders[folder.name] ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
-              <Collapse in={openFolders[folder.name]} timeout="auto" unmountOnExit>
+              <Collapse
+                in={openFolders[folder.name]}
+                timeout="auto"
+                unmountOnExit
+              >
                 <List disablePadding>
                   {folder.files.map((file, fileIndex) => (
-                    <ListItemButton key={fileIndex} sx={{ pl: 4 }} component="a" href={file.url} target="_blank">
+                    <ListItemButton
+                      key={fileIndex}
+                      sx={{ pl: 4 }}
+                      component="a"
+                      href={file.url}
+                      target="_blank"
+                    >
                       <ListItemIcon>
                         <DescriptionIcon />
                       </ListItemIcon>

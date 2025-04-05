@@ -23,26 +23,27 @@ const initialState: UserRequestsState = {
 // GET /protected/user-requests/get-requests?limit=...&start_key=...
 export const getUserRequests = createAsyncThunk(
   'userRequests/getUserRequests',
-  async (
-    params: { limit?: number; start_key?: string },
-    thunkAPI
-  ) => {
+  async (params: { limit?: number; start_key?: string }, thunkAPI) => {
     const state = thunkAPI.getState() as RootState;
     const idToken = state.user.idToken;
     const queryParams = new URLSearchParams();
-    if (params.limit !== undefined) queryParams.append('limit', params.limit.toString());
+    if (params.limit !== undefined)
+      queryParams.append('limit', params.limit.toString());
     if (params.start_key) queryParams.append('start_key', params.start_key);
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/protected/user-requests/get-requests?${queryParams.toString()}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': idToken || ''
-      },
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/protected/user-requests/get-requests?${queryParams.toString()}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: idToken || '',
+        },
+      }
+    );
     if (response.ok) {
       return response.json();
     }
-    throw new Error("Failed to get user requests");
+    throw new Error('Failed to get user requests');
   }
 );
 
@@ -50,29 +51,29 @@ export const getUserRequests = createAsyncThunk(
 // Expected payload: { "email": "user@example.com", "action": "approve" or "reject" }
 export const actionRequest = createAsyncThunk(
   'userRequests/actionRequest',
-  async (
-    data: { email: string; action: "approve" | "reject" },
-    thunkAPI
-  ) => {
+  async (data: { email: string; action: 'approve' | 'reject' }, thunkAPI) => {
     const state = thunkAPI.getState() as RootState;
     const idToken = state.user.idToken;
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/protected/user-requests/action-request`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': idToken || ''
-      },
-      body: JSON.stringify(data),
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/protected/user-requests/action-request`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: idToken || '',
+        },
+        body: JSON.stringify(data),
+      }
+    );
 
     if (response.ok) {
-      if (data.action === "approve" && response.status === 201) {
+      if (data.action === 'approve' && response.status === 201) {
         return response.json(); // Approve returns a 201 with a JSON body
-      } else if (data.action === "reject" && response.status === 204) {
-        return { message: "Request rejected successfully" }; // Reject returns a 204 with no body
+      } else if (data.action === 'reject' && response.status === 204) {
+        return { message: 'Request rejected successfully' }; // Reject returns a 204 with no body
       }
     }
-    throw new Error("Failed to perform action on user request");
+    throw new Error('Failed to perform action on user request');
   }
 );
 
@@ -87,7 +88,12 @@ export const actionRequest = createAsyncThunk(
 export const createAccountRequest = createAsyncThunk(
   'userRequests/createAccountRequest',
   async (
-    data: { email: string; company: string; name: string; role_requested: string },
+    data: {
+      email: string;
+      company: string;
+      name: string;
+      role_requested: string;
+    },
     thunkAPI
   ) => {
     const response = await fetch(
@@ -95,15 +101,15 @@ export const createAccountRequest = createAsyncThunk(
       {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       }
     );
     if (response.ok) {
       return response.json();
     }
-    throw new Error("Failed to create account request");
+    throw new Error('Failed to create account request');
   }
 );
 
@@ -117,10 +123,13 @@ const userRequestsSlice = createSlice({
       state.loading = true;
       state.error = null;
     });
-    builder.addCase(getUserRequests.fulfilled, (state, action: PayloadAction<UserRequest[]>) => {
-      state.loading = false;
-      state.requests = action.payload.requests || []; // Assuming the response has a 'requests' field
-    });
+    builder.addCase(
+      getUserRequests.fulfilled,
+      (state, action: PayloadAction<UserRequest[]>) => {
+        state.loading = false;
+        state.requests = action.payload.requests || []; // Assuming the response has a 'requests' field
+      }
+    );
     builder.addCase(getUserRequests.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message || 'Failed to get user requests';
@@ -131,13 +140,17 @@ const userRequestsSlice = createSlice({
       state.actionRequestStatus = 'loading';
       state.error = null;
     });
-    builder.addCase(actionRequest.fulfilled, (state, action: PayloadAction<any>) => {
-      state.actionRequestStatus = 'succeeded';
-      // Optionally update or remove the request from state.requests if needed.
-    });
+    builder.addCase(
+      actionRequest.fulfilled,
+      (state, action: PayloadAction<any>) => {
+        state.actionRequestStatus = 'succeeded';
+        // Optionally update or remove the request from state.requests if needed.
+      }
+    );
     builder.addCase(actionRequest.rejected, (state, action) => {
       state.actionRequestStatus = 'failed';
-      state.error = action.error.message || 'Failed to perform action on user request';
+      state.error =
+        action.error.message || 'Failed to perform action on user request';
     });
 
     // createAccountRequest cases
@@ -145,11 +158,14 @@ const userRequestsSlice = createSlice({
       state.actionRequestStatus = 'loading';
       state.error = null;
     });
-    builder.addCase(createAccountRequest.fulfilled, (state, action: PayloadAction<any>) => {
-      state.actionRequestStatus = 'succeeded';
-      // Optionally, add the new account request to state.requests if needed:
-      // state.requests.push(action.payload);
-    });
+    builder.addCase(
+      createAccountRequest.fulfilled,
+      (state, action: PayloadAction<any>) => {
+        state.actionRequestStatus = 'succeeded';
+        // Optionally, add the new account request to state.requests if needed:
+        // state.requests.push(action.payload);
+      }
+    );
     builder.addCase(createAccountRequest.rejected, (state, action) => {
       state.actionRequestStatus = 'failed';
       state.error = action.error.message || 'Failed to create account request';

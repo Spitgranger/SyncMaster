@@ -12,6 +12,7 @@
 }
 \usepackage{longtable}
 \usepackage[round]{natbib}
+\usepackage[normalem]{ulem}
 
 \input{../Comments}
 \input{../Common}
@@ -33,6 +34,9 @@
   \midrule
   2025/03/10 & 1.0 & Initial Revision of VnV Report\\
   2025/03/16 & 1.1 & Remove unit tests related to removed errors\\
+  2025/03/31 & 1.2 & Add latest unit tests\\
+  2025/04/02 & 1.3 & Remove FR-9, update passing tests\\
+  2025/04/03 & 1.4 & Added detail to passed tests, linked to SRS, MIS, and MG.\\
   \bottomrule
 \end{tabularx}
 
@@ -81,20 +85,22 @@ the Software Requirements Specification document
   allowed location\\ \hline
   TC-FR-6 & Admin user navigates to main portal when a document
   approaching expiry is present in the system & A notification is displayed
-  indicating the expiry of this document&
-  Fail, functionality is not fully implemented\\ \hline
+  indicating the expiry of this document &
+  Pass, documents soon to expire are highlighted in yellow, documents
+  which have expired are highlighted in red.\\ \hline
   TC-FR-7 & Admin user navigates to main portal when users with
   expired training exist & A message indicating there are users with
-  expired trainings is displayed&
-  Fail, functionality is not fully implemented\\ \hline
+  expired trainings is displayed &
+  Fail, implementation moved to future revision\\ \hline
   TC-FR-8 & User authenticates into the system and acknowledges
   document & The acknowledgement is stored in the system with the
   required information &
-  Fail, functionality not fully implemented\\ \hline
-  TC-FR-9 & Contractor without the required training attempts to
-  authenticate & The system prevents authentication and displays a
-  message telling the user to contact their facilities manager &
-  Fail, functionality not fully implemented\\ \hline
+  Pass, user acknowledgement status saved in site entry log\\ \hline
+  \sout{TC-FR-9} & \sout{Contractor without the required training attempts to
+  authenticate} \textcolor{red}{Requirement no longer exists} &
+  \sout{The system prevents authentication and displays a message
+  telling the user to contact their facilities manager} &
+  \sout{Fail}\\ \hline
   \caption{Functional Requirement Test Cases}
 \end{longtable}
 
@@ -163,13 +169,10 @@ Through these actions, the following results were observed:\\
   Test passed.\\
   \hline
   TC-EU-2 & User 1& As an admin user, the tester was able to add a
-  site wide document but did not receive a warning before deleting file
-  thus identifying a bug in the system to be patched for rev1. Test failed.\\
+  site wide document and received a warning before deleting file. Test passed.\\
   \hline
   TC-EU-2 & User 2& As an admin user, the tester was able to add a
-  site wide document but did not receive a warning before deleting file
-  thus identifying a bug in the system to be patched for rev1, same
-  as issue identified for User 1. Test failed.\\
+  site wide document and received a warning before deleting file. Test passed.\\
   \hline
   TC-LR-1 & User 1& User successfully discovered the documentation
   page. Did not have issues with selecting documents and
@@ -276,21 +279,24 @@ Usability Study further before it will be submitted in the Extras folder.
   manually clicking on all UI elements and then measuring the time taken to
   see a response\\ \hline
   TC-PR-3 & Upload/Download a document & Document should be verified for
-  integrity during upload and retrieval & Pass\\ \hline
+  integrity during upload and retrieval & Pass, uploaded document
+  maintains intergrity when downloaded.\\ \hline
   TC-PR-4 & Unauthorized user tries to access a document &
   Unauthorized user should not be allowed to access the document &
   Pass, this is verified by trying to upload/download a document
   without a valid access token or role\\ \hline
   TC-PR-5 & Search query for documents or user data & Search Resuls
-  should be 95\% relevant to the input query & Pass\\ \hline
+  should be 95\% relevant to the input query & Pass, API only returns
+  results with matching keys.\\ \hline
   TC-PR-7 & An unexpected input/event & System should handle the
-  unexpected input/event gracefully and should not crash & Pass\\ \hline
+  unexpected input/event gracefully and should not crash & Pass,
+  client does not crash when API returns error messages.\\ \hline
   TC-PR-10 & Manually upload files of sizes 25MB, 50MB, 100MB, 250MB,
   500MB 1GB, and 2GB  & System should accept individual file sizes
-  upto 1GB & Pass \\ \hline
+  upto 1GB & Pass, all test files uploaded successfully. \\ \hline
   TC-PR-11 & Manually create nested documents/files & System should
   allow documents/folders to be nested &
-  Pass\\ \hline
+  Pass, document tree creation and rendering succesfull.\\ \hline
   \caption{Performance Test Cases}
 \end{longtable}
 
@@ -304,19 +310,20 @@ Usability Study further before it will be submitted in the Extras folder.
   TC-MS-4 & - & There is 95\% line coverage and 90\% branch coverage
   on our code & Pass, this is being checked in GitHub actions\\ \hline
   TC-MS-5 & - & All functional requirements have a corresponding unit
-  test & Fail, FR8 and FR9 are missing unit tests as they are not
-  currently implemented\\ \hline
+  test & Pass\\ \hline
   TC-MS-6 & - & Contribution guidelines and maintainer documentation
-  of system approved by the City of Hamilton & Fail, not yet approved\\ \hline
+  of system approved by the City of Hamilton & Pass\\ \hline
   TC-MS-7 & - & User manual exists and has been approved by the City
-  of Hamilton & Fail, not yet created\\ \hline
+  of Hamilton & Pass\\ \hline
   TC-MS-8 & - & OAS3 compliant documentation has been provided for
-  all API's & Fail, not yet created\\ \hline
+  all API's & Pass, exists under /unprotected/swagger path of API\\ \hline
   TC-MS-9 & - & Internal abstractions (classes and functions) in the
   system have documentation associated with them & Pass, linter
   checks this\\ \hline
   TC-MS-10 & - & Documentation for deployment of the system exists &
-  Fail, not yet created\\ \hline
+  Pass\\ \hline
+  TC-MS-11 & - & E2E tests exist for all FR's &
+  Fail, out of scope, planned for development by City\\ \hline
   \caption{Maintainability and Support Test Cases}
 \end{longtable}
 
@@ -341,14 +348,12 @@ Usability Study further before it will be submitted in the Extras folder.
   with a set of entries which vary between incomplete, impossible, and
   malicious and checked how the application handled the inputs. User
   login fields and user creation fields tested. & Pass\\ \hline
-  TC-SS-5 & The application client has so far been tested using local
-  hosting. & Fail, not yet hosted\\ \hline
-  TC-SS-7 & Pull requests created by Dependabot are merged within
-  a week. & Fail, not yet integrated with Dependabot\\ \hline
+  TC-SS-5 & The application has been deployed to AWS & Pass\\ \hline
+  TC-SS-7 & Pull requests created by Dependabot/Renovate are
+  addressed within a week. & Pass\\ \hline
   TC-SS-8 & Check notification creation when contractor user declines
   acknowledgement, attempts to acknowledge but does not complete
-  action, or ignores acknowledge-
-  ment. & Fail, notification module not yet implemented\\ \hline
+  action, or ignores acknowledgement. & Pass\\ \hline
   \caption{Safety and Security Test Cases}
 \end{longtable}
 
@@ -543,6 +548,23 @@ to mock AWS services.
   credentials, and ensure an UnauthorizedException is raised & Pass\\ \hline
   UT-UM17 & Delete a user, with an arbitrary error occuring from
   AWS, and check that an ExternalServiceException is raised & Pass\\ \hline
+  UT-UR1 & Create a user request, and ensure it gets added to the
+  database with the correct information & Pass\\ \hline
+  UT-UR2 & Create a user request with the same email as an existing
+  user request, and ensure a ResourceConflict is raised & Pass\\ \hline
+  UT-UR3 & Create a user request with the same email as an existing
+  user, and ensure a ConflictException is raised & Pass\\ \hline
+  UT-UR4 & Get all user requests in the database, ensure attributes
+  are correct & Pass\\ \hline
+  UT-UR5 & Approve a user request, ensure the correct user was added
+  & Pass\\ \hline
+  UT-UR6 & Reject a user request, ensure user was not added & Pass\\ \hline
+  UT-UR7 & Approve a user request, but a user with the same email has
+  already been created, ensure ConflictException raised & Pass\\ \hline
+  UT-UR8 & Approve a user request that does not exist, ensure
+  ResourceNotFound raised & Pass\\ \hline
+  UT-UR9 & Attempt a non-existent action on a user request, ensure
+  ValueError is raised & Pass\\ \hline
   \caption{Unit Test Cases for User Management Module}
 \end{longtable}
 
@@ -572,6 +594,12 @@ to mock AWS services.
   UT-LG8 & Get a list of all site visit logs using a database
   start\_key to start the listing from a certain log, and ensure that
   logs start from the correct location & Pass\\ \hline
+  UT-LG9 & Get a site visit log using its entry time, user\_id, and
+  site\_id, and ensure that obtained log details match the passed
+  criteria & Pass\\ \hline
+  UT-LG10 & Get a site visit log using its entry time, user\_id, and
+  site\_id, where the log doesn't exist, ensure ResourceNotFound is
+  raised & Pass\\ \hline
   \caption{Unit Test Cases for Logging Module}
 \end{longtable}
 
@@ -602,6 +630,40 @@ to mock AWS services.
   \caption{Unit Test for Document Management Module}
 \end{longtable}
 
+\subsection{Site Management Module Unit Tests}
+
+\begin{longtable}{|m{2cm}|m{10cm}|m{1.4cm}|}
+  \hline
+  \textbf{Test. ID} & \textbf{Description} & \textbf{Result} \\ \hline
+  UT-SM1 & Create a site, and ensure it gets added to the
+  database with the correct information & Pass\\ \hline
+  UT-SM2 & Create a site with the same site id as an existing site,
+  and ensure a ResourceConflict is raised & Pass\\ \hline
+  UT-SM3 & Update a site, and ensure given attributes are reflected
+  in the database & Pass\\ \hline
+  UT-SM4 & Update a site where the update request came in earlier
+  than the last updated time of the existing entry, raise a
+  TimeConsistencyException & Pass\\ \hline
+  UT-SM5 & Delete a site, check that it no longer exists in the
+  database & Pass\\ \hline
+  UT-SM6 & Attempt to delete a site, where a document still exists
+  for that site in the database, ensure a BadRequestException is
+  raised & Pass\\ \hline
+  UT-SM7 & Attempt to delete a site, where the site has been updated
+  since the delete request came in, ensure a TimeConsistencyException
+  is raised & Pass\\ \hline
+  UT-SM8 & Get a site from the database based on id, check attributes
+  match expectations & Pass\\ \hline
+  UT-SM9 & Attempt to get a site that doesn't exist, ensure a
+  ResourceNotFound is raised & Pass\\ \hline
+  UT-SM10 & Get a list of all sites from the database, ensure list of
+  sites matches what is the database & Pass\\ \hline
+  UT-SM11 & Get a list of sites from the database, with a size limit
+  of 1, then use the pagination start\_key to get the next site,
+  ensure these site details match expectations & Pass\\ \hline
+  \caption{Unit Test for Site Management Module}
+\end{longtable}
+
 \section{Changes Due to Testing}
 
 The scope of the project has evolved since the original version of
@@ -623,20 +685,23 @@ this requirement. The scenarios are outlined in the following flow charts.
 \newpage
 
 \begin{figure}[h!]
-\includegraphics[scale=0.7]{ease_of_access.png}
-\caption{Prioritizing ease of access to the application with a visitor account}
+  \includegraphics[scale=0.7]{ease_of_access.png}
+  \caption{Prioritizing ease of access to the application with a
+  visitor account}
 \end{figure}
 \newpage
 \begin{figure}[h!]
-\includegraphics[scale=0.7]{trusted_access.png}
-\caption{Prioritizing security of the application
-by requiring a contractor account first be verified}
+  \includegraphics[scale=0.7]{trusted_access.png}
+  \caption{Prioritizing security of the application
+  by requiring a contractor account first be verified}
 \end{figure}
 \newpage
 \section{Automated Testing}
 N/A, the only automated testing we have is the unit tests.
 
 \section{Trace to Requirements}
+
+SRS \cite{SRS}
 
 \begin{longtable}{|l|l|}
   \hline
@@ -648,8 +713,8 @@ N/A, the only automated testing we have is the unit tests.
   FR5 & TC-FR5, UT-UA2\\ \hline
   FR6 & TC-FR6, UT-DM1\\ \hline
   FR7 & TC-FR8, UT-DM4, UT-DM6\\ \hline
-  FR8 & TC-FR7\\ \hline
-  FR9 & TC-FR9\\ \hline
+  FR8 & TC-FR7, UT-LG1\\ \hline
+  \sout{FR9} & \sout{TC-FR9}\\ \hline
   LF-AP1 & TC-LF-1 \\ \hline
   LF-ST1 & TC-LF-2 \\ \hline
   UH-EU1 & TC-EU1\\ \hline
@@ -675,8 +740,9 @@ N/A, the only automated testing we have is the unit tests.
   OE-REL3 & TC-OE-4 \\ \hline
   OE-REL4 & TC-OE-4 \\ \hline
   MS-MTN4 & TC-MS-4 \\ \hline
-  MS-MTN5 & TC-MS-5 \\ \hline
+  MS-MTN5 & TC-MS-11\\ \hline
   MS-MTN6 & TC-MS-6 \\ \hline
+  MS-MTN7 & TC-MS-5 \\ \hline
   MS-SUP1 & TC-MS-7 \\ \hline
   MS-SUP2 & TC-MS-8 \\ \hline
   MS-SUP3 & TC-MS-9 \\ \hline
@@ -700,6 +766,9 @@ N/A, the only automated testing we have is the unit tests.
 
 \section{Trace to Modules}
 
+MG \cite{MG},
+MIS \cite{MIS}
+
 Note: * indicates that any test prefixed with the test case ID,
 covers the given module
 
@@ -711,9 +780,13 @@ covers the given module
   Logging & UT-LG* TC-FR-5 TC-EU1 TC-EU2\\ \hline
   File Storage & UT-FS* TC-FR-1 TC-FR-2 TC-PR-10 TC-PR-11\\ \hline
   Location Verification & UT-LV* TC-FR-5 TC-FR-8\\ \hline
-  User Management & UT-UM* TC-FR-4 TC-FR-7 TC-SS-1 TC-SS-4 TC-PR-5 TC-LR1 TC-LR2 TC-OE1 TC-OE2 \\ \hline
-  User Authentication & UT-AU* TC-FR-9 TC-PR-4 TC-AS1 TC-LF1 TC-LF2 TC-CR1\\ \hline
-  Document Management & UT-DM* TC-FR-1 TC-FR-2 TC-FR-3 TC-FR-7 TC-SS-2 TC-PR-1 TC-PR-3 TC-PR-5 TC-UP1 TC-UP2\\ \hline
+  User Management & UT-UM* TC-FR-4 TC-FR-7 TC-SS-1 TC-SS-4 TC-PR-5
+  TC-LR1 TC-LR2 TC-OE1 TC-OE2 UT-UR* \\ \hline
+  User Authentication & UT-AU* TC-FR-9 TC-PR-4 TC-AS1 TC-LF1 TC-LF2
+  TC-CR1\\ \hline
+  Document Management & UT-DM* TC-FR-1 TC-FR-2 TC-FR-3 TC-FR-7
+  TC-SS-2 TC-PR-1 TC-PR-3 TC-PR-5 TC-UP1 TC-UP2\\ \hline
+  Site Management & UT-SM*\\ \hline
   \caption{Module to Test Case Traceability Matrix}
 \end{longtable}
 

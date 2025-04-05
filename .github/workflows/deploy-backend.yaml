@@ -1,0 +1,42 @@
+name: deploy-backend
+on:
+  push:
+    branches:
+      - main
+    paths: ["**backend**"]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: BackendDeploy
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+      - uses: aws-actions/setup-sam@v2
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET}}
+          aws-region: us-east-2
+      - name: Install the latest version of uv
+        id: setup-uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+      - name: Sync dependencies
+        if: steps.setup-uv.outputs.cache-hit == 'false'
+        run: uv sync --dev
+      - name: Export Python Dependencies
+        run: uv export --frozen --no-emit-workspace --no-dev --no-editable -o ./src/backend/requirements.txt
+
+      - name: Build AWS SAM Application
+        run: sam build --template-file ./infrastructure/backend.yaml --use-container --build-image public.ecr.aws/sam/build-python3.13
+
+      - name: Deploy AWS SAM Application
+        run: |
+          sam deploy \
+            --parameter-overrides Name=SyncMaster \
+            --stack-name SyncMaster-Backend \
+            --resolve-s3 \
+            --capabilities CAPABILITY_NAMED_IAM \
+            --no-fail-on-empty-changeset
