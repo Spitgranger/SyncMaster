@@ -7,8 +7,7 @@ import { useRouter } from 'next/router';
 const BottomNavBar = () => {
   const router = useRouter();
   const currentPath = router.pathname;
-  console.log("current path",currentPath);
-  
+  console.log('current path', currentPath);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     if (newValue === '/portal/jobs') {
@@ -19,12 +18,11 @@ const BottomNavBar = () => {
   };
 
   return (
-    <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
-      <BottomNavigation
-        value={currentPath}
-        onChange={handleChange}
-        showLabels
-      >
+    <Paper
+      sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}
+      elevation={3}
+    >
+      <BottomNavigation value={currentPath} onChange={handleChange} showLabels>
         <BottomNavigationAction
           label="Jobs"
           value="/jobs"
