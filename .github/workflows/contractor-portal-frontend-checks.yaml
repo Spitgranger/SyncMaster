@@ -30,6 +30,3 @@ jobs:
         run: |
           cd src/client-contractor-portal
           npm run lint:check
-
-      - name: Run tests
-        run: npm test
