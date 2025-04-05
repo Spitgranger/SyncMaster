@@ -3,7 +3,8 @@ name: contractor-portal-frontend-checks
 on:
   pull_request:
     types: [opened, reopened, synchronize]
-    paths: ["**client-contractor-portal**"]
+    paths:
+      ["**client-contractor-portal**", ".github/workflows/frontend-checks.yaml"]
 
 jobs:
   frontend-checks:

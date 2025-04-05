@@ -3,7 +3,7 @@ name: admin-portal-frontend-checks
 on:
   pull_request:
     types: [opened, reopened, synchronize]
-    paths: ["**client-admin-portal**"]
+    paths: ["**client-admin-portal**", ".github/workflows/frontend-checks.yaml"]
 
 jobs:
   frontend-checks:
