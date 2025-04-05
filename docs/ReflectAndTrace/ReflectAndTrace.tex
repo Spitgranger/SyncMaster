@@ -105,6 +105,13 @@ Peer Review & Peer Review - FMEA Table Missing Notification Design function & Th
  To address the issue, we have provided links in the appendix of the MIS to link the reader to such relevant documentation.
  Closed in PR \#607 & \#358\\
  \hline
+ Peer Review & Peer Review - [Design Doc] Lack of Cross-refrencing & Fixed by adding hyperlinks to module sections in PR \#607 & \#359\\
+ \hline
+ Peer Review & Peer Review - [Design Doc] Diagram Clarity & Diagram has been reorganized in PR \#607 & \#356\\
+ \hline
+ Peer Review & Peer Review - [Design Doc] Module Decomp Connections & The module decomposition is now organized in a hierarchical manner. 
+ Addressed this issue and the connection between modules is now clear pertaining to the different layers of abstractions in PR \#607 & \#355\\
+ \hline
 \end{longtable}
 
 \subsection{VnV Plan and Report}
@@ -175,21 +182,19 @@ with them, we evolved the requirements to only allow authorized users into the s
 
 \section{Design Decisions (LO12)}
 
-\textbf{Limitations:}\\
+\textbf{Limitations and Constraints:}\\
 \\
+One limitation we encountered was that we could not track the GPS location of contractors in real time, as they would not have
+their phone open to the app at all times when they are on site. This means, we could not automatically detect when they leave a 
+site automatically. To get around this, our application records an entry time and exit time. The entry time is obtained during
+the QR code scan, and the exit time is indicated when the contractor uses the end visit button in the application.\\
+\\
+\textbf{Assumptions:}\\
+\\
+An assumption we are using is that this application will not be used frequently at night, as that is not normal working hours.\\
+This allowed us not to be concerned about the light levels and how that affects the QR code, and also to use AWS Lambda because
+it can scale to 0 when not in use.
 \section{Economic Considerations (LO23)}
-
-\plt{Is there a market for your product? What would be involved in
-  marketing your
-  product? What is your estimate of the cost to produce a version that you could
-  sell?  What would you charge for your product?  How many units
-  would you have to
-  sell to make money? If your product isn't something that would be
-  sold, like an
-  open source project, how would you go about attracting users?  How
-  many potential
-users currently exist?}
-
 This application is tailor made specifically for the City of Hamilton, with no intention on marketing it to
 other users at this time. There is certainly a demand for an application of this nature due to 
 the current challenges faced without the existance of an application with the specific features
@@ -217,32 +222,30 @@ widely in price, but estimating it to cost a few thousand dollars for occasional
 
 \section{Reflection on Project Management (LO24)}
 
-\plt{This question focuses on processes and tools used for project management.}
-
 \subsection{How Does Your Project Management Compare to Your Development Plan}
 
-\plt{Did you follow your Development plan, with respect to the team
-  meeting plan,
-  team communication plan, team member roles and workflow plan.  Did you use the
-technology you planned on using?}
+In general, many of the items in the development plan stayed consistent throughout the project. We had frequent team meetings
+to keep on track of progress near deadlines and used the GitHub issue tracker to track items, so our team communication plan
+was effective. Team member roles were generally consistent, assigned to member based on their skillsets and the team had a good
+understanding of how tasks should best be delegated to maximize the teams productivity and ensure an even distribution of work.
 
 \subsection{What Went Well?}
 
-\plt{What went well for your project management in terms of processes and
-technology?}
+The use of the GitHub issue tracker and communication over discord was implemented successfully by our team to maintain regular
+updates and team communication. Items were delegated effectively to each team member based on their role and this was adhered
+to throughout the duration of the project.
 
 \subsection{What Went Wrong?}
 
-\plt{What went wrong in terms of processes and technology?}
+During some deliverables, we had a tendency to devote most of our development efforts close to the deadline, which didn't give
+us as much time to extensively test as we may have wanted.
 
 \subsection{What Would you Do Differently Next Time?}
 
-\plt{What will you do differently for your next project?}
+Next time, we would want to continuously improve on how proactive we are on some items, so that we a consistent distribution of work
+rather than a large number of hours closer to the deadline.
 
 \section{Reflection on Capstone}
-
-\plt{This question focuses on what you learned during the course of
-the capstone project.}
 
 \subsection{Which Courses Were Relevant}
 
