@@ -1,0 +1,29 @@
+name: admin-portal-frontend-checks
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    paths: ["**client-admin-portal**"]
+
+jobs:
+  frontend-checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run linters
+        run: |
+          cd src/client-admin-portal
+          npm run lint:check
+
+      - name: Run tests
+        run: npm test
