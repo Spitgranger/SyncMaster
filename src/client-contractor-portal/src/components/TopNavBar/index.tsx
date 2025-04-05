@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppBar, Toolbar, IconButton, Typography, Box } from '@mui/material';
 import Image from 'next/image';
-import hamiltonLogo from "../../../public/hamiltonCityLogo.svg";
+import hamiltonLogo from '../../../public/hamiltonCityLogo.svg';
 import { useRouter } from 'next/router';
 
 const TopNavBar = () => {
@@ -17,12 +17,17 @@ const TopNavBar = () => {
           sx={{ cursor: 'pointer' }}
           onClick={() => router.push('/')}
         >
-          <Image src={hamiltonLogo} width={40} height={35} alt="Hamilton Logo" style={{ marginRight: 8 }} />
+          <Image
+            src={hamiltonLogo}
+            width={40}
+            height={35}
+            alt="Hamilton Logo"
+            style={{ marginRight: 8 }}
+          />
           <Typography variant="h6" fontWeight="bold">
             Hamilton Water
           </Typography>
         </Box>
-
       </Toolbar>
     </AppBar>
   );

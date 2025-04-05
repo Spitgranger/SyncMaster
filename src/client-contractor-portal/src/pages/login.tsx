@@ -3,7 +3,7 @@
 import React from 'react';
 import { Container } from '@mui/material';
 import SignInForm from '@/components/SignInForm';
-import NonNavbarLogo from '@/components/NonNavbarLogo'
+import NonNavbarLogo from '@/components/NonNavbarLogo';
 
 const LoginPage = () => {
   return (
