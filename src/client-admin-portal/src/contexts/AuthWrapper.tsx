@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { isAuthenticated } from '@/utils/userHelpers';
 import { useRouter } from 'next/router';
@@ -16,13 +16,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     // Check if the user is authenticated
     const checkAuth = () => {
       const isAuth = isAuthenticated();
-      console.log("isAuth",isAuth);
-      
+      console.log('isAuth', isAuth);
+
       const pathname = window.location.pathname;
 
       // If the user is trying to access the dashboard and is not authenticated, redirect to login
-      if (pathname.includes("/dashboard") && !isAuth) {
-        router.push("/login");
+      if (pathname.includes('/dashboard') && !isAuth) {
+        router.push('/login');
       } else {
         // If authenticated or not on /dashboard, allow the page to load
         setLoading(false);

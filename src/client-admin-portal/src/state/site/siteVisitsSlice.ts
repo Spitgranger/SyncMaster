@@ -57,7 +57,9 @@ export const getSiteVisits = createAsyncThunk<
   'siteVisits/getSiteVisits',
   async ({ params, idToken }, { rejectWithValue }) => {
     try {
-      const url = new URL(`${process.env.NEXT_PUBLIC_API_BASE_URL}/protected/site/visits`);
+      const url = new URL(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/protected/site/visits`
+      );
 
       // Append allowed query parameters only
       Object.entries(params).forEach(([key, value]) => {
@@ -69,8 +71,8 @@ export const getSiteVisits = createAsyncThunk<
       const response = await fetch(url.toString(), {
         method: 'GET',
         headers: {
-          'Authorization': idToken,
-          'Content-Type': 'application/json'
+          Authorization: idToken,
+          'Content-Type': 'application/json',
         },
       });
 

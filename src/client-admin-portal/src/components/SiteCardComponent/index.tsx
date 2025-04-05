@@ -16,26 +16,34 @@ const SiteCardComponent = ({ siteId }: { siteId: string }) => {
     <Grid
       onClick={handleNavigate}
       sx={{
-        width: "100%",
-        maxWidth: "368px",
-        border: "1px solid black",
-        borderRadius: "8px",
+        width: '100%',
+        maxWidth: '368px',
+        border: '1px solid black',
+        borderRadius: '8px',
         px: 2,
         py: 1,
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         mb: 3,
-        cursor: "pointer"
+        cursor: 'pointer',
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center" }}>
-        <ApartmentIcon sx={{ width: "48px", height: "48px", color: "black", opacity: "56%", mr: 2 }} />
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <ApartmentIcon
+          sx={{
+            width: '48px',
+            height: '48px',
+            color: 'black',
+            opacity: '56%',
+            mr: 2,
+          }}
+        />
         <Typography variant="body1" fontWeight="bold">
           Site ID: {siteId}
         </Typography>
       </Box>
-      <ChevronRightIcon sx={{ width: "24px", height: "24px" }} />
+      <ChevronRightIcon sx={{ width: '24px', height: '24px' }} />
     </Grid>
   );
 };

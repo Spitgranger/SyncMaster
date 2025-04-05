@@ -1,13 +1,23 @@
-"use client"
-import DashboardLayout from '@/components/layouts/DashboardLayout'
-import { AppDispatch, RootState } from '@/state/store'
-import { Folder, InsertDriveFile } from '@mui/icons-material'
-import { Box, Container, Table, TableBody, TableCell, TableHead, TableRow, Typography, Skeleton } from '@mui/material'
-import { useRouter } from 'next/router'
-import React, { } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { getDocuments } from '@/state/document/documentSlice' // Adjust the path as needed
-import FileUploaderComponent from '@/components/FileUploaderComponent'
+'use client';
+import DashboardLayout from '@/components/layouts/DashboardLayout';
+import { AppDispatch, RootState } from '@/state/store';
+import { Folder, InsertDriveFile } from '@mui/icons-material';
+import {
+  Box,
+  Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+  Skeleton,
+} from '@mui/material';
+import { useRouter } from 'next/router';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getDocuments } from '@/state/document/documentSlice'; // Adjust the path as needed
+import FileUploaderComponent from '@/components/FileUploaderComponent';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { visuallyHidden } from '@mui/utils';
 import Checkbox from '@mui/material/Checkbox';
@@ -16,27 +26,32 @@ import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import DownloadIcon from '@mui/icons-material/Download';
-import DeleteFileComponent from '@/components/DeleteFileComponent'
+import DeleteFileComponent from '@/components/DeleteFileComponent';
 
 const SiteWideDocuments = () => {
-  const userState = useSelector((state: RootState) => state.user)
-  const documentState = useSelector((state: RootState) => state.document)
-  const { currentFolderFiles, isLoading } = documentState
+  const userState = useSelector((state: RootState) => state.user);
+  const documentState = useSelector((state: RootState) => state.document);
+  const { currentFolderFiles, isLoading } = documentState;
   const { username, role, idToken, userId } = userState;
 
   const router = useRouter();
-  const folderId = router.query.slug ? router.query.slug[0] : "root"; // Handle slug logic
+  const folderId = router.query.slug ? router.query.slug[0] : 'root'; // Handle slug logic
 
-  console.log("Folder ID:", folderId);
+  console.log('Folder ID:', folderId);
 
   const dispatch = useDispatch<AppDispatch>();
   React.useEffect(() => {
-    dispatch(getDocuments({ site_id: "ALL", folder_id: folderId, idToken: userState.idToken })).then((response) => {
-      if (response.meta.requestStatus === "fulfilled") {
-        console.log("Documents fetched successfully");
-      }
-      else {
-        console.log("Documents fetch failed");
+    dispatch(
+      getDocuments({
+        site_id: 'ALL',
+        folder_id: folderId,
+        idToken: userState.idToken,
+      })
+    ).then((response) => {
+      if (response.meta.requestStatus === 'fulfilled') {
+        console.log('Documents fetched successfully');
+      } else {
+        console.log('Documents fetch failed');
         console.log(response);
       }
     });
@@ -55,19 +70,23 @@ const SiteWideDocuments = () => {
   const getExpiryColor = (expiryDate: string) => {
     const now = new Date();
     const expiry = new Date(expiryDate);
-    const diffInDays = (expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
+    const diffInDays =
+      (expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
 
-    if (diffInDays < 0) return "red"; // Expired
-    if (diffInDays < 30) return "orange"; // Less than a month
-    return "inherit"; // Default color
+    if (diffInDays < 0) return 'red'; // Expired
+    if (diffInDays < 30) return 'orange'; // Less than a month
+    return 'inherit'; // Default color
   };
 
   const handleClick = (id: string) => {
     setSelected((prevSelected) => (prevSelected === id ? null : id));
   };
 
-  const handleDoubleClick = (file: { document_type: string; document_id: string }) => {
-    if (file.document_type === "folder") {
+  const handleDoubleClick = (file: {
+    document_type: string;
+    document_id: string;
+  }) => {
+    if (file.document_type === 'folder') {
       router.push(`/dashboard/sitewide/${file.document_id}`);
     }
   };
@@ -84,10 +103,16 @@ const SiteWideDocuments = () => {
       } else if (orderBy === 'last_modified') {
         const dateA = new Date(a.last_modified);
         const dateB = new Date(b.last_modified);
-        return order === 'asc' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
+        return order === 'asc'
+          ? dateA.getTime() - dateB.getTime()
+          : dateB.getTime() - dateA.getTime();
       } else if (orderBy === 'document_expiry') {
-        const dateA = a.document_expiry ? new Date(a.document_expiry).getTime() : Infinity;
-        const dateB = b.document_expiry ? new Date(b.document_expiry).getTime() : Infinity;
+        const dateA = a.document_expiry
+          ? new Date(a.document_expiry).getTime()
+          : Infinity;
+        const dateB = b.document_expiry
+          ? new Date(b.document_expiry).getTime()
+          : Infinity;
         return order === 'asc' ? dateA - dateB : dateB - dateA;
       }
       return 0;
@@ -135,16 +160,16 @@ const SiteWideDocuments = () => {
         <>
           <br />
           <Table sx={{ mb: 6 }}>
-            <TableHead >
-              {selectedFile && selectedFile.document_type === "file" && (
-                <TableRow sx={{ height: "20px" }}>
+            <TableHead>
+              {selectedFile && selectedFile.document_type === 'file' && (
+                <TableRow sx={{ height: '20px' }}>
                   <TableCell sx={{ px: 0, py: 0 }} colSpan={4}>
                     <Toolbar
                       sx={{
-                        minHeight: "40px !important",
+                        minHeight: '40px !important',
                         bgcolor: (theme) => theme.palette.action.hover,
-                        px: "0 !important",
-                        py: "0 !important",
+                        px: '0 !important',
+                        py: '0 !important',
                       }}
                     >
                       <Tooltip title="Download">
@@ -152,10 +177,18 @@ const SiteWideDocuments = () => {
                           href={selectedFile.s3_presigned_get}
                           target="_blank"
                           rel="noopener noreferrer"
-                          sx={{ padding: 0, minHeight: "auto", minWidth: "auto" }}
+                          sx={{
+                            padding: 0,
+                            minHeight: 'auto',
+                            minWidth: 'auto',
+                          }}
                         >
                           <DownloadIcon color="primary" />
-                          <Typography color="primary" variant="body1" sx={{ ml: 1 }}>
+                          <Typography
+                            color="primary"
+                            variant="body1"
+                            sx={{ ml: 1 }}
+                          >
                             Download
                           </Typography>
                         </IconButton>
@@ -165,8 +198,7 @@ const SiteWideDocuments = () => {
                 </TableRow>
               )}
               <TableRow>
-                <TableCell padding="checkbox">
-                </TableCell>
+                <TableCell padding="checkbox"></TableCell>
                 <TableCell>
                   <TableSortLabel
                     active={orderBy === 'document_name'}
@@ -176,7 +208,9 @@ const SiteWideDocuments = () => {
                     Name
                     {orderBy === 'document_name' ? (
                       <Box component="span" sx={visuallyHidden}>
-                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                        {order === 'desc'
+                          ? 'sorted descending'
+                          : 'sorted ascending'}
                       </Box>
                     ) : null}
                   </TableSortLabel>
@@ -190,7 +224,9 @@ const SiteWideDocuments = () => {
                     Date Modified
                     {orderBy === 'last_modified' ? (
                       <Box component="span" sx={visuallyHidden}>
-                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                        {order === 'desc'
+                          ? 'sorted descending'
+                          : 'sorted ascending'}
                       </Box>
                     ) : null}
                   </TableSortLabel>
@@ -204,7 +240,9 @@ const SiteWideDocuments = () => {
                     Expiry Date
                     {orderBy === 'document_expiry' ? (
                       <Box component="span" sx={visuallyHidden}>
-                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                        {order === 'desc'
+                          ? 'sorted descending'
+                          : 'sorted ascending'}
                       </Box>
                     ) : null}
                   </TableSortLabel>
@@ -214,7 +252,7 @@ const SiteWideDocuments = () => {
             </TableHead>
             <TableBody>
               {sortedFiles.map((file) => {
-                console.log(file)
+                console.log(file);
 
                 const isItemSelected = isSelected(file.document_id);
                 return (
@@ -226,33 +264,46 @@ const SiteWideDocuments = () => {
                     selected={isItemSelected}
                   >
                     <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                      />
+                      <Checkbox color="primary" checked={isItemSelected} />
                     </TableCell>
                     <TableCell>
                       <Box display="flex" alignItems="center">
-                        {file.document_type === "folder" ? <Folder /> : <InsertDriveFile />}
-                        <Typography sx={{ marginLeft: 1, mt: "5px" }} variant="body1">
+                        {file.document_type === 'folder' ? (
+                          <Folder />
+                        ) : (
+                          <InsertDriveFile />
+                        )}
+                        <Typography
+                          sx={{ marginLeft: 1, mt: '5px' }}
+                          variant="body1"
+                        >
                           {file.document_name}
                         </Typography>
                       </Box>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body1">{formatDate(file.last_modified)}</Typography>
+                      <Typography variant="body1">
+                        {formatDate(file.last_modified)}
+                      </Typography>
                     </TableCell>
                     <TableCell>
                       <Typography
                         variant="body1"
-                        sx={{ color: file.document_expiry ? getExpiryColor(file.document_expiry) : "inherit" }}
+                        sx={{
+                          color: file.document_expiry
+                            ? getExpiryColor(file.document_expiry)
+                            : 'inherit',
+                        }}
                       >
-                        {file.document_expiry ? formatDate(file.document_expiry) : "N/A"}
+                        {file.document_expiry
+                          ? formatDate(file.document_expiry)
+                          : 'N/A'}
                       </Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="body1">
-                        {file.document_type.charAt(0).toUpperCase() + file.document_type.slice(1)}
+                        {file.document_type.charAt(0).toUpperCase() +
+                          file.document_type.slice(1)}
                       </Typography>
                     </TableCell>
                   </TableRow>
@@ -260,10 +311,27 @@ const SiteWideDocuments = () => {
               })}
             </TableBody>
           </Table>
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <FileUploaderComponent site_id="ALL" parent_folder_id={folderId} document_path={"path"} user_id={userId} idToken={idToken} />
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <FileUploaderComponent
+              site_id="ALL"
+              parent_folder_id={folderId}
+              document_path={'path'}
+              user_id={userId}
+              idToken={idToken}
+            />
             {selectedFile && (
-              <DeleteFileComponent site_id="ALL" parent_folder_id={folderId} document_id={selectedFile.document_id} idToken={idToken} />
+              <DeleteFileComponent
+                site_id="ALL"
+                parent_folder_id={folderId}
+                document_id={selectedFile.document_id}
+                idToken={idToken}
+              />
             )}
           </Box>
         </>
@@ -276,4 +344,4 @@ export default SiteWideDocuments;
 
 SiteWideDocuments.getLayout = function getLayout(page: React.ReactElement) {
   return <DashboardLayout>{page}</DashboardLayout>;
-}
+};

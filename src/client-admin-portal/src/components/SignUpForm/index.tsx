@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useState } from 'react';
 import Grid from '@mui/material/Grid2';
 import { Button, TextField, Typography, MenuItem } from '@mui/material';
@@ -10,18 +10,18 @@ import { AppDispatch } from '@/state/store';
 const SignUpForm = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const [email, setEmail] = useState("");
-  const [company, setCompany] = useState("");
-  const [name, setName] = useState("");
-  const [roleRequested, setRoleRequested] = useState("contractor"); // default value
+  const [email, setEmail] = useState('');
+  const [company, setCompany] = useState('');
+  const [name, setName] = useState('');
+  const [roleRequested, setRoleRequested] = useState('contractor'); // default value
 
   const [emailError, setEmailError] = useState(false);
-  const [formError, setFormError] = useState("");
+  const [formError, setFormError] = useState('');
   const [isSignUpButtonDisabled, setIsSignUpButtonDisabled] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   // Optional: a separate state for the success message
-  const [successMessage, setSuccessMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -43,28 +43,37 @@ const SignUpForm = () => {
     setName(e.target.value);
   };
 
-  const handleRoleRequestedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRoleRequestedChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setRoleRequested(e.target.value);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSignUpButtonDisabled(true);
-    setFormError("");
+    setFormError('');
 
     try {
       const response = await dispatch(
-        createAccountRequest({ email, company, name, role_requested: roleRequested })
+        createAccountRequest({
+          email,
+          company,
+          name,
+          role_requested: roleRequested,
+        })
       );
-      if (response.meta.requestStatus === "fulfilled") {
+      if (response.meta.requestStatus === 'fulfilled') {
         // Instead of redirecting, display a success message on the same page
-        setSuccessMessage("Your submission has been received and is pending review by our team.");
+        setSuccessMessage(
+          'Your submission has been received and is pending review by our team.'
+        );
         setSubmitted(true);
       } else {
-        setFormError("An error occurred while creating the account request.");
+        setFormError('An error occurred while creating the account request.');
       }
     } catch (error) {
-      setFormError("An error occurred while creating the account request.");
+      setFormError('An error occurred while creating the account request.');
     }
     setIsSignUpButtonDisabled(false);
   };
@@ -74,7 +83,7 @@ const SignUpForm = () => {
       container
       boxShadow={16}
       direction="column"
-      sx={{ width: "100%", maxWidth: "552px", px: "24px" }}
+      sx={{ width: '100%', maxWidth: '552px', px: '24px' }}
     >
       {submitted ? (
         <Grid py={2}>
@@ -99,7 +108,7 @@ const SignUpForm = () => {
                 fullWidth
                 variant="outlined"
                 placeholder="Email"
-                helperText={emailError && "Please enter a valid email address"}
+                helperText={emailError && 'Please enter a valid email address'}
               />
             </Grid>
             <Grid>
@@ -149,7 +158,12 @@ const SignUpForm = () => {
               </Grid>
             )}
             <Grid display="flex" justifyContent="center">
-              <Button disabled={isSignUpButtonDisabled} type="submit" size="large" variant="contained">
+              <Button
+                disabled={isSignUpButtonDisabled}
+                type="submit"
+                size="large"
+                variant="contained"
+              >
                 Request Account
               </Button>
             </Grid>
