@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -14,8 +14,11 @@ import {
   CircularProgress,
   TableSortLabel,
   Collapse,
-  Button
+  Button,
+  IconButton,
 } from '@mui/material';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { getSiteVisits } from '@/state/site/siteVisitsSlice';
 import { RootState, AppDispatch } from '@/state/store';
 
@@ -43,7 +46,7 @@ type Order = 'asc' | 'desc';
 
 // Helper to convert values for comparison
 function getComparableValue(visit: Visit, orderBy: keyof Visit) {
-  let value = visit[orderBy];
+  const value = visit[orderBy];
   if (orderBy === 'entry_time' || orderBy === 'exit_time') {
     return new Date(value as string).getTime();
   }
@@ -71,8 +74,13 @@ function getComparator(order: Order, orderBy: keyof Visit) {
     : (a: Visit, b: Visit) => -descendingComparator(a, b, orderBy);
 }
 
-function stableSort(array: Visit[], comparator: (a: Visit, b: Visit) => number) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [Visit, number]);
+function stableSort(
+  array: Visit[],
+  comparator: (a: Visit, b: Visit) => number
+) {
+  const stabilizedThis = array.map(
+    (el, index) => [el, index] as [Visit, number]
+  );
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -98,7 +106,9 @@ const columns = [
 const SiteVisitsTable: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { idToken } = useSelector((state: RootState) => state.user);
-  const { visits, isLoading } = useSelector((state: RootState) => state.siteVisits);
+  const { visits, isLoading } = useSelector(
+    (state: RootState) => state.siteVisits
+  );
 
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<keyof Visit>('site_id');
@@ -123,27 +133,34 @@ const SiteVisitsTable: React.FC = () => {
     setExpandedRow(expandedRow === index ? null : index);
   };
 
-  const sortedVisits = visits ? stableSort(visits, getComparator(order, orderBy)) : [];
+  const sortedVisits = visits
+    ? stableSort(visits, getComparator(order, orderBy))
+    : [];
 
   // Define visibleColumns (exclude user_id) for table display
-  const visibleColumns = columns.filter(column => column.id !== 'user_id');
+  const visibleColumns = columns.filter((column) => column.id !== 'user_id');
 
   const handleExport = () => {
     if (!sortedVisits || sortedVisits.length === 0) return;
 
-    const exportData = sortedVisits.map(visit => ({
-      "Site ID": visit.site_id,
-      "User ID": visit.user_id, // still included in CSV export
-      "User Email": visit.user_email,
-      "Employee ID": visit.employee_id,
-      "Entry Time": new Date(visit.entry_time).toLocaleString(),
-      "Exit Time": visit.exit_time ? new Date(visit.exit_time).toLocaleString() : 'N/A',
-      "Allowed Tracking": visit.allowed_tracking ? 'Yes' : 'No',
-      "Acknowledgment Status": visit.ack_status ? 'Yes' : 'No',
-      "Work Order": visit.work_order,
-      "On Site": visit.on_site ? 'Yes' : 'No',
-      "Description": visit.description,
-      "Attachments": visit.attachments && visit.attachments.length > 0 ? visit.attachments.map(a => a.name).join(', ') : ''
+    const exportData = sortedVisits.map((visit) => ({
+      'Site ID': visit.site_id,
+      'User ID': visit.user_id, // still included in CSV export
+      'User Email': visit.user_email,
+      'Employee ID': visit.employee_id,
+      'Entry Time': new Date(visit.entry_time).toLocaleString(),
+      'Exit Time': visit.exit_time
+        ? new Date(visit.exit_time).toLocaleString()
+        : 'N/A',
+      'Allowed Tracking': visit.allowed_tracking ? 'Yes' : 'No',
+      'Acknowledgment Status': visit.ack_status ? 'Yes' : 'No',
+      'Work Order': visit.work_order,
+      'On Site': visit.on_site ? 'Yes' : 'No',
+      Description: visit.description,
+      Attachments:
+        visit.attachments && visit.attachments.length > 0
+          ? visit.attachments.map((a) => a.name).join(', ')
+          : '',
     }));
 
     // Convert the export data to a CSV string
@@ -153,7 +170,7 @@ const SiteVisitsTable: React.FC = () => {
     csvRows.push(headers.join(','));
     // Add data rows
     for (const row of exportData) {
-      const values = headers.map(header => {
+      const values = headers.map((header) => {
         const escaped = String(row[header]).replace(/"/g, '""');
         return `"${escaped}"`;
       });
@@ -175,32 +192,73 @@ const SiteVisitsTable: React.FC = () => {
   return (
     <>
       <Container maxWidth={false} disableGutters sx={{ mt: 0, px: 2 }}>
-        <Typography variant="h5" fontWeight="bold" textAlign="left" gutterBottom>
+        <Typography
+          variant="h5"
+          fontWeight="bold"
+          textAlign="left"
+          gutterBottom
+        >
           Site Visits
         </Typography>
         <Button variant="contained" onClick={handleExport}>
           Export to CSV
         </Button>
       </Container>
-      <Container maxWidth={false} disableGutters sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 6, px: 2 }}>
+      <Container
+        maxWidth={false}
+        disableGutters
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          py: 6,
+          px: 2,
+        }}
+      >
         {isLoading ? (
           <CircularProgress />
         ) : (
-          <TableContainer component={Paper}>
-            <Table>
+          <TableContainer
+            component={Paper}
+            sx={{
+              maxHeight: '75vh', // Set a maximum height for the table container
+              overflow: 'auto', // Enable scrolling
+            }}
+          >
+            <Table stickyHeader>
               <TableHead>
                 <TableRow>
                   {visibleColumns.map((column) => (
-                    <TableCell key={column.id}>
+                    <TableCell
+                      key={column.id}
+                      style={{
+                        position: 'sticky',
+                        top: 0,
+                        background: 'white',
+                        zIndex: 1,
+                      }}
+                    >
                       <TableSortLabel
                         active={orderBy === column.id}
                         direction={orderBy === column.id ? order : 'asc'}
-                        onClick={() => handleRequestSort(column.id as keyof Visit)}
+                        onClick={() =>
+                          handleRequestSort(column.id as keyof Visit)
+                        }
                       >
                         <strong>{column.label}</strong>
                       </TableSortLabel>
                     </TableCell>
                   ))}
+                  <TableCell
+                    style={{
+                      position: 'sticky',
+                      top: 0,
+                      background: 'white',
+                      zIndex: 1,
+                    }}
+                  >
+                    {/* Extra header cell for chevron column (can be left blank) */}
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -216,18 +274,42 @@ const SiteVisitsTable: React.FC = () => {
                         {/* User ID cell is intentionally hidden from table display */}
                         <TableCell>{visit.user_email}</TableCell>
                         <TableCell>{visit.employee_id}</TableCell>
-                        <TableCell>{new Date(visit.entry_time).toLocaleString()}</TableCell>
-                        <TableCell>{visit.exit_time ? new Date(visit.exit_time).toLocaleString() : 'N/A'}</TableCell>
-                        <TableCell>{visit.allowed_tracking ? 'Yes' : 'No'}</TableCell>
+                        <TableCell>
+                          {new Date(visit.entry_time).toLocaleString()}
+                        </TableCell>
+                        <TableCell>
+                          {visit.exit_time
+                            ? new Date(visit.exit_time).toLocaleString()
+                            : 'N/A'}
+                        </TableCell>
+                        <TableCell>
+                          {visit.allowed_tracking ? 'Yes' : 'No'}
+                        </TableCell>
                         <TableCell>{visit.ack_status ? 'Yes' : 'No'}</TableCell>
                         <TableCell>{visit.work_order}</TableCell>
                         <TableCell>{visit.on_site ? 'Yes' : 'No'}</TableCell>
+                        <TableCell>
+                          <IconButton size="small">
+                            {expandedRow === index ? (
+                              <KeyboardArrowUpIcon />
+                            ) : (
+                              <KeyboardArrowDownIcon />
+                            )}
+                          </IconButton>
+                        </TableCell>
                       </TableRow>
                       {expandedRow === index && (
                         <TableRow>
-                          <TableCell colSpan={visibleColumns.length}>
-                            <Collapse in={expandedRow === index} timeout="auto" unmountOnExit>
-                              <Container maxWidth={false} sx={{ py: 2, textAlign: 'left' }}>
+                          <TableCell colSpan={visibleColumns.length + 1}>
+                            <Collapse
+                              in={expandedRow === index}
+                              timeout="auto"
+                              unmountOnExit
+                            >
+                              <Container
+                                maxWidth={false}
+                                sx={{ py: 2, textAlign: 'left' }}
+                              >
                                 <Typography variant="subtitle1" gutterBottom>
                                   Description:
                                 </Typography>
@@ -237,16 +319,23 @@ const SiteVisitsTable: React.FC = () => {
                                 <Typography variant="subtitle1" gutterBottom>
                                   Attachments:
                                 </Typography>
-                                {visit.attachments && visit.attachments.length > 0 ? (
+                                {visit.attachments &&
+                                visit.attachments.length > 0 ? (
                                   visit.attachments.map((attachment, i) => (
                                     <div key={i}>
-                                      <a href={attachment.url} target="_blank" rel="noopener noreferrer">
+                                      <a
+                                        href={attachment.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
                                         {attachment.name}
                                       </a>
                                     </div>
                                   ))
                                 ) : (
-                                  <Typography variant="body2">No attachments</Typography>
+                                  <Typography variant="body2">
+                                    No attachments
+                                  </Typography>
                                 )}
                               </Container>
                             </Collapse>
@@ -257,7 +346,10 @@ const SiteVisitsTable: React.FC = () => {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={visibleColumns.length} align="center">
+                    <TableCell
+                      colSpan={visibleColumns.length + 1}
+                      align="center"
+                    >
                       No site visits found
                     </TableCell>
                   </TableRow>

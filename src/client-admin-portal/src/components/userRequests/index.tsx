@@ -10,7 +10,7 @@ import {
   TableRow,
   Paper,
   Button,
-  CircularProgress
+  CircularProgress,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserRequests, actionRequest } from '@/state/user/userRequestsSlice';
@@ -18,7 +18,9 @@ import { AppDispatch, RootState } from '@/state/store';
 
 const UserRequests: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { requests, loading, error } = useSelector((state: RootState) => state.userRequests);
+  const { requests, loading, error } = useSelector(
+    (state: RootState) => state.userRequests
+  );
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   useEffect(() => {
@@ -37,7 +39,7 @@ const UserRequests: React.FC = () => {
       // Refresh the list after performing the action.
       dispatch(getUserRequests({}));
     } catch (err) {
-      console.error("Failed to perform action on user request", err);
+      console.error('Failed to perform action on user request', err);
     }
   };
 
@@ -60,11 +62,21 @@ const UserRequests: React.FC = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell><strong>Name</strong></TableCell>
-                <TableCell><strong>Email</strong></TableCell>
-                <TableCell><strong>Company</strong></TableCell>
-                <TableCell><strong>Role Requested</strong></TableCell>
-                <TableCell><strong>Actions</strong></TableCell>
+                <TableCell>
+                  <strong>Name</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>Email</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>Company</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>Role Requested</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>Actions</strong>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

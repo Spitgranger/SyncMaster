@@ -18,6 +18,7 @@ from ...models.api.file_attachment import APIAddFileAttachment, APIRemoveFileAtt
 from ...models.api.site_visit import (
     APIEnterSiteRequest,
     APIListSiteVisitResponse,
+    APISiteVisit,
     EditableSiteVisitDetails,
 )
 from ...models.db.site_visit import DBSiteVisit
@@ -34,6 +35,8 @@ from ...util import (
     CORS_HEADERS,
     AWSAccessLevel,
     UserType,
+    create_open_api_error_response,
+    create_open_api_response,
     decode_db_key,
     encode_db_key,
     time_epoch_to_datetime,
@@ -43,7 +46,16 @@ from ...util import (
 router = Router()
 
 
-@router.post("/<site_id>/enter")
+@router.post(
+    "/<site_id>/enter",
+    security=[{"bearer": []}],
+    responses={
+        201: create_open_api_response(
+            description="Created site visit", response_body_schema=APISiteVisit
+        ),
+        409: create_open_api_error_response(description="Visit exists with the same entry time"),
+    },
+)
 def enter_site_handler(
     site_id: Annotated[str, Path()], visit_details: Annotated[APIEnterSiteRequest, Body()]
 ):
@@ -87,7 +99,16 @@ def enter_site_handler(
     )
 
 
-@router.patch("/<site_id>/visit/<entry_time>")
+@router.patch(
+    "/<site_id>/visit/<entry_time>",
+    security=[{"bearer": []}],
+    responses={
+        200: create_open_api_response(
+            description="Updated site visit", response_body_schema=APISiteVisit
+        ),
+        400: create_open_api_error_response(description="No attributes given to update"),
+    },
+)
 def edit_visit_details_handler(
     site_id: Annotated[str, Path()],
     entry_time: Annotated[datetime, Path()],
@@ -128,7 +149,17 @@ def edit_visit_details_handler(
     )
 
 
-@router.patch("/<site_id>/visit/<entry_time>/attachments/add")
+@router.patch(
+    "/<site_id>/visit/<entry_time>/attachments/add",
+    security=[{"bearer": []}],
+    responses={
+        200: create_open_api_response(
+            description="Updated site visit", response_body_schema=APISiteVisit
+        ),
+        400: create_open_api_error_response(description="Limit of 10 attachments exceeded"),
+        409: create_open_api_error_response(description="Attachment with the same name exists"),
+    },
+)
 def add_file_attachment_handler(
     site_id: Annotated[str, Path()],
     entry_time: Annotated[datetime, Path()],
@@ -170,7 +201,15 @@ def add_file_attachment_handler(
     )
 
 
-@router.patch("/<site_id>/visit/<entry_time>/attachments/remove")
+@router.patch(
+    "/<site_id>/visit/<entry_time>/attachments/remove",
+    security=[{"bearer": []}],
+    responses={
+        200: create_open_api_response(
+            description="Updated site visit", response_body_schema=APISiteVisit
+        ),
+    },
+)
 def remove_file_attachment_handler(
     site_id: Annotated[str, Path()],
     entry_time: Annotated[datetime, Path()],
@@ -211,7 +250,16 @@ def remove_file_attachment_handler(
     )
 
 
-@router.patch("/<site_id>/exit/<entry_time>")
+@router.patch(
+    "/<site_id>/exit/<entry_time>",
+    security=[{"bearer": []}],
+    responses={
+        200: create_open_api_response(
+            description="Updated site visit", response_body_schema=APISiteVisit
+        ),
+        404: create_open_api_error_response(description="Site visit not found for entry time"),
+    },
+)
 def exit_site_handler(site_id: Annotated[str, Path()], entry_time: Annotated[datetime, Path()]):
     """
     Adds an exit time to an existing site visit in the database
@@ -242,7 +290,16 @@ def exit_site_handler(site_id: Annotated[str, Path()], entry_time: Annotated[dat
     )
 
 
-@router.get("/<site_id>/visit/<entry_time>")
+@router.get(
+    "/<site_id>/visit/<entry_time>",
+    security=[{"bearer": []}],
+    responses={
+        200: create_open_api_response(
+            description="Requested site visit", response_body_schema=APISiteVisit
+        ),
+        404: create_open_api_error_response(description="Site visit not found for entry time"),
+    },
+)
 def get_visit_handler(site_id: Annotated[str, Path()], entry_time: Annotated[datetime, Path()]):
     """
     Gets a site visit from the database
@@ -266,7 +323,15 @@ def get_visit_handler(site_id: Annotated[str, Path()], entry_time: Annotated[dat
     )
 
 
-@router.get("/visits")
+@router.get(
+    "/visits",
+    security=[{"bearer": [UserType.ADMIN.value]}],
+    responses={
+        200: create_open_api_response(
+            description="List of all site visits", response_body_schema=APIListSiteVisitResponse
+        )
+    },
+)
 def list_site_visits_handler(
     from_time: Annotated[Optional[datetime], Query()] = None,
     to_time: Annotated[Optional[datetime], Query()] = None,

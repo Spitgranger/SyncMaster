@@ -15,6 +15,7 @@
   linkcolor=red,
   urlcolor=blue
 }
+\usepackage[normalem]{ulem}
 
 \input{../../Comments}
 \input{../../Common}
@@ -44,10 +45,16 @@
 \section{Revision History}
 
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-  \toprule {\bf Date} & {\bf Version} & {\bf Notes} \\
+  \toprule {\bf Date} & {\bf Version} & {\bf Notes}
+  \\
   \midrule
-  January 17, 2024              & 1.0           & Initial version of Module
-  Guide      \\
+  January 17, 2024    & 1.0           & Initial version of Module
+  Guide
+  \\
+  April 2, 2025       & 1.1           & Remove and added modules to
+  reflect current software
+  architecture
+  \\
   \bottomrule
 \end{tabularx}
 
@@ -221,19 +228,23 @@ below, which are leaves in the hierarchy tree, are the modules that will
 actually be implemented.
 
 \begin{description}
-  \item [\refstepcounter{mnum} \mthemnum \label{mAC}:] Audit and
-    Compliance Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mAC}:] \sout{Audit and
+    Compliance Module}
   \item [\refstepcounter{mnum} \mthemnum \label{mUA}:] User
     Authentication Module
   \item [\refstepcounter{mnum} \mthemnum \label{mLV}:] Location Verification
     Module
   \item [\refstepcounter{mnum} \mthemnum \label{mLM}:] Logging Module
+    \textcolor{red}{(Site Visits)}
   \item [\refstepcounter{mnum} \mthemnum \label{mAR}:] Analytics and Reporting
     Module
   \item [\refstepcounter{mnum} \mthemnum \label{mUM}:] User Management Module
   \item [\refstepcounter{mnum} \mthemnum \label{mDM}:] Document
     Management Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mJM}:] Job Management Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mSM}:]
+    \textcolor{red}{Site Management Module}
+  \item [\refstepcounter{mnum} \mthemnum \label{mJM}:] \sout{Job
+    Management Module}
   \item [\refstepcounter{mnum} \mthemnum \label{mAI}:] API Integration Module
   \item [\refstepcounter{mnum} \mthemnum \label{mDI}:] Database
     Interaction Module
@@ -256,16 +267,20 @@ actually be implemented.
     \\
     \midrule
 
-    \multirow{7}{0.3\textwidth}{Software Decision Modules} & Audit
-    and Compliance Module
+    \multirow{7}{0.3\textwidth}{Software Decision Modules} & \sout{Audit
+    and Compliance Module}
     \\
     & User Authentication Module      \\
     & Location Verification Module    \\
     & Logging Module                  \\
     & Analytics and Reporting Module  \\
+    & \sout{Job
+      Management
+    Module}
+    \\
     & User Management Module          \\
     & Document Management Module      \\
-    & Job Management Module           \\
+    & Site Management Module          \\
     \midrule
 
     \multirow{3}{0.3\textwidth}{Behaviour-Hiding Modules}  & {API
@@ -415,13 +430,15 @@ to be implemented.
   \item[Implemented By:] \progname
 \end{description}
 
-\subsubsection{Audit and Compliance Module (\mref{mAC})}
+\subsubsection{\sout{Audit and Compliance Module (\mref{mAC})}}
 
 \begin{description}
-  \item[Secrets:] Data obtained from the Job Management and Logging Module.
-  \item[Services:] Allows admin users users to retrieve data regarding
-    contractors in the frontend
-  \item[Implemented By:] \progname
+  \item[Secrets:] \sout{Data obtained from the Logging Module.}
+  \item[Services:] \sout{Allows admin users users to retrieve data regarding
+    contractors in the frontend}
+  \item[Implemented By:] \sout{\progname}
+    \textcolor{red}{No longer implementing this as it is part of the
+    Logging Module.}
 \end{description}
 
 \subsubsection{Analytics and Reporting Module (\mref{mAR})}
@@ -445,15 +462,22 @@ to be implemented.
     to a specific site and/or job for contractors to see as the come on site.
   \item[Implemented By:] \progname
 \end{description}
-
-\subsubsection{Job Management Module (\mref{mJM})}
+\subsubsection{\sout{Job Management Module} (\sout{\mref{mJM}})}
 \begin{description}
-  \item[Secrets:] A job identifier, job details, and status.
-  \item[Services:] Allows contractor to fill in information relevant
-    to the job they are completing.
+  \item[Secrets:] \sout{A job identifier, job details, and status.}
+  \item[Services:]\sout{Allows contractor to fill in information relevant
+    to the job they are completing.}
+  \item[Implemented By:] \sout{\progname}
+\end{description}
+\textcolor{red}{There is no longer a concept of jobs in the system as per the
+discussions had with the city.}
+\subsubsection{Site Management Module (\mref{mSM})}
+\begin{description}
+  \item[Secrets:] The site identifier and location.
+  \item[Services:] Allows an admin user to add/remove/edit site
+    locations in the system.
   \item[Implemented By:] \progname
 \end{description}
-
 \section{Traceability Matrix} \label{SecTM}
 
 This section shows two traceability matrices: between the modules and the
@@ -468,22 +492,22 @@ requirements and between the modules and the anticipated changes.
     \textbf{Req.} & \textbf{Modules}
     \\
     \midrule
-    FR1            & \mref{mDM}, \mref{mBS}, \mref{mAI}
+    FR1           & \mref{mDM}, \mref{mBS}, \mref{mAI}
     \\
-    FR3            & \mref{mUM}, \mref{mDM}, \mref{mAI}, \mref{mBS}, \mref{mUA}
+    FR3           & \mref{mUM}, \mref{mDM}, \mref{mAI}, \mref{mBS}, \mref{mUA}
     \\
-    FR4            & \mref{mUM}, \mref{mAI}, \mref{mLM}, \mref{mLM},
+    FR4           & \mref{mUM}, \mref{mAI}, \mref{mLM}, \mref{mLM},
     \mref{mUA}, \mref{mDI}
     \\
-    FR5            & \mref{mLV}, \mref{mUA}
+    FR5           & \mref{mLV}, \mref{mUA}
     \\
-    FR6            & \mref{mDM}
+    FR6           & \mref{mDM}
     \\
-    FR7            & \mref{mDM}, \mref{mDI}
+    FR7           & \mref{mDM}, \mref{mDI}
     \\
-    FR8            & \mref{mDM}
+    FR8           & \mref{mDM}
     \\
-    FR9            & \mref{mDM}
+    FR9           & \mref{mDM}
     \\
     \bottomrule
   \end{tabular}
@@ -495,14 +519,14 @@ requirements and between the modules and the anticipated changes.
   \centering
   \begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
     \toprule
-    \textbf{AC}                        & \textbf{Modules} \\
+    \textbf{AC}                     & \textbf{Modules} \\
     \midrule
-    \acref{acGps}                      & \mref{mLV} \\
-    \acref{acLocationThreshod}         & \mref{mLV} \\
-    \acref{acAuthenticationMethods}    & \mref{mUA} \\
-    \acref{acDocuments}                & \mref{mDM} \\
-    \acref{acIntegration}              & \mref{mAI} \\
-    \acref{acDataLogs}                 & \mref{mLM} \\
+    \acref{acGps}                   & \mref{mLV}       \\
+    \acref{acLocationThreshod}      & \mref{mLV}       \\
+    \acref{acAuthenticationMethods} & \mref{mUA}       \\
+    \acref{acDocuments}             & \mref{mDM}       \\
+    \acref{acIntegration}           & \mref{mAI}       \\
+    \acref{acDataLogs}              & \mref{mLM}       \\
     \bottomrule
   \end{tabular}
   \caption{Trace Between Anticipated Changes and Modules}
@@ -573,33 +597,50 @@ Issues \href{https://github.com/Spitgranger/SyncMaster/issues}{here}.
   \centering
   \begin{tabular}{|l|l|l|}
     \hline
-    \textbf{Module} & \textbf{Responsible} & \textbf{Deadline} \\
+    \textbf{Module}                               &
+    \textbf{Responsible}                          & \textbf{Deadline}         \\
     \hline
-    M1: Audit and Compliance Module  & Akshit Gulia & January 31st, 2025 \\
+    \sout{M1:} \sout{Audit and Compliance Module} & \sout{Akshit
+    Gulia}                                        & \sout{January 31st, 2025} \\
     \hline
-    M2: User Authentication Module    & Rafeed Iqbal & January 24th, 2025 \\
+    M2: User Authentication Module                & Rafeed Iqbal
+    & January 24th, 2025        \\
     \hline
-    M3: Location Verification Module  & Rafeed Iqbal & January 31st, 2025 \\
+    M3: Location Verification Module              & Rafeed Iqbal
+    & January 31st, 2025        \\
     \hline
-    M4: Logging Module                & Kyle D'Souza & January 24th, 2025 \\
+    M4: Logging Module                            & Kyle D'Souza
+    & January 24th, 2025        \\
     \hline
-    M5: Analytics and Reporting Module & Akshit Gulia & January 31st, 2025 \\
+    M5: Analytics and Reporting Module            & Akshit Gulia
+    & January 31st, 2025        \\
     \hline
-    M6: User Management Module        & Rafeed Iqbal & January 24th, 2025 \\
+    M6: User Management Module                    & Rafeed Iqbal
+    & January 24th, 2025        \\
     \hline
-    M7: Document Management Module    & Richard Fan & January 31st, 2025 \\
+    M7: Document Management Module                & Richard Fan
+    & January 31st, 2025        \\
     \hline
-    M8: Job Management Module         & Mitchell Hynes & January 31st, 2025 \\
+    \sout{M8: Job Management Module}              & \sout{Mitchell
+    Hynes}                                        & \sout{January 31st, 2025} \\
     \hline
-    M9: API Integration Module        & Richard Fan & January 24th, 2025 \\
+    M8: Site Management Module                    & Mitchell Hynes
+    & January 31st, 2025        \\
     \hline
-    M10: Database Interaction Module  & Kyle D'Souza & January 24th, 2025 \\
+    M9: API Integration Module                    & Richard Fan
+    & January 24th, 2025        \\
     \hline
-    M11: File Storage Interaction Module & Kyle D'Souza & January 31st, 2025 \\
+    M10: Database Interaction Module              & Kyle D'Souza
+    & January 24th, 2025        \\
     \hline
-    M12: Routing Module               & Kyle D'Souza & January 24th, 2025 \\
+    M11: File Storage Interaction Module          & Kyle D'Souza
+    & January 31st, 2025        \\
     \hline
-    M13: Function Compute Module      & Kyle D'Souza & January 31st, 2025 \\
+    M12: Routing Module                           & Kyle D'Souza
+    & January 24th, 2025        \\
+    \hline
+    M13: Function Compute Module                  & Kyle D'Souza
+    & January 31st, 2025        \\
     \hline
   \end{tabular}
   \caption{Schedule for module implementation}

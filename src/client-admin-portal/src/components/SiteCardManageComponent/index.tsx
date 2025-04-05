@@ -1,5 +1,17 @@
 import React, { useState, useRef } from 'react';
-import { Box, Button, Typography, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  Typography,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  Tooltip,
+} from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import EditIcon from '@mui/icons-material/Edit';
@@ -14,12 +26,12 @@ const SiteCardManageComponent = ({
   siteId,
   longitude,
   latitude,
-  acceptable_range
+  acceptable_range,
 }: {
-  siteId: string,
-  longitude: number,
-  latitude: number,
-  acceptable_range: number
+  siteId: string;
+  longitude: number;
+  latitude: number;
+  acceptable_range: number;
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -78,36 +90,40 @@ const SiteCardManageComponent = ({
   const handleConfirmDelete = async () => {
     setIsDeleting(true);
     setError(null);
-    dispatch(deleteSite({ idToken: idToken, site_id: siteId })).then((response) => {
-      if (response.meta.requestStatus === "fulfilled") {
-        console.log("Site deleted successfully");
-        dispatch(getSites({ idToken }));
-        handleCloseModal();
-      } else {
-        setError("Failed to delete the site. Do you want to try again?");
-        setIsDeleting(false);
+    dispatch(deleteSite({ idToken: idToken, site_id: siteId })).then(
+      (response) => {
+        if (response.meta.requestStatus === 'fulfilled') {
+          console.log('Site deleted successfully');
+          dispatch(getSites({ idToken }));
+          handleCloseModal();
+        } else {
+          setError('Failed to delete the site. Do you want to try again?');
+          setIsDeleting(false);
+        }
       }
-    });
+    );
   };
 
   const handleSaveEdit = () => {
     setError(null);
     setIsEditing(true);
-    dispatch(updateSite({
-      idToken: idToken,
-      site_id: editSite.siteId,
-      longitude: parseFloat(editSite.longitude),
-      latitude: parseFloat(editSite.latitude),
-      acceptable_range: parseFloat(editSite.acceptableRange)
-    })).then((response) => {
+    dispatch(
+      updateSite({
+        idToken: idToken,
+        site_id: editSite.siteId,
+        longitude: parseFloat(editSite.longitude),
+        latitude: parseFloat(editSite.latitude),
+        acceptable_range: parseFloat(editSite.acceptableRange),
+      })
+    ).then((response) => {
       setIsEditing(false);
-      if (response.meta.requestStatus === "fulfilled") {
-        console.log("Site edited successfully");
+      if (response.meta.requestStatus === 'fulfilled') {
+        console.log('Site edited successfully');
         dispatch(getSites({ idToken }));
         setIsEditModalOpen(false);
       } else {
-        console.log("Failed to edit site");
-        setError("Failed to edit the site. Please try again.");
+        console.log('Failed to edit site');
+        setError('Failed to edit the site. Please try again.');
       }
     });
   };
@@ -117,10 +133,10 @@ const SiteCardManageComponent = ({
     if (!qrRef.current) return;
 
     // Convert the canvas content to a DataURL
-    const dataUrl = qrRef.current.toDataURL("image/png");
+    const dataUrl = qrRef.current.toDataURL('image/png');
 
     // Create an <a> tag and trigger download
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = dataUrl;
     link.download = `site-${siteId}-qr.png`; // File name
     document.body.appendChild(link);
@@ -131,37 +147,55 @@ const SiteCardManageComponent = ({
   return (
     <Grid
       sx={{
-        width: "100%",
-        maxWidth: "368px",
-        border: "1px solid black",
-        borderRadius: "8px",
+        width: '100%',
+        maxWidth: '368px',
+        border: '1px solid black',
+        borderRadius: '8px',
         px: 2,
         py: 1,
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        mb: 3
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        mb: 3,
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <ApartmentIcon
-          sx={{ width: "48px", height: "48px", color: "black", opacity: "56%", mr: 2 }}
+          sx={{
+            width: '48px',
+            height: '48px',
+            color: 'black',
+            opacity: '56%',
+            mr: 2,
+          }}
         />
         <Typography variant="body1" fontWeight="bold">
           Site ID: {siteId}
         </Typography>
       </Box>
       <Box>
-        <EditIcon sx={{ mr: 2, cursor: "pointer" }} onClick={handleEditClick} />
-        <DeleteIcon sx={{ mr: 2, cursor: "pointer" }} onClick={handleDeleteClick} />
-        <QrCode2Icon sx={{ cursor: "pointer" }} onClick={handleOpenQRModal} />
+        <Tooltip title="Edit Site">
+          <EditIcon
+            sx={{ mr: 2, cursor: 'pointer' }}
+            onClick={handleEditClick}
+          />
+        </Tooltip>
+        <Tooltip title="Delete Site">
+          <DeleteIcon
+            sx={{ mr: 2, cursor: 'pointer' }}
+            onClick={handleDeleteClick}
+          />
+        </Tooltip>
+        <Tooltip title="Show QR Code">
+          <QrCode2Icon sx={{ cursor: 'pointer' }} onClick={handleOpenQRModal} />
+        </Tooltip>
 
         {/* Confirm Deletion Dialog */}
         <Dialog open={isModalOpen} onClose={handleCloseModal}>
           <DialogTitle>Confirm Deletion</DialogTitle>
           <DialogContent>
             {isDeleting ? (
-              <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <CircularProgress size={24} />
                 <Typography sx={{ ml: 2 }}>Deleting...</Typography>
               </Box>
@@ -175,7 +209,9 @@ const SiteCardManageComponent = ({
           </DialogContent>
           {!isDeleting && (
             <DialogActions>
-              <Button onClick={handleConfirmDelete} color="error">Yes</Button>
+              <Button onClick={handleConfirmDelete} color="error">
+                Yes
+              </Button>
               <Button onClick={handleCloseModal}>No</Button>
             </DialogActions>
           )}
@@ -236,7 +272,11 @@ const SiteCardManageComponent = ({
             <Button onClick={handleCloseEditModal} disabled={isEditing}>
               Cancel
             </Button>
-            <Button onClick={handleSaveEdit} variant="contained" disabled={isEditing}>
+            <Button
+              onClick={handleSaveEdit}
+              variant="contained"
+              disabled={isEditing}
+            >
               Save
             </Button>
           </DialogActions>
@@ -246,7 +286,7 @@ const SiteCardManageComponent = ({
         <Dialog open={isQRModalOpen} onClose={handleCloseQRModal}>
           <DialogTitle>Site QR Code</DialogTitle>
           <DialogContent>
-            <Box sx={{ textAlign: "center", mt: 2 }}>
+            <Box sx={{ textAlign: 'center', mt: 2 }}>
               {/* Add ref to capture the <canvas> element */}
               <QRCodeCanvas
                 ref={qrRef}
@@ -258,9 +298,7 @@ const SiteCardManageComponent = ({
           <DialogActions>
             <Button onClick={handleCloseQRModal}>Close</Button>
             {/* Save Image Button */}
-            <Button onClick={handleDownloadQRCode}>
-              Save Image
-            </Button>
+            <Button onClick={handleDownloadQRCode}>Save Image</Button>
           </DialogActions>
         </Dialog>
       </Box>

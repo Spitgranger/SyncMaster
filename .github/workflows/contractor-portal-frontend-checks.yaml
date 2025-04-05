@@ -1,0 +1,32 @@
+name: contractor-portal-frontend-checks
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    paths:
+      [
+        "**client-contractor-portal**",
+        ".github/workflows/contractor-portal-frontend-checks.yaml",
+      ]
+
+jobs:
+  frontend-checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: |
+          cd src/client-contractor-portal
+          npm install
+
+      - name: Run linters
+        run: |
+          cd src/client-contractor-portal
+          npm run lint:check

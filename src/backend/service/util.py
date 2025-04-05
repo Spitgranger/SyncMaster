@@ -10,10 +10,16 @@ from typing import Optional
 
 import boto3
 from aws_lambda_powertools.event_handler import Response
+from aws_lambda_powertools.event_handler.openapi.types import (
+    OpenAPIResponse,
+    OpenAPIResponseContentModel,
+    OpenAPIResponseContentSchema,
+)
 from aws_lambda_powertools.logging import Logger
 from botocore.config import Config
 from botocore.exceptions import ClientError
 from cachetools.func import ttl_cache
+from pydantic import BaseModel
 
 from .exceptions import (
     ExternalServiceException,
@@ -223,3 +229,38 @@ def verify_user_role(user_groups: list[str], acceptable_roles: list[UserType], a
 
     if not allowed_access:
         raise InsufficientUserPermissionException(roles=user_groups, action=action)
+
+
+def create_open_api_response(
+    description: str, response_body_schema: dict | type[BaseModel]
+) -> OpenAPIResponse:
+    """
+    Gives the openapi response appropriate for the API docs
+
+    :param description: description of response content
+    :param response_body_schema: schema of response body
+    :return: The open api response schema appropriate for the swagger docs
+    """
+    content_schema = (
+        OpenAPIResponseContentModel(model=response_body_schema)
+        if isinstance(response_body_schema, type)
+        else OpenAPIResponseContentSchema(schema=response_body_schema)
+    )
+    return OpenAPIResponse(description=description, content={"application/json": content_schema})
+
+
+class ErrorResponse(BaseModel):
+    """Model representing API error response"""
+
+    error: str
+
+
+def create_open_api_error_response(description: str) -> OpenAPIResponse:
+    """
+    Gives the openapi error response appropriate for the API docs
+
+    :param description: description of error response content
+    :return: The open api response schema appropriate for the swagger docs
+    """
+    content_schema = OpenAPIResponseContentModel(model=ErrorResponse)
+    return OpenAPIResponse(description=description, content={"application/json": content_schema})

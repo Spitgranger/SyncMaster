@@ -2,6 +2,4 @@
 
 The folders and files for this folder are as follows:
 
-Describe ...
-
-This folder will typically contain a slideshow.  The file format for the slideshow is not prescribed.
+Demonstration_team15.pptx - The Powerpoint Presntation for the Rev1 Demo

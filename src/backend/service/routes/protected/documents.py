@@ -22,13 +22,20 @@ from ...document_management.document_management import (
 )
 from ...environment import DOCUMENT_STORAGE_BUCKET_NAME
 from ...file_storage.s3_bucket import S3Bucket
-from ...models.api.document import APIDocumentUploadRequest, APIExpiringDocumentResponse
+from ...models.api.document import (
+    APIDocumentListResponse,
+    APIDocumentResponse,
+    APIDocumentUploadRequest,
+    APIExpiringDocumentResponse,
+)
 from ...models.db.document import DBDocument
 from ...util import (
     CORS_HEADERS,
     AWSAccessLevel,
     UserType,
     create_http_response,
+    create_open_api_error_response,
+    create_open_api_response,
     time_epoch_to_datetime,
     verify_user_role,
 )
@@ -36,7 +43,16 @@ from ...util import (
 router = Router()
 
 
-@router.post("/upload")
+@router.post(
+    "/upload",
+    security=[{"bearer": [UserType.ADMIN.value]}],
+    responses={
+        201: create_open_api_response(
+            description="The created document", response_body_schema=APIDocumentResponse
+        ),
+        409: create_open_api_error_response(description="document already exists"),
+    },
+)
 def upload_handler(body: Annotated[APIDocumentUploadRequest, Body()]):
     """
     "Uploads" a file to the virtual file system
@@ -77,7 +93,15 @@ def upload_handler(body: Annotated[APIDocumentUploadRequest, Body()]):
     )
 
 
-@router.get("/<site_id>/<folder>/get_files")
+@router.get(
+    "/<site_id>/<folder>/get_files",
+    security=[{"bearer": []}],
+    responses={
+        200: create_open_api_response(
+            description="The created document", response_body_schema=APIDocumentListResponse
+        )
+    },
+)
 def get_files_handler(site_id: Annotated[str, Path()], folder: Annotated[str, Path()]):
     """
     Route to get files for a specific site
@@ -100,7 +124,15 @@ def get_files_handler(site_id: Annotated[str, Path()], folder: Annotated[str, Pa
     )
 
 
-@router.get("/get_presigned_url/<s3_key>")
+@router.get(
+    "/get_presigned_url/<s3_key>",
+    security=[{"bearer": []}],
+    responses={
+        201: create_open_api_response(
+            description="The presigned url", response_body_schema={"s3_presigned_url": "link"}
+        )
+    },
+)
 def get_presigned_url_handler(s3_key: Annotated[str, Path()]):
     """
     Route to get presigned url to upload file
@@ -117,7 +149,15 @@ def get_presigned_url_handler(s3_key: Annotated[str, Path()]):
     )
 
 
-@router.delete("/delete")
+@router.delete(
+    "/delete",
+    security=[{"bearer": [UserType.ADMIN.value]}],
+    responses={
+        204: create_open_api_response(
+            description="No content returned on delete", response_body_schema={}
+        )
+    },
+)
 def delete_file_handler(
     site_id: Annotated[str, Query()],
     parent_folder_id: Annotated[str, Query()],
@@ -146,7 +186,16 @@ def delete_file_handler(
     )
 
 
-@router.get("/expiring_documents")
+@router.get(
+    "/expiring_documents",
+    security=[{"bearer": [UserType.ADMIN.value, UserType.EMPLOYEE.value]}],
+    responses={
+        200: create_open_api_response(
+            description="List of expiring documents",
+            response_body_schema=APIExpiringDocumentResponse,
+        )
+    },
+)
 def list_expiring_documents_handler(
     days: Annotated[Optional[int], Query()] = None,
     limit: Annotated[Optional[int], Query()] = None,

@@ -3,9 +3,6 @@
   "extends": [
     "security:only-security-updates"
   ],
-  "lockFileMaintenance": {
-    "enabled": true
-  },
   "ignorePaths": [
     "src/poc/**"
   ],

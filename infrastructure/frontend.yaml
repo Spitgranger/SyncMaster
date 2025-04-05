@@ -1,0 +1,90 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: AWS CloudFormation template to the SyncMaster frontend
+
+Parameters:
+  AppNameContractor:
+    Type: String
+    Description: Name of the Amplify application
+    Default: frontend-contractor-portal
+  AppNameAdmin:
+    Type: String
+    Description: Name of the Amplify application
+    Default: frontend-admin-portal
+  Repository:
+    Type: String
+    Description: GitHub repository URL (e.g., https://github.com/user/repo)
+    Default: https://github.com/Spitgranger/SyncMaster
+  BranchNameAdmin:
+    Type: String
+    Description: The branch to deploy from (e.g., main)
+    Default: frontend-deploy-staging
+  BranchNameContractor:
+    Type: String
+    Description: The branch to deploy from (e.g., main)
+    Default: frontend-deploy-contractor
+  OauthToken:
+    Type: String
+    Description: GitHub OAuth token for repository access
+    NoEcho: true
+  BaseAPIUrl:
+    Type: String
+    Description: The base url for SyncMaster API
+
+Resources:
+  ContractorApp:
+    Type: AWS::Amplify::App
+    Properties:
+      Name: !Ref AppNameContractor
+      Repository: !Ref Repository
+      AccessToken: !Ref OauthToken
+      Platform: WEB_COMPUTE
+      EnvironmentVariables:
+        - Name: AMPLIFY_MONOREPO_APP_ROOT
+          Value: src/client-contractor-portal
+        - Name: NEXT_PUBLIC_API_BASE_URL
+          Value: !Ref BaseAPIUrl
+
+  ContractorBranch:
+    Type: AWS::Amplify::Branch
+    Properties:
+      AppId: !GetAtt ContractorApp.AppId
+      BranchName: !Ref BranchNameContractor
+      EnableAutoBuild: true
+      Framework: Next.js - SSR
+
+  AdminApp:
+    Type: AWS::Amplify::App
+    Properties:
+      Name: !Ref AppNameAdmin
+      Repository: !Ref Repository
+      AccessToken: !Ref OauthToken
+      Platform: WEB_COMPUTE
+      EnvironmentVariables:
+        - Name: AMPLIFY_MONOREPO_APP_ROOT
+          Value: src/client-admin-portal
+        - Name: NEXT_PUBLIC_API_BASE_URL
+          Value: !Ref BaseAPIUrl
+        - Name: NEXT_PUBLIC_API_CONTRACTOR_BASE_URL
+          Value: !Sub "https://${ContractorBranch.BranchName}.${ContractorApp.DefaultDomain}/login"
+
+  AdminBranch:
+    Type: AWS::Amplify::Branch
+    Properties:
+      AppId: !GetAtt AdminApp.AppId
+      BranchName: !Ref BranchNameAdmin
+      EnableAutoBuild: true
+      Framework: Next.js - SSR
+
+Outputs:
+  ContractorAppId:
+    Description: The Amplify App ID
+    Value: !GetAtt ContractorApp.AppId
+  ContractorAppURL:
+    Description: The Amplify App URL
+    Value: !Sub "https://${ContractorBranch.BranchName}.${ContractorApp.DefaultDomain}"
+  AdminAppId:
+    Description: The Amplify App ID
+    Value: !GetAtt AdminApp.AppId
+  AdminAppURL:
+    Description: The Amplify App URL
+    Value: !Sub "https://${AdminBranch.BranchName}.${AdminApp.DefaultDomain}"

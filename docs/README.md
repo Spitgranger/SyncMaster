@@ -29,4 +29,26 @@ the unnecessary folders and rename your folder to SRS.>
 
 The folders and files for this folder are as follows:
 
-Describe ...
+Design - The design documents for the project
+
+DevelopmentPlan - The development plan for the project outlining coding standards and tools used
+
+HazardAnalysis - The hazard analysis, reviewing safety and security hazards for the project
+
+Presentations - The presentations done for the project
+
+ProblemStatementAndGoals - The problem statement, goals for the project, and description of extras
+
+ReflectAndTrace - Include reflection on the project and details of how we responded to feedback from the TA and peers
+
+SRS-Volere - The Software Requirement Specification (Using the Volere template)
+
+VnVPlan - The plan for Verification and Validation
+
+VnVReport - The report outlining the results of executing the tests described in the VnV Plan
+
+projMngmnt - Contains metrics outlining team contribution for each major milestone of the project
+
+Checklists - Various checklists for specific tasks
+
+Extras - The extras for the project

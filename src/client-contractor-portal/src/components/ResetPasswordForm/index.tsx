@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { Container, Typography, TextField, Button, IconButton, InputAdornment, Box } from '@mui/material';
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  IconButton,
+  InputAdornment,
+  Box,
+} from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { resetPassword } from '@/services/authService';
@@ -19,15 +27,15 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ email }) => {
     e.preventDefault();
     setError(null);
 
-    const IdToken = localStorage.getItem("IdToken"); 
+    const IdToken = localStorage.getItem('IdToken');
     if (!IdToken) {
-      console.error("User ID not found in localStorage!");
+      console.error('User ID not found in localStorage!');
       return;
     }
 
     try {
       await resetPassword(email, password, newPassword, IdToken);
-      window.location.href = "/acknowledgement"; // Redirect after success
+      window.location.href = '/acknowledgement'; // Redirect after success
     } catch (err) {
       setError('Failed to reset password. Please try again.');
     }
@@ -35,14 +43,28 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ email }) => {
 
   return (
     <Container maxWidth="sm" sx={{ mt: 8, px: 2 }}>
-      <Typography variant="h5" fontWeight="bold" textAlign="center" gutterBottom>
+      <Typography
+        variant="h5"
+        fontWeight="bold"
+        textAlign="center"
+        gutterBottom
+      >
         Reset Password
       </Typography>
-      <Typography variant="body1" color="text.secondary" textAlign="center" gutterBottom>
+      <Typography
+        variant="body1"
+        color="text.secondary"
+        textAlign="center"
+        gutterBottom
+      >
         Enter your current one-time password and set a new password.
       </Typography>
 
-      {error && <Typography color="error" textAlign="center">{error}</Typography>}
+      {error && (
+        <Typography color="error" textAlign="center">
+          {error}
+        </Typography>
+      )}
 
       <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
         <TextField
@@ -75,7 +97,9 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ email }) => {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton onClick={() => setShowNewPassword(!showNewPassword)}>
+                <IconButton
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                >
                   {showNewPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
@@ -83,7 +107,13 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ email }) => {
           }}
         />
 
-        <Button type="submit" variant="contained" color="primary" fullWidth sx={{ py: 1.5 }}>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+          sx={{ py: 1.5 }}
+        >
           RESET PASSWORD
         </Button>
       </Box>

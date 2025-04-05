@@ -18,7 +18,7 @@ import {
   TextField,
   MenuItem,
   IconButton,
-  TableSortLabel
+  TableSortLabel,
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -37,21 +37,27 @@ interface User {
 const ManageUsersTable: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
-  const { users, loading, error } = useSelector((state: RootState) => state.userManagement);
+  const { users, loading, error } = useSelector(
+    (state: RootState) => state.userManagement
+  );
   const { idToken } = useSelector((state: RootState) => state.user);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   // Local state for edit dialog and form values.
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [formValues, setFormValues] = useState({ name: '', company: '', role: '' });
+  const [formValues, setFormValues] = useState({
+    name: '',
+    company: '',
+    role: '',
+  });
   // Local state for sorting.
   const [sortField, setSortField] = useState<keyof User | ''>('');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   useEffect(() => {
     if (!idToken) {
-      console.error("Authentication token not found. Please sign in.");
+      console.error('Authentication token not found. Please sign in.');
       return;
     }
     dispatch(getUsers({}));
@@ -80,17 +86,17 @@ const ManageUsersTable: React.FC = () => {
     }, {});
 
     const statusMapping: Record<string, string> = {
-      CONFIRMED: "Confirmed",
-      UNCONFIRMED: "Pending",
-      FORCE_CHANGE_PASSWORD: "Requires Password Change"
+      CONFIRMED: 'Confirmed',
+      UNCONFIRMED: 'Pending',
+      FORCE_CHANGE_PASSWORD: 'Requires Password Change',
     };
 
     return {
-      name: attributes["name"] || "N/A",
-      email: attributes["email"] || "N/A",
-      role: attributes["custom:role"] || "N/A",
-      company: attributes["custom:company"] || "N/A",
-      status: statusMapping[user.UserStatus] || user.UserStatus || "N/A",
+      name: attributes['name'] || 'N/A',
+      email: attributes['email'] || 'N/A',
+      role: attributes['custom:role'] || 'N/A',
+      company: attributes['custom:company'] || 'N/A',
+      status: statusMapping[user.UserStatus] || user.UserStatus || 'N/A',
     };
   });
 
@@ -124,7 +130,7 @@ const ManageUsersTable: React.FC = () => {
 
   // Update form values on change.
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormValues(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setFormValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleDialogClose = () => {
@@ -136,25 +142,35 @@ const ManageUsersTable: React.FC = () => {
   const handleUpdateUser = async () => {
     if (!selectedUser) return;
     try {
-      await dispatch(updateUser({
-        email: selectedUser.email,
-        attributes: {
-          name: formValues.name,
-          "custom:company": formValues.company,
-          "custom:role": formValues.role as "admin" | "contractor" | "employee"
-        }
-      })).unwrap();
+      await dispatch(
+        updateUser({
+          email: selectedUser.email,
+          attributes: {
+            name: formValues.name,
+            'custom:company': formValues.company,
+            'custom:role': formValues.role as
+              | 'admin'
+              | 'contractor'
+              | 'employee',
+          },
+        })
+      ).unwrap();
       await dispatch(getUsers({}));
       handleDialogClose();
     } catch (error) {
-      console.error("Failed to update user:", error);
+      console.error('Failed to update user:', error);
     }
   };
 
   return (
     <>
       <Container sx={{ mt: 4, px: 2 }}>
-        <Typography variant="h5" fontWeight="bold" textAlign="left" gutterBottom>
+        <Typography
+          variant="h5"
+          fontWeight="bold"
+          textAlign="left"
+          gutterBottom
+        >
           Manage Users
         </Typography>
         {successMsg && (
@@ -179,7 +195,14 @@ const ManageUsersTable: React.FC = () => {
           User Requests
         </Button>
       </Container>
-      <Container sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 6 }}>
+      <Container
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          py: 6,
+        }}
+      >
         {loading ? (
           <CircularProgress />
         ) : error ? (
@@ -257,7 +280,9 @@ const ManageUsersTable: React.FC = () => {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={6} align="center">No users found</TableCell>
+                    <TableCell colSpan={6} align="center">
+                      No users found
+                    </TableCell>
                   </TableRow>
                 )}
               </TableBody>
@@ -300,7 +325,11 @@ const ManageUsersTable: React.FC = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogClose}>Cancel</Button>
-          <Button onClick={handleUpdateUser} variant="contained" color="primary">
+          <Button
+            onClick={handleUpdateUser}
+            variant="contained"
+            color="primary"
+          >
             Update
           </Button>
         </DialogActions>
