@@ -4,7 +4,10 @@ on:
   pull_request:
     types: [opened, reopened, synchronize]
     paths:
-      ["**client-contractor-portal**", ".github/workflows/frontend-checks.yaml"]
+      [
+        "**client-contractor-portal**",
+        ".github/workflows/contractor-portal-frontend-checks.yaml",
+      ]
 
 jobs:
   frontend-checks:
