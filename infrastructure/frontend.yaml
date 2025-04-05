@@ -80,11 +80,11 @@ Outputs:
     Description: The Amplify App ID
     Value: !GetAtt ContractorApp.AppId
   ContractorAppURL:
-    Description: The Amplify app URL
+    Description: The Amplify App URL
     Value: !Sub "https://${ContractorBranch.BranchName}.${ContractorApp.DefaultDomain}"
   AdminAppId:
     Description: The Amplify App ID
     Value: !GetAtt AdminApp.AppId
   AdminAppURL:
-    Description: The Amplify app URL
+    Description: The Amplify App URL
     Value: !Sub "https://${AdminBranch.BranchName}.${AdminApp.DefaultDomain}"
