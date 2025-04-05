@@ -1,12 +1,15 @@
-'use client'
+'use client';
 import React from 'react';
 import Container from '@mui/material/Container';
 import { Box, Typography } from '@mui/material';
-import NonNavbarLogo from '@/components/NonNavbarLogo'
+import NonNavbarLogo from '@/components/NonNavbarLogo';
 
 const EndVisitPage = () => {
   return (
-    <Container maxWidth="sm" sx={{ display: 'flex', alignItems: 'center', minHeight: '100vh' }}>
+    <Container
+      maxWidth="sm"
+      sx={{ display: 'flex', alignItems: 'center', minHeight: '100vh' }}
+    >
       <Box
         sx={{
           width: '100%',
@@ -14,7 +17,7 @@ const EndVisitPage = () => {
           boxShadow: 16,
           textAlign: 'center',
           borderRadius: 2,
-          mx: 'auto'
+          mx: 'auto',
         }}
       >
         <NonNavbarLogo />

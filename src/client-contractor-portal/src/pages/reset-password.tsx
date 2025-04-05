@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useRouter } from "next/router";
-import { Container } from "@mui/material";
-import ResetPasswordForm from "@/components/ResetPasswordForm";
-import NonNavbarLogo from "@/components/NonNavbarLogo";
+import React from 'react';
+import { useRouter } from 'next/router';
+import { Container } from '@mui/material';
+import ResetPasswordForm from '@/components/ResetPasswordForm';
+import NonNavbarLogo from '@/components/NonNavbarLogo';
 
 const ResetPasswordPage = () => {
   const router = useRouter();
@@ -13,16 +13,20 @@ const ResetPasswordPage = () => {
   return (
     <Container
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
         py: 4,
       }}
     >
       <NonNavbarLogo />
-      {email ? <ResetPasswordForm email={email as string} /> : <p>Loading...</p>}
+      {email ? (
+        <ResetPasswordForm email={email as string} />
+      ) : (
+        <p>Loading...</p>
+      )}
     </Container>
   );
 };

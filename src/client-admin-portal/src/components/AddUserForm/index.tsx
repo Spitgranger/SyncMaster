@@ -1,16 +1,32 @@
-"use client";
+'use client';
 import React, { useState, useEffect } from 'react';
-import { Container, TextField, Button, Typography, MenuItem, Select, FormControl, InputLabel, Box, CircularProgress } from '@mui/material';
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+  Box,
+  CircularProgress,
+} from '@mui/material';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { createUser, resetCreateUserStatus } from '@/state/user/userManagementSlice'; // Import the reset action
+import {
+  createUser,
+  resetCreateUserStatus,
+} from '@/state/user/userManagementSlice'; // Import the reset action
 import { RootState, AppDispatch } from '@/state/store';
 
 const AddUserForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const { idToken } = useSelector((state: RootState) => state.user);
-  const { createUserStatus, error } = useSelector((state: RootState) => state.userManagement);
+  const { createUserStatus, error } = useSelector(
+    (state: RootState) => state.userManagement
+  );
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -28,7 +44,10 @@ const AddUserForm: React.FC = () => {
     if (createUserStatus === 'succeeded') {
       // Reset status before redirecting to avoid instant redirect on subsequent visits
       dispatch(resetCreateUserStatus());
-      setTimeout(() => router.push(`/dashboard/manageusers?success=${email}`), 30000);
+      setTimeout(
+        () => router.push(`/dashboard/manageusers?success=${email}`),
+        30000
+      );
     }
   }, [createUserStatus, router, dispatch, email]);
 
@@ -47,27 +66,47 @@ const AddUserForm: React.FC = () => {
     }
 
     // Dispatch the createUser thunk with the necessary data
-    dispatch(createUser({
-      email,
-      attributes: {
-        "custom:role": role as 'admin' | 'contractor' | 'employee',
-        "custom:company": company,
-        name,
-      }
-    }));
+    dispatch(
+      createUser({
+        email,
+        attributes: {
+          'custom:role': role as 'admin' | 'contractor' | 'employee',
+          'custom:company': company,
+          name,
+        },
+      })
+    );
   };
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4, px: 2 }}>
-      <Typography variant="h5" fontWeight="bold" textAlign="center" gutterBottom>
+      <Typography
+        variant="h5"
+        fontWeight="bold"
+        textAlign="center"
+        gutterBottom
+      >
         Add New User
       </Typography>
-      <Typography variant="body1" color="text.secondary" textAlign="center" gutterBottom>
+      <Typography
+        variant="body1"
+        color="text.secondary"
+        textAlign="center"
+        gutterBottom
+      >
         Please enter the following details about the new user
       </Typography>
 
-      {localError && <Typography color="error" textAlign="center">{localError}</Typography>}
-      {error && <Typography color="error" textAlign="center">{error}</Typography>}
+      {localError && (
+        <Typography color="error" textAlign="center">
+          {localError}
+        </Typography>
+      )}
+      {error && (
+        <Typography color="error" textAlign="center">
+          {error}
+        </Typography>
+      )}
       {createUserStatus === 'succeeded' && (
         <Typography color="success.main" textAlign="center">
           User {email} was successfully added! Redirecting...
@@ -112,8 +151,18 @@ const AddUserForm: React.FC = () => {
             <MenuItem value="contractor">Contractor</MenuItem>
           </Select>
         </FormControl>
-        <Button type="submit" variant="contained" color="primary" fullWidth disabled={createUserStatus === 'loading'}>
-          {createUserStatus === 'loading' ? <CircularProgress size={24} /> : '+ ADD NEW USER'}
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+          disabled={createUserStatus === 'loading'}
+        >
+          {createUserStatus === 'loading' ? (
+            <CircularProgress size={24} />
+          ) : (
+            '+ ADD NEW USER'
+          )}
         </Button>
       </Box>
     </Container>
