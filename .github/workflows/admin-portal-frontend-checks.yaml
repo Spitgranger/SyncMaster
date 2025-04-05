@@ -22,7 +22,9 @@ jobs:
           node-version: "20"
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          cd src/client-admin-portal
+          npm install
 
       - name: Run linters
         run: |
