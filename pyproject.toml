@@ -26,7 +26,7 @@ dev = [
     "pytest-cov==6.0.0",
     "pytest-env==1.1.5",
     "pytest-socket==0.7.0",
-    "requests==2.32.3",
+    "requests==2.33.0",
     "ruff==0.11.2",
     "types-cachetools==5.5.*",
 ]
